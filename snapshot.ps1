@@ -60,10 +60,13 @@ if ($dirty.Count -gt 0) {
     Write-Host "  Uncommitted files:" -ForegroundColor Yellow
     foreach ($line in $dirty) { Write-Host "    $line" -ForegroundColor DarkYellow }
     Write-Host ""
-    Write-Host "  Commit them first:" -ForegroundColor DarkGray
-    Write-Host "    git -C `"$src`" add -A" -ForegroundColor DarkGray
+    Write-Host "  Option 1 — commit them (recommended):" -ForegroundColor DarkGray
+    Write-Host "    git -C `"$src`" add <file>" -ForegroundColor DarkGray
     Write-Host "    git -C `"$src`" commit -m `"your message`"" -ForegroundColor DarkGray
-    Write-Host "  Or discard them:" -ForegroundColor DarkGray
+    Write-Host "  Option 2 — stash them (reversible):" -ForegroundColor DarkGray
+    Write-Host "    git -C `"$src`" stash" -ForegroundColor DarkGray
+    Write-Host "    # then snapshot, then: git -C `"$src`" stash pop" -ForegroundColor DarkGray
+    Write-Host "  Option 3 — discard them (PERMANENT, cannot be undone):" -ForegroundColor DarkGray
     Write-Host "    git -C `"$src`" checkout -- ." -ForegroundColor DarkGray
     Write-Host ""
     exit 1

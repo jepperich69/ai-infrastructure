@@ -367,7 +367,7 @@
         <div class="diag-layer-title">&#9670; AI Infrastructure &mdash; Claude Code</div>
         <div class="diag-items">
           <div class="diag-box ai-cmd">/work<small>load context &amp; open session</small></div>
-          <div class="diag-box ai-cmd">/snapshot V2<small>copy main.tex &rarr; V2</small></div>
+          <div class="diag-box ai-cmd">/snapshot V2<small>git tag full Overleaf_source/</small></div>
           <div class="diag-box ai-cmd">/close<small>log session &amp; wrap up</small></div>
           <div class="diag-box ai-dim">/family + /add-memory<small>ingest feeder digests</small></div>
           <div class="diag-box ai-dim">auto-commit hook<small>git commit per response</small></div>
@@ -909,7 +909,7 @@ claude --full-auto        # launch Claude Code without approval pauses
     <li><strong>Open VS Code</strong> on the project (<code>helpi 4 Pub_XXX</code>) &mdash; LaTeX compiles on save automatically.</li>
     <li><strong>Start Claude Code</strong> in the project folder. Type <code>/work Pub_XXX</code> (or paste the folder path). Claude reads the log, checks feeder digests for updates, summarises where you left off, and asks for today's goal.</li>
     <li><strong>Link feeder projects</strong> (first time only): <code>/family Pub_YYY1</code> — Claude reads that project and stores a digest. Future sessions only check for deltas.</li>
-    <li><strong>Snapshot before risky edits</strong> (optional): <code>/snapshot V2</code> saves the current <code>main.tex</code> as a frozen copy before a major rewrite.</li>
+    <li><strong>Snapshot before risky edits</strong> (optional): <code>/snapshot V2</code> git-tags the full <code>Overleaf_source/</code> state (.tex, .bib, figures, styles) before a major rewrite.</li>
     <li><strong>Work</strong> &mdash; Claude edits code or LaTeX. Each response auto-commits to git (Stop hook).</li>
     <li><strong>Compile &amp; preview</strong> as needed: save in VS Code, or <code>helpi 3 Pub_XXX</code> from the terminal.</li>
     <li><strong>Close the session</strong>: type <code>/close</code>. Claude fills in the session block in <code>_ai_log.md</code>.</li>
@@ -1511,7 +1511,7 @@ claude --full-auto        # launch Claude Code without approval pauses
   <p>
     The infrastructure itself is versioned so that you can recover a working state,
     understand what changed between sessions, and avoid accidentally breaking things
-    mid-project. The current version is <strong>v0.1</strong> (see <code>VERSION</code> file).
+    mid-project. The current version is <strong>v0.2</strong> (see <code>VERSION</code> file — single source of truth).
   </p>
 
   <h3>Workflow in plain language</h3>

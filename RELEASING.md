@@ -16,14 +16,16 @@ Use `develop` when you are in the middle of something larger that is not yet rea
 
 ---
 
-## Current state: v0.1
+## Current state: v0.2
 
-The infrastructure was tagged `v0.1` on 2026-04-05. This is the first stable release.
-To see it: `git show v0.1`
+The infrastructure was tagged `v0.2` on 2026-04-05.
+To see it: `git show v0.2`
+
+Previous stable release: `v0.1` (2026-04-05) — `git show v0.1`
 
 ---
 
-## Working toward v0.2
+## Working toward v0.3
 
 1. Make changes — edit scripts, update docs, add commands.
 2. Commit as you go: `git add <file>` then `git commit -m "short description"`.
@@ -40,13 +42,13 @@ git merge develop
 
 ---
 
-## Promoting to the next stable version (e.g. v0.2)
+## Promoting to the next stable version (e.g. v0.3)
 
-1. Move the `[Unreleased]` section in `CHANGELOG.md` to `[v0.2] — YYYY-MM-DD`.
-2. Update the version field in `infrastructure.html` (search for `Infrastructure version`).
-3. Update the `VERSION` file to contain `v0.2`.
-4. Commit: `git commit -m "Release v0.2"`
-5. Tag it: `git tag v0.2`
+1. Move the `[Unreleased]` section in `CHANGELOG.md` to `[v0.3] — YYYY-MM-DD`.
+2. `VERSION` is the single source of truth — update it to contain `v0.3`.
+3. Update the version field in `infrastructure.html` (search for `Infrastructure version`).
+4. Commit: `git commit -m "Release v0.3"`
+5. Tag it: `git tag v0.3`
 
 That is the entire release process.
 
