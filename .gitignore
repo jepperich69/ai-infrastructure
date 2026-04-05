@@ -1,0 +1,9 @@
+# Runtime logs — not versioned
+logs/
+
+# Volatile data files regenerated from Overleaf
+overleaf_projects.csv
+
+# OS noise
+Thumbs.db
+.DS_Store

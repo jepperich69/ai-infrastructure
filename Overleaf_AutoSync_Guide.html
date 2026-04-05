@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Overleaf Auto-Sync Infrastructure</title>
+<style>
+  body { font-family: Georgia, serif; max-width: 780px; margin: 40px auto; color: #222; line-height: 1.6; }
+  h1 { font-size: 1.8em; border-bottom: 2px solid #c00; padding-bottom: 8px; color: #c00; }
+  h2 { font-size: 1.2em; margin-top: 2em; border-bottom: 1px solid #ddd; padding-bottom: 4px; color: #333; }
+  h3 { font-size: 1em; margin-bottom: 4px; color: #555; }
+  code { background: #f4f4f4; padding: 2px 6px; border-radius: 3px; font-size: 0.9em; font-family: Consolas, monospace; }
+  pre { background: #f4f4f4; padding: 12px 16px; border-radius: 4px; border-left: 3px solid #c00; font-size: 0.85em; font-family: Consolas, monospace; overflow-x: auto; }
+  table { border-collapse: collapse; width: 100%; font-size: 0.9em; margin-top: 0.5em; }
+  th { background: #c00; color: white; padding: 7px 10px; text-align: left; }
+  td { padding: 6px 10px; border-bottom: 1px solid #eee; }
+  tr:nth-child(even) { background: #fafafa; }
+  .box { background: #fff8f0; border: 1px solid #f0c070; border-radius: 4px; padding: 12px 16px; margin: 1em 0; }
+  .step { display: inline-block; background: #c00; color: white; border-radius: 50%; width: 22px; height: 22px; text-align: center; line-height: 22px; font-size: 0.8em; font-weight: bold; margin-right: 8px; }
+  footer { margin-top: 3em; font-size: 0.8em; color: #999; border-top: 1px solid #eee; padding-top: 1em; }
+  @media print { body { margin: 20px; } }
+</style>
+</head>
+<body>
+
+<h1>Overleaf Auto-Sync Infrastructure</h1>
+<p><strong>Author:</strong> Rich Frederiks &nbsp;|&nbsp; <strong>DTU — Department of Management</strong> &nbsp;|&nbsp; <strong>Updated:</strong> March 2026</p>
+
+<div class="box">
+<strong>Purpose:</strong> Automatically pull all Overleaf projects to a local folder structure every 4 hours, creating a live local backup that mirrors the Overleaf source — including all subfolders, figures, and bibliography files. Covers publications, projects, teaching material, presentations, and applications.
+</div>
+
+<h2>1. Overview</h2>
+<p>All Overleaf projects are automatically synchronised to a local folder structure via Overleaf's built-in Git integration. A Windows Scheduled Task triggers the sync every 4 hours. The system covers five categories, each mapped to a different local directory based on the <strong>tag</strong> assigned in Overleaf:</p>
+
+<table>
+  <tr><th>Overleaf Tag</th><th>Local Directory</th><th>Folder naming</th></tr>
+  <tr><td>Papers</td><td>Publikationer\</td><td>Manual mapping via papers.csv (Pub_XXX convention)</td></tr>
+  <tr><td>Projects</td><td>Projekter DTU\</td><td>Overleaf project name used directly</td></tr>
+  <tr><td>Teaching</td><td>Kurser\</td><td>Overleaf project name used directly</td></tr>
+  <tr><td>Presentations</td><td>Slides\</td><td>Overleaf project name used directly</td></tr>
+  <tr><td>Applications</td><td>Ansøgninger\</td><td>Overleaf project name used directly</td></tr>
+</table>
+
+<p style="margin-top:1em">Papers use a manual folder mapping (since local <code>Pub_XXX</code> names differ from Overleaf project names). All other categories use the Overleaf project name directly as the folder name — no mapping needed.</p>
+
+<h2>2. Folder Structure</h2>
+<pre>OneDrive - DTU\JR\
+├── AI_auto\                       ← automation scripts live here
+│   ├── sync_all.ps1               ← main sync script (runs every 4h)
+│   ├── projects.json              ← registry of all active repos
+│   ├── papers.csv                 ← Overleaf → local folder mapping (Papers only)
+│   ├── setup_project.ps1          ← helper: manually add a single paper
+│   ├── setup_tagged.ps1           ← one-off setup for Projects/Teaching/etc.
+│   └── logs\                      ← daily log files (sync_YYYY-MM-DD.log)
+│
+├── Publikationer\                 ← Papers (manual folder mapping)
+│   ├── Pub_ActionSpace_NatComm\
+│   │   └── Overleaf_source\       ← full Overleaf project cloned here
+│   │       ├── main.tex
+│   │       ├── figures\
+│   │       └── references.bib
+│   └── ...                        ← ~60 publication folders
+│
+├── Projekter DTU\                 ← Projects (folder = Overleaf project name)
+│   ├── Pro_Flitmo\
+│   └── ...
+│
+├── Kurser\                        ← Teaching material
+├── Slides\                        ← Presentations
+└── Ansøgninger\                   ← Applications</pre>
+
+<h2>3. How It Works</h2>
+<p>Each Overleaf project exposes a <strong>Git remote</strong> at <code>https://git.overleaf.com/&lt;project-id&gt;</code>. The sync uses standard <code>git pull</code> — only actual changes are downloaded, so syncing 60+ projects takes only seconds.</p>
+
+<p><strong>Important:</strong> the sync is <em>one-way</em> (Overleaf → local). Git will never silently overwrite local files. If a conflict exists, the pull fails and logs <code>ERR</code> — local work is always preserved.</p>
+
+<p>The main script <code>sync_all.ps1</code> runs in two phases:</p>
+<ol>
+  <li><strong>Setup phase:</strong> reads <code>papers.csv</code> and clones any new papers not yet registered locally.</li>
+  <li><strong>Sync phase:</strong> loops through all entries in <code>projects.json</code> and pulls the latest changes from Overleaf.</li>
+</ol>
+
+<h2>4. Scheduled Task</h2>
+<table>
+  <tr><th>Setting</th><th>Value</th></tr>
+  <tr><td>Task name</td><td>AI Auto Sync</td></tr>
+  <tr><td>Script</td><td>sync_all.ps1</td></tr>
+  <tr><td>Frequency</td><td>Every 4 hours</td></tr>
+  <tr><td>Start time</td><td>11:06 daily</td></tr>
+  <tr><td>Run as</td><td>rich (interactive)</td></tr>
+</table>
+
+<h2>5. Adding New Projects</h2>
+
+<h3>New Paper (tagged "Papers")</h3>
+<p><span class="step">1</span> Create the local folder under <code>Publikationer\</code>, e.g. <code>Pub_NewPaper_TBA\</code></p>
+<p><span class="step">2</span> Get the Git URL from Overleaf → <strong>Menu → Sync → Git</strong></p>
+<p><span class="step">3</span> Add a row to <code>papers.csv</code>:</p>
+<table>
+  <tr><th>OverleafName</th><th>GitUrl</th><th>LocalFolder</th><th>SubFolder</th></tr>
+  <tr><td>My New Paper</td><td>https://git.overleaf.com/XXXX</td><td>Pub_NewPaper_TBA</td><td>Overleaf_source</td></tr>
+</table>
+<p><span class="step">4</span> Done — the next scheduled run clones it automatically.</p>
+
+<div class="box">
+<strong>Alternative (immediate):</strong><br><br>
+<code>.\setup_project.ps1 -FolderName "Pub_NewPaper_TBA" -OverleafUrl "https://git.overleaf.com/XXXX"</code>
+</div>
+
+<h3>New Project / Teaching / Presentation / Application</h3>
+<p>Simply tag the project correctly in Overleaf (<strong>Projects</strong>, <strong>Teaching</strong>, <strong>Presentations</strong>, or <strong>Applications</strong>), then run <code>setup_tagged.ps1</code> once:</p>
+<pre>.\setup_tagged.ps1</pre>
+<p>The script reads the tags directly from Overleaf, clones any new projects into the correct local folder using the Overleaf project name, and registers them for the 4-hour sync. No CSV or manual mapping needed.</p>
+
+<h2>6. Log Files</h2>
+<p>A daily log is written to <code>AI_auto\logs\sync_YYYY-MM-DD.log</code>. Each line follows the format:</p>
+<pre>2026-03-28 11:06:01 - OK   | Pub_ActionSpace_NatComm - up to date
+2026-03-28 11:06:04 - OK   | Pub_NapstiGranularity_TBA - backed up
+2026-03-28 11:06:07 - NEW  | Pub_NewPaper_TBA - cloned and registered
+2026-03-28 11:06:09 - ERR  | Pub_SomePaper - pull failed</pre>
+
+<h2>7. Key Files Reference</h2>
+<table>
+  <tr><th>File</th><th>Purpose</th><th>Edit manually?</th></tr>
+  <tr><td>papers.csv</td><td>Master list of papers + local folder mapping (Papers tag only)</td><td>Yes — to add new papers</td></tr>
+  <tr><td>projects.json</td><td>Registry of all cloned repos used by the sync loop</td><td>No — auto-maintained</td></tr>
+  <tr><td>sync_all.ps1</td><td>Main sync + setup script called by scheduler every 4h</td><td>No</td></tr>
+  <tr><td>setup_project.ps1</td><td>Immediately add and clone a single new paper</td><td>No</td></tr>
+  <tr><td>setup_tagged.ps1</td><td>Set up all Projects/Teaching/Presentations/Applications from Overleaf tags</td><td>No</td></tr>
+  <tr><td>logs\sync_*.log</td><td>Daily activity logs</td><td>No</td></tr>
+</table>
+
+<h2>8. Requirements</h2>
+<ul>
+  <li>Git installed and available on the system PATH</li>
+  <li>Overleaf account with Git sync enabled (available on all paid plans)</li>
+  <li>Git credentials for <code>git.overleaf.com</code> stored in Windows Credential Manager</li>
+  <li>Windows Task Scheduler (built into Windows)</li>
+</ul>
+
+<footer>
+  Generated March 2026 &nbsp;|&nbsp; DTU Department of Management &nbsp;|&nbsp;
+  Scripts located at: <code>C:\Users\rich\OneDrive - Danmarks Tekniske Universitet\JR\AI_auto\</code>
+</footer>
+
+</body>
+</html>

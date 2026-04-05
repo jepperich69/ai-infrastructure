@@ -1,0 +1,101 @@
+# new_project.ps1
+# Scaffold a complete new paper project folder structure.
+#
+# Usage:
+#   .\new_project.ps1 -Project Pub_NewPaper_TBA
+#   .\new_project.ps1 -Project Pub_NewPaper_TBA -GitUrl https://git.overleaf.com/abc123
+#
+param(
+    [Parameter(Mandatory=$true)]
+    [string]$Project,
+
+    [string]$GitUrl = ""   # Overleaf git URL — clone into Overleaf_source/ if provided
+)
+
+$pubRoot     = "C:\Users\rich\OneDrive - Danmarks Tekniske Universitet\JR\Publikationer"
+$aiRoot      = "C:\Users\rich\OneDrive - Danmarks Tekniske Universitet\JR\AI_auto"
+$projectRoot = Join-Path $pubRoot $Project
+
+if (Test-Path $projectRoot) {
+    Write-Host "ERR  | Project folder already exists: $projectRoot"
+    exit 1
+}
+
+Write-Host "Creating project: $Project"
+
+# ── Folder structure ──────────────────────────────────────────────
+foreach ($sub in @("code", "code\data", "Literature")) {
+    New-Item -ItemType Directory -Path (Join-Path $projectRoot $sub) -Force | Out-Null
+}
+Write-Host "OK   | Folders created (code/, code/data/, Literature/)"
+
+# ── Overleaf_source ───────────────────────────────────────────────
+$overleafDir = Join-Path $projectRoot "Overleaf_source"
+if ($GitUrl) {
+    Write-Host "Cloning Overleaf repo..."
+    git clone --quiet $GitUrl $overleafDir 2>&1 | Out-Null
+    if ($LASTEXITCODE -eq 0) {
+        Write-Host "OK   | Overleaf_source cloned from $GitUrl"
+
+        # Register in projects.json
+        $jsonPath = "$aiRoot\projects.json"
+        $projects = Get-Content $jsonPath | ConvertFrom-Json
+        $branch   = "master"
+        $head     = Join-Path $overleafDir ".git\HEAD"
+        if (Test-Path $head) {
+            $hc = Get-Content $head
+            if ($hc -match "refs/heads/(.+)") { $branch = $Matches[1] }
+        }
+        $projects += [PSCustomObject]@{ name = $Project; path = $overleafDir; branch = $branch }
+        $projects | ConvertTo-Json -Depth 5 | Set-Content $jsonPath
+        Write-Host "OK   | Registered in projects.json (branch: $branch)"
+    } else {
+        Write-Host "ERR  | Clone failed — creating empty Overleaf_source/ instead"
+        New-Item -ItemType Directory -Path $overleafDir -Force | Out-Null
+    }
+} else {
+    New-Item -ItemType Directory -Path $overleafDir -Force | Out-Null
+    Set-Content -Path (Join-Path $overleafDir "README.md") -Value "# $Project`n`nLink Overleaf git URL here and run sync_all.ps1."
+    Write-Host "OK   | Overleaf_source/ created (placeholder — add git URL later)"
+}
+
+# ── Git in code/ ──────────────────────────────────────────────────
+$codeDir = Join-Path $projectRoot "code"
+$gitignore = @"
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.ipynb_checkpoints/
+.env
+*.egg-info/
+dist/
+build/
+"@
+Set-Content -Path (Join-Path $codeDir ".gitignore") -Value $gitignore
+git -C $codeDir init --quiet
+git -C $codeDir add -A
+git -C $codeDir commit --quiet -m "init: $Project"
+Write-Host "OK   | Git initialised in code/"
+
+# ── Session log ───────────────────────────────────────────────────
+$logContent = @"
+# AI Session Log - $Project
+
+<!-- Claude updates this file at the start and end of every working session. -->
+<!-- Format: one ## Session block per date. -->
+
+"@
+Set-Content -Path (Join-Path $projectRoot "_ai_log.md") -Value $logContent
+Write-Host "OK   | _ai_log.md created"
+
+Write-Host ""
+Write-Host "Done. Project ready at:"
+Write-Host "  $projectRoot"
+Write-Host ""
+Write-Host "Next steps:"
+if (!$GitUrl) {
+    Write-Host "  - Add Overleaf git URL to Overleaf_source\README.md and run sync_all.ps1"
+}
+Write-Host "  - helpi 4 $Project   (open in VS Code)"
+Write-Host "  - helpi 3 $Project   (compile LaTeX)"

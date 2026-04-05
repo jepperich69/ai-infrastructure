@@ -1,0 +1,1544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Research Infrastructure Guide</title>
+  <style>
+    :root {
+      --blue:   #2c5f8a;
+      --lblue:  #e8f0f8;
+      --green:  #2a6b4a;
+      --lgreen: #e8f4ee;
+      --gold:   #7a5c00;
+      --lgold:  #fffbe6;
+      --red:    #8a2c2c;
+      --lred:   #fdf0f0;
+      --border: #dde4ee;
+      --bg:     #f6f8fb;
+      --text:   #1a1a1a;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: Georgia, serif; background: var(--bg); color: var(--text); padding: 40px 24px; }
+    .page { max-width: 900px; margin: 0 auto; }
+
+    h1 { font-size: 1.9em; color: var(--blue); border-bottom: 3px solid var(--blue); padding-bottom: 10px; margin-bottom: 6px; }
+    .subtitle { color: #666; font-size: 0.9em; margin-bottom: 36px; }
+
+    h2 { font-size: 1.25em; color: var(--blue); margin: 0 0 14px 0; }
+    h3 { font-size: 1em; color: #333; margin: 16px 0 6px 0; font-style: italic; }
+
+    .section { background: #fff; border: 1px solid var(--border); border-radius: 8px; padding: 24px 28px; margin-bottom: 28px; }
+    .section.green  { border-left: 4px solid var(--green);  }
+    .section.blue   { border-left: 4px solid var(--blue);   }
+    .section.gold   { border-left: 4px solid #c8a000;       }
+    .section.purple { border-left: 4px solid #6a4a8a;       }
+    .section.teal   { border-left: 4px solid #2a7a7a;       }
+    .section.indigo { border-left: 4px solid #4a4a9a;       }
+    .section.rose   { border-left: 4px solid #8a2a6a;       }
+
+    p  { line-height: 1.65; margin-bottom: 10px; }
+    ul { padding-left: 1.4em; margin-bottom: 10px; }
+    li { margin: 5px 0; line-height: 1.55; }
+
+    code { font-family: Consolas, "Courier New", monospace; font-size: 0.85em;
+           background: #f0f4f8; padding: 2px 6px; border-radius: 3px; }
+    pre  { font-family: Consolas, "Courier New", monospace; font-size: 0.82em;
+           background: #f0f4f8; border: 1px solid var(--border); border-radius: 5px;
+           padding: 14px 16px; margin: 10px 0; overflow-x: auto; white-space: pre-wrap; }
+
+    .cmd-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+    .cmd-table th { background: var(--lblue); color: var(--blue); text-align: left;
+                    padding: 8px 12px; font-size: 0.85em; border-bottom: 2px solid var(--border); }
+    .cmd-table td { padding: 9px 12px; border-bottom: 1px solid var(--border);
+                    font-size: 0.85em; vertical-align: top; }
+    .cmd-table tr:last-child td { border-bottom: none; }
+    .cmd-table td:first-child { font-weight: bold; color: #444; white-space: nowrap; }
+    .cmd-table td code { background: #eef2f8; }
+
+    .flow { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; margin: 14px 0; }
+    .box  { background: var(--lblue); border: 1px solid #b0c8e0; border-radius: 6px;
+            padding: 8px 14px; font-size: 0.85em; text-align: center; min-width: 110px; }
+    .box.green  { background: var(--lgreen); border-color: #90c8a8; }
+    .box.gold   { background: var(--lgold);  border-color: #d4b840; }
+    .box.purple { background: #f0eaf8;       border-color: #b090d0; }
+    .arr { font-size: 1.2em; color: #888; }
+
+    .note { background: var(--lgold); border: 1px solid #e0c840; border-radius: 6px;
+            padding: 12px 16px; font-size: 0.88em; margin: 12px 0; }
+    .note strong { color: var(--gold); }
+
+    .tag { display: inline-block; font-size: 0.72em; font-weight: bold; letter-spacing: 0.04em;
+           padding: 2px 7px; border-radius: 10px; vertical-align: middle; margin-left: 6px; }
+    .tag.auto   { background: #d0ecd8; color: #1a5a30; }
+    .tag.manual { background: #dde8f8; color: #1a3a6a; }
+    .tag.once   { background: #f0e8d8; color: #6a3a10; }
+    .tag.ai     { background: #e8e0f8; color: #3a1a6a; }
+
+    .num { display: inline-block; background: var(--blue); color: #fff;
+           border-radius: 50%; width: 22px; height: 22px; text-align: center;
+           line-height: 22px; font-size: 0.78em; font-weight: bold; margin-right: 6px; }
+
+    hr { border: none; border-top: 1px solid var(--border); margin: 20px 0; }
+
+    /* ── Part dividers ── */
+    .part-divider {
+      display: flex; align-items: center; gap: 14px;
+      margin: 36px 0 20px 0;
+    }
+    .part-divider .part-label {
+      white-space: nowrap;
+      font-size: 0.78em; font-weight: bold; letter-spacing: 0.1em;
+      text-transform: uppercase; padding: 4px 14px; border-radius: 12px;
+    }
+    .part-divider.file .part-label { background: var(--lgreen); color: var(--green); border: 1px solid #90c8a8; }
+    .part-divider.ai   .part-label { background: #ece8f8;        color: #4a4a9a;     border: 1px solid #b0a8d8; }
+    .part-divider .part-line { flex: 1; height: 1px; background: var(--border); }
+
+    /* ── Diagram: shared centre-stack styles ── */
+    .infra-diagram { margin: 20px 0 6px 0; }
+
+    .diag-layer { border-radius: 8px; padding: 14px 16px 12px 16px; }
+    .diag-layer.ai-side   { background: #dde8f8; border: 2px solid var(--blue);  }
+    .diag-layer.file-side { background: #daeae0; border: 2px solid var(--green); }
+    .diag-layer-title { font-size: 0.75em; font-weight: bold; letter-spacing: 0.1em;
+                        text-transform: uppercase; margin-bottom: 10px; }
+    .ai-side   .diag-layer-title { color: var(--blue);  }
+    .file-side .diag-layer-title { color: var(--green); }
+
+    .diag-items { display: flex; gap: 8px; flex-wrap: wrap; }
+    .diag-box { flex: 1; min-width: 120px; border-radius: 6px; padding: 8px 10px;
+                text-align: center; font-family: Consolas, "Courier New", monospace;
+                font-size: 0.8em; font-weight: bold; color: #fff; }
+    .diag-box small { display: block; margin-top: 3px; font-family: Georgia, serif;
+                      font-weight: normal; font-size: 0.88em; color: rgba(255,255,255,0.72); }
+    .diag-box.ai-cmd { background: var(--blue);  }
+    .diag-box.ai-dim { background: #5080a8;       }
+    .diag-box.fi-cmd { background: var(--green); }
+    .diag-box.fi-dim { background: #4a9a6a;       }
+
+    .diag-connector { display: flex; align-items: stretch; margin: 0; gap: 0; }
+    .diag-conn-side { width: 32px; display: flex; flex-direction: column; align-items: center; }
+    .diag-conn-line  { flex: 1; width: 2px; background: #b0c0d8; margin: 0 auto; }
+    .diag-conn-arrow { color: #8a9ab8; font-size: 0.9em; line-height: 1; padding: 1px 0; }
+    .diag-files-wrap { flex: 1; display: flex; flex-direction: column;
+                       justify-content: center; padding: 8px 0; }
+    .diag-files-label { font-size: 0.68em; letter-spacing: 0.1em; text-transform: uppercase;
+                        color: #999; text-align: center; margin-bottom: 6px; }
+    .diag-files { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; }
+    .diag-file { background: #f4f6fa; border: 1px solid #c0ccd8; border-radius: 12px;
+                 padding: 3px 12px; font-family: Consolas, monospace;
+                 font-size: 0.78em; color: #445; }
+
+    /* ── Many-to-many RAG layout ── */
+    .diag-rag { display: flex; align-items: center; gap: 0; }
+
+    .diag-rag-col         { display: flex; flex-direction: column; }
+    .diag-rag-col.feeder  { flex: 0 0 160px; align-items: center; }
+    .diag-rag-col.center  { flex: 1; }
+
+    .diag-rag-label { font-size: 0.72em; font-weight: bold; color: #555;
+                      text-align: center; margin-bottom: 8px; letter-spacing: 0.03em; }
+    .diag-rag-label.main  { color: var(--blue); font-size: 0.8em; }
+    .diag-rag-sublabel    { font-size: 0.63em; color: #999; text-align: center;
+                            margin-top: 6px; font-style: italic; }
+
+    .diag-mini { width: 100%; border-radius: 8px; overflow: hidden; border: 1px solid #bbb; }
+    .diag-mini-ai   { background: var(--blue);  color: #fff; padding: 10px 8px;
+                      font-size: 0.74em; font-weight: bold; text-align: center; }
+    .diag-mini-file { background: var(--green); color: #fff; padding: 10px 8px;
+                      font-size: 0.74em; font-weight: bold; text-align: center; }
+    .diag-mini-ai small, .diag-mini-file small {
+      display: block; font-weight: normal; color: rgba(255,255,255,0.68);
+      margin-top: 3px; font-family: Consolas, monospace; font-size: 0.88em; }
+    .diag-mini-files { background: #f0f2f6; border-top: 1px dashed #c0c8d8;
+                       border-bottom: 1px dashed #c0c8d8; padding: 7px 6px;
+                       font-size: 0.64em; color: #556; text-align: center;
+                       font-family: Consolas, monospace; line-height: 1.75; }
+
+    .diag-rag-arrow { flex: 0 0 52px; display: flex; flex-direction: column;
+                      align-items: center; justify-content: center; gap: 5px;
+                      padding-bottom: 20px; }
+    .diag-arrow-shaft { display: flex; align-items: center; }
+    .diag-arrow-line-h { height: 2px; width: 26px; background: #8a9ab8; }
+    .diag-arrow-tip    { color: #8a9ab8; font-size: 0.95em; line-height: 1; }
+    .diag-arrow-lbl    { font-size: 0.63em; color: #8a9ab8; text-align: center;
+                         line-height: 1.3; font-style: italic; }
+
+    .diag-many-note { margin-top: 10px; font-size: 0.8em; color: #666; text-align: center;
+                      font-style: italic; border-top: 1px dashed #ccd0d8; padding-top: 8px; }
+
+    /* ── Worked example ── */
+    .ex-step { margin-bottom: 30px; }
+    .ex-step-hdr { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; flex-wrap: wrap; }
+    .ex-num { display: inline-flex; align-items: center; justify-content: center;
+              background: #4a4a9a; color: #fff; border-radius: 50%;
+              width: 28px; height: 28px; font-size: 0.82em; font-weight: bold; flex-shrink: 0; }
+    .ex-title { font-weight: bold; font-size: 1em; color: #222; }
+    .ex-ref { font-family: Consolas, monospace; font-size: 0.76em;
+              background: #eceaf8; color: #4a4a9a; padding: 2px 9px; border-radius: 10px; }
+    .ex-ref.ps { background: #e4f0e8; color: #2a6b4a; }
+    .ex-why { background: var(--lgold); border-left: 3px solid #c8a000; padding: 8px 14px;
+              font-size: 0.86em; margin-bottom: 10px; border-radius: 0 4px 4px 0;
+              line-height: 1.55; color: #4a3800; }
+    .term { background: #1a1e2a; border-radius: 7px; padding: 16px 18px; margin: 8px 0;
+            font-family: Consolas, "Courier New", monospace; font-size: 0.79em;
+            line-height: 1.65; overflow-x: auto; }
+    .tc  { color: #7090c8; }   /* prompt */
+    .tk  { color: #f0c840; }   /* command typed by user */
+    .to  { color: #b8c8d8; }   /* normal output */
+    .tg  { color: #50c878; }   /* green / success */
+    .tw  { color: #f0a030; }   /* warning / yellow */
+    .tm  { color: #9090c8; font-style: italic; } /* comment/annotation */
+    .tb  { display: block; border-top: 1px solid #2a3040; margin: 10px 0; }
+    .section.example { border-left: 4px solid #4a4a9a; }
+    .scenario-box { background: #eceaf8; border: 1px solid #b0a8d8; border-radius: 7px;
+                    padding: 14px 18px; margin-bottom: 24px; font-size: 0.9em; line-height: 1.6; }
+    .scenario-box strong { color: #4a4a9a; }
+
+  /* ── One-pager (screen) ── */
+  .one-pager {
+    background: #fff; border: 2px solid var(--blue); border-radius: 10px;
+    padding: 28px 32px; margin-bottom: 28px; page-break-inside: avoid;
+  }
+  .one-pager h1 { font-size: 1.3em; color: var(--blue); border-bottom: 2px solid var(--blue);
+                  padding-bottom: 6px; margin-bottom: 16px; }
+  .one-pager .op-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 18px; }
+  .one-pager .op-col h2 { font-size: 0.88em; font-weight: bold; letter-spacing: 0.06em;
+                           text-transform: uppercase; color: var(--blue);
+                           border-bottom: 1px solid var(--border); padding-bottom: 4px; margin-bottom: 8px; }
+  .one-pager table { width: 100%; border-collapse: collapse; font-size: 0.8em; }
+  .one-pager td { padding: 4px 6px; vertical-align: top; border-bottom: 1px solid #eee; line-height: 1.4; }
+  .one-pager td:first-child { white-space: nowrap; font-family: Consolas, monospace;
+                               font-weight: bold; color: #333; padding-right: 10px; }
+  .one-pager td:last-child { color: #555; }
+  .one-pager .op-flow { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; margin: 6px 0; }
+  .one-pager .op-step { background: var(--lblue); border: 1px solid #b0c8e0; border-radius: 5px;
+                         padding: 5px 10px; font-size: 0.78em; text-align: center; }
+  .one-pager .op-step code { background: none; font-size: 1em; font-weight: bold; }
+  .one-pager .op-step small { display: block; color: #666; font-size: 0.85em; margin-top: 1px; }
+  .one-pager .op-arr { color: #aaa; font-size: 1em; }
+  .one-pager .op-scenarios { font-size: 0.8em; }
+  .one-pager .op-scenarios dt { font-weight: bold; color: #333; margin-top: 7px; }
+  .one-pager .op-scenarios dd { color: #555; margin-left: 12px; line-height: 1.45; }
+  .one-pager .op-scenarios dd code { font-size: 0.9em; }
+  .one-pager .op-print-note { font-size: 0.74em; color: #999; text-align: right; margin-top: 10px; font-style: italic; }
+  .one-pager .op-tag { display: inline-block; font-size: 0.68em; font-weight: bold;
+                        padding: 1px 6px; border-radius: 8px; margin-left: 4px; vertical-align: middle; }
+  .one-pager .op-tag.auto { background: #d0ecd8; color: #1a5a30; }
+  .one-pager .op-tag.ai   { background: #e8e0f8; color: #3a1a6a; }
+
+  /* ── Print: show ONLY the one-pager ── */
+  @media print {
+    body { background: #fff; padding: 0; }
+    .page > *:not(.one-pager) { display: none !important; }
+    .one-pager { border: none; border-radius: 0; padding: 10px 0; margin: 0;
+                 box-shadow: none; page-break-inside: avoid; }
+    .one-pager .op-print-note { display: none; }
+    .one-pager h1 { font-size: 1.15em; }
+  }
+  </style>
+</head>
+<body>
+<div class="page">
+
+<h1>Research Infrastructure Guide</h1>
+<div class="subtitle">Infrastructure version: <strong>v0.1</strong> &nbsp;&bull;&nbsp; Last updated: 2026-04-05 &nbsp;&bull;&nbsp; Scripts live in <code>JR\AI_auto\</code> &nbsp;&bull;&nbsp; Claude commands live in <code>~\.claude\commands\</code></div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- PROBLEM FORMULATION                                             -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="section gold">
+  <h2>Problem Formulation</h2>
+  <p>
+    A modern researcher writes papers in Overleaf, analyses data in Python, and increasingly relies
+    on AI tools &mdash; Claude, GPT, NotebookLM &mdash; to accelerate every stage of the work.
+    This is productive, but it creates a set of structural problems that none of those tools solve on their own.
+  </p>
+
+  <h3>i &mdash; Local file storage and resilience</h3>
+  <p>
+    Overleaf is convenient, but storing everything in a single cloud service is a real risk: outages,
+    accidental overwrites, and loss of history with no local backup. The same applies to AI session
+    context &mdash; if it lives only in a chat window, it is gone the moment the session ends.
+    The infrastructure keeps a full local copy of every manuscript and every session log, git-tracked,
+    on your own machine. Overleaf remains the collaboration layer; local storage is the safety net.
+  </p>
+
+  <h3>ii &mdash; AI infrastructure that leverages your paper knowledge</h3>
+  <p>
+    AI tools are only as useful as the context you give them. A generic AI session knows nothing
+    about your prior work, your methods, or where a paper currently stands. Getting useful output
+    requires either lengthy re-briefings or accepting shallow answers.
+    This infrastructure solves that by keeping a structured session log (<code>_ai_log.md</code>)
+    and a generated handover document (<code>_handover.html</code>) per project. Any AI agent
+    &mdash; Claude, GPT, or a future tool &mdash; reads these files at session start and is
+    immediately oriented: what the project is, what was done last time, and what comes next.
+    No re-briefing. No lost context.
+  </p>
+
+  <h3>iii &mdash; Multi-agent, multi-skill integration</h3>
+  <p>
+    No single AI tool does everything well. Claude Code excels at code and structured edits;
+    GPT-based tools have different strengths; NotebookLM handles literature differently again.
+    Locking your workflow to one tool is fragile. This infrastructure is agent-agnostic: Claude Code
+    and GPT Codex CLI both run the same session commands (<code>/work</code>, <code>/close</code>,
+    <code>/snapshot</code>, <code>/family</code>), write to the same log format, and read the same
+    handover files. Switching agents mid-project, or using different agents for different tasks,
+    requires no extra setup. The handover document is the universal hand-off mechanism.
+  </p>
+
+  <h3>iv &mdash; Cross-project knowledge without full RAG</h3>
+  <p>
+    With 50+ active papers, knowledge compounds across projects: a method developed in one paper
+    is relevant to three others; a dataset used in an old project reappears in a new one.
+    A full vector RAG pipeline (embeddings, chunking, retrieval, staleness management) would handle
+    this mechanically but at significant complexity and token cost, and it removes you from the loop.
+    Instead, this infrastructure uses a directed digest model: you explicitly register which projects
+    inform which others (<code>/family</code>), Claude or GPT reads those projects once and distils
+    a compact structured digest, and from then on only new sessions are read as deltas.
+    The result is a many-to-many knowledge graph across your portfolio, at a fraction of the
+    token cost &mdash; and because you control the links, expert knowledge is applied precisely
+    where it is relevant, not retrieved by similarity from a black-box index.
+  </p>
+
+  <h3>v &mdash; Speed, ease of use, and openness</h3>
+  <p>
+    The infrastructure does not replace your existing tools &mdash; it wraps around them.
+    You still write in Overleaf. You still use NotebookLM for literature synthesis. You still
+    run analyses however you choose. What the infrastructure adds is: every edit is tracked,
+    every AI session is logged, every version is recoverable, and any agent can pick up exactly
+    where the last one left off. The overhead is minimal &mdash; a <code>helpi</code> command
+    to push, a <code>/work</code> to open, a <code>/close</code> to log. Everything else is
+    automatic.
+  </p>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- TWO-INFRASTRUCTURE OVERVIEW                                     -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="section blue">
+  <h2>Overview — Two Complementary Infrastructures</h2>
+  <p>
+    The research setup is split into two layers that are tightly coupled through a shared set of files.
+    The <strong>File Infrastructure</strong> handles all mechanical operations — syncing with Overleaf, version control,
+    LaTeX compilation, and folder scaffolding — and lives entirely in PowerShell scripts invoked via <code>helpi</code>.
+    The <strong>AI Infrastructure</strong> is the workflow layer that runs <em>inside</em> Claude Code (or GPT):
+    it loads project context, manages session logging, and creates manuscript snapshots.
+  </p>
+  <p>
+    Crucially, every project is an identical instance of this same two-layer stack.
+    When one project draws on knowledge from another, the feeder is not a passive file dump &mdash;
+    it is a full peer with its own Overleaf sync, git history, session log, and AI commands.
+    The <code>/family</code> command reads a feeder's living infrastructure (handover + log) and distils
+    it into a compact digest. From then on, <code>/work</code> monitors only the delta, giving you a
+    many-to-many knowledge graph across projects at very low ongoing token cost.
+  </p>
+
+  <!-- ── Diagram ── -->
+  <div class="infra-diagram">
+  <div class="diag-rag">
+
+    <!-- ── Feeder left ── -->
+    <div class="diag-rag-col feeder">
+      <div class="diag-rag-label">Feeder: Pub_YYY1</div>
+      <div class="diag-mini">
+        <div class="diag-mini-ai">AI Layer<small>/work · /snapshot · /close · /family</small></div>
+        <div class="diag-mini-files">_ai_log.md · _handover.html<br>Overleaf_source/ · code/ · _feeders/</div>
+        <div class="diag-mini-file">File Layer<small>sync · push · compile · handover</small></div>
+      </div>
+      <div class="diag-rag-sublabel">complete two-layer infrastructure<br>(may itself have feeders)</div>
+    </div>
+
+    <!-- ── Arrow left → center ── -->
+    <div class="diag-rag-arrow">
+      <div class="diag-arrow-shaft">
+        <div class="diag-arrow-line-h"></div>
+        <div class="diag-arrow-tip">&#9658;</div>
+      </div>
+      <div class="diag-arrow-lbl">digest<br>/ delta</div>
+    </div>
+
+    <!-- ── Centre: current project (full stack) ── -->
+    <div class="diag-rag-col center">
+      <div class="diag-rag-label main">Current Project: Pub_XXX</div>
+
+      <div class="diag-layer ai-side">
+        <div class="diag-layer-title">&#9670; AI Infrastructure &mdash; Claude Code</div>
+        <div class="diag-items">
+          <div class="diag-box ai-cmd">/work<small>load context &amp; open session</small></div>
+          <div class="diag-box ai-cmd">/snapshot V2<small>copy main.tex &rarr; V2</small></div>
+          <div class="diag-box ai-cmd">/close<small>log session &amp; wrap up</small></div>
+          <div class="diag-box ai-dim">/family + /add-memory<small>ingest feeder digests</small></div>
+          <div class="diag-box ai-dim">auto-commit hook<small>git commit per response</small></div>
+        </div>
+      </div>
+
+      <div class="diag-connector">
+        <div class="diag-conn-side">
+          <div class="diag-conn-line"></div><div class="diag-conn-arrow">&#8597;</div><div class="diag-conn-line"></div>
+        </div>
+        <div class="diag-files-wrap">
+          <div class="diag-files-label">shared files</div>
+          <div class="diag-files">
+            <span class="diag-file">_ai_log.md</span>
+            <span class="diag-file">_handover.html</span>
+            <span class="diag-file">Overleaf_source/</span>
+            <span class="diag-file">code/ (git)</span>
+            <span class="diag-file">_feeders/ &larr; digests land here</span>
+          </div>
+        </div>
+        <div class="diag-conn-side">
+          <div class="diag-conn-line"></div><div class="diag-conn-arrow">&#8597;</div><div class="diag-conn-line"></div>
+        </div>
+      </div>
+
+      <div class="diag-layer file-side">
+        <div class="diag-layer-title">&#9670; File Infrastructure &mdash; PowerShell / helpi</div>
+        <div class="diag-items">
+          <div class="diag-box fi-cmd">sync_all<small>pull Overleaf (auto 4h)</small></div>
+          <div class="diag-box fi-cmd">push_to_overleaf<small>push edits back</small></div>
+          <div class="diag-box fi-cmd">compile_latex<small>build PDF</small></div>
+          <div class="diag-box fi-cmd">generate_handover<small>build _handover.html</small></div>
+          <div class="diag-box fi-dim">rollback / status<small>git &amp; project health</small></div>
+        </div>
+      </div>
+    </div><!-- /center -->
+
+    <!-- ── Arrow right → center ── -->
+    <div class="diag-rag-arrow">
+      <div class="diag-arrow-shaft">
+        <div class="diag-arrow-tip">&#9668;</div>
+        <div class="diag-arrow-line-h"></div>
+      </div>
+      <div class="diag-arrow-lbl">digest<br>/ delta</div>
+    </div>
+
+    <!-- ── Feeder right ── -->
+    <div class="diag-rag-col feeder">
+      <div class="diag-rag-label">Feeder: Pub_YYY2</div>
+      <div class="diag-mini">
+        <div class="diag-mini-ai">AI Layer<small>/work · /snapshot · /close · /family</small></div>
+        <div class="diag-mini-files">_ai_log.md · _handover.html<br>Overleaf_source/ · code/ · _feeders/</div>
+        <div class="diag-mini-file">File Layer<small>sync · push · compile · handover</small></div>
+      </div>
+      <div class="diag-rag-sublabel">complete two-layer infrastructure<br>(may itself have feeders)</div>
+    </div>
+
+  </div><!-- /diag-rag -->
+
+  <div class="diag-many-note">
+    Each feeder is a full instance of the same two-layer infrastructure and may itself have feeders &mdash;
+    forming a many-to-many knowledge graph, not a simple hierarchy.
+  </div>
+
+  </div><!-- /infra-diagram -->
+
+  <h3>Project folder structure</h3>
+  <p>Each paper lives under <code>JR\Publikationer\Pub_&lt;Name&gt;\</code>:</p>
+  <ul>
+    <li><code>Overleaf_source/</code> &mdash; LaTeX manuscript, git-cloned from Overleaf</li>
+    <li><code>code/</code> &mdash; Python research code, git-tracked locally</li>
+    <li><code>code/data/</code> &mdash; Raw and processed data</li>
+    <li><code>Literature/</code> &mdash; PDFs and references</li>
+    <li><code>_ai_log.md</code> &mdash; AI session log (read and written by both layers)</li>
+    <li><code>_handover.html</code> &mdash; Generated handover document for agent hand-off</li>
+  </ul>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- PART 1                                                          -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="part-divider file">
+  <div class="part-line"></div>
+  <div class="part-label">Part 1 &mdash; File Infrastructure (PowerShell / helpi)</div>
+  <div class="part-line"></div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- OVERLEAF PULL                                                   -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="section green">
+  <h2>1 &mdash; Overleaf Pull Sync <span class="tag auto">AUTO every 4h</span></h2>
+  <p>
+    Every Overleaf project is cloned as a standard git repository into its
+    <code>Overleaf_source/</code> folder. A Windows Task Scheduler job runs
+    <code>sync_all.ps1</code> every 4 hours to pull updates from all registered projects.
+  </p>
+  <h3>How it works</h3>
+  <ul>
+    <li>Checks the remote HEAD SHA via <code>git ls-remote</code> &mdash; skips the pull entirely if nothing changed on Overleaf</li>
+    <li>Pulls all ~90 repos <strong>in parallel</strong> (20 threads) &mdash; total time ~30&ndash;60 s</li>
+    <li>Auto-commits any local uncommitted changes with an <code>Auto-backup HH:MM</code> message</li>
+    <li>Logs every result to <code>AI_auto\logs\sync_YYYY-MM-DD.log</code></li>
+  </ul>
+  <h3>Registry</h3>
+  <p>All registered projects are listed in <code>AI_auto\projects.json</code>. New projects added to
+  <code>papers.csv</code> are cloned and registered automatically on the next sync run.</p>
+  <h3>Manual trigger</h3>
+  <pre>powershell -File "C:\...\AI_auto\sync_all.ps1"</pre>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- OVERLEAF PUSH                                                   -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="section green">
+  <h2>2 &mdash; Push Local Edits to Overleaf <span class="tag manual">MANUAL</span></h2>
+  <p>
+    When you edit <code>Overleaf_source/</code> files locally (e.g. after a Claude session),
+    push them back to Overleaf with:
+  </p>
+  <pre>.\AI_auto\push_to_overleaf.ps1 -Project Pub_AssesTiming_Raoul_TBA</pre>
+  <p>The script stages all changes, shows a summary of what will be pushed, commits with a
+  timestamped message, then <strong>pulls before pushing</strong>:</p>
+  <ol style="padding-left:1.4em; margin-bottom:10px;">
+    <li>Fetches the remote to check for new commits (e.g. from a co-author on Overleaf)</li>
+    <li>If the remote is ahead, rebases your local commits on top of theirs — so your changes
+    land after theirs in history, cleanly</li>
+    <li>Pushes to <code>origin</code> (Overleaf's git endpoint). Overleaf picks up the changes immediately.</li>
+  </ol>
+  <p><strong>If the same lines were edited by both sides</strong>, the rebase stops and places
+  conflict markers in the affected <code>.tex</code> file:</p>
+  <pre>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD
+your version of the sentence
+=======
+co-author's version of the sentence
+&gt;&gt;&gt;&gt;&gt;&gt;&gt; origin/master</pre>
+  <p>Edit the file to keep the right version, remove the markers, then run:</p>
+  <pre>git -C "...\Pub_XXX\Overleaf_source" rebase --continue</pre>
+  <p>and push again. This is the only scenario that requires manual intervention — it means
+  you and a co-author edited the exact same lines at the same time.</p>
+  <div class="note">
+    <strong>Note:</strong> You can also run this from inside any <code>Overleaf_source/</code>
+    folder without the <code>-Project</code> argument.
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- AI LOGGING                                                      -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="section gold">
+  <h2>3 &mdash; AI Session Logging &amp; Handover</h2>
+
+  <h3>Session log &mdash; <code>_ai_log.md</code></h3>
+  <p>
+    Each project root contains <code>_ai_log.md</code> &mdash; the living record of all AI
+    sessions. Claude writes a new <code>## Session YYYY-MM-DD</code> block at the start and end
+    of every working session via the <code>/work</code> and <code>/close</code> commands.
+    Any agent (Claude, GPT, etc.) can read and update this file.
+  </p>
+  <pre>## Session 2026-04-04
+**Agent:** Claude Sonnet 4.6
+**Goal:** Refactor surrogate model in code/surrogate.py
+**Files touched:**
+- `code/surrogate.py` -- replaced polynomial fit with Gaussian process
+**Outcome:** GP surrogate implemented, RMSE reduced from 0.12 to 0.04
+**Next steps:** Run full PMIP sweep with new surrogate
+**Git ref:** a3f9c12</pre>
+
+  <h3>Auto-commit hook <span class="tag auto">AUTO</span></h3>
+  <p>
+    A Claude Code <em>Stop hook</em> runs <code>auto_commit_hook.ps1</code> after every Claude
+    response. It walks up from the current directory, finds the nearest git repo, and commits
+    any file changes with <code>claude: auto-commit HH:MM</code>. This gives rollback
+    granularity at the turn level.
+  </p>
+
+  <h3>Handover document <span class="tag manual">MANUAL</span></h3>
+  <p>Run this to generate <code>_handover.html</code> in the project root:</p>
+  <pre>.\AI_auto\generate_handover.ps1 -Project Pub_AssesTiming_Raoul_TBA</pre>
+  <p>The HTML contains:</p>
+  <ul>
+    <li>Instructions for any AI agent on how to add a session entry</li>
+    <li>The rendered session log</li>
+    <li>A copyable textarea with the raw <code>_ai_log.md</code> &mdash; paste to GPT, get updated markdown back, paste into <code>_ai_log.md</code>, regenerate HTML</li>
+    <li>Git history for both <code>code/</code> and <code>Overleaf_source/</code></li>
+  </ul>
+
+  <h3>One-time project setup <span class="tag once">ONCE</span></h3>
+  <pre>.\AI_auto\init_project_git.ps1 -Project Pub_AssesTiming_Raoul_TBA</pre>
+  <p>Initialises a git repo in <code>code/</code>, adds a Python <code>.gitignore</code>, makes the first commit, and creates a blank <code>_ai_log.md</code>.</p>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- LOCAL LATEX                                                     -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="section purple">
+  <h2>4 &mdash; Local LaTeX Compilation (MiKTeX + VS Code)</h2>
+
+  <h3>Installation</h3>
+  <ul>
+    <li><strong>MiKTeX 25.12</strong> &mdash; installed at <code>AppData\Local\Programs\MiKTeX\</code></li>
+    <li><strong>VS Code 1.114</strong> with <strong>LaTeX Workshop</strong> extension (James Yu)</li>
+    <li>MiKTeX set to <strong>auto-install missing packages</strong> silently on first use</li>
+  </ul>
+
+  <h3>VS Code workflow (recommended)</h3>
+  <ol style="padding-left:1.4em; margin-bottom:10px;">
+    <li>Open <code>Overleaf_source/</code> in VS Code: <code>code "...\Pub_XXX\Overleaf_source"</code></li>
+    <li>Open the main <code>.tex</code> file</li>
+    <li>It compiles <strong>automatically on every save</strong> &mdash; PDF appears in a side tab</li>
+    <li><strong>Ctrl+Alt+J</strong> &mdash; jump from source to PDF location (forward search)</li>
+    <li>Click in the PDF &mdash; jumps to the matching source line (inverse search)</li>
+  </ol>
+  <p>Build artefacts go into <code>Overleaf_source/out/</code> and are cleaned after each successful build.</p>
+
+  <h3>CLI compile</h3>
+  <pre>.\AI_auto\compile_latex.ps1 -Project Pub_AssesTiming_Raoul_TBA</pre>
+  <p>Auto-detects <code>main.tex</code>, compiles with <code>latexmk</code> (handles bibliography passes), and opens the PDF in your default viewer.</p>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- HELPI / COMMAND REFERENCE                                       -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="section teal">
+  <h2>5 &mdash; Quick Command Reference (<code>helpi</code>)</h2>
+
+  <h3>Calling conventions</h3>
+  <pre>helpi                              # show all commands (project auto-detected from CWD)
+helpi 3                            # run command 3 (uses detected project, or prompts)
+helpi 3 Pub_AssesTiming_Raoul_TBA  # run command 3 for a specific project
+helpi compi                        # partial name match &rarr; resolves to command 3
+helpi 3 Pub_X main.tex             # run command 3 with a specific .tex file</pre>
+
+  <h3>Context awareness &mdash; CWD project detection</h3>
+  <p>
+    <code>helpi</code> automatically detects which project you are in by reading your current
+    working directory. If any folder segment in your path matches a known project name
+    (e.g. <code>Pub_</code>, <code>Pro_</code>, <code>PhD_</code> prefixes), that project is
+    pre-filled into every example command in the list &mdash; no need to type it.
+    Works from any subfolder (<code>code/</code>, <code>Overleaf_source/</code>, etc.).
+  </p>
+
+  <h3>Partial name matching</h3>
+  <p>
+    You can type a fragment of any command name instead of a number.
+    <code>helpi compi</code> matches <em>Compile LaTeX + open PDF</em> (the only command starting with
+    &ldquo;compi&rdquo;) and runs it directly. If your fragment matches more than one command,
+    helpi lists the candidates so you can pick by number.
+  </p>
+
+  <h3>Preview &amp; confirm before every run</h3>
+  <p>
+    Every <code>helpi &lt;N&gt;</code> invocation shows the exact underlying script line before
+    executing, e.g.:
+  </p>
+  <pre>  [3] Compile LaTeX + open PDF  ->  Pub_AssesTiming_Raoul_TBA
+  compile_latex.ps1 -Project Pub_AssesTiming_Raoul_TBA
+
+  [Enter] run  |  [any other key] cancel  (press Up to edit at prompt)</pre>
+  <ul>
+    <li><strong>Enter</strong> &mdash; runs the command as shown.</li>
+    <li><strong>Any other key</strong> &mdash; cancels. The command is pre-loaded into shell history: press <kbd>&uarr;</kbd> at the next prompt to retrieve it, edit freely, then press Enter.</li>
+  </ul>
+
+  <h3>Tab completion</h3>
+  <p>Registered in PowerShell profile:</p>
+  <ul>
+    <li><code>helpi compi&lt;Tab&gt;</code> &mdash; completes to <code>helpi 3</code>; dropdown shows <code>[3] Compile LaTeX + open PDF</code>; tooltip shows the actual script line with the detected project filled in.</li>
+    <li><code>helpi 3 &lt;Tab&gt;</code> &mdash; completes the project name from <code>projects.json</code>.</li>
+    <li><code>helpi 3 Pub_X &lt;Tab&gt;</code> &mdash; lists <code>.tex</code> files in <code>Overleaf_source/</code>, sorted most-recently-modified first; tooltip shows last-modified timestamp.</li>
+    <li>Same <code>-TexFile</code> completion is also available directly on <code>compile_latex</code>.</li>
+  </ul>
+
+  <table class="cmd-table">
+    <tr><th>#</th><th>What it does</th><th>Command</th><th>Type</th></tr>
+    <tr><td>1</td><td>Pull all projects from Overleaf</td><td><code>sync_all.ps1</code></td><td><span class="tag auto">auto 4h</span></td></tr>
+    <tr><td>2</td><td>Push local edits to Overleaf</td><td><code>push_to_overleaf.ps1 -Project Pub_XXX</code></td><td><span class="tag manual">manual</span></td></tr>
+    <tr><td>3</td><td>Compile LaTeX &amp; open PDF</td><td><code>compile_latex.ps1 -Project Pub_XXX</code> &mdash; graphical .tex picker if multiple files</td><td><span class="tag manual">manual</span></td></tr>
+    <tr><td>4</td><td>Open project in VS Code</td><td><code>code "...\Pub_XXX\Overleaf_source"</code></td><td><span class="tag manual">manual</span></td></tr>
+    <tr><td>5</td><td>Generate handover HTML</td><td><code>generate_handover.ps1 -Project Pub_XXX</code></td><td><span class="tag manual">manual</span></td></tr>
+    <tr><td>6</td><td>Open handover in browser</td><td><code>Start-Process "...\Pub_XXX\_handover.html"</code></td><td><span class="tag manual">manual</span></td></tr>
+    <tr><td>7</td><td>Init code/ git repo (one-time)</td><td><code>init_project_git.ps1 -Project Pub_XXX</code></td><td><span class="tag once">once</span></td></tr>
+    <tr><td>8</td><td>Open infrastructure guide</td><td><code>Start-Process "AI_auto\infrastructure.html"</code></td><td><span class="tag manual">manual</span></td></tr>
+    <tr><td>9</td><td>Create new project</td><td><code>new_project.ps1 -Project Pub_XXX [-GitUrl url]</code> &mdash; scaffolds folders, inits git, creates <code>_ai_log.md</code> and <code>data/</code></td><td><span class="tag once">once</span></td></tr>
+    <tr><td>10</td><td>Pull one project from Overleaf</td><td><code>sync_one.ps1 -Project Pub_XXX</code> &mdash; instant pull without waiting for 4h scheduler</td><td><span class="tag manual">manual</span></td></tr>
+    <tr><td>11</td><td>Project status dashboard</td><td><code>status.ps1</code> &mdash; shows active projects, uncommitted changes, Overleaf sync state</td><td><span class="tag manual">manual</span></td></tr>
+    <tr><td>12</td><td>Open project (all-in-one)</td><td><code>open_project.ps1 -Project Pub_XXX</code> &mdash; VS Code + Explorer + PDF + graphical .tex picker</td><td><span class="tag manual">manual</span></td></tr>
+    <tr><td>13</td><td>Rollback code commits</td><td><code>rollback.ps1 -Project Pub_XXX -N 1</code> &mdash; previews changes before reverting</td><td><span class="tag manual">manual</span></td></tr>
+    <tr><td>14</td><td>Snapshot Overleaf source</td><td><code>snapshot.ps1 -Project Pub_XXX [-Tag V2]</code> &mdash; git-tags full Overleaf_source/ (.tex, .bib, figures); auto-increments version if Tag omitted</td><td><span class="tag manual">manual</span></td></tr>
+    <tr><td>15</td><td>Open project network graph</td><td><code>network.ps1</code> &mdash; generates and opens interactive HTML graph of all projects and feeder links</td><td><span class="tag manual">manual</span></td></tr>
+  </table>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- PART 2                                                          -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="part-divider ai">
+  <div class="part-line"></div>
+  <div class="part-label">Part 2 &mdash; AI Infrastructure (Claude Code commands)</div>
+  <div class="part-line"></div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- CLAUDE CODE COMMANDS                                            -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="section indigo">
+  <h2>6 &mdash; Claude Code Commands</h2>
+  <p>
+    These are slash commands registered in <code>~\.claude\commands\</code> and are available
+    in any Claude Code session. They handle the three pivotal moments of an AI working session:
+    opening, checkpointing, and closing.
+  </p>
+  <p>
+    Global behaviour is set in <code>~\.claude\CLAUDE.md</code>: if you paste a bare project
+    path into the Claude prompt with no other instruction, Claude automatically treats it as
+    <code>/work &lt;path&gt;</code>.
+  </p>
+
+  <h3>/work &mdash; open a project session <span class="tag ai">AI</span></h3>
+  <p>Reads <code>_ai_log.md</code> and <code>_handover.html</code>, summarises the last session
+  and any open next-steps, checks git status of <code>code/</code>, then asks for today's goal
+  before writing anything to the log.</p>
+  <pre>/work Pub_AssesTiming_Raoul_TBA
+
+# or paste the full path — both are equivalent:
+C:\Users\rich\OneDrive - Danmarks Tekniske Universitet\JR\Publikationer\Pub_AssesTiming_Raoul_TBA</pre>
+
+  <h3>/snapshot &mdash; version the full manuscript <span class="tag ai">AI</span></h3>
+  <p>
+    Creates an annotated <strong>git tag</strong> on <code>Overleaf_source/</code>, capturing the complete
+    state: all <code>.tex</code> files, <code>.bib</code> bibliography, figures, style files, and
+    subdirectories. Auto-increments the version number if omitted. Calls <code>snapshot.ps1</code>
+    under the hood (also available as <code>helpi 14</code>).
+  </p>
+  <pre>/snapshot V2
+/snapshot                          # auto-detects next version
+/snapshot V2 before-reviewer-cuts  # tag: snapshot-v2-before-reviewer-cuts</pre>
+  <p>Useful git commands after snapshotting:</p>
+  <pre>git tag -l "snapshot-*"                      # list all snapshots
+git diff snapshot-v2 HEAD                    # what changed since V2
+git checkout snapshot-v2 -- main.tex         # restore one file
+git checkout snapshot-v2                     # restore everything</pre>
+
+  <h3>/close &mdash; end a session <span class="tag ai">AI</span></h3>
+  <p>
+    Appends the closing block to <code>_ai_log.md</code> (files touched, outcome, next steps,
+    git ref), then reminds you of the two follow-up steps:
+  </p>
+  <pre>/close</pre>
+  <ul>
+    <li>After <code>/close</code>: push to Overleaf with <code>helpi 2 Pub_XXX</code></li>
+    <li>Regenerate handover with <code>helpi 5 Pub_XXX</code> before handing off to GPT</li>
+  </ul>
+
+  <table class="cmd-table" style="margin-top:18px;">
+    <tr><th>Command</th><th>Argument</th><th>What it does</th></tr>
+    <tr>
+      <td><code>/work</code></td>
+      <td>project name or full path (optional if CWD is inside a project)</td>
+      <td>Load context from log + handover, summarise, ask for goal, write session-start block</td>
+    </tr>
+    <tr>
+      <td><code>/snapshot</code></td>
+      <td><code>V2</code> or empty (auto) or <code>V2 label</code></td>
+      <td>Git-tag full Overleaf_source/ as a named frozen checkpoint</td>
+    </tr>
+    <tr>
+      <td><code>/close</code></td>
+      <td>&mdash;</td>
+      <td>Complete session block in _ai_log.md with files, outcome, next steps, git ref</td>
+    </tr>
+    <tr>
+      <td><code>/respond</code></td>
+      <td><code>R1</code> or <code>R1 --draft response_R1.tex</code></td>
+      <td>Autonomous reviewer response loop — see Section 6b below</td>
+    </tr>
+    <tr>
+      <td><code>/submit</code></td>
+      <td>empty (first submission) or <code>R1</code>, <code>R2</code></td>
+      <td>Generate complete submission package — see Section 6c below</td>
+    </tr>
+  </table>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- RESPOND COMMAND                                                 -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="section indigo">
+  <h2>6b &mdash; /respond &mdash; Autonomous reviewer response loop <span class="tag ai">AI</span></h2>
+  <p>
+    Runs fully autonomously — launch before sleeping, wake up to a finished response letter.
+    Handles comment parsing, manuscript edits, cross-reviewer clustering, and tone management
+    without interruption. Flags only genuine conflicts and unresolvable comments for your attention.
+  </p>
+
+  <h3>File conventions (all in <code>Overleaf_source/</code>)</h3>
+  <table class="cmd-table">
+    <tr><th>File</th><th>Role</th></tr>
+    <tr><td><code>reviewers_R[n].txt</code></td><td>All reviewer comments — paste the full text as received (one file, all reviewers)</td></tr>
+    <tr><td><code>response_R[n].tex</code></td><td>Response letter — generated by Claude, or your partial draft in continue mode</td></tr>
+    <tr><td><code>review_log_R[n].md</code></td><td>Tracking table — every comment, status, and manuscript change</td></tr>
+    <tr><td><code>main.tex</code></td><td>Working manuscript — Claude edits this directly</td></tr>
+    <tr><td><code>snapshot-pre-R[n]</code></td><td>Git tag taken automatically before the loop starts — full recovery point</td></tr>
+  </table>
+
+  <h3>Usage</h3>
+  <pre>/respond R1                              # clean start, round 1
+/respond R1 --draft response_R1.tex     # continue from a partial draft
+/respond R2                              # round 2 — reads reviewers_R2.txt</pre>
+
+  <h3>What the loop does</h3>
+  <ol style="padding-left:1.4em; margin-bottom:10px;">
+    <li><strong>Setup:</strong> pulls from Overleaf, takes snapshot <code>snapshot-pre-R[n]</code>, reads inputs</li>
+    <li><strong>Parse:</strong> numbers all comments R1.1, R1.2, R2.1 &hellip; identifies cross-cutting comments</li>
+    <li><strong>Pass 1:</strong> addresses all Reviewer 1 comments — edits manuscript, drafts responses using title-based references</li>
+    <li><strong>Pass 2:</strong> addresses Reviewer 2+ — cross-references R1 responses, flags reviewer conflicts</li>
+    <li><strong>Pass 3:</strong> integration pass — unified cross-cutting responses, tone consistency, accuracy check</li>
+    <li><strong>Self-check:</strong> evaluates whether another pass is needed; continues to Pass 4&ndash;5 if so (cap: 5 total)</li>
+    <li><strong>Structure freeze:</strong> parses final <code>main.tex</code> section structure, resolves all title references to &ldquo;Section 3.2 (Model Calibration)&rdquo; format</li>
+    <li><strong>Diff:</strong> runs <code>latexdiff</code> against <code>snapshot-pre-R[n]</code> to generate <code>manus_R[n]_diff.tex</code></li>
+    <li><strong>Output:</strong> writes <code>response_R[n].tex</code>, <code>manus_R[n]_diff.tex</code>, <code>review_log_R[n].md</code>, logs to <code>_ai_log.md</code></li>
+  </ol>
+
+  <h3>Referencing convention</h3>
+  <p>
+    Throughout all passes, manuscript locations are referenced by <strong>title only</strong> &mdash;
+    never by section number or line number. Section numbers shift every time a subsection is added,
+    removed, or merged. Numbers are resolved in a single final pass after all edits are complete
+    and the structure is frozen. Final references read: <em>&ldquo;Section 3.2 (Model Calibration)&rdquo;</em>
+    &mdash; both number and title, so the reviewer can find the location even if their compiled
+    version differs slightly.
+  </p>
+
+  <h3>Tone policy</h3>
+  <ul>
+    <li>Always polite — even when pushing back</li>
+    <li>Acknowledge when the reviewer is right, sincerely</li>
+    <li>Push back with <em>"we respectfully disagree"</em> + a clear scientific argument when warranted</li>
+    <li>Never dismissive; never sycophantic</li>
+  </ul>
+
+  <h3>Unresolved comments</h3>
+  <p>
+    Comments that cannot be addressed through editing (go deeper than the current revision allows)
+    are marked <strong>Fully unresolved</strong> or <strong>Partly unresolved</strong> and collected
+    in a dedicated section at the end of <code>response_R[n].tex</code> — rendered in red for
+    immediate visibility. These are flagged in the final report for your decision.
+  </p>
+
+  <h3>Overnight workflow</h3>
+  <pre># Before sleeping:
+helpi 10 Pub_XXX          # pull latest (also done automatically inside /respond)
+claude --full-auto        # launch Claude Code without approval pauses
+/respond R1               # kick off the loop — leave terminal open</pre>
+  <div class="note">
+    <strong>Trust:</strong> <code>C:\Users\rich\OneDrive - Danmarks Tekniske Universitet\JR</code>
+    is already marked trusted in <code>~\.claude\</code> config. No extra permission setup needed.
+    The blast radius is low — only LaTeX files in <code>Overleaf_source/</code> are touched,
+    and the pre-revision snapshot is always available for rollback.
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- CROSS-PROJECT MEMORY                                            -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="section rose">
+  <h2>7 &mdash; Cross-Project Memory &mdash; Feeder Projects</h2>
+  <p>
+    When a project builds on knowledge from earlier work, you can link those projects as
+    <strong>feeders</strong>. Claude reads them once, distils a compact digest (~300&ndash;500 tokens),
+    and stores it locally. From then on, <code>/work</code> checks for new sessions in each feeder
+    and only reads the delta &mdash; keeping the ongoing token cost very low.
+  </p>
+
+  <h3>Folder structure</h3>
+  <p>Feeder digests live inside the current project root:</p>
+  <pre>Pub_XXX/
+  _feeders/
+    Pub_YYY1_digest.md    # compact summary of YYY1, generated by Claude
+    Pub_YYY2_digest.md    # compact summary of YYY2
+    notes.md              # free-text notes added via /add-memory
+  _feeders.json           # registry: which feeders, last-synced date &amp; git ref</pre>
+
+  <h3>/family &mdash; register feeder projects <span class="tag ai">AI</span> <span class="tag once">once per link</span></h3>
+  <p>Run once when you want to connect another project. Claude reads the feeder's handover,
+  session log, and LaTeX abstract, then writes a structured digest.</p>
+  <pre>/family Pub_YYY1 Pub_YYY2</pre>
+  <p>Token cost: ~2&ndash;4k per feeder on first run. After that, only deltas are read.</p>
+
+  <h3>/work (updated) &mdash; feeder auto-update on every session open <span class="tag auto">AUTO</span></h3>
+  <p>
+    When <code>/work</code> opens a project, it reads <code>_feeders.json</code> and checks each
+    feeder's <code>_ai_log.md</code> for new session entries since the last sync. Updates happen
+    automatically — no prompting.
+  </p>
+  <ul>
+    <li><strong>No new sessions:</strong> silent — costs ~200 tokens per feeder.</li>
+    <li><strong>New sessions found:</strong> automatically reads only the new blocks, appends a delta to the digest, updates <code>_feeders.json</code>. Reports what changed.</li>
+  </ul>
+  <p>This means a collaborator's work on a feeder project is picked up the next time you open the dependent project — with no manual action required.</p>
+
+  <h3>/add-memory &mdash; lightweight surgical memory <span class="tag ai">AI</span></h3>
+  <p>
+    For adding a specific file, code snippet, or free-text note without digesting a whole project.
+  </p>
+  <pre>/add-memory C:\...\Pub_YYY1\code\model.py "GP surrogate architecture"
+/add-memory Pub_YYY1              # adds _ai_log.md only + registers for monitoring
+/add-memory "YYY1 uses a 3-layer GP surrogate trained on PMIP ensemble data"</pre>
+
+  <h3>Design rationale &mdash; why not a full vector RAG?</h3>
+  <p>
+    A vector RAG (embeddings + semantic retrieval) was considered and deliberately rejected.
+    The digest approach is a better fit here because:
+  </p>
+  <ul>
+    <li>You know precisely how projects relate &mdash; semantic search adds no value over a directed query</li>
+    <li>Queries like <em>"go study this section of YYY1 and see if it applies here"</em> are more precise than anything retrieval would surface</li>
+    <li>A full RAG requires an embedding pipeline, vector DB, chunking strategy, and staleness management &mdash; significant overhead for a benefit that is not needed</li>
+    <li><code>/add-memory</code> covers the surgical case when you want to pull in something specific without a full digest</li>
+  </ul>
+  <p>The summary-based model is intentionally simpler, cheaper, and sufficient.</p>
+
+  <h3>Token cost summary</h3>
+  <table class="cmd-table">
+    <tr><th>Operation</th><th>When</th><th>Approx. tokens</th></tr>
+    <tr><td><code>/family</code> (initial digest)</td><td>Once per feeder link</td><td>~2&ndash;4k per feeder</td></tr>
+    <tr><td><code>/work</code> feeder check (no changes)</td><td>Every session open</td><td>~200 per feeder</td></tr>
+    <tr><td><code>/work</code> feeder delta (new sessions)</td><td>When feeder has new work</td><td>~500&ndash;2k per feeder</td></tr>
+    <tr><td><code>/add-memory</code> (file)</td><td>Ad hoc</td><td>~500&ndash;1k</td></tr>
+  </table>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- TYPICAL WORKFLOW                                                 -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="section blue">
+  <h2>8 &mdash; Typical Working Session</h2>
+  <ol style="padding-left:1.4em;">
+    <li><strong>Open VS Code</strong> on the project (<code>helpi 4 Pub_XXX</code>) &mdash; LaTeX compiles on save automatically.</li>
+    <li><strong>Start Claude Code</strong> in the project folder. Type <code>/work Pub_XXX</code> (or paste the folder path). Claude reads the log, checks feeder digests for updates, summarises where you left off, and asks for today's goal.</li>
+    <li><strong>Link feeder projects</strong> (first time only): <code>/family Pub_YYY1</code> — Claude reads that project and stores a digest. Future sessions only check for deltas.</li>
+    <li><strong>Snapshot before risky edits</strong> (optional): <code>/snapshot V2</code> saves the current <code>main.tex</code> as a frozen copy before a major rewrite.</li>
+    <li><strong>Work</strong> &mdash; Claude edits code or LaTeX. Each response auto-commits to git (Stop hook).</li>
+    <li><strong>Compile &amp; preview</strong> as needed: save in VS Code, or <code>helpi 3 Pub_XXX</code> from the terminal.</li>
+    <li><strong>Close the session</strong>: type <code>/close</code>. Claude fills in the session block in <code>_ai_log.md</code>.</li>
+    <li><strong>Push to Overleaf</strong> (<code>helpi 2 Pub_XXX</code>).</li>
+    <li><strong>Hand off to GPT</strong>: run <code>helpi 5 Pub_XXX</code>, open the HTML (<code>helpi 6 Pub_XXX</code>), paste the markdown textarea into GPT. GPT adds its session block. Paste updated markdown back into <code>_ai_log.md</code>, rerun step 5.</li>
+  </ol>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- WORKED EXAMPLE                                                   -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="section example">
+  <h2>9 &mdash; Worked Example: <code>Pub_AssesTiming_Raoul_TBA</code></h2>
+
+  <div class="scenario-box">
+    <strong>Scenario.</strong> This paper studies the optimal timing of fleet electrification under
+    uncertainty, using a Portfolio Mixed-Integer Programme (PMIP) with a Gaussian-process surrogate.
+    It builds on two earlier projects: <code>Pub_PMIP_AOR</code> (the base PMIP fleet model) and
+    <code>Pub_MIPEntropy_MPC</code> (entropy-regularised flexibility quantification). Collaborator
+    Raoul also edits the LaTeX on Overleaf. Today's goal: run the full variance decomposition with
+    the new GP surrogate and update the paper figures.
+  </div>
+
+  <!-- ── Step 1 ─────────────────────────────────────────────────── -->
+  <div class="ex-step">
+    <div class="ex-step-hdr">
+      <span class="ex-num">1</span>
+      <span class="ex-title">Check overall project status</span>
+      <span class="ex-ref ps">helpi 11</span>
+    </div>
+    <p class="ex-why">Before opening anything, get a bird's-eye view — which projects have uncommitted changes or are behind Overleaf.</p>
+    <div class="term">
+<span class="tc">PS&gt; </span><span class="tk">helpi 11</span>
+<span class="to">
+  Project Status Dashboard  —  2026-04-04 09:12
+  ──────────────────────────────────────────────────────────────────
+  Pub_AssesTiming_Raoul_TBA   last session 2026-03-28   </span><span class="tw">2 uncommitted</span>
+<span class="to">  Pub_PMIP_AOR                last session 2026-03-15   </span><span class="tg">clean</span>
+<span class="to">  Pub_MIPEntropy_MPC          last session 2026-02-20   </span><span class="tg">clean</span>
+<span class="to">  Pub_PopInt_PartB            last session 2026-01-10   </span><span class="tg">clean</span>
+<span class="to">  ...  (83 further projects)
+  ──────────────────────────────────────────────────────────────────
+  4 projects with recent activity  |  2 with uncommitted changes</span>
+    </div>
+  </div>
+
+  <!-- ── Step 2 ─────────────────────────────────────────────────── -->
+  <div class="ex-step">
+    <div class="ex-step-hdr">
+      <span class="ex-num">2</span>
+      <span class="ex-title">Pull Overleaf changes</span>
+      <span class="ex-ref ps">helpi 10</span>
+    </div>
+    <p class="ex-why">Raoul may have edited the manuscript since the last session. Pull before touching anything locally.</p>
+    <div class="term">
+<span class="tc">PS&gt; </span><span class="tk">helpi 10 Pub_AssesTiming_Raoul_TBA</span>
+<span class="to">
+  [10] Pull one project from Overleaf  ->  Pub_AssesTiming_Raoul_TBA
+  sync_one.ps1 -Project Pub_AssesTiming_Raoul_TBA
+
+  [Enter] run  |  [any other key] cancel
+</span><span class="tb"></span>
+<span class="to">  Checking remote... changes found.
+  Pulling Pub_AssesTiming_Raoul_TBA... </span><span class="tg">done</span>
+<span class="to">  1 file changed: main.tex (Raoul edited Section 3)</span>
+    </div>
+  </div>
+
+  <!-- ── Step 3 ─────────────────────────────────────────────────── -->
+  <div class="ex-step">
+    <div class="ex-step-hdr">
+      <span class="ex-num">3</span>
+      <span class="ex-title">Open the project in Claude Code</span>
+      <span class="ex-ref">/work</span>
+    </div>
+    <p class="ex-why">Load context from the session log, check git status, and get a summary before starting work. Claude will ask for today's goal before writing anything to the log.</p>
+    <div class="term">
+<span class="tc">Claude&gt; </span><span class="tk">/work Pub_AssesTiming_Raoul_TBA</span>
+<span class="to">
+  Project : Pub_AssesTiming_Raoul_TBA
+  Root    : C:\...\Publikationer\Pub_AssesTiming_Raoul_TBA
+
+  Last session — 2026-03-28
+    Agent   : Claude Sonnet 4.6
+    Goal    : Implement GP surrogate for PMIP
+    Outcome : GP surrogate implemented; RMSE reduced from 0.12 to 0.04
+    Next    : Run full variance decomposition with new surrogate;
+              update figures in Section 4
+
+  Git status (code/):
+    </span><span class="tw">M  strategic_pmip_killer/surrogate.py</span>
+<span class="to">    </span><span class="tw">?? results/gp_sweep_results.csv</span>
+<span class="to">
+  No feeders registered yet.
+</span><span class="tb"></span>
+<span class="to">  What is the goal for today's session? </span>
+<span class="tc">You&gt; </span><span class="tk">Run full variance decomposition sweep and update figures in Section 4.</span>
+<span class="tg">
+  Session block opened in _ai_log.md.</span>
+    </div>
+  </div>
+
+  <!-- ── Step 4 ─────────────────────────────────────────────────── -->
+  <div class="ex-step">
+    <div class="ex-step-hdr">
+      <span class="ex-num">4</span>
+      <span class="ex-title">Link feeder projects <em style="font-weight:normal; font-size:0.85em;">(one-time setup)</em></span>
+      <span class="ex-ref">/family</span>
+    </div>
+    <p class="ex-why">This paper builds directly on the PMIP fleet model and the entropy-MIP flexibility work. Register them as feeders so their knowledge is available in every future session — and monitored for changes automatically.</p>
+    <div class="term">
+<span class="tc">Claude&gt; </span><span class="tk">/family Pub_PMIP_AOR Pub_MIPEntropy_MPC</span>
+<span class="to">
+  Reading Pub_PMIP_AOR...
+    </span><span class="tg">✓</span><span class="to"> _handover.html found
+    </span><span class="tg">✓</span><span class="to"> _ai_log.md  (8 sessions, last: 2026-03-15)
+    </span><span class="tg">✓</span><span class="to"> Overleaf_source/main.tex (abstract extracted)
+    → Digest written: _feeders/Pub_PMIP_AOR_digest.md
+
+  Reading Pub_MIPEntropy_MPC...
+    </span><span class="tg">✓</span><span class="to"> _ai_log.md  (5 sessions, last: 2026-02-20)
+    </span><span class="tw">✗</span><span class="to"> _handover.html not found — using log + abstract only
+    → Digest written: _feeders/Pub_MIPEntropy_MPC_digest.md
+
+  _feeders.json updated. 2 feeders registered.
+</span><span class="tb"></span>
+<span class="to">  Pub_PMIP_AOR        PMIP fleet model for EV adoption; stochastic scenario trees;
+                      key result: optimal switching threshold ~40% TCO parity.
+  Pub_MIPEntropy_MPC  Entropy-regularised MIP for flexibility; entropy term stabilises
+                      early-stage adoption curves under demand uncertainty.
+
+  /work will now auto-check these at the start of each session.</span>
+    </div>
+  </div>
+
+  <!-- ── Step 5 ─────────────────────────────────────────────────── -->
+  <div class="ex-step">
+    <div class="ex-step-hdr">
+      <span class="ex-num">5</span>
+      <span class="ex-title">Snapshot before risky edits</span>
+      <span class="ex-ref">/snapshot</span>
+      <span class="ex-ref ps">helpi 14</span>
+    </div>
+    <p class="ex-why">The variance decomposition refactor will touch <code>surrogate.py</code> heavily and regenerate all figures. Tag the current full manuscript state — including <code>.bib</code> and all figures — before anything changes.</p>
+    <div class="term">
+<span class="tc">Claude&gt; </span><span class="tk">/snapshot V1</span>
+<span class="to">
+  </span><span class="tg">Snapshot created</span>
+<span class="to">  Project  : Pub_AssesTiming_Raoul_TBA
+  Tag      : snapshot-v1
+  Commit   : 3fa19b2
+  Captured : 17 files (main.tex, refs.bib, 11 figures, sty, cls)
+
+  Diff vs now  : git -C "...\Overleaf_source" diff snapshot-v1 HEAD
+  Restore file : git -C "...\Overleaf_source" checkout snapshot-v1 -- main.tex</span>
+    </div>
+  </div>
+
+  <!-- ── Step 6 ─────────────────────────────────────────────────── -->
+  <div class="ex-step">
+    <div class="ex-step-hdr">
+      <span class="ex-num">6</span>
+      <span class="ex-title">Work — Claude edits code and LaTeX</span>
+    </div>
+    <p class="ex-why">Claude refactors <code>surrogate.py</code> to run the full variance decomposition sweep, regenerates <code>variance_decomposition_compare.png</code>, and updates the figure reference in Section&nbsp;4. Each Claude response is auto-committed to git by the Stop hook.</p>
+    <div class="term">
+<span class="tm">  [Claude edits strategic_pmip_killer/surrogate.py]</span>
+<span class="tm">  [Claude runs the sweep — results written to results/gp_sweep_results.csv]</span>
+<span class="tm">  [Claude regenerates pictures/variance_decomposition_compare.png]</span>
+<span class="tm">  [Claude updates Section 4 caption in main.tex]</span>
+<span class="tb"></span>
+<span class="to">  Auto-commit: claude: auto-commit 10:47   </span><span class="tg">✓  3 files</span>
+<span class="to">  Auto-commit: claude: auto-commit 11:02   </span><span class="tg">✓  2 files</span>
+    </div>
+  </div>
+
+  <!-- ── Step 7 ─────────────────────────────────────────────────── -->
+  <div class="ex-step">
+    <div class="ex-step-hdr">
+      <span class="ex-num">7</span>
+      <span class="ex-title">Compile LaTeX and check the PDF</span>
+      <span class="ex-ref ps">helpi 3</span>
+    </div>
+    <p class="ex-why">Verify that the updated figure and caption compile cleanly before pushing anything to Overleaf.</p>
+    <div class="term">
+<span class="tc">PS&gt; </span><span class="tk">helpi 3 Pub_AssesTiming_Raoul_TBA</span>
+<span class="to">
+  [3] Compile LaTeX + open PDF  ->  Pub_AssesTiming_Raoul_TBA
+  compile_latex.ps1 -Project Pub_AssesTiming_Raoul_TBA
+
+  [Enter] run  |  [any other key] cancel
+</span><span class="tb"></span>
+<span class="to">  Running latexmk (pdfLaTeX + BibTeX)...
+  This is pdfTeX, Version 3.141592653 (MiKTeX 25.12)
+  (./main.tex ... ./refs.bib ... 2 passes)
+  Output written on main.pdf (19 pages, 1.4 MB)
+  </span><span class="tg">Compilation successful.</span><span class="to"> Opening PDF...</span>
+    </div>
+  </div>
+
+  <!-- ── Step 8 ─────────────────────────────────────────────────── -->
+  <div class="ex-step">
+    <div class="ex-step-hdr">
+      <span class="ex-num">8</span>
+      <span class="ex-title">Close the session</span>
+      <span class="ex-ref">/close</span>
+    </div>
+    <p class="ex-why">Log what was done, which files were touched, and what needs to happen next. This is the permanent record — future sessions and other agents pick up from here.</p>
+    <div class="term">
+<span class="tc">Claude&gt; </span><span class="tk">/close</span>
+<span class="to">
+  Files touched (suggested — confirm or edit):
+    </span><span class="tg">✓</span><span class="to"> code/strategic_pmip_killer/surrogate.py
+    </span><span class="tg">✓</span><span class="to"> Overleaf_source/pictures/variance_decomposition_compare.png
+    </span><span class="tg">✓</span><span class="to"> Overleaf_source/main.tex  (Section 4 caption)
+  Any others? (Enter to skip)
+</span><span class="tb"></span>
+<span class="to">  One-sentence outcome:
+</span><span class="tc">You&gt; </span><span class="tk">Full variance decomposition sweep completed; figure updated in Section 4.</span>
+<span class="to">
+  Next steps:
+</span><span class="tc">You&gt; </span><span class="tk">Run robustness checks across epsilon values; draft discussion section.</span>
+<span class="to">
+  Git ref: a4c8d91
+  </span><span class="tg">Session block written to _ai_log.md.</span>
+<span class="tb"></span>
+<span class="to">  Next:  push to Overleaf  →  helpi 2 Pub_AssesTiming_Raoul_TBA
+         generate handover  →  helpi 5 Pub_AssesTiming_Raoul_TBA</span>
+    </div>
+  </div>
+
+  <!-- ── Step 9 ─────────────────────────────────────────────────── -->
+  <div class="ex-step">
+    <div class="ex-step-hdr">
+      <span class="ex-num">9</span>
+      <span class="ex-title">Push edits to Overleaf</span>
+      <span class="ex-ref ps">helpi 2</span>
+    </div>
+    <p class="ex-why">Send the updated figure and LaTeX back to Overleaf so Raoul can see the changes and compile on his end.</p>
+    <div class="term">
+<span class="tc">PS&gt; </span><span class="tk">helpi 2 Pub_AssesTiming_Raoul_TBA</span>
+<span class="to">
+  [2] Push local edits to Overleaf  ->  Pub_AssesTiming_Raoul_TBA
+  push_to_overleaf.ps1 -Project Pub_AssesTiming_Raoul_TBA
+
+  [Enter] run  |  [any other key] cancel
+</span><span class="tb"></span>
+<span class="to">  Staged changes:
+    M  main.tex
+    M  pictures/variance_decomposition_compare.png
+
+  Committing: "Local edit 2026-04-04 11:18"
+  Pushing to Overleaf...
+    To https://git.overleaf.com/...
+       3fa19b2..a4c8d91  master -> master
+  </span><span class="tg">Done. Overleaf will reflect changes within a few seconds.</span>
+    </div>
+  </div>
+
+  <!-- ── Step 10 ────────────────────────────────────────────────── -->
+  <div class="ex-step">
+    <div class="ex-step-hdr">
+      <span class="ex-num">10</span>
+      <span class="ex-title">Generate handover document</span>
+      <span class="ex-ref ps">helpi 5</span>
+    </div>
+    <p class="ex-why">Regenerate the handover HTML so it reflects today's session. Ready for a GPT hand-off or to brief a future Claude session.</p>
+    <div class="term">
+<span class="tc">PS&gt; </span><span class="tk">helpi 5 Pub_AssesTiming_Raoul_TBA</span>
+<span class="to">
+  [5] Generate handover document  ->  Pub_AssesTiming_Raoul_TBA
+  generate_handover.ps1 -Project Pub_AssesTiming_Raoul_TBA
+
+  [Enter] run  |  [any other key] cancel
+</span><span class="tb"></span>
+<span class="to">  Sessions found  : 9
+  Git log (code/) : 27 commits
+  Git log (LaTeX) : 12 commits
+  </span><span class="tg">Done: C:\...\Pub_AssesTiming_Raoul_TBA\_handover.html</span>
+    </div>
+  </div>
+
+  <!-- ── Step 11 ────────────────────────────────────────────────── -->
+  <div class="ex-step">
+    <div class="ex-step-hdr">
+      <span class="ex-num">11</span>
+      <span class="ex-title">View project network graph</span>
+      <span class="ex-ref ps">helpi 15</span>
+    </div>
+    <p class="ex-why">See the full knowledge graph — all projects, feeder links, and activity. Useful to spot stale connections or find related projects you may have forgotten about.</p>
+    <div class="term">
+<span class="tc">PS&gt; </span><span class="tk">helpi 15</span>
+<span class="to">
+  [15] Open project network graph
+  network.ps1
+
+  [Enter] run  |  [any other key] cancel
+</span><span class="tb"></span>
+<span class="to">  </span><span class="tg">Network graph generated</span>
+<span class="to">  Projects    : 87
+  Feeder links: 2
+  Output      : C:\...\AI_auto\network.html
+</span><span class="tm">  [browser opens — Pub_AssesTiming_Raoul_TBA shown as diamond node
+   with arrows from Pub_PMIP_AOR and Pub_MIPEntropy_MPC]</span>
+    </div>
+  </div>
+
+  <!-- ── Next session ───────────────────────────────────────────── -->
+  <hr>
+  <h3>Next session &mdash; feeder auto-update in action</h3>
+  <p>Two days later, Raoul has been working on <code>Pub_PMIP_AOR</code>. When you open
+  <code>Pub_AssesTiming_Raoul_TBA</code>, the feeder digest is updated automatically &mdash;
+  no manual action required.</p>
+  <div class="term">
+<span class="tc">Claude&gt; </span><span class="tk">/work Pub_AssesTiming_Raoul_TBA</span>
+<span class="to">
+  Project : Pub_AssesTiming_Raoul_TBA
+
+  Last session — 2026-04-04
+    Goal    : Run full variance decomposition sweep and update figures
+    Outcome : Full sweep completed; figure updated in Section 4
+    Next    : Robustness checks across epsilon values; draft discussion
+
+  Git status (code/): </span><span class="tg">clean</span>
+<span class="tb"></span>
+<span class="to">  Feeders:
+    Pub_PMIP_AOR       </span><span class="tw">2 new sessions since 2026-03-15 — updating digest...</span>
+<span class="to">      Session 2026-04-05: extended scenario tree to 5 stages; new results in Table 3
+      Session 2026-04-06: sensitivity analysis on discount rate; findings affect switching threshold
+      → _feeders/Pub_PMIP_AOR_digest.md updated.
+    Pub_MIPEntropy_MPC </span><span class="tg">up to date</span>
+<span class="tb"></span>
+<span class="to">  What is the goal for today's session? </span>
+  </div>
+  <p style="margin-top:10px; font-size:0.88em; color:#555;">
+    The new PMIP_AOR findings (extended scenario tree, revised switching threshold) are now part of
+    the project's working knowledge — available to Claude without re-reading the full feeder project.
+  </p>
+
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SUBMIT COMMAND                                                  -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="section indigo">
+  <h2>6c &mdash; /submit &mdash; Submission package generator <span class="tag ai">AI</span></h2>
+  <p>
+    Generates a complete, journal-ready submission package in a versioned subfolder inside
+    <code>Overleaf_source/</code>. Handles BibTeX integration, anonymous PDF, cover letter,
+    highlights, and author statements autonomously.
+  </p>
+
+  <h3>Versioned subfolders</h3>
+  <pre>Overleaf_source/
+  Original/          # /submit
+  Revision_R1/       # /submit R1
+  Revision_R2/       # /submit R2</pre>
+
+  <h3>Files generated in each subfolder</h3>
+  <table class="cmd-table">
+    <tr><th>File</th><th>Description</th><th>Action needed</th></tr>
+    <tr><td><code>manuscript.zip</code></td><td>Submission package — bbl integrated, no .bib, figures included</td><td>Upload to journal</td></tr>
+    <tr><td><code>anonymous_main.pdf</code></td><td>PDF for double-blind review — author info stripped</td><td>Review, submit as main PDF</td></tr>
+    <tr><td><code>frontpage.pdf</code></td><td>Title page with full author info and affiliations</td><td>Submit as title page</td></tr>
+    <tr><td><code>coverletter.tex</code> / <code>.pdf</code></td><td>Cover letter drafted by Claude from abstract</td><td>Fill in journal name, review</td></tr>
+    <tr><td><code>highlights.tex</code> / <code>.txt</code> / <code>.pdf</code></td><td>5 highlights ≤ 85 chars each, signed</td><td>Review for accuracy</td></tr>
+    <tr><td><code>author_statements.tex</code></td><td>CRediT contributions + competing interests + data availability</td><td>Confirm co-author roles, choose data statement</td></tr>
+  </table>
+
+  <h3>BibTeX integration</h3>
+  <p>
+    At submission time, the compiled <code>main.bbl</code> is inlined into <code>submission_main.tex</code>,
+    replacing <code>\bibliography{refs}</code>. The zip contains this self-contained file — no
+    <code>.bib</code> dependency for the journal's LaTeX system. Your <code>refs.bib</code> is
+    kept locally for continued development but not shipped.
+  </p>
+
+  <h3>Usage</h3>
+  <pre>/submit              # first submission → Original/
+/submit R1           # after revision round 1 → Revision_R1/
+/submit R2           # after revision round 2 → Revision_R2/</pre>
+
+  <h3>Placeholders to fill before submitting</h3>
+  <ul>
+    <li><code>coverletter.tex</code> — fill in <code>[Journal Name]</code></li>
+    <li><code>author_statements.tex</code> — confirm co-author CRediT contributions and choose the correct data availability statement</li>
+  </ul>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- PART 3                                                          -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="part-divider ai">
+  <div class="part-line"></div>
+  <div class="part-label">Part 3 &mdash; GPT Codex CLI (peer AI agent)</div>
+  <div class="part-line"></div>
+</div>
+
+<div class="section indigo">
+  <h2>10 &mdash; GPT Codex CLI Skills</h2>
+  <p>
+    GPT Codex CLI (<code>codex</code>, v0.118+, model gpt-5.4) runs as a terminal agent with full
+    filesystem access &mdash; a direct peer to Claude Code. It uses a <strong>skills</strong> system
+    (stored in <code>~\.codex\skills\</code>) that mirrors Claude Code's slash commands.
+    The file infrastructure (helpi, PowerShell scripts, <code>_ai_log.md</code>,
+    <code>_handover.html</code>) is shared identically between both agents.
+  </p>
+
+  <h3>Installed skills</h3>
+  <p>Skills live in <code>~\.codex\skills\</code>. Verify they are loaded by typing <code>/skills</code> inside a Codex session.</p>
+
+  <table class="cmd-table">
+    <tr><th>Skill</th><th>Triggers on</th><th>What it does</th><th>Claude equivalent</th></tr>
+    <tr>
+      <td><code>research-work</code></td>
+      <td><code>/work Pub_XXX</code>, pasted project path, "open project"</td>
+      <td>Reads <code>_ai_log.md</code>, feeder digests, git status &mdash; asks for goal &mdash; writes session-start block</td>
+      <td><code>/work</code></td>
+    </tr>
+    <tr>
+      <td><code>research-close</code></td>
+      <td><code>/close</code>, "close session", "end session"</td>
+      <td>Writes close block to <code>_ai_log.md</code> (files, outcome, next steps, git ref) &mdash; reminds to push + handover</td>
+      <td><code>/close</code></td>
+    </tr>
+    <tr>
+      <td><code>research-snapshot</code></td>
+      <td><code>/snapshot V2</code>, "snapshot the manuscript", "save a version"</td>
+      <td>Runs <code>helpi 14</code> to create an annotated git tag on <code>Overleaf_source/</code></td>
+      <td><code>/snapshot</code></td>
+    </tr>
+    <tr>
+      <td><code>research-family</code></td>
+      <td><code>/family Pub_YYY</code>, "link feeder", "add feeder project"</td>
+      <td>Reads feeder's log, handover, and abstract &mdash; writes digest to <code>_feeders/</code> &mdash; updates <code>_feeders.json</code></td>
+      <td><code>/family</code></td>
+    </tr>
+  </table>
+
+  <h3>Shared session log format</h3>
+  <p>
+    Both Claude Code and Codex write identical <code>## Session YYYY-MM-DD</code> blocks to
+    <code>_ai_log.md</code>. Sessions from both agents interleave cleanly in the same file &mdash;
+    the agent name appears in the <strong>Agent:</strong> field (e.g. <em>Claude Sonnet 4.6</em>
+    vs <em>GPT-5.4</em>). Neither agent edits or deletes the other's entries.
+  </p>
+
+  <h3>Skill folder structure</h3>
+  <pre>~\.codex\skills\
+  research-work\
+    SKILL.md                        # trigger description + session-open steps
+    agents\openai.yaml              # UI metadata
+    references\session-log-format.md
+  research-close\
+    SKILL.md
+    agents\openai.yaml
+    references\session-log-format.md
+  research-snapshot\
+    SKILL.md
+    agents\openai.yaml</pre>
+
+  <h3>What Codex can and cannot do (vs Claude Code)</h3>
+  <table class="cmd-table">
+    <tr><th>Capability</th><th>Claude Code</th><th>GPT Codex CLI</th></tr>
+    <tr><td>Open/close session (<code>/work</code>, <code>/close</code>)</td><td>&#10003;</td><td>&#10003; via skills</td></tr>
+    <tr><td>Snapshot manuscript (<code>/snapshot</code>)</td><td>&#10003;</td><td>&#10003; via skill</td></tr>
+    <tr><td>Read <code>_ai_log.md</code> and feeders directly</td><td>&#10003;</td><td>&#10003; (filesystem access)</td></tr>
+    <tr><td>Run <code>helpi</code> commands</td><td>&#10003;</td><td>&#10003;</td></tr>
+    <tr><td>Feeder digest creation (<code>/family</code>)</td><td>&#10003;</td><td>&#10003; via <code>research-family</code> skill</td></tr>
+    <tr><td>Auto-commit after every response</td><td>&#10003; (Stop hook)</td><td>&#10007; no hook equivalent confirmed</td></tr>
+    <tr><td>Global instructions (CLAUDE.md equivalent)</td><td>&#10003; <code>~\.claude\CLAUDE.md</code></td><td>&#10003; <code>developer_instructions</code> in <code>~\.codex\config.toml</code></td></tr>
+  </table>
+
+  <div class="note">
+    <strong>Global instructions field:</strong> <code>developer_instructions</code> in <code>~\.codex\config.toml</code>.
+    This mirrors <code>~\.claude\CLAUDE.md</code> and is now configured with the same project conventions,
+    path detection, session discipline, and communication style.
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- ONE-PAGER — print with Ctrl+P                                   -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="one-pager">
+
+  <h1>Research Infrastructure — Desk Reference &nbsp;<span style="font-size:0.6em; color:#999; font-weight:normal;">print: Ctrl+P</span></h1>
+
+  <div class="op-grid">
+
+    <!-- LEFT: helpi (File layer) -->
+    <div class="op-col">
+      <h2>File Layer &mdash; <code>helpi</code> commands</h2>
+      <table>
+        <tr><td>helpi 1</td><td>Pull ALL projects from Overleaf <span class="op-tag auto">auto 4h</span></td></tr>
+        <tr><td>helpi 10 Pub_XXX</td><td>Pull one project now</td></tr>
+        <tr><td>helpi 2 Pub_XXX</td><td>Push local edits to Overleaf (pulls first, rebases)</td></tr>
+        <tr><td>helpi 3 Pub_XXX</td><td>Compile LaTeX &amp; open PDF</td></tr>
+        <tr><td>helpi 4 Pub_XXX</td><td>Open project in VS Code</td></tr>
+        <tr><td>helpi 12 Pub_XXX</td><td>Open project — VS Code + Explorer + PDF (all-in-one)</td></tr>
+        <tr><td>helpi 5 Pub_XXX</td><td>Generate handover HTML</td></tr>
+        <tr><td>helpi 6 Pub_XXX</td><td>Open handover in browser</td></tr>
+        <tr><td>helpi 11</td><td>Project status dashboard (all projects)</td></tr>
+        <tr><td>helpi 13 Pub_XXX -N 1</td><td>Rollback N commits (previews before reverting)</td></tr>
+        <tr><td>helpi 14 Pub_XXX</td><td>Snapshot full manuscript as git tag</td></tr>
+        <tr><td>helpi 15</td><td>Open project network graph</td></tr>
+        <tr><td>helpi 9 Pub_XXX</td><td>Create new project (folders, git, log)</td></tr>
+      </table>
+    </div>
+
+    <!-- RIGHT: Claude Code (AI layer) -->
+    <div class="op-col">
+      <h2>AI Layer &mdash; Claude Code commands <span class="op-tag ai">AI</span></h2>
+      <table>
+        <tr><td>/work Pub_XXX</td><td>Open session — reads log &amp; feeders, asks for goal</td></tr>
+        <tr><td>/snapshot V2</td><td>Version the full manuscript as a named git tag</td></tr>
+        <tr><td>/close</td><td>Log session outcome, files touched, next steps</td></tr>
+        <tr><td>/family Pub_YYY</td><td>Link feeder project — digests it once, monitors for deltas</td></tr>
+        <tr><td>/add-memory</td><td>Add a specific file or note to project memory</td></tr>
+        <tr><td>/respond R1</td><td>Autonomous reviewer response loop — runs overnight, wakes you with a finished letter</td></tr>
+        <tr><td>/submit</td><td>Generate full submission package — zip, anonymous PDF, cover letter, highlights, author statements</td></tr>
+      </table>
+
+      <h2 style="margin-top:14px;">GPT Codex CLI — equivalent skills</h2>
+      <table>
+        <tr><td>/work Pub_XXX</td><td>Open session (research-work skill)</td></tr>
+        <tr><td>/close</td><td>Close session (research-close skill)</td></tr>
+        <tr><td>/snapshot V2</td><td>Version manuscript (research-snapshot skill)</td></tr>
+      </table>
+      <p style="font-size:0.75em; color:#777; margin-top:6px;">
+        Skills live in <code>~\.codex\skills\</code>. Verify with <code>/skills</code> inside Codex.
+        Session log format is identical — both agents write to the same <code>_ai_log.md</code>.
+      </p>
+
+      <h2 style="margin-top:14px;">Versioning &amp; rollback</h2>
+      <table>
+        <tr><td>git tag -l "snapshot-*"</td><td>List all named snapshots</td></tr>
+        <tr><td>git diff snapshot-v2 HEAD</td><td>What changed since V2</td></tr>
+        <tr><td>git checkout snapshot-v2 -- main.tex</td><td>Restore one file from snapshot</td></tr>
+        <tr><td>git log --oneline</td><td>Full commit history (auto-commits every Claude turn)</td></tr>
+      </table>
+      <p style="font-size:0.75em; color:#777; margin-top:6px;">
+        All git commands run inside <code>Overleaf_source/</code> or <code>code/</code>.
+      </p>
+    </div>
+
+  </div>
+
+  <!-- Typical session flow -->
+  <h2 style="font-size:0.88em; font-weight:bold; letter-spacing:0.06em; text-transform:uppercase;
+             color:var(--blue); border-bottom:1px solid var(--border); padding-bottom:4px; margin-bottom:10px;">
+    Typical session flow
+  </h2>
+  <div class="op-flow">
+    <div class="op-step"><code>helpi 10</code><small>pull from Overleaf</small></div>
+    <span class="op-arr">&#8594;</span>
+    <div class="op-step"><code>/work Pub_XXX</code><small>open &amp; set goal</small></div>
+    <span class="op-arr">&#8594;</span>
+    <div class="op-step"><code>/snapshot</code><small>optional — before big edit</small></div>
+    <span class="op-arr">&#8594;</span>
+    <div class="op-step"><code style="color:#2a6b4a;">work with Claude</code><small>auto-commits every turn</small></div>
+    <span class="op-arr">&#8594;</span>
+    <div class="op-step"><code>helpi 3</code><small>compile &amp; check PDF</small></div>
+    <span class="op-arr">&#8594;</span>
+    <div class="op-step"><code>/close</code><small>log session</small></div>
+    <span class="op-arr">&#8594;</span>
+    <div class="op-step"><code>helpi 2</code><small>push to Overleaf</small></div>
+    <span class="op-arr">&#8594;</span>
+    <div class="op-step"><code>helpi 5</code><small>generate handover</small></div>
+  </div>
+
+  <!-- Key scenarios -->
+  <h2 style="font-size:0.88em; font-weight:bold; letter-spacing:0.06em; text-transform:uppercase;
+             color:var(--blue); border-bottom:1px solid var(--border); padding-bottom:4px;
+             margin-top:14px; margin-bottom:8px;">
+    Key scenarios
+  </h2>
+  <dl class="op-scenarios">
+    <dt>Co-author edited Overleaf while you were working locally</dt>
+    <dd><code>helpi 2</code> detects diverged history, rebases your changes on top, pushes cleanly. If same lines were edited, conflict markers appear in the .tex file — fix them, then push again.</dd>
+    <dt>Need to undo Claude's last few edits</dt>
+    <dd><code>helpi 13 Pub_XXX -N 2</code> — previews the rollback before committing. Every Claude turn is a separate auto-commit, so rollback is fine-grained.</dd>
+    <dt>About to rewrite a section — want a safety net</dt>
+    <dd><code>/snapshot V2</code> or <code>helpi 14 Pub_XXX</code> — git-tags the full manuscript. Restore one file: <code>git checkout snapshot-v2 -- main.tex</code></dd>
+    <dt>Using knowledge from another project</dt>
+    <dd><code>/family Pub_YYY</code> once — Claude digests it and monitors for new sessions automatically. Ask deep questions about the feeder anytime; Claude reads the source on demand.</dd>
+    <dt>Handing off to GPT</dt>
+    <dd><code>helpi 5</code> then <code>helpi 6</code> — open the handover HTML, paste the markdown textarea into GPT. GPT adds its session block. Paste updated markdown back into <code>_ai_log.md</code>, rerun <code>helpi 5</code>.</dd>
+  </dl>
+
+  <p class="op-print-note">Full reference: AI_auto\infrastructure.html &nbsp;&bull;&nbsp; Updated 2026-04-04</p>
+
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- VERSIONING                                                       -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="section teal">
+  <h2>Infrastructure Versioning</h2>
+  <p>
+    The infrastructure itself is versioned so that you can recover a working state,
+    understand what changed between sessions, and avoid accidentally breaking things
+    mid-project. The current version is <strong>v0.1</strong> (see <code>VERSION</code> file).
+  </p>
+
+  <h3>Workflow in plain language</h3>
+  <ul>
+    <li><strong>Stable line (<code>main</code>)</strong> — what you rely on day-to-day. Each release is permanently marked with a tag like <code>v0.1</code>.</li>
+    <li><strong>Development line (<code>develop</code>)</strong> — where larger ongoing changes accumulate before they are tested and promoted. For small fixes, committing directly to <code>main</code> is fine.</li>
+    <li><strong>Promoting a release</strong> — update <code>CHANGELOG.md</code>, bump <code>VERSION</code>, update the version field in this file, then <code>git tag v0.2</code>.</li>
+  </ul>
+
+  <h3>When does a change deserve a new version?</h3>
+  <ul>
+    <li>A new <code>helpi</code> command or slash command is added or removed</li>
+    <li>An existing command's behavior changes in a way that would break current usage</li>
+    <li>A safety or reliability improvement that affects the normal workflow</li>
+    <li>A structural change to how projects are stored or registered</li>
+  </ul>
+  <p>Minor tweaks — wording in docs, small bug fixes that don't change behavior — do not need a version bump.</p>
+
+  <h3>Key files</h3>
+  <table class="cmd-table">
+    <tr><th>File</th><th>Purpose</th></tr>
+    <tr><td><code>VERSION</code></td><td>Current version number at a glance</td></tr>
+    <tr><td><code>CHANGELOG.md</code></td><td>What changed in each version and what is coming next</td></tr>
+    <tr><td><code>RELEASING.md</code></td><td>Step-by-step instructions for making a new release</td></tr>
+  </table>
+</div>
+
+</div><!-- /page -->
+</body>
+</html>
