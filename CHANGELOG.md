@@ -39,7 +39,7 @@ A "change" is anything that affects how you or Claude interacts with the system.
 
 _Ongoing changes toward v0.2 go here. Move to a new `[vX.Y]` block when promoted._
 
-- (nothing yet)
+- `snapshot.ps1`: removed silent auto-commit of dirty state before tagging. Now aborts with a clear file list and instructions to commit or discard first. A snapshot should always capture a known, intentional state.
 
 ---
 

@@ -50,12 +50,23 @@ if (@(git -C $src tag -l $tagName 2>$null).Count -gt 0) {
     exit 1
 }
 
-# ── Commit any dirty state first ──────────────────────────────────────────────
+# ── Abort if working tree is dirty ────────────────────────────────────────────
 $dirty = @(git -C $src status --porcelain 2>$null)
 if ($dirty.Count -gt 0) {
-    Write-Host "  Uncommitted changes found — committing before snapshot..." -ForegroundColor Yellow
-    git -C $src add -A 2>&1 | Out-Null
-    git -C $src commit -m "Pre-snapshot: $Tag" 2>&1 | Out-Null
+    Write-Host ""
+    Write-Host "  ABORT: uncommitted changes in '$Project'." -ForegroundColor Red
+    Write-Host "  A snapshot should capture a known state, not accidental edits." -ForegroundColor Yellow
+    Write-Host ""
+    Write-Host "  Uncommitted files:" -ForegroundColor Yellow
+    foreach ($line in $dirty) { Write-Host "    $line" -ForegroundColor DarkYellow }
+    Write-Host ""
+    Write-Host "  Commit them first:" -ForegroundColor DarkGray
+    Write-Host "    git -C `"$src`" add -A" -ForegroundColor DarkGray
+    Write-Host "    git -C `"$src`" commit -m `"your message`"" -ForegroundColor DarkGray
+    Write-Host "  Or discard them:" -ForegroundColor DarkGray
+    Write-Host "    git -C `"$src`" checkout -- ." -ForegroundColor DarkGray
+    Write-Host ""
+    exit 1
 }
 
 # ── Create annotated tag ──────────────────────────────────────────────────────
