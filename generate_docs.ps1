@@ -43,7 +43,7 @@ Write-Host "  Found @media print block at lines $($blockStart+1)-$($blockEnd+1)"
 
 # Summary: always hide non-one-pager content (not just on print); also clean up for print
 $summaryCss = @(
-    "  /* ── Summary mode: always show only the one-pager ── */",
+    "  /* -- Summary mode: always show only the one-pager -- */",
     "  .page > *:not(.one-pager) { display: none !important; }",
     "  .one-pager .op-print-note { display: none; }",
     "  @media print {",
@@ -56,7 +56,7 @@ $summaryCss = @(
 
 # Full: print shows everything; one-pager goes last so it stays at end
 $fullCss = @(
-    "  /* ── Print: show full document (one-pager hidden) ── */",
+    "  /* -- Print: show full document (one-pager hidden) -- */",
     "  @media print {",
     "    body { background: #fff; padding: 20px 24px; }",
     "    .one-pager { display: none !important; }",
