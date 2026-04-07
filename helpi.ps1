@@ -44,7 +44,8 @@ $commands = @(
     [PSCustomObject]@{ N=12; NeedsProject=$true;  Tag="MANUAL";  Name="Open project (VS Code + Explorer + PDF)";Example="open_project.ps1 -Project XXX" },
     [PSCustomObject]@{ N=13; NeedsProject=$true;  Tag="MANUAL";  Name="Rollback last N code commits";           Example="rollback.ps1 -Project XXX -N 1" },
     [PSCustomObject]@{ N=14; NeedsProject=$true;  Tag="MANUAL";  Name="Snapshot Overleaf source (git tag)";      Example="snapshot.ps1 -Project XXX [-Tag V2]" },
-    [PSCustomObject]@{ N=15; NeedsProject=$false; Tag="INFO";    Name="Open project network graph";              Example="network.ps1" }
+    [PSCustomObject]@{ N=15; NeedsProject=$false; Tag="INFO";    Name="Open project network graph";              Example="network.ps1" },
+    [PSCustomObject]@{ N=16; NeedsProject=$false; Tag="MANUAL";  Name="Generate docs (summary + full HTML/PDF)";  Example="generate_docs.ps1" }
 )
 
 # ── Show menu (condensed: one line per command) ────────────────────
@@ -93,6 +94,7 @@ function Get-CommandPreview {
         13 { "rollback.ps1 -Project $proj -N 1" }
         14 { "snapshot.ps1 -Project $proj" }
         15 { "network.ps1" }
+        16 { "generate_docs.ps1" }
     }
 }
 
@@ -164,6 +166,7 @@ function Invoke-Command-N {
                else      { & "$aiRoot\snapshot.ps1" -Project $proj }
            }
         15 { & "$aiRoot\network.ps1" }
+        16 { & "$aiRoot\generate_docs.ps1" }
     }
 }
 

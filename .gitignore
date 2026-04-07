@@ -4,6 +4,12 @@ logs/
 # Volatile data files regenerated from Overleaf
 overleaf_projects.csv
 
+# Generated doc exports (rebuilt by helpi 16 / generate_docs.ps1)
+infrastructure_summary.html
+infrastructure_full.html
+infrastructure_summary.pdf
+infrastructure_full.pdf
+
 # OS noise
 Thumbs.db
 .DS_Store

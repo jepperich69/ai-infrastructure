@@ -1,472 +1,467 @@
 [
-    {
-        "name":  "Pub_NapstiGranularity_TBA",
-        "path":  "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Publikationer\\Pub_NapstiGranularity_TBA\\Napsti paper 1\\Overleaf_source",
-        "branch":  "master"
-    },
-    {
-        "name":  "Pub_PopInt_PartB",
-        "path":  "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Publikationer\\Pub_PopInt_PartB\\Overleaf_source",
-        "branch":  "master"
-    },
-    {
-        "name":  "Pub_PMIP_AOR",
-        "path":  "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Publikationer\\Pub_PMIP_AOR\\Overleaf_source",
-        "branch":  "master"
-    },
-    {
-        "name":  "Pub_AssesTiming_Raoul_TBA",
-        "path":  "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Publikationer\\Pub_AssesTiming_Raoul_TBA\\Overleaf_source",
-        "branch":  "master"
-    },
-    {
-        "name":  "Pub_ActionSpace_TG",
-        "path":  "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Publikationer\\Pub_ActionSpace_TG\\Overleaf_source",
-        "branch":  "master"
-    },
-    {
-        "name":  "Pub_OptimismBias_PartA",
-        "path":  "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Publikationer\\Pub_OptimismBias_PartA\\Overleaf_source",
-        "branch":  "master"
-    },
-    {
-        "name":  "Pub_FlowSP1_TBA",
-        "path":  "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Publikationer\\Pub_FlowSP1_TBA\\Overleaf_source",
-        "branch":  "master"
-    },
-    {
-        "name":  "Pub_MIPEntropy_MPC",
-        "path":  "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Publikationer\\Pub_MIPEntropy_MPC\\Overleaf_source",
-        "branch":  "master"
-    },
-    {
-        "name":  "Pub_ActionSpace_NatComm",
-        "path":  "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Publikationer\\Pub_ActionSpace_NatComm\\Overleaf_source",
-        "branch":  "master"
-    },
-    {
-        "name":  "Pub_NapstiGranularity_TBA",
-        "path":  "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Publikationer\\Pub_NapstiGranularity_TBA\\Overleaf_source",
-        "branch":  "master"
-    },
-    {
-        "name":  "Pub_pLCA_Trucks_TBA",
-        "path":  "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Publikationer\\Pub_pLCA_Trucks_TBA\\Overleaf_source",
-        "branch":  "master"
-    },
-    {
-        "name":  "Pub_FlowPaperSP2_TRD",
-        "path":  "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Publikationer\\Pub_FlowPaperSP2_TRD\\Overleaf_source",
-        "branch":  "master"
-    },
-    {
-        "name":  "Pub_NonlinearDiffusion_PartB",
-        "path":  "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Publikationer\\Pub_NonlinearDiffusion_PartB\\Overleaf_source",
-        "branch":  "master"
-    },
-    {
-        "name":  "Pub_EbikeAdaptation_TRC",
-        "path":  "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Publikationer\\Pub_EbikeAdaptation_TRC\\Overleaf_source",
-        "branch":  "master"
-    },
-    {
-        "name":  "Pub_FareWelfare_TRA",
-        "path":  "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Publikationer\\Pub_FareWelfare_TRA\\Overleaf_source",
-        "branch":  "master"
-    },
-    {
-        "name":  "Pub_EV_geografi",
-        "path":  "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Publikationer\\Pub_EV_geografi\\Overleaf_source",
-        "branch":  "master"
-    },
-    {
-        "name":  "Pub_Cycling_overunder_performance_JCMR",
-        "path":  "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Publikationer\\Pub_Cycling_overunder_performance_JCMR\\Overleaf_source",
-        "branch":  "master"
-    },
-    {
-        "name":  "Pub_Bias_Smartphone_IEEE",
-        "path":  "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Publikationer\\Pub_Bias_Smartphone_IEEE\\Overleaf_source",
-        "branch":  "master"
-    },
-    {
-        "name":  "Pub_LVGrid_TBA",
-        "path":  "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Publikationer\\Pub_LVGrid_TBA\\Overleaf_source",
-        "branch":  "master"
-    },
-    {
-        "name":  "Pub_Roadworks_Findings",
-        "path":  "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Publikationer\\Pub_Roadworks_Findings\\Overleaf_source",
-        "branch":  "master"
-    },
-    {
-        "name":  "Pub_BicycleNetworkDemand_PartB",
-        "path":  "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Publikationer\\Pub_BicycleNetworkDemand_PartB\\Overleaf_source",
-        "branch":  "master"
-    },
-    {
-        "name":  "Pub_ConditionalAgreement_TBA",
-        "path":  "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Publikationer\\Pub_ConditionalAgreement_TBA\\Overleaf_source",
-        "branch":  "master"
-    },
-    {
-        "name":  "Pub_CensoredCharging_EV",
-        "path":  "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Publikationer\\Pub_CensoredCharging_EV\\Overleaf_source",
-        "branch":  "master"
-    },
-    {
-        "name":  "Pub_Letswalk_Transp",
-        "path":  "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Publikationer\\Pub_Letswalk_Transp\\Overleaf_source",
-        "branch":  "master"
-    },
-    {
-        "name":  "Pub_SurfaceQuality",
-        "path":  "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Publikationer\\Pub_SurfaceQuality\\Overleaf_source",
-        "branch":  "master"
-    },
-    {
-        "name":  "Pub_GridConnectionReview_EV",
-        "path":  "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Publikationer\\Pub_GridConnectionReview_EV\\Overleaf_source",
-        "branch":  "master"
-    },
-    {
-        "name":  "Pub_CarSharing_Procedia",
-        "path":  "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Publikationer\\Pub_CarSharing_Procedia\\Overleaf_source",
-        "branch":  "master"
-    },
-    {
-        "name":  "Pub_SharedPub_Competition_TPA",
-        "path":  "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Publikationer\\Pub_SharedPub_Competition_TPA\\Overleaf_source",
-        "branch":  "master"
-    },
-    {
-        "name":  "Pub_InformationSharing_OnePlus",
-        "path":  "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Publikationer\\Pub_InformationSharing_OnePlus\\Overleaf_source",
-        "branch":  "master"
-    },
-    {
-        "name":  "Pub_CBACharging_TRD",
-        "path":  "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Publikationer\\Pub_CBACharging_TRD\\Overleaf_source",
-        "branch":  "master"
-    },
-    {
-        "name":  "Pub_SOC_EV",
-        "path":  "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Publikationer\\Pub_SOC_EV\\Overleaf_source",
-        "branch":  "master"
-    },
-    {
-        "name":  "Pub_ELISA_TRD",
-        "path":  "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Publikationer\\Pub_ELISA_TRD\\Overleaf_source",
-        "branch":  "master"
-    },
-    {
-        "name":  "Pub_Idle-time_PARTA",
-        "path":  "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Publikationer\\Pub_Idle-time_PARTA\\Overleaf_source",
-        "branch":  "master"
-    },
-    {
-        "name":  "Pub_CausalInference_TBA",
-        "path":  "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Publikationer\\Pub_CausalInference_TBA\\Overleaf_source",
-        "branch":  "master"
-    },
-    {
-        "name":  "Pub_IrregularPanel_TBA",
-        "path":  "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Publikationer\\Pub_IrregularPanel_TBA\\Overleaf_source",
-        "branch":  "master"
-    },
-    {
-        "name":  "Pub_SupercycleHighways_TRA",
-        "path":  "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Publikationer\\Pub_SupercycleHighways_TRA\\Overleaf_source",
-        "branch":  "master"
-    },
-    {
-        "name":  "Pub_ABM_AVbusses_TRA",
-        "path":  "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Publikationer\\Pub_ABM_AVbusses_TRA\\Overleaf_source",
-        "branch":  "master"
-    },
-    {
-        "name":  "Pub_ChargingInformationSharing_OnePlus",
-        "path":  "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Publikationer\\Pub_ChargingInformationSharing_OnePlus\\Overleaf_source",
-        "branch":  "master"
-    },
-    {
-        "name":  "Pub_Platooning_TRE",
-        "path":  "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Publikationer\\Pub_Platooning_TRE\\Overleaf_source",
-        "branch":  "master"
-    },
-    {
-        "name":  "Pub_ScalablePopSynth_TRC",
-        "path":  "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Publikationer\\Pub_ScalablePopSynth_TRC\\Overleaf_source",
-        "branch":  "master"
-    },
-    {
-        "name":  "Pub_PseudoPanel_Stas_Transp",
-        "path":  "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Publikationer\\Pub_PseudoPanel_Stas_Transp\\Overleaf_source",
-        "branch":  "master"
-    },
-    {
-        "name":  "Pub_BicycleInfra_SocioEconomic_TRB",
-        "path":  "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Publikationer\\Pub_BicycleInfra_SocioEconomic_TRB\\Overleaf_source",
-        "branch":  "master"
-    },
-    {
-        "name":  "Pub_Popsynth_Zero_TRC",
-        "path":  "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Publikationer\\Pub_Popsynth_Zero_TRC\\Overleaf_source",
-        "branch":  "master"
-    },
-    {
-        "name":  "Pub_MicroModel_CarOwner_EL",
-        "path":  "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Publikationer\\Pub_MicroModel_CarOwner_EL\\Overleaf_source",
-        "branch":  "master"
-    },
-    {
-        "name":  "PhD_Thesis_DA",
-        "path":  "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Projekter DTU\\PhD_Thesis_DA",
-        "branch":  "master"
-    },
-    {
-        "name":  "Pro_Traction",
-        "path":  "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Projekter DTU\\Pro_Traction",
-        "branch":  "master"
-    },
-    {
-        "name":  "Pro_Flitmo",
-        "path":  "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Projekter DTU\\Pro_Flitmo",
-        "branch":  "master"
-    },
-    {
-        "name":  "gaia_documentation",
-        "path":  "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Projekter DTU\\gaia_documentation",
-        "branch":  "master"
-    },
-    {
-        "name":  "CHARGO - charging Infrastructure report",
-        "path":  "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Projekter DTU\\CHARGO - charging Infrastructure report",
-        "branch":  "master"
-    },
-    {
-        "name":  "CHARGO - charging Infrastructure report v2",
-        "path":  "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Projekter DTU\\CHARGO - charging Infrastructure report v2",
-        "branch":  "master"
-    },
-    {
-        "name":  "CHARGO - charging Infrastructure",
-        "path":  "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Projekter DTU\\CHARGO - charging Infrastructure",
-        "branch":  "master"
-    },
-    {
-        "name":  "BeamerPres CHARGO",
-        "path":  "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Projekter DTU\\BeamerPres CHARGO",
-        "branch":  "master"
-    },
-    {
-        "name":  "42180 Lectures",
-        "path":  "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Kurser\\42180 Lectures",
-        "branch":  "master"
-    },
-    {
-        "name":  "42180 - F26 - Weekly exercises",
-        "path":  "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Kurser\\42180 - F26 - Weekly exercises",
-        "branch":  "master"
-    },
-    {
-        "name":  "Reagent Novo",
-        "path":  "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Kurser\\Reagent Novo",
-        "branch":  "master"
-    },
-    {
-        "name":  "DTU Management Master Thesis � Structured Guidance Template",
-        "path":  "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Kurser\\DTU Management Master Thesis � Structured Guidance Template",
-        "branch":  "master"
-    },
-    {
-        "name":  "Slides-Model-Specification",
-        "path":  "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Kurser\\Slides-Model-Specification",
-        "branch":  "master"
-    },
-    {
-        "name":  "42180 - F24 - Exercises week 4,5 and 7",
-        "path":  "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Kurser\\42180 - F24 - Exercises week 4,5 and 7",
-        "branch":  "master"
-    },
-    {
-        "name":  "Jeppe\u0027s course case",
-        "path":  "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Kurser\\Jeppe\u0027s course case",
-        "branch":  "master"
-    },
-    {
-        "name":  "Carlsberg_Postdoc_application_Dimitrios",
-        "path":  "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Ansøgninger\\Carlsberg_Postdoc_application_Dimitrios",
-        "branch":  "master"
-    },
-    {
-        "name":  "NNF_Postdoc_application_Dimitrios",
-        "path":  "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Ansøgninger\\NNF_Postdoc_application_Dimitrios",
-        "branch":  "master"
-    },
-    {
-        "name":  "DFF_TRUST",
-        "path":  "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Ansøgninger\\DFF_TRUST",
-        "branch":  "master"
-    },
-    {
-        "name":  "DFF Green 2021 bicycle network design",
-        "path":  "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Ansøgninger\\DFF Green 2021 bicycle network design",
-        "branch":  "master"
-    },
-    {
-        "name":  "E-bike_adoption_trafikdage2026",
-        "path":  "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Slides\\E-bike_adoption_trafikdage2026",
-        "branch":  "master"
-    },
-    {
-        "name":  "Bicycle_design_Slides_Grenoble",
-        "path":  "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Slides\\Bicycle_design_Slides_Grenoble",
-        "branch":  "master"
-    },
-    {
-        "name":  "Aalborg Trafikdage 2025 - FLOW",
-        "path":  "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Slides\\Aalborg Trafikdage 2025 - FLOW",
-        "branch":  "master"
-    },
-    {
-        "name":  "13th hEART: Assessing Public Transport Fares in Denmark",
-        "path":  "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Slides\\13th hEART_ Assessing Public Transport Fares in Denmark",
-        "branch":  "master"
-    },
-    {
-        "name":  "hEART - FLOW",
-        "path":  "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Slides\\hEART - FLOW",
-        "branch":  "master"
-    },
-    {
-        "name":  "Cycling paper on over and under-performance |SHORT (hEART) JR",
-        "path":  "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Slides\\Cycling paper on over and under-performance _SHORT (hEART) JR",
-        "branch":  "master"
-    },
-    {
-        "name":  "hEART 2023 - first and last mile fallacy",
-        "path":  "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Slides\\hEART 2023 - first and last mile fallacy",
-        "branch":  "master"
-    },
-    {
-        "name":  "Paulsen_Mads_hEART2023",
-        "path":  "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Slides\\Paulsen_Mads_hEART2023",
-        "branch":  "master"
-    },
-    {
-        "name":  "IATBR_24_Dimitrios_Riding Smooth",
-        "path":  "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Slides\\IATBR_24_Dimitrios_Riding Smooth",
-        "branch":  "master"
-    },
-    {
-        "name":  "Cycling_speed_and_infra_IATBR_abstract",
-        "path":  "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Slides\\Cycling_speed_and_infra_IATBR_abstract",
-        "branch":  "master"
-    },
-    {
-        "name":  "Presentation_hEART2023_PaulsenRich",
-        "path":  "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Slides\\Presentation_hEART2023_PaulsenRich",
-        "branch":  "master"
-    },
-    {
-        "name":  "EV charging simulation: censored demand - HEART",
-        "path":  "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Slides\\EV charging simulation_ censored demand - HEART",
-        "branch":  "master"
-    },
-    {
-        "name":  "Discrete choice and irregularily spaced panels HEART",
-        "path":  "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Slides\\Discrete choice and irregularily spaced panels HEART",
-        "branch":  "master"
-    },
-    {
-        "name":  "Pub_FlowPaperSP2_TRD",
-        "path":  "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Publikationer\\Pub_FlowPaperSP2_TRD\\Overleaf_source_2",
-        "branch":  "master"
-    },
-    {
-        "name":  "Pub_NonlinearDiffusion_PartB",
-        "path":  "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Publikationer\\Pub_NonlinearDiffusion_PartB\\Overleaf_source_2",
-        "branch":  "master"
-    },
-    {
-        "name":  "Pub_SurfaceQuality",
-        "path":  "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Publikationer\\Pub_SurfaceQuality\\Overleaf_source_2",
-        "branch":  "master"
-    },
-    {
-        "name":  "Pub_InformationSharing_OnePlus",
-        "path":  "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Publikationer\\Pub_InformationSharing_OnePlus\\Overleaf_source_2",
-        "branch":  "master"
-    },
-    {
-        "name":  "Pub_SupercycleHighways_TRA",
-        "path":  "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Publikationer\\Pub_SupercycleHighways_TRA\\Overleaf_source_2",
-        "branch":  "master"
-    },
-    {
-        "name":  "Pub_SupercycleHighways_TRA",
-        "path":  "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Publikationer\\Pub_SupercycleHighways_TRA\\Overleaf_source_3",
-        "branch":  "master"
-    },
-    {
-        "name":  "Pub_SupercycleHighways_TRA",
-        "path":  "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Publikationer\\Pub_SupercycleHighways_TRA\\Overleaf_source_4",
-        "branch":  "master"
-    },
-    {
-        "name":  "Pub_PseudoPanel_Stas_Transp",
-        "path":  "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Publikationer\\Pub_PseudoPanel_Stas_Transp\\Overleaf_source_2",
-        "branch":  "master"
-    },
-    {
-        "name":  "Pub_PseudoPanel_Stas_Transp",
-        "path":  "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Publikationer\\Pub_PseudoPanel_Stas_Transp\\Overleaf_source_3",
-        "branch":  "master"
-    },
-    {
-        "name":  "Pub_PseudoPanel_Stas_Transp",
-        "path":  "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Publikationer\\Pub_PseudoPanel_Stas_Transp\\Overleaf_source_4",
-        "branch":  "master"
-    },
-    {
-        "name":  "Pub_PseudoPanel_Stas_Transp",
-        "path":  "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Publikationer\\Pub_PseudoPanel_Stas_Transp\\Overleaf_source_5",
-        "branch":  "master"
-    },
-    {
-        "name":  "Pub_CausalInference_TBA",
-        "path":  "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Publikationer\\Pub_CausalInference_TBA\\Overleaf_source_2",
-        "branch":  "master"
-    },
-    {
-        "name":  "Pub_Platooning_TRE",
-        "path":  "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Publikationer\\Pub_Platooning_TRE\\Overleaf_source_2",
-        "branch":  "master"
-    },
-    {
-        "name":  "Pub_ScalablePopSynth_TRC",
-        "path":  "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Publikationer\\Pub_ScalablePopSynth_TRC\\Overleaf_source_2",
-        "branch":  "master"
-    },
-    {
-        "name":  "Pub_ScalablePopSynth_TRC",
-        "path":  "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Publikationer\\Pub_ScalablePopSynth_TRC\\Overleaf_source_3",
-        "branch":  "master"
-    },
-    {
-        "name":  "Pub_PseudoPanel_Stas_Transp",
-        "path":  "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Publikationer\\Pub_PseudoPanel_Stas_Transp\\Overleaf_source_6",
-        "branch":  "master"
-    },
-    {
-        "name":  "Pub_ScalablePopSynth_TRC",
-        "path":  "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Publikationer\\Pub_ScalablePopSynth_TRC\\Overleaf_source_4",
-        "branch":  "master"
-    },
-    {
-        "name":  "Pub_StopGeometry_TBA",
-        "path":  "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Publikationer\\Pub_StopGeometry_TBA\\Overleaf_source",
-        "branch":  "master"
-    }
+  {
+    "name": "Pub_PopInt_PartB",
+    "path": "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Publikationer\\Pub_PopInt_PartB\\Overleaf_source",
+    "branch": "master"
+  },
+  {
+    "name": "Pub_PMIP_AOR",
+    "path": "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Publikationer\\Pub_PMIP_AOR\\Overleaf_source",
+    "branch": "master"
+  },
+  {
+    "name": "Pub_AssesTiming_Raoul_TBA",
+    "path": "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Publikationer\\Pub_AssesTiming_Raoul_TBA\\Overleaf_source",
+    "branch": "master"
+  },
+  {
+    "name": "Pub_ActionSpace_TG",
+    "path": "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Publikationer\\Pub_ActionSpace_TG\\Overleaf_source",
+    "branch": "master"
+  },
+  {
+    "name": "Pub_OptimismBias_PartA",
+    "path": "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Publikationer\\Pub_OptimismBias_PartA\\Overleaf_source",
+    "branch": "master"
+  },
+  {
+    "name": "Pub_FlowSP1_TBA",
+    "path": "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Publikationer\\Pub_FlowSP1_TBA\\Overleaf_source",
+    "branch": "master"
+  },
+  {
+    "name": "Pub_MIPEntropy_MPC",
+    "path": "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Publikationer\\Pub_MIPEntropy_MPC\\Overleaf_source",
+    "branch": "master"
+  },
+  {
+    "name": "Pub_ActionSpace_NatComm",
+    "path": "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Publikationer\\Pub_ActionSpace_NatComm\\Overleaf_source",
+    "branch": "master"
+  },
+  {
+    "name": "Pub_NapstiGranularity_TBA",
+    "path": "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Publikationer\\Pub_NapstiGranularity_TBA\\Overleaf_source",
+    "branch": "master"
+  },
+  {
+    "name": "Pub_pLCA_Trucks_TBA",
+    "path": "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Publikationer\\Pub_pLCA_Trucks_TBA\\Overleaf_source",
+    "branch": "master"
+  },
+  {
+    "name": "Pub_FlowPaperSP2_TRD",
+    "path": "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Publikationer\\Pub_FlowPaperSP2_TRD\\Overleaf_source",
+    "branch": "master"
+  },
+  {
+    "name": "Pub_NonlinearDiffusion_PartB",
+    "path": "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Publikationer\\Pub_NonlinearDiffusion_PartB\\Overleaf_source",
+    "branch": "master"
+  },
+  {
+    "name": "Pub_EbikeAdaptation_TRC",
+    "path": "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Publikationer\\Pub_EbikeAdaptation_TRC\\Overleaf_source",
+    "branch": "master"
+  },
+  {
+    "name": "Pub_FareWelfare_TRA",
+    "path": "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Publikationer\\Pub_FareWelfare_TRA\\Overleaf_source",
+    "branch": "master"
+  },
+  {
+    "name": "Pub_EV_geografi",
+    "path": "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Publikationer\\Pub_EV_geografi\\Overleaf_source",
+    "branch": "master"
+  },
+  {
+    "name": "Pub_Cycling_overunder_performance_JCMR",
+    "path": "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Publikationer\\Pub_Cycling_overunder_performance_JCMR\\Overleaf_source",
+    "branch": "master"
+  },
+  {
+    "name": "Pub_Bias_Smartphone_IEEE",
+    "path": "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Publikationer\\Pub_Bias_Smartphone_IEEE\\Overleaf_source",
+    "branch": "master"
+  },
+  {
+    "name": "Pub_LVGrid_TBA",
+    "path": "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Publikationer\\Pub_LVGrid_TBA\\Overleaf_source",
+    "branch": "master"
+  },
+  {
+    "name": "Pub_Roadworks_Findings",
+    "path": "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Publikationer\\Pub_Roadworks_Findings\\Overleaf_source",
+    "branch": "master"
+  },
+  {
+    "name": "Pub_BicycleNetworkDemand_PartB",
+    "path": "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Publikationer\\Pub_BicycleNetworkDemand_PartB\\Overleaf_source",
+    "branch": "master"
+  },
+  {
+    "name": "Pub_ConditionalAgreement_TBA",
+    "path": "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Publikationer\\Pub_ConditionalAgreement_TBA\\Overleaf_source",
+    "branch": "master"
+  },
+  {
+    "name": "Pub_CensoredCharging_EV",
+    "path": "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Publikationer\\Pub_CensoredCharging_EV\\Overleaf_source",
+    "branch": "master"
+  },
+  {
+    "name": "Pub_Letswalk_Transp",
+    "path": "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Publikationer\\Pub_Letswalk_Transp\\Overleaf_source",
+    "branch": "master"
+  },
+  {
+    "name": "Pub_SurfaceQuality",
+    "path": "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Publikationer\\Pub_SurfaceQuality\\Overleaf_source",
+    "branch": "master"
+  },
+  {
+    "name": "Pub_GridConnectionReview_EV",
+    "path": "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Publikationer\\Pub_GridConnectionReview_EV\\Overleaf_source",
+    "branch": "master"
+  },
+  {
+    "name": "Pub_CarSharing_Procedia",
+    "path": "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Publikationer\\Pub_CarSharing_Procedia\\Overleaf_source",
+    "branch": "master"
+  },
+  {
+    "name": "Pub_SharedPub_Competition_TPA",
+    "path": "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Publikationer\\Pub_SharedPub_Competition_TPA\\Overleaf_source",
+    "branch": "master"
+  },
+  {
+    "name": "Pub_InformationSharing_OnePlus",
+    "path": "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Publikationer\\Pub_InformationSharing_OnePlus\\Overleaf_source",
+    "branch": "master"
+  },
+  {
+    "name": "Pub_CBACharging_TRD",
+    "path": "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Publikationer\\Pub_CBACharging_TRD\\Overleaf_source",
+    "branch": "master"
+  },
+  {
+    "name": "Pub_SOC_EV",
+    "path": "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Publikationer\\Pub_SOC_EV\\Overleaf_source",
+    "branch": "master"
+  },
+  {
+    "name": "Pub_ELISA_TRD",
+    "path": "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Publikationer\\Pub_ELISA_TRD\\Overleaf_source",
+    "branch": "master"
+  },
+  {
+    "name": "Pub_Idle-time_PARTA",
+    "path": "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Publikationer\\Pub_Idle-time_PARTA\\Overleaf_source",
+    "branch": "master"
+  },
+  {
+    "name": "Pub_CausalInference_TBA",
+    "path": "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Publikationer\\Pub_CausalInference_TBA\\Overleaf_source",
+    "branch": "master"
+  },
+  {
+    "name": "Pub_IrregularPanel_TBA",
+    "path": "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Publikationer\\Pub_IrregularPanel_TBA\\Overleaf_source",
+    "branch": "master"
+  },
+  {
+    "name": "Pub_SupercycleHighways_TRA",
+    "path": "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Publikationer\\Pub_SupercycleHighways_TRA\\Overleaf_source",
+    "branch": "master"
+  },
+  {
+    "name": "Pub_ABM_AVbusses_TRA",
+    "path": "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Publikationer\\Pub_ABM_AVbusses_TRA\\Overleaf_source",
+    "branch": "master"
+  },
+  {
+    "name": "Pub_ChargingInformationSharing_OnePlus",
+    "path": "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Publikationer\\Pub_ChargingInformationSharing_OnePlus\\Overleaf_source",
+    "branch": "master"
+  },
+  {
+    "name": "Pub_Platooning_TRE",
+    "path": "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Publikationer\\Pub_Platooning_TRE\\Overleaf_source",
+    "branch": "master"
+  },
+  {
+    "name": "Pub_ScalablePopSynth_TRC",
+    "path": "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Publikationer\\Pub_ScalablePopSynth_TRC\\Overleaf_source",
+    "branch": "master"
+  },
+  {
+    "name": "Pub_PseudoPanel_Stas_Transp",
+    "path": "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Publikationer\\Pub_PseudoPanel_Stas_Transp\\Overleaf_source",
+    "branch": "master"
+  },
+  {
+    "name": "Pub_BicycleInfra_SocioEconomic_TRB",
+    "path": "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Publikationer\\Pub_BicycleInfra_SocioEconomic_TRB\\Overleaf_source",
+    "branch": "master"
+  },
+  {
+    "name": "Pub_Popsynth_Zero_TRC",
+    "path": "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Publikationer\\Pub_Popsynth_Zero_TRC\\Overleaf_source",
+    "branch": "master"
+  },
+  {
+    "name": "Pub_MicroModel_CarOwner_EL",
+    "path": "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Publikationer\\Pub_MicroModel_CarOwner_EL\\Overleaf_source",
+    "branch": "master"
+  },
+  {
+    "name": "PhD_Thesis_DA",
+    "path": "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Projekter DTU\\PhD_Thesis_DA",
+    "branch": "master"
+  },
+  {
+    "name": "Pro_Traction",
+    "path": "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Projekter DTU\\Pro_Traction",
+    "branch": "master"
+  },
+  {
+    "name": "Pro_Flitmo",
+    "path": "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Projekter DTU\\Pro_Flitmo",
+    "branch": "master"
+  },
+  {
+    "name": "gaia_documentation",
+    "path": "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Projekter DTU\\gaia_documentation",
+    "branch": "master"
+  },
+  {
+    "name": "CHARGO - charging Infrastructure report",
+    "path": "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Projekter DTU\\CHARGO - charging Infrastructure report",
+    "branch": "master"
+  },
+  {
+    "name": "CHARGO - charging Infrastructure report v2",
+    "path": "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Projekter DTU\\CHARGO - charging Infrastructure report v2",
+    "branch": "master"
+  },
+  {
+    "name": "CHARGO - charging Infrastructure",
+    "path": "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Projekter DTU\\CHARGO - charging Infrastructure",
+    "branch": "master"
+  },
+  {
+    "name": "BeamerPres CHARGO",
+    "path": "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Projekter DTU\\BeamerPres CHARGO",
+    "branch": "master"
+  },
+  {
+    "name": "42180 Lectures",
+    "path": "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Kurser\\42180 Lectures",
+    "branch": "master"
+  },
+  {
+    "name": "42180 - F26 - Weekly exercises",
+    "path": "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Kurser\\42180 - F26 - Weekly exercises",
+    "branch": "master"
+  },
+  {
+    "name": "Reagent Novo",
+    "path": "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Kurser\\Reagent Novo",
+    "branch": "master"
+  },
+  {
+    "name": "DTU Management Master Thesis � Structured Guidance Template",
+    "path": "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Kurser\\DTU Management Master Thesis � Structured Guidance Template",
+    "branch": "master"
+  },
+  {
+    "name": "Slides-Model-Specification",
+    "path": "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Kurser\\Slides-Model-Specification",
+    "branch": "master"
+  },
+  {
+    "name": "42180 - F24 - Exercises week 4,5 and 7",
+    "path": "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Kurser\\42180 - F24 - Exercises week 4,5 and 7",
+    "branch": "master"
+  },
+  {
+    "name": "Jeppe's course case",
+    "path": "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Kurser\\Jeppe's course case",
+    "branch": "master"
+  },
+  {
+    "name": "Carlsberg_Postdoc_application_Dimitrios",
+    "path": "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Ansøgninger\\Carlsberg_Postdoc_application_Dimitrios",
+    "branch": "master"
+  },
+  {
+    "name": "NNF_Postdoc_application_Dimitrios",
+    "path": "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Ansøgninger\\NNF_Postdoc_application_Dimitrios",
+    "branch": "master"
+  },
+  {
+    "name": "DFF_TRUST",
+    "path": "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Ansøgninger\\DFF_TRUST",
+    "branch": "master"
+  },
+  {
+    "name": "DFF Green 2021 bicycle network design",
+    "path": "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Ansøgninger\\DFF Green 2021 bicycle network design",
+    "branch": "master"
+  },
+  {
+    "name": "E-bike_adoption_trafikdage2026",
+    "path": "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Slides\\E-bike_adoption_trafikdage2026",
+    "branch": "master"
+  },
+  {
+    "name": "Bicycle_design_Slides_Grenoble",
+    "path": "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Slides\\Bicycle_design_Slides_Grenoble",
+    "branch": "master"
+  },
+  {
+    "name": "Aalborg Trafikdage 2025 - FLOW",
+    "path": "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Slides\\Aalborg Trafikdage 2025 - FLOW",
+    "branch": "master"
+  },
+  {
+    "name": "13th hEART: Assessing Public Transport Fares in Denmark",
+    "path": "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Slides\\13th hEART_ Assessing Public Transport Fares in Denmark",
+    "branch": "master"
+  },
+  {
+    "name": "hEART - FLOW",
+    "path": "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Slides\\hEART - FLOW",
+    "branch": "master"
+  },
+  {
+    "name": "Cycling paper on over and under-performance |SHORT (hEART) JR",
+    "path": "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Slides\\Cycling paper on over and under-performance _SHORT (hEART) JR",
+    "branch": "master"
+  },
+  {
+    "name": "hEART 2023 - first and last mile fallacy",
+    "path": "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Slides\\hEART 2023 - first and last mile fallacy",
+    "branch": "master"
+  },
+  {
+    "name": "Paulsen_Mads_hEART2023",
+    "path": "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Slides\\Paulsen_Mads_hEART2023",
+    "branch": "master"
+  },
+  {
+    "name": "IATBR_24_Dimitrios_Riding Smooth",
+    "path": "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Slides\\IATBR_24_Dimitrios_Riding Smooth",
+    "branch": "master"
+  },
+  {
+    "name": "Cycling_speed_and_infra_IATBR_abstract",
+    "path": "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Slides\\Cycling_speed_and_infra_IATBR_abstract",
+    "branch": "master"
+  },
+  {
+    "name": "Presentation_hEART2023_PaulsenRich",
+    "path": "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Slides\\Presentation_hEART2023_PaulsenRich",
+    "branch": "master"
+  },
+  {
+    "name": "EV charging simulation: censored demand - HEART",
+    "path": "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Slides\\EV charging simulation_ censored demand - HEART",
+    "branch": "master"
+  },
+  {
+    "name": "Discrete choice and irregularily spaced panels HEART",
+    "path": "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Slides\\Discrete choice and irregularily spaced panels HEART",
+    "branch": "master"
+  },
+  {
+    "name": "Pub_FlowPaperSP2_TRD",
+    "path": "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Publikationer\\Pub_FlowPaperSP2_TRD\\Overleaf_source_2",
+    "branch": "master"
+  },
+  {
+    "name": "Pub_NonlinearDiffusion_PartB",
+    "path": "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Publikationer\\Pub_NonlinearDiffusion_PartB\\Overleaf_source_2",
+    "branch": "master"
+  },
+  {
+    "name": "Pub_SurfaceQuality",
+    "path": "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Publikationer\\Pub_SurfaceQuality\\Overleaf_source_2",
+    "branch": "master"
+  },
+  {
+    "name": "Pub_InformationSharing_OnePlus",
+    "path": "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Publikationer\\Pub_InformationSharing_OnePlus\\Overleaf_source_2",
+    "branch": "master"
+  },
+  {
+    "name": "Pub_SupercycleHighways_TRA",
+    "path": "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Publikationer\\Pub_SupercycleHighways_TRA\\Overleaf_source_2",
+    "branch": "master"
+  },
+  {
+    "name": "Pub_SupercycleHighways_TRA",
+    "path": "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Publikationer\\Pub_SupercycleHighways_TRA\\Overleaf_source_3",
+    "branch": "master"
+  },
+  {
+    "name": "Pub_SupercycleHighways_TRA",
+    "path": "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Publikationer\\Pub_SupercycleHighways_TRA\\Overleaf_source_4",
+    "branch": "master"
+  },
+  {
+    "name": "Pub_PseudoPanel_Stas_Transp",
+    "path": "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Publikationer\\Pub_PseudoPanel_Stas_Transp\\Overleaf_source_2",
+    "branch": "master"
+  },
+  {
+    "name": "Pub_PseudoPanel_Stas_Transp",
+    "path": "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Publikationer\\Pub_PseudoPanel_Stas_Transp\\Overleaf_source_3",
+    "branch": "master"
+  },
+  {
+    "name": "Pub_PseudoPanel_Stas_Transp",
+    "path": "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Publikationer\\Pub_PseudoPanel_Stas_Transp\\Overleaf_source_4",
+    "branch": "master"
+  },
+  {
+    "name": "Pub_PseudoPanel_Stas_Transp",
+    "path": "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Publikationer\\Pub_PseudoPanel_Stas_Transp\\Overleaf_source_5",
+    "branch": "master"
+  },
+  {
+    "name": "Pub_CausalInference_TBA",
+    "path": "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Publikationer\\Pub_CausalInference_TBA\\Overleaf_source_2",
+    "branch": "master"
+  },
+  {
+    "name": "Pub_Platooning_TRE",
+    "path": "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Publikationer\\Pub_Platooning_TRE\\Overleaf_source_2",
+    "branch": "master"
+  },
+  {
+    "name": "Pub_ScalablePopSynth_TRC",
+    "path": "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Publikationer\\Pub_ScalablePopSynth_TRC\\Overleaf_source_2",
+    "branch": "master"
+  },
+  {
+    "name": "Pub_ScalablePopSynth_TRC",
+    "path": "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Publikationer\\Pub_ScalablePopSynth_TRC\\Overleaf_source_3",
+    "branch": "master"
+  },
+  {
+    "name": "Pub_PseudoPanel_Stas_Transp",
+    "path": "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Publikationer\\Pub_PseudoPanel_Stas_Transp\\Overleaf_source_6",
+    "branch": "master"
+  },
+  {
+    "name": "Pub_ScalablePopSynth_TRC",
+    "path": "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Publikationer\\Pub_ScalablePopSynth_TRC\\Overleaf_source_4",
+    "branch": "master"
+  },
+  {
+    "name": "Pub_StopGeometry_TBA",
+    "path": "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Publikationer\\Pub_StopGeometry_TBA\\Overleaf_source",
+    "branch": "master"
+  }
 ]
