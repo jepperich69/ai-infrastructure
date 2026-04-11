@@ -106,6 +106,43 @@ $sandboxSettings = @"
 Set-Content -Path (Join-Path $claudeDir "settings.json") -Value $sandboxSettings
 Write-Host "OK   | .claude/settings.json created (proxy-sandbox active)"
 
+# ── Per-project CLAUDE.md (session briefing) ──────────────────────
+$claudeMd = @"
+# Project: $Project
+
+<!-- This file is read by Claude Code at session start. Keep it current but brief.
+     Session-by-session changes go in _ai_log.md — not here.
+     Update this file when: co-authors change, venue changes, a section is frozen, notation is locked. -->
+
+## What this paper is about
+<!-- 3-5 sentences: problem, method, main result. Enough to orient a smart colleague cold. -->
+
+
+## People
+- **PI:** Jeppe Rich
+- **Co-authors:** [Name, role]
+- **Overleaf URL:** [https://git.overleaf.com/...]
+
+## Venue
+- **Target journal:** TBA
+- **Current phase:** Writing
+- **Submission deadline:** none set
+
+## Key files
+- **Main manuscript:** ``Overleaf_source/main.tex``
+- **Main code:** ``code/[primary script]``
+
+## Standing constraints
+<!-- Notation conventions, frozen sections, reviewer mandates — things always true for this paper. -->
+- [add as they emerge]
+
+## What NOT to touch
+<!-- Files or sections that are frozen or off-limits unless explicitly instructed. -->
+- [add as they emerge]
+"@
+Set-Content -Path (Join-Path $claudeDir "CLAUDE.md") -Value $claudeMd
+Write-Host "OK   | .claude/CLAUDE.md created (fill in project details)"
+
 Write-Host ""
 Write-Host "Done. Project ready at:"
 Write-Host "  $projectRoot"
@@ -114,5 +151,6 @@ Write-Host "Next steps:"
 if (!$GitUrl) {
     Write-Host "  - Add Overleaf git URL to Overleaf_source\README.md and run sync_all.ps1"
 }
+Write-Host "  - Fill in .claude\CLAUDE.md with project details (co-authors, venue, key files)"
 Write-Host "  - helpi 4 $Project   (open in VS Code)"
 Write-Host "  - helpi 3 $Project   (compile LaTeX)"
