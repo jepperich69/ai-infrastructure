@@ -66,3 +66,31 @@
 - `helpi.ps1`: wrap PSConsoleReadLine call in try/catch for non-interactive shell degradation (v0.3 candidate)
 - Extract hardcoded `$aiRoot` / `$pubRoot` paths to a shared `config.ps1` (v0.3 candidate)
 **Git ref:** a56d604
+
+---
+
+## Session 2026-04-11
+**Agent:** Claude Sonnet 4.6
+**Goal:** Explore Claude Code features being underused; implement per-project CLAUDE.md system; extend it to Codex; update infrastructure docs.
+**Files touched:**
+- `AI_auto/prompts/project_claude_md_template.md` — created; blank template for per-project Claude briefs
+- `AI_auto/new_project.ps1` — added `.claude/CLAUDE.md` scaffolding step to project creation
+- `AI_auto/infrastructure.html` — updated: handover tag manual→auto, /close description, Codex skill table, capability comparison table, worked example terminal output
+- `~/.claude/CLAUDE.md` — added per-project auto-fill instruction (fills blank CLAUDE.md from manuscript at session start) and AGENTS.md convention note
+- `~/.claude/commands/close.md` — added step 4 (CLAUDE.md sync) and step 5 (auto-regenerate handover via helpi 5)
+- `~/.codex/skills/research-work/SKILL.md` — added step 2: read `.claude/CLAUDE.md` before `_ai_log.md`
+- `~/.codex/config.toml` — added "Per-project brief" section to developer_instructions
+- `89× <project>/.claude/settings.json` — scaffolded across all projects (proxy-sandbox deny rules)
+- `89× <project>/.claude/CLAUDE.md` — scaffolded with placeholder template; 6 filled with real content
+- `Pub_AssesTiming_Raoul_TBA/.claude/CLAUDE.md` — filled: R1 revision, Raoul co-author, call-option payoff fix, β notation, frozen sections
+- `Pub_PMIP_AOR/.claude/CLAUDE.md` — filled: under review AOR, MH=probabilistic-inference, mh_swap_repair() location
+- `Pub_MIPEntropy_MPC/.claude/CLAUDE.md` — filled: R1 ready to submit, 47 comments, Springer_R1B.tex active, Stage 4 MH
+- `Pub_ActionSpace_NatComm/.claude/CLAUDE.md` — filled: NatComm R1B complete, 56+ label, SI numbering, kernel provenance
+- `Pub_NapstiGranularity_TBA/.claude/CLAUDE.md` — filled: V6 complete, 4 contributions, S-shape explanation, 14-city dataset
+- `Pub_PopInt_PartB/.claude/CLAUDE.md` — filled: TR Part B under review, floor/ceiling proof, submitted version frozen, cross-bib constraints
+**Outcome:** Per-project CLAUDE.md system fully deployed across 89 projects; both Claude Code and Codex now read the same brief at session start, eliminating cold-start on agent switches; /close now auto-updates CLAUDE.md and auto-regenerates handover.
+**Next steps:**
+- Fill in `.claude/CLAUDE.md` for other projects as you work on them (auto-fill kicks in at first `/work`)
+- `helpi.ps1`: wrap PSConsoleReadLine call in try/catch for non-interactive shell degradation (v0.3 candidate)
+- Extract hardcoded `$aiRoot` / `$pubRoot` paths to a shared `config.ps1` (v0.3 candidate)
+**Git ref:** 8519688
