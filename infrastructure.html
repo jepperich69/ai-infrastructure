@@ -545,9 +545,12 @@ co-author's version of the sentence
     granularity at the turn level.
   </p>
 
-  <h3>Handover document <span class="tag manual">MANUAL</span></h3>
-  <p>Run this to generate <code>_handover.html</code> in the project root:</p>
-  <pre>.\AI_auto\generate_handover.ps1 -Project Pub_AssesTiming_Raoul_TBA</pre>
+  <h3>Handover document <span class="tag auto">AUTO</span></h3>
+  <p>
+    <code>_handover.html</code> is regenerated automatically at the end of every <code>/close</code>.
+    No manual step needed. You can also regenerate it manually at any time:
+  </p>
+  <pre>helpi 5 Pub_AssesTiming_Raoul_TBA</pre>
   <p>The HTML contains:</p>
   <ul>
     <li>Instructions for any AI agent on how to add a session entry</li>
@@ -648,7 +651,7 @@ helpi 3 Pub_X main.tex             # run command 3 with a specific .tex file</pr
     <tr><td>2</td><td>Push local edits to Overleaf</td><td><code>push_to_overleaf.ps1 -Project Pub_XXX</code></td><td><span class="tag manual">manual</span></td></tr>
     <tr><td>3</td><td>Compile LaTeX &amp; open PDF</td><td><code>compile_latex.ps1 -Project Pub_XXX</code> &mdash; graphical .tex picker if multiple files</td><td><span class="tag manual">manual</span></td></tr>
     <tr><td>4</td><td>Open project in VS Code</td><td><code>code "...\Pub_XXX\Overleaf_source"</code></td><td><span class="tag manual">manual</span></td></tr>
-    <tr><td>5</td><td>Generate handover HTML</td><td><code>generate_handover.ps1 -Project Pub_XXX</code></td><td><span class="tag manual">manual</span></td></tr>
+    <tr><td>5</td><td>Generate handover HTML</td><td><code>generate_handover.ps1 -Project Pub_XXX</code></td><td><span class="tag auto">auto on /close</span></td></tr>
     <tr><td>6</td><td>Open handover in browser</td><td><code>Start-Process "...\Pub_XXX\_handover.html"</code></td><td><span class="tag manual">manual</span></td></tr>
     <tr><td>7</td><td>Init code/ git repo (one-time)</td><td><code>init_project_git.ps1 -Project Pub_XXX</code></td><td><span class="tag once">once</span></td></tr>
     <tr><td>8</td><td>Open infrastructure guide</td><td><code>Start-Process "AI_auto\infrastructure.html"</code></td><td><span class="tag manual">manual</span></td></tr>
@@ -715,12 +718,13 @@ git checkout snapshot-v2                     # restore everything</pre>
   <h3>/close &mdash; end a session <span class="tag ai">AI</span></h3>
   <p>
     Appends the closing block to <code>_ai_log.md</code> (files touched, outcome, next steps,
-    git ref), then reminds you of the two follow-up steps:
+    git ref), then automatically:
   </p>
   <pre>/close</pre>
   <ul>
-    <li>After <code>/close</code>: push to Overleaf with <code>helpi 2 Pub_XXX</code></li>
-    <li>Regenerate handover with <code>helpi 5 Pub_XXX</code> before handing off to GPT</li>
+    <li><strong>Updates <code>.claude/CLAUDE.md</code></strong> &mdash; if the session changed the project phase, locked new notation, froze a file, or created a new manuscript version, Claude edits the relevant sections and reports what changed (or "CLAUDE.md unchanged")</li>
+    <li><strong>Regenerates <code>_handover.html</code></strong> &mdash; runs <code>helpi 5</code> automatically; no manual step needed</li>
+    <li>Reminds you to push to Overleaf if manuscript files were changed: <code>helpi 2 Pub_XXX</code></li>
   </ul>
 
   <table class="cmd-table" style="margin-top:18px;">
@@ -738,7 +742,7 @@ git checkout snapshot-v2                     # restore everything</pre>
     <tr>
       <td><code>/close</code></td>
       <td>&mdash;</td>
-      <td>Complete session block in _ai_log.md with files, outcome, next steps, git ref</td>
+      <td>Complete session block in _ai_log.md; auto-update .claude/CLAUDE.md if project state changed; auto-regenerate _handover.html</td>
     </tr>
     <tr>
       <td><code>/respond</code></td>
@@ -1221,7 +1225,7 @@ claude --full-auto        # launch Claude Code without approval pauses
       <span class="ex-title">Close the session</span>
       <span class="ex-ref">/close</span>
     </div>
-    <p class="ex-why">Log what was done, which files were touched, and what needs to happen next. This is the permanent record — future sessions and other agents pick up from here.</p>
+    <p class="ex-why">Log what was done, which files were touched, and what needs to happen next. Claude also auto-updates .claude/CLAUDE.md if the project state changed, and regenerates the handover — no extra steps needed.</p>
     <div class="term">
 <span class="tc">Claude&gt; </span><span class="tk">/close</span>
 <span class="to">
@@ -1240,8 +1244,10 @@ claude --full-auto        # launch Claude Code without approval pauses
   Git ref: a4c8d91
   </span><span class="tg">Session block written to _ai_log.md.</span>
 <span class="tb"></span>
-<span class="to">  Next:  push to Overleaf  →  helpi 2 Pub_AssesTiming_Raoul_TBA
-         generate handover  →  helpi 5 Pub_AssesTiming_Raoul_TBA</span>
+<span class="to">  CLAUDE.md unchanged.
+  </span><span class="tg">Handover regenerated: _handover.html</span>
+<span class="tb"></span>
+<span class="to">  Push to Overleaf if ready:  helpi 2 Pub_AssesTiming_Raoul_TBA</span>
     </div>
   </div>
 
@@ -1270,29 +1276,6 @@ claude --full-auto        # launch Claude Code without approval pauses
     To https://git.overleaf.com/...
        3fa19b2..a4c8d91  master -> master
   </span><span class="tg">Done. Overleaf will reflect changes within a few seconds.</span>
-    </div>
-  </div>
-
-  <!-- ── Step 10 ────────────────────────────────────────────────── -->
-  <div class="ex-step">
-    <div class="ex-step-hdr">
-      <span class="ex-num">10</span>
-      <span class="ex-title">Generate handover document</span>
-      <span class="ex-ref ps">helpi 5</span>
-    </div>
-    <p class="ex-why">Regenerate the handover HTML so it reflects today's session. Ready for a GPT hand-off or to brief a future Claude session.</p>
-    <div class="term">
-<span class="tc">PS&gt; </span><span class="tk">helpi 5 Pub_AssesTiming_Raoul_TBA</span>
-<span class="to">
-  [5] Generate handover document  ->  Pub_AssesTiming_Raoul_TBA
-  generate_handover.ps1 -Project Pub_AssesTiming_Raoul_TBA
-
-  [Enter] run  |  [any other key] cancel
-</span><span class="tb"></span>
-<span class="to">  Sessions found  : 9
-  Git log (code/) : 27 commits
-  Git log (LaTeX) : 12 commits
-  </span><span class="tg">Done: C:\...\Pub_AssesTiming_Raoul_TBA\_handover.html</span>
     </div>
   </div>
 
