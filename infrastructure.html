@@ -1413,7 +1413,7 @@ claude --full-auto        # launch Claude Code without approval pauses
     <tr>
       <td><code>research-work</code></td>
       <td><code>/work Pub_XXX</code>, pasted project path, "open project"</td>
-      <td>Reads <code>_ai_log.md</code>, feeder digests, git status &mdash; asks for goal &mdash; writes session-start block</td>
+      <td>Reads <code>.claude/CLAUDE.md</code> (project brief), then <code>_ai_log.md</code>, feeder digests, git status &mdash; asks for goal &mdash; writes session-start block</td>
       <td><code>/work</code></td>
     </tr>
     <tr>
@@ -1468,12 +1468,13 @@ claude --full-auto        # launch Claude Code without approval pauses
     <tr><td>Feeder digest creation (<code>/family</code>)</td><td>&#10003;</td><td>&#10003; via <code>research-family</code> skill</td></tr>
     <tr><td>Auto-commit after every response</td><td>&#10003; (Stop hook)</td><td>&#10007; no hook equivalent confirmed</td></tr>
     <tr><td>Global instructions (CLAUDE.md equivalent)</td><td>&#10003; <code>~\.claude\CLAUDE.md</code></td><td>&#10003; <code>developer_instructions</code> in <code>~\.codex\config.toml</code></td></tr>
+    <tr><td>Per-project brief (<code>.claude/CLAUDE.md</code>)</td><td>&#10003; read automatically</td><td>&#10003; read in step 2 of <code>research-work</code> skill</td></tr>
   </table>
 
   <div class="note">
-    <strong>Global instructions field:</strong> <code>developer_instructions</code> in <code>~\.codex\config.toml</code>.
-    This mirrors <code>~\.claude\CLAUDE.md</code> and is now configured with the same project conventions,
-    path detection, session discipline, and communication style.
+    <strong>Shared project brief:</strong> <code>.claude/CLAUDE.md</code> in each project root is read by both agents.
+    Claude Code reads it automatically; Codex reads it as step 2 of the <code>research-work</code> skill and via
+    <code>developer_instructions</code> in <code>config.toml</code>. Switching agents mid-project no longer means a cold start.
   </div>
 </div>
 
