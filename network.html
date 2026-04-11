@@ -1,98 +1,4 @@
-# network.ps1  --  Generate a project network graph (feeder links only).
-#                  No external dependencies. Opens in default browser.
-# Usage:  network.ps1
-
-$aiRoot  = Split-Path -Parent $MyInvocation.MyCommand.Path
-$pubRoot = "C:\Users\rich\OneDrive - Danmarks Tekniske Universitet\JR\Publikationer"
-$outFile = Join-Path $aiRoot "network.html"
-
-$projData = Get-Content "$aiRoot\projects.json" | ConvertFrom-Json
-
-# Collect last-session dates
-$lastSessions = @{}
-foreach ($proj in $projData) {
-    $logPath = Join-Path $pubRoot "$($proj.name)\_ai_log.md"
-    if (Test-Path $logPath) {
-        $m = Select-String -Path $logPath -Pattern '^## Session (\d{4}-\d{2}-\d{2})' |
-             Select-Object -Last 1
-        if ($m) { $lastSessions[$proj.name] = $m.Matches[0].Groups[1].Value }
-    }
-}
-
-# Collect edges; support flat-object and legacy array format
-$edges    = [System.Collections.Generic.List[object]]::new()
-$involved = [System.Collections.Generic.HashSet[string]]::new()
-
-foreach ($proj in $projData) {
-    $feedersFile = Join-Path $pubRoot "$($proj.name)\_feeders.json"
-    if (-not (Test-Path $feedersFile)) { continue }
-
-    $raw = Get-Content $feedersFile -Raw | ConvertFrom-Json
-    $feederNames = @()
-    if ($raw.PSObject.Properties.Name -contains 'feeders' -and $raw.feeders -is [array]) {
-        $feederNames = $raw.feeders | ForEach-Object { $_.name }
-    } else {
-        $feederNames = $raw.PSObject.Properties.Name
-    }
-
-    foreach ($feederName in $feederNames) {
-        $lastSync = '?'
-        if (-not ($raw.PSObject.Properties.Name -contains 'feeders')) {
-            $entry = $raw.$feederName
-            if ($entry -and $entry.last_synced_date) { $lastSync = $entry.last_synced_date }
-        }
-        $edges.Add([PSCustomObject]@{ from=$feederName; to=$proj.name; sync=$lastSync })
-        [void]$involved.Add($feederName)
-        [void]$involved.Add($proj.name)
-    }
-}
-
-# Build node list (connected projects only)
-$nodeList = [System.Collections.Generic.List[object]]::new()
-foreach ($name in ($involved | Sort-Object)) {
-    $session = if ($lastSessions.ContainsKey($name)) { $lastSessions[$name] } else { $null }
-    $days    = if ($session) { ([datetime]::Today - [datetime]$session).Days } else { 9999 }
-    $color   = if ($days -le 14) { '#2a7a52' } elseif ($days -le 60) { '#c8a000' } elseif ($days -le 9998) { '#9a3030' } else { '#aaaaaa' }
-    $label   = $name -replace '^(Pub|Pro|PhD)_','' -replace '_TBA$','' -replace '_$',''
-    $tip     = if ($session) { "Last session: $session" } else { "No sessions yet" }
-    $nodeList.Add([PSCustomObject]@{ name=$name; label=$label; color=$color; tip=$tip })
-}
-
-# Build standalone list as HTML li elements directly
-$connectedNames = $involved
-$standaloneItems = $projData |
-    Where-Object { -not $connectedNames.Contains($_.name) } |
-    Sort-Object name |
-    ForEach-Object {
-        $lbl = $_.name -replace '^(Pub|Pro|PhD)_','' -replace '_TBA$','' -replace '_$',''
-        "<li>$lbl</li>"
-    }
-$standaloneHtml = $standaloneItems -join "`n"
-
-# Serialise nodes and edges to JSON
-$nodesJson = ($nodeList | ForEach-Object {
-    $n = $_.name  | ConvertTo-Json -Compress
-    $l = $_.label | ConvertTo-Json -Compress
-    $c = $_.color | ConvertTo-Json -Compress
-    $t = $_.tip   | ConvertTo-Json -Compress
-    "{name:$n,label:$l,color:$c,tip:$t}"
-}) -join ","
-
-$edgesJson = ($edges | ForEach-Object {
-    $f = $_.from | ConvertTo-Json -Compress
-    $t = $_.to   | ConvertTo-Json -Compress
-    $s = $_.sync | ConvertTo-Json -Compress
-    "{from:$f,to:$t,sync:$s}"
-}) -join ","
-
-$genTime     = Get-Date -Format "yyyy-MM-dd HH:mm"
-$nTotal      = $projData.Count
-$nConnected  = $involved.Count
-$nEdges      = $edges.Count
-$nStandalone = $nTotal - $nConnected
-
-$html = @"
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -122,7 +28,7 @@ canvas { background: #fff; border: 1px solid #dde4ee; border-radius: 4px; box-sh
 <body>
 <div id="header">
   <h1>Research Project Network</h1>
-  <span class="sub">Generated $genTime &bull; $nConnected connected / $nTotal total &bull; $nEdges feeder links</span>
+  <span class="sub">Generated 2026-04-11 18:44 &bull; 29 connected / 93 total &bull; 34 feeder links</span>
 </div>
 <div id="legend">
   <strong style="color:#555">Last session:</strong>
@@ -140,14 +46,73 @@ canvas { background: #fff; border: 1px solid #dde4ee; border-radius: 4px; box-sh
 <div id="canvas-wrap"><canvas id="c"></canvas></div>
 <div id="tooltip"></div>
 <details id="standalone">
-  <summary>Standalone projects ($nStandalone - no feeder links)</summary>
+  <summary>Standalone projects (64 - no feeder links)</summary>
   <ul>
-$standaloneHtml
+<li>13th hEART: Assessing Public Transport Fares in Denmark</li>
+<li>42180 - F24 - Exercises week 4,5 and 7</li>
+<li>42180 - F26 - Weekly exercises</li>
+<li>42180 Lectures</li>
+<li>BeamerPres CHARGO</li>
+<li>Bicycle_design_Slides_Grenoble</li>
+<li>Carlsberg_Postdoc_application_Dimitrios</li>
+<li>CHARGO - charging Infrastructure</li>
+<li>CHARGO - charging Infrastructure report</li>
+<li>CHARGO - charging Infrastructure report v2</li>
+<li>Cycling paper on over and under-performance |SHORT (hEART) JR</li>
+<li>Cycling_speed_and_infra_IATBR_abstract</li>
+<li>DFF Green 2021 bicycle network design</li>
+<li>DFF_TRUST</li>
+<li>Discrete choice and irregularily spaced panels HEART</li>
+<li>DTU Management Master Thesis ï¿½ Structured Guidance Template</li>
+<li>E-bike_adoption_trafikdage2026</li>
+<li>EV charging simulation: censored demand - HEART</li>
+<li>gaia_documentation</li>
+<li>hEART - FLOW</li>
+<li>hEART 2023 - first and last mile fallacy</li>
+<li>IATBR_24_Dimitrios_Riding Smooth</li>
+<li>Jeppe's course case</li>
+<li>NNF_Postdoc_application_Dimitrios</li>
+<li>Paulsen_Mads_hEART2023</li>
+<li>Thesis_DA</li>
+<li>Presentation_hEART2023_PaulsenRich</li>
+<li>Flitmo</li>
+<li>Traction</li>
+<li>ABM_AVbusses_TRA</li>
+<li>Bias_Smartphone_IEEE</li>
+<li>CarSharing_Procedia</li>
+<li>CausalInference</li>
+<li>CausalInference</li>
+<li>CensoredCharging_EV</li>
+<li>ConditionalAgreement</li>
+<li>Cycling_overunder_performance_JCMR</li>
+<li>ELISA_TRD</li>
+<li>FareWelfare_TRA</li>
+<li>Idle-time_PARTA</li>
+<li>IrregularPanel</li>
+<li>MicroModel_CarOwner_EL</li>
+<li>NonlinearDiffusion_PartB</li>
+<li>NonlinearDiffusion_PartB</li>
+<li>OptimismBias_PartA</li>
+<li>Platooning_TRE</li>
+<li>Platooning_TRE</li>
+<li>pLCA_Trucks</li>
+<li>PseudoPanel_Stas_Transp</li>
+<li>PseudoPanel_Stas_Transp</li>
+<li>PseudoPanel_Stas_Transp</li>
+<li>PseudoPanel_Stas_Transp</li>
+<li>PseudoPanel_Stas_Transp</li>
+<li>PseudoPanel_Stas_Transp</li>
+<li>Roadworks_Findings</li>
+<li>SharedPub_Competition_TPA</li>
+<li>SOC_EV</li>
+<li>Reagent Novo</li>
+<li>Slides-Model-Specification</li>
+<li>Aalborg Trafikdage 2025 - FLOW</li>
   </ul>
 </details>
 <script>
-var RAW_NODES = [$nodesJson];
-var RAW_EDGES = [$edgesJson];
+var RAW_NODES = [{name:"Pub_ActionSpace_NatComm",label:"ActionSpace_NatComm",color:"#2a7a52",tip:"Last session: 2026-04-06"},{name:"Pub_ActionSpace_TG",label:"ActionSpace_TG",color:"#aaaaaa",tip:"No sessions yet"},{name:"Pub_AssesTiming_Raoul_TBA",label:"AssesTiming_Raoul",color:"#2a7a52",tip:"Last session: 2026-04-10"},{name:"Pub_BicycleInfra_SocioEconomic_TRB",label:"BicycleInfra_SocioEconomic_TRB",color:"#aaaaaa",tip:"No sessions yet"},{name:"Pub_BicycleNetworkDemand_PartB",label:"BicycleNetworkDemand_PartB",color:"#aaaaaa",tip:"No sessions yet"},{name:"Pub_CBACharging_TRD",label:"CBACharging_TRD",color:"#aaaaaa",tip:"No sessions yet"},{name:"Pub_ChargingInformationSharing_OnePlus",label:"ChargingInformationSharing_OnePlus",color:"#aaaaaa",tip:"No sessions yet"},{name:"Pub_EbikeAdaptation_TRC",label:"EbikeAdaptation_TRC",color:"#aaaaaa",tip:"No sessions yet"},{name:"Pub_EV_geografi",label:"EV_geografi",color:"#aaaaaa",tip:"No sessions yet"},{name:"Pub_FlowPaperSP2_TRD",label:"FlowPaperSP2_TRD",color:"#aaaaaa",tip:"No sessions yet"},{name:"Pub_FlowSP1_TBA",label:"FlowSP1",color:"#aaaaaa",tip:"No sessions yet"},{name:"Pub_GridConnectionReview_EV",label:"GridConnectionReview_EV",color:"#aaaaaa",tip:"No sessions yet"},{name:"Pub_InformationSharing_OnePlus",label:"InformationSharing_OnePlus",color:"#aaaaaa",tip:"No sessions yet"},{name:"Pub_Letswalk_Transp",label:"Letswalk_Transp",color:"#aaaaaa",tip:"No sessions yet"},{name:"Pub_LVGrid_TBA",label:"LVGrid",color:"#aaaaaa",tip:"No sessions yet"},{name:"Pub_MIPEntropy_MPC",label:"MIPEntropy_MPC",color:"#2a7a52",tip:"Last session: 2026-04-05"},{name:"Pub_NapstiGranularity_TBA",label:"NapstiGranularity",color:"#2a7a52",tip:"Last session: 2026-04-08"},{name:"Pub_PMIP_AOR",label:"PMIP_AOR",color:"#2a7a52",tip:"Last session: 2026-04-11"},{name:"Pub_PopInt_PartB",label:"PopInt_PartB",color:"#aaaaaa",tip:"No sessions yet"},{name:"Pub_PopSynth_LTM_ETTR",label:"PopSynth_LTM_ETTR",color:"#aaaaaa",tip:"No sessions yet"},{name:"Pub_Popsynth_Zero_TRC",label:"Popsynth_Zero_TRC",color:"#aaaaaa",tip:"No sessions yet"},{name:"Pub_PopulationSynthesis_TRA",label:"PopulationSynthesis_TRA",color:"#aaaaaa",tip:"No sessions yet"},{name:"Pub_PopulationVianuey_TBA",label:"PopulationVianuey",color:"#aaaaaa",tip:"No sessions yet"},{name:"Pub_ScalablePopSynth_TRC",label:"ScalablePopSynth_TRC",color:"#aaaaaa",tip:"No sessions yet"},{name:"Pub_StopGeometry_TBA",label:"StopGeometry",color:"#aaaaaa",tip:"No sessions yet"},{name:"Pub_SupercycleHighways_TRA",label:"SupercycleHighways_TRA",color:"#aaaaaa",tip:"No sessions yet"},{name:"Pub_SurfaceQuality",label:"SurfaceQuality",color:"#aaaaaa",tip:"No sessions yet"},{name:"Pub_VoTOverTime_TRA",label:"VoTOverTime_TRA",color:"#aaaaaa",tip:"No sessions yet"},{name:"Pub_WelfareBicycles_CTP",label:"WelfareBicycles_CTP",color:"#aaaaaa",tip:"No sessions yet"}];
+var RAW_EDGES = [{from:"Pub_PMIP_AOR",to:"Pub_PopInt_PartB",sync:"2026-04-11"},{from:"Pub_ScalablePopSynth_TRC",to:"Pub_PopInt_PartB",sync:"2026-04-11"},{from:"Pub_Popsynth_Zero_TRC",to:"Pub_PopInt_PartB",sync:"2026-04-11"},{from:"Pub_PopulationSynthesis_TRA",to:"Pub_PopInt_PartB",sync:"2026-04-11"},{from:"Pub_PopSynth_LTM_ETTR",to:"Pub_PopInt_PartB",sync:"2026-04-11"},{from:"Pub_PopulationVianuey_TBA",to:"Pub_PopInt_PartB",sync:"2026-04-11"},{from:"Pub_PopInt_PartB",to:"Pub_PMIP_AOR",sync:"2026-04-11"},{from:"Pub_PMIP_AOR",to:"Pub_AssesTiming_Raoul_TBA",sync:"2026-04-04"},{from:"Pub_MIPEntropy_MPC",to:"Pub_AssesTiming_Raoul_TBA",sync:"2026-04-04"},{from:"Pub_ActionSpace_NatComm",to:"Pub_ActionSpace_TG",sync:"2026-04-06"},{from:"Pub_FlowPaperSP2_TRD",to:"Pub_FlowSP1_TBA",sync:"2026-04-11"},{from:"Pub_PMIP_AOR",to:"Pub_MIPEntropy_MPC",sync:"2026-04-05"},{from:"Pub_PopInt_PartB",to:"Pub_MIPEntropy_MPC",sync:"2026-04-11"},{from:"Pub_PopSynth_LTM_ETTR",to:"Pub_MIPEntropy_MPC",sync:"2026-04-11"},{from:"Pub_ActionSpace_TG",to:"Pub_ActionSpace_NatComm",sync:"2026-04-06"},{from:"Pub_VoTOverTime_TRA",to:"Pub_ActionSpace_NatComm",sync:"2026-04-11"},{from:"Pub_Letswalk_Transp",to:"Pub_NapstiGranularity_TBA",sync:"2026-04-06"},{from:"Pub_BicycleNetworkDemand_PartB",to:"Pub_NapstiGranularity_TBA",sync:"2026-04-06"},{from:"Pub_StopGeometry_TBA",to:"Pub_NapstiGranularity_TBA",sync:"2026-04-06"},{from:"Pub_SurfaceQuality",to:"Pub_NapstiGranularity_TBA",sync:"2026-04-11"},{from:"Pub_EbikeAdaptation_TRC",to:"Pub_NapstiGranularity_TBA",sync:"2026-04-11"},{from:"Pub_SupercycleHighways_TRA",to:"Pub_NapstiGranularity_TBA",sync:"2026-04-11"},{from:"Pub_FlowSP1_TBA",to:"Pub_FlowPaperSP2_TRD",sync:"2026-04-11"},{from:"Pub_SupercycleHighways_TRA",to:"Pub_BicycleNetworkDemand_PartB",sync:"2026-04-11"},{from:"Pub_WelfareBicycles_CTP",to:"Pub_BicycleNetworkDemand_PartB",sync:"2026-04-11"},{from:"Pub_BicycleInfra_SocioEconomic_TRB",to:"Pub_BicycleNetworkDemand_PartB",sync:"2026-04-11"},{from:"Pub_ChargingInformationSharing_OnePlus",to:"Pub_InformationSharing_OnePlus",sync:"2026-04-11"},{from:"Pub_GridConnectionReview_EV",to:"Pub_CBACharging_TRD",sync:"2026-04-11"},{from:"Pub_LVGrid_TBA",to:"Pub_CBACharging_TRD",sync:"2026-04-11"},{from:"Pub_EV_geografi",to:"Pub_CBACharging_TRD",sync:"2026-04-11"},{from:"Pub_InformationSharing_OnePlus",to:"Pub_ChargingInformationSharing_OnePlus",sync:"2026-04-11"},{from:"Pub_FlowSP1_TBA",to:"Pub_FlowPaperSP2_TRD",sync:"2026-04-11"},{from:"Pub_ChargingInformationSharing_OnePlus",to:"Pub_InformationSharing_OnePlus",sync:"2026-04-11"},{from:"Pub_NapstiGranularity_TBA",to:"Pub_StopGeometry_TBA",sync:"2026-04-08"}];
 
 var canvas = document.getElementById('c');
 var ctx = canvas.getContext('2d');
@@ -321,14 +286,3 @@ draw();
 </script>
 </body>
 </html>
-"@
-
-[System.IO.File]::WriteAllText($outFile, $html, [System.Text.Encoding]::UTF8)
-
-Write-Host ""
-Write-Host "  Network graph generated" -ForegroundColor Green
-Write-Host "  Projects    : $nTotal ($nConnected with feeder links, $nStandalone standalone)"
-Write-Host "  Feeder links: $nEdges"
-Write-Host "  Output      : $outFile"
-Write-Host ""
-Start-Process $outFile

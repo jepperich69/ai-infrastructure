@@ -89,6 +89,23 @@ $logContent = @"
 Set-Content -Path (Join-Path $projectRoot "_ai_log.md") -Value $logContent
 Write-Host "OK   | _ai_log.md created"
 
+# ── Proxy-sandbox: per-project Claude permissions ─────────────────
+$claudeDir = Join-Path $projectRoot ".claude"
+New-Item -ItemType Directory -Path $claudeDir -Force | Out-Null
+$sandboxSettings = @"
+{
+  "permissions": {
+    "deny": [
+      "Read(C:/Users/rich/OneDrive*/JR/AI_auto/**)",
+      "Read(C:/Users/rich/AppData/**)",
+      "Read(C:/Users/rich/.claude/**)"
+    ]
+  }
+}
+"@
+Set-Content -Path (Join-Path $claudeDir "settings.json") -Value $sandboxSettings
+Write-Host "OK   | .claude/settings.json created (proxy-sandbox active)"
+
 Write-Host ""
 Write-Host "Done. Project ready at:"
 Write-Host "  $projectRoot"

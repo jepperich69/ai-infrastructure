@@ -443,6 +443,7 @@
     <li><code>Literature/</code> &mdash; PDFs and references</li>
     <li><code>_ai_log.md</code> &mdash; AI session log (read and written by both layers)</li>
     <li><code>_handover.html</code> &mdash; Generated handover document for agent hand-off</li>
+    <li><code>.claude/settings.json</code> &mdash; Per-project Claude permissions (proxy-sandbox, see &sect;7b)</li>
   </ul>
 </div>
 
@@ -898,6 +899,109 @@ claude --full-auto        # launch Claude Code without approval pauses
     <tr><td><code>/work</code> feeder delta (new sessions)</td><td>When feeder has new work</td><td>~500&ndash;2k per feeder</td></tr>
     <tr><td><code>/add-memory</code> (file)</td><td>Ad hoc</td><td>~500&ndash;1k</td></tr>
   </table>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- PROXY-SANDBOX                                                    -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="section green">
+  <h2>7b &mdash; Proxy-Sandbox: Per-Project File Isolation <span class="tag once">AUTO on new_project</span></h2>
+  <p>
+    Claude Code is not an OS-level sandbox &mdash; it runs with your full user account permissions.
+    The <strong>proxy-sandbox</strong> design compensates for this through two complementary layers:
+  </p>
+  <ol>
+    <li><strong>Organisational:</strong> sensitive files live <em>outside</em> the paper project folder. If it is not in the project, Claude will not see it.</li>
+    <li><strong>Technical:</strong> a per-project <code>.claude/settings.json</code> deny list blocks Claude from reading known sensitive paths even if asked.</li>
+  </ol>
+  <p>
+    The result is a practical guardrail, not a cryptographic guarantee. The discipline of keeping
+    data outside the project folder does the heavy lifting; the deny rules close the obvious escape hatches.
+  </p>
+
+  <h3>Shared sensitive data &mdash; <code>JR\Sensitive_Data\</code></h3>
+  <p>
+    Many projects draw on the same sensitive source material (participant data, raw surveys, confidential datasets).
+    Rather than duplicating or scattering this data, a single shared folder sits at the JR root &mdash;
+    outside all project folders and outside Claude's reach by both layers of protection.
+  </p>
+  <pre>JR\
+  Sensitive_Data\          &lt;!-- human-only zone --&gt;
+    raw_data.csv
+    participants.xlsx
+    code\                  &lt;!-- scripts you run yourself --&gt;
+      anonymise.py
+  Publikationer\
+    Pub_XXX\               &lt;!-- Claude works here --&gt;
+    Pub_YYY\               &lt;!-- Claude works here --&gt;
+  AI_auto\</pre>
+  <p>
+    Workflow: run scripts in <code>Sensitive_Data\code\</code> yourself &rarr;
+    anonymised outputs land in <code>Pub_XXX\code\data\</code> &rarr;
+    Claude picks up from there.
+  </p>
+
+  <h3>What is blocked</h3>
+  <p>Deny rules operate at two levels:</p>
+  <table class="cmd-table">
+    <tr><th>Path</th><th>Scope</th><th>Reason</th></tr>
+    <tr><td><code>JR/Sensitive_Data/**</code></td><td>Global <code>~/.claude/settings.json</code></td><td>Shared sensitive source data and analysis scripts</td></tr>
+    <tr><td><code>JR/AI_auto/**</code></td><td>Per-project <code>.claude/settings.json</code></td><td>Infrastructure scripts, logs, API config</td></tr>
+    <tr><td><code>AppData/**</code></td><td>Per-project <code>.claude/settings.json</code></td><td>Application credentials, browser data, tokens</td></tr>
+    <tr><td><code>~/.claude/**</code></td><td>Per-project <code>.claude/settings.json</code></td><td>Global Claude config, memory files, session state</td></tr>
+  </table>
+
+  <h3>What is not blocked</h3>
+  <p>
+    Claude can still read files in the project folder and any other path not on the deny list.
+    The primary protection against cross-project leakage is simply <em>not putting sensitive data inside a project folder</em>.
+    If a file must be confidential, keep it in <code>Sensitive_Data\</code> or outside <code>JR\</code> entirely.
+  </p>
+
+  <h3>Generated file</h3>
+  <pre>Pub_XXX/
+  .claude/
+    settings.json    # auto-created by new_project.ps1
+      deny: AI_auto/**, AppData/**, ~/.claude/**
+
+~/.claude/settings.json   # global — deny: JR/Sensitive_Data/**</pre>
+
+  <h3>DTU data policy compliance</h3>
+  <p>DTU's AI use policy states:</p>
+  <blockquote style="border-left:3px solid #aaa; margin:0.5em 0 0.5em 1em; padding:0.3em 0.8em; color:#444; font-style:italic;">
+    &ldquo;You must avoid using personal or sensitive data in prompts regardless of the AI tool.
+    You may use AI tools for which we do not have a data processing agreement, provided the content
+    is not subject to GDPR or otherwise critical to the business.&rdquo;
+  </blockquote>
+  <p>This setup satisfies that policy by construction:</p>
+  <table class="cmd-table">
+    <tr><th>Policy requirement</th><th>How it is met</th></tr>
+    <tr>
+      <td>No personal/sensitive data in prompts</td>
+      <td>Project folders contain only LaTeX source, research code, and non-personal data.
+          Nothing personal is ever placed inside a project folder.</td>
+    </tr>
+    <tr>
+      <td>Confidential material &rarr; use a tool with DPA</td>
+      <td>Not applicable: no confidential material enters the project folder or the prompt.</td>
+    </tr>
+    <tr>
+      <td>Without DPA &rarr; only non-GDPR, non-business-critical content</td>
+      <td>All content Claude sees is academic research material: manuscripts, simulations,
+          published data, code. Not subject to GDPR.</td>
+    </tr>
+  </table>
+  <p>
+    The proxy-sandbox enforces this not through trust alone, but structurally: Claude can only
+    read what is inside the project folder, and the project folder is kept free of sensitive data
+    by design. Compliance is therefore a property of the system, not a matter of remembering to be careful.
+  </p>
+
+  <div class="note">
+    <strong>Design intent:</strong> Claude manages files responsibly, not by bypassing permissions.
+    The proxy-sandbox makes accidental exposure hard &mdash; it does not make deliberate
+    exposure impossible. Keep truly sensitive material outside the project root.
+  </div>
 </div>
 
 <!-- ═══════════════════════════════════════════════════════════════ -->
