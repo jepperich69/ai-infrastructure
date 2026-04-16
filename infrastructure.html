@@ -232,7 +232,16 @@
   .frontpage-img { text-align: center; margin: 0 0 40px 0; }
   .frontpage-img img { max-width: 620px; width: 100%; border-radius: 8px;
                        box-shadow: 0 4px 20px rgba(0,0,0,0.12); }
-  @media print { .frontpage-img { page-break-after: always; } }
+  @media print {
+    /* Image has its own title — hide the HTML h1/subtitle in print */
+    .page > h1, .page > .subtitle { display: none !important; }
+    /* Frontpage fills exactly one page */
+    .frontpage-img { page-break-after: always; display: flex;
+                     align-items: center; justify-content: center;
+                     height: 100vh; margin: 0; }
+    .frontpage-img img { max-height: 96vh; max-width: 100%; width: auto;
+                         border-radius: 0; box-shadow: none; }
+  }
 
   /* ── Print: show ONLY the one-pager ── */
   @media print {
