@@ -136,3 +136,20 @@
 - Update `CHANGELOG.md` and bump `VERSION` to v0.3 (submit pipeline is a meaningful new feature)
 - `helpi.ps1`: wrap PSConsoleReadLine call in try/catch for non-interactive shell degradation (carried from v0.2)
 - Extract hardcoded `$aiRoot` / `$pubRoot` paths to a shared `config.ps1` (carried from v0.2)
+
+---
+
+## Session 2026-04-16
+**Agent:** Claude Sonnet 4.6
+**Goal:** Improve agent-switching context (AGENTS.md auto-generation), add feeder network visualization to infrastructure docs, integrate frontpage image, discuss packaging feasibility.
+**Files touched:**
+- `AI_auto/generate_handover.ps1` — added AGENTS.md generation: writes paper description (from `.claude/CLAUDE.md`), latest session snapshot, full log, and session-entry instructions to project root on every `helpi 5` / `/close`
+- `AI_auto/infrastructure.html` — v0.2 → v0.3: added AGENTS.md subsection in §3, added interactive D3.js feeder network graph in §7 (41 nodes, 7 clusters, convex hulls, zoom/drag), updated §10 shared-context note, updated one-pager handover scenario, integrated `Infra_frontpage.png` as cover page (HTML + full PDF, print-only h1/subtitle hide, `page-break-after: always`)
+- `AI_auto/infrastructure_full.html` / `infrastructure_summary.html` / `_full.pdf` / `_summary.pdf` — regenerated via `generate_docs.ps1`
+**Outcome:** Agent switching (Claude ↔ Codex) is now fully automatic in both directions — AGENTS.md is regenerated on every close and auto-loaded by Codex; the infrastructure guide is visually richer with a cover page and an interactive feeder graph showing the full cross-project knowledge network.
+**Next steps:**
+- Consider packaging the infrastructure as a GitHub template repo + installer script for external use (discussed: parameterise paths via `config.ps1`, write a `setup.ps1`, Windows-first)
+- Update `CHANGELOG.md` and bump `VERSION` to v0.3
+- `helpi.ps1`: wrap PSConsoleReadLine call in try/catch for non-interactive shell degradation (carried)
+- Extract hardcoded `$aiRoot` / `$pubRoot` paths to a shared `config.ps1` (carried)
+**Git ref:** 9c33350
