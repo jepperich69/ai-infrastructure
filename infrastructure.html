@@ -243,7 +243,7 @@
 <div class="page">
 
 <h1>Research Infrastructure Guide</h1>
-<div class="subtitle">Infrastructure version: <strong>v0.2</strong> &nbsp;&bull;&nbsp; Last updated: 2026-04-05 &nbsp;&bull;&nbsp; Scripts live in <code>JR\AI_auto\</code> &nbsp;&bull;&nbsp; Claude commands live in <code>~\.claude\commands\</code></div>
+<div class="subtitle">Infrastructure version: <strong>v0.2</strong> &nbsp;&bull;&nbsp; Last updated: 2026-04-13 &nbsp;&bull;&nbsp; Scripts live in <code>JR\AI_auto\</code> &nbsp;&bull;&nbsp; Claude commands live in <code>~\.claude\commands\</code></div>
 
 <!-- ═══════════════════════════════════════════════════════════════ -->
 <!-- PROBLEM FORMULATION                                             -->
@@ -547,16 +547,23 @@ co-author's version of the sentence
 
   <h3>Handover document <span class="tag auto">AUTO</span></h3>
   <p>
-    <code>_handover.html</code> is regenerated automatically at the end of every <code>/close</code>.
-    No manual step needed. You can also regenerate it manually at any time:
+    <code>helpi 5</code> now compiles the handoff package directly from the structured
+    session log. The source of truth remains <code>_ai_log.md</code>, but the command
+    also validates the newest session block and emits both <code>_handover.html</code>
+    and a machine-readable <code>_handover.json</code> sidecar. The package is regenerated
+    automatically at the end of every <code>/close</code>. You can also rebuild it manually
+    at any time:
   </p>
   <pre>helpi 5 Pub_AssesTiming_Raoul_TBA</pre>
-  <p>The HTML contains:</p>
+  <p>The handoff package contains:</p>
   <ul>
+    <li>A latest-session snapshot (goal, outcome, next steps, files touched, git ref when present)</li>
+    <li>Validation of whether the newest session block is complete enough for handoff</li>
     <li>Instructions for any AI agent on how to add a session entry</li>
     <li>The rendered session log</li>
     <li>A copyable textarea with the raw <code>_ai_log.md</code> &mdash; paste to GPT, get updated markdown back, paste into <code>_ai_log.md</code>, regenerate HTML</li>
     <li>Git history for both <code>code/</code> and <code>Overleaf_source/</code></li>
+    <li>A structured <code>_handover.json</code> sidecar for future automation</li>
   </ul>
 
   <h3>One-time project setup <span class="tag once">ONCE</span></h3>
@@ -651,7 +658,7 @@ helpi 3 Pub_X main.tex             # run command 3 with a specific .tex file</pr
     <tr><td>2</td><td>Push local edits to Overleaf</td><td><code>push_to_overleaf.ps1 -Project Pub_XXX</code></td><td><span class="tag manual">manual</span></td></tr>
     <tr><td>3</td><td>Compile LaTeX &amp; open PDF</td><td><code>compile_latex.ps1 -Project Pub_XXX</code> &mdash; graphical .tex picker if multiple files</td><td><span class="tag manual">manual</span></td></tr>
     <tr><td>4</td><td>Open project in VS Code</td><td><code>code "...\Pub_XXX\Overleaf_source"</code></td><td><span class="tag manual">manual</span></td></tr>
-    <tr><td>5</td><td>Generate handover HTML</td><td><code>generate_handover.ps1 -Project Pub_XXX</code></td><td><span class="tag auto">auto on /close</span></td></tr>
+    <tr><td>5</td><td>Compile handover package from AI log</td><td><code>generate_handover.ps1 -Project Pub_XXX</code> &mdash; validates latest session, writes <code>_handover.html</code> + <code>_handover.json</code></td><td><span class="tag auto">auto on /close</span></td></tr>
     <tr><td>6</td><td>Open handover in browser</td><td><code>Start-Process "...\Pub_XXX\_handover.html"</code></td><td><span class="tag manual">manual</span></td></tr>
     <tr><td>7</td><td>Init code/ git repo (one-time)</td><td><code>init_project_git.ps1 -Project Pub_XXX</code></td><td><span class="tag once">once</span></td></tr>
     <tr><td>8</td><td>Open infrastructure guide</td><td><code>Start-Process "AI_auto\infrastructure.html"</code></td><td><span class="tag manual">manual</span></td></tr>
@@ -662,6 +669,8 @@ helpi 3 Pub_X main.tex             # run command 3 with a specific .tex file</pr
     <tr><td>13</td><td>Rollback code commits</td><td><code>rollback.ps1 -Project Pub_XXX -N 1</code> &mdash; previews changes before reverting</td><td><span class="tag manual">manual</span></td></tr>
     <tr><td>14</td><td>Snapshot Overleaf source</td><td><code>snapshot.ps1 -Project Pub_XXX [-Tag V2]</code> &mdash; git-tags full Overleaf_source/ (.tex, .bib, figures); auto-increments version if Tag omitted</td><td><span class="tag manual">manual</span></td></tr>
     <tr><td>15</td><td>Open project network graph</td><td><code>network.ps1</code> &mdash; generates and opens interactive HTML graph of all projects and feeder links</td><td><span class="tag manual">manual</span></td></tr>
+    <tr><td>16</td><td>Generate docs (summary + full HTML/PDF)</td><td><code>generate_docs.ps1</code> &mdash; rebuilds <code>infrastructure_summary.html/pdf</code> and <code>infrastructure_full.html/pdf</code></td><td><span class="tag manual">manual</span></td></tr>
+    <tr><td>17</td><td>Build submission package</td><td><code>submit.ps1 -Project Pub_XXX</code> &mdash; prompts for journal, main .tex, and original .tex (for diff); assembles complete package in <code>_submissions/YYYY-MM-DD_journal/</code>. Run <code>/submit</code> first to also generate cover letter, highlights, and author statement.</td><td><span class="tag manual">manual</span></td></tr>
   </table>
 </div>
 
@@ -1344,46 +1353,96 @@ claude --full-auto        # launch Claude Code without approval pauses
 <div class="section indigo">
   <h2>6c &mdash; /submit &mdash; Submission package generator <span class="tag ai">AI</span></h2>
   <p>
-    Generates a complete, journal-ready submission package in a versioned subfolder inside
-    <code>Overleaf_source/</code>. Handles BibTeX integration, anonymous PDF, cover letter,
-    highlights, and author statements autonomously.
+    Assembles a complete, journal-ready submission package in a timestamped subfolder
+    <code>_submissions/YYYY-MM-DD_&lt;journal&gt;/</code> under the project root.
+    Two entry points exist: <code>/submit</code> (AI + file ops) and <code>helpi 17</code>
+    (auto-generates AI content via <code>claude -p</code> if staging is empty, then runs file ops).
   </p>
 
-  <h3>Versioned subfolders</h3>
-  <pre>Overleaf_source/
-  Original/          # /submit
-  Revision_R1/       # /submit R1
-  Revision_R2/       # /submit R2</pre>
+  <div class="flow">
+    <div class="box purple"><strong>/submit</strong><br><small>Claude reads manuscript,<br>generates AI content,<br>calls submit.ps1</small></div>
+    <div class="arr">→</div>
+    <div class="box green"><strong>submit.ps1</strong><br><small>7-step file ops<br>(helpi 17 entry point)</small></div>
+    <div class="arr">→</div>
+    <div class="box gold"><strong>_submissions/<br>YYYY-MM-DD_MPC/</strong><br><small>complete package</small></div>
+  </div>
 
-  <h3>Files generated in each subfolder</h3>
+  <h3>Two-step flow</h3>
+  <p><strong>Step 1 — AI content:</strong> Claude reads the abstract and contributions,
+  writes <code>cover_letter.tex</code>, <code>highlights.txt</code>, and <code>author_statement.tex</code>
+  to <code>_submit_staging/</code>, and compiles them to PDF.
+  <code>/submit</code> triggers this directly; <code>helpi 17</code> triggers it automatically via
+  <code>claude -p</code> if <code>_submit_staging/cover_letter.pdf</code> is absent.</p>
+  <p><strong>Step 2 — File assembly</strong> (<code>submit.ps1</code>): prompts for journal abbreviation,
+  revised .tex, and original .tex (for diff), then runs all 7 steps below.</p>
+
+  <h3>File naming convention</h3>
+  <p>All outputs use a consistent prefix: <code>Type_Author_Journal_Year_Rev</code>
+  (e.g. <code>Rich_MPC_2026_R1</code>). Revision is auto-detected from the .tex filename
+  (e.g. <code>Springer_R1C.tex</code> → <code>R1</code>); override with <code>-Revision R2</code>.</p>
+
+  <h3>Files produced</h3>
   <table class="cmd-table">
-    <tr><th>File</th><th>Description</th><th>Action needed</th></tr>
-    <tr><td><code>manuscript.zip</code></td><td>Submission package — bbl integrated, no .bib, figures included</td><td>Upload to journal</td></tr>
-    <tr><td><code>anonymous_main.pdf</code></td><td>PDF for double-blind review — author info stripped</td><td>Review, submit as main PDF</td></tr>
-    <tr><td><code>frontpage.pdf</code></td><td>Title page with full author info and affiliations</td><td>Submit as title page</td></tr>
-    <tr><td><code>coverletter.tex</code> / <code>.pdf</code></td><td>Cover letter drafted by Claude from abstract</td><td>Fill in journal name, review</td></tr>
-    <tr><td><code>highlights.tex</code> / <code>.txt</code> / <code>.pdf</code></td><td>5 highlights ≤ 85 chars each, signed</td><td>Review for accuracy</td></tr>
-    <tr><td><code>author_statements.tex</code></td><td>CRediT contributions + competing interests + data availability</td><td>Confirm co-author roles, choose data statement</td></tr>
+    <tr><th>File</th><th>How generated</th><th>Action needed</th></tr>
+    <tr><td><code>Manus_Rich_MPC_2026_R1.pdf</code></td><td>Full latexmk compile (BIBINPUTS + BSTINPUTS set)</td><td>Verify layout</td></tr>
+    <tr><td><code>Frontpage_Rich_MPC_2026_R1.pdf</code></td><td>Page 1 via Ghostscript</td><td>Title-page upload</td></tr>
+    <tr><td><code>Package_Rich_MPC_2026_R1.tex</code></td><td>Flat .tex with .bbl inlined</td><td>Reference copy</td></tr>
+    <tr><td><code>Package_Rich_MPC_2026_R1.zip</code></td><td>Flat tex (as <code>main.tex</code>) + figures + .sty/.cls</td><td>Upload as source package</td></tr>
+    <tr><td><code>Manus_Blind_MPC_2026_R1.pdf</code></td><td>Author info stripped, compiled</td><td>Double-blind submissions</td></tr>
+    <tr><td><code>Package_Blind_MPC_2026_R1.zip</code></td><td>Blind tex (as <code>main.tex</code>) + figures</td><td>Double-blind source upload</td></tr>
+    <tr><td><code>Diff_Rich_MPC_2026_R1.pdf</code></td><td>latexdiff vs original (CRLF-normalised, bbl inlined)</td><td>Attach as tracked-changes</td></tr>
+    <tr><td><code>Diff_Rich_MPC_2026_R1.tex</code></td><td>Diff source for manual re-compile if needed</td><td>Open in Overleaf if PDF fails</td></tr>
+    <tr><td><code>Cover_Rich_MPC_2026_R1.pdf</code></td><td>Claude-drafted cover letter</td><td>Fill in journal name, review</td></tr>
+    <tr><td><code>Highlights_Rich_MPC_2026_R1.txt</code></td><td>5 bullets ≤ 85 chars</td><td>Paste into submission form</td></tr>
+    <tr><td><code>AuthorStat_Rich_MPC_2026_R1.pdf</code></td><td>CRediT taxonomy statement</td><td>Confirm roles</td></tr>
+    <tr><td><code>MANIFEST.txt</code></td><td>Contents summary with file sizes</td><td>Keep for records</td></tr>
   </table>
 
-  <h3>BibTeX integration</h3>
-  <p>
-    At submission time, the compiled <code>main.bbl</code> is inlined into <code>submission_main.tex</code>,
-    replacing <code>\bibliography{refs}</code>. The zip contains this self-contained file — no
-    <code>.bib</code> dependency for the journal's LaTeX system. Your <code>refs.bib</code> is
-    kept locally for continued development but not shipped.
-  </p>
+  <h3>Blind manuscript — what is stripped</h3>
+  <p>A line-by-line state machine comments out (prefixes <code>% [BLIND]</code>) all author-identifying content:
+  <code>\author{}</code>, <code>\institute{}</code>, <code>\affiliation{}</code>, <code>\address{}</code>,
+  <code>\thanks{}</code>, <code>\email{}</code>, elsarticle markers (<code>\ead</code>, <code>\corref</code>,
+  <code>\cortext</code>, <code>\fntext</code>), and the entire Acknowledgements section.
+  Works for svjour3, elsarticle, and article classes.</p>
+
+  <h3>Known gotchas &amp; fixes implemented</h3>
+  <ul>
+    <li><strong>BSTINPUTS not set</strong> — bibtex could not find <code>.bst</code> files (e.g. <code>spmpsci.bst</code>) stored in <code>Overleaf_source/</code>, producing an empty .bbl. Fixed: <code>$env:BSTINPUTS</code> set alongside <code>$env:BIBINPUTS</code> before all compilations.</li>
+    <li><strong>CRLF/LF mismatch in diff</strong> — files saved on Windows (CRLF) vs Overleaf (LF) differ on every line; latexdiff cannot find anchors and silently drops changes. Fixed: LF-normalised temp copies are diffed; originals untouched.</li>
+    <li><strong>PowerShell <code>-replace</code> corrupts .bbl</strong> — <code>$</code> in bibliography entries (math in titles) is interpreted as a regex back-reference, corrupting or erasing the inlined .bbl. Fixed: <code>[regex]::Replace</code> with a MatchEvaluator used for all .bbl substitutions.</li>
+    <li><strong>diff.tex compiled from wrong directory</strong> — when compiled from the output folder, <code>svjour3.cls</code> and figure files are missing. Fixed: diff is compiled from <code>Overleaf_source/</code>; temp files cleaned up after.</li>
+  </ul>
+
+  <h3>Dependencies (pre-installed)</h3>
+  <table class="cmd-table">
+    <tr><th>Tool</th><th>Location</th><th>Used for</th></tr>
+    <tr><td>Ghostscript 10.07</td><td><code>C:\Program Files\gs\</code> (version-independent search)</td><td>Front-page extraction</td></tr>
+    <tr><td>latexdiff</td><td>MiKTeX scripts folder</td><td>Diff generation</td></tr>
+    <tr><td>Strawberry Perl</td><td><code>C:\Strawberry\perl\bin\perl.exe</code></td><td>Runs latexdiff (has Algorithm::Diff; Git Bash perl does not)</td></tr>
+    <tr><td>latexmk + MiKTeX</td><td>MiKTeX bin</td><td>Compilation (all 4 passes)</td></tr>
+  </table>
+  <div class="note"><strong>Note:</strong> pdftk is <em>not</em> required — Ghostscript handles front-page extraction.
+  <code>spmpsci.bst</code> and other journal style files must be present in <code>Overleaf_source/</code>
+  (they are downloaded automatically when you sync from Overleaf).</div>
 
   <h3>Usage</h3>
-  <pre>/submit              # first submission → Original/
-/submit R1           # after revision round 1 → Revision_R1/
-/submit R2           # after revision round 2 → Revision_R2/</pre>
+  <pre>/submit                    # AI content + full package (recommended)
+helpi 17                   # same — auto-calls claude -p if staging is empty, then submit.ps1</pre>
 
-  <h3>Placeholders to fill before submitting</h3>
+  <h3>Prompts during submit.ps1</h3>
   <ul>
-    <li><code>coverletter.tex</code> — fill in <code>[Journal Name]</code></li>
-    <li><code>author_statements.tex</code> — confirm co-author CRediT contributions and choose the correct data availability statement</li>
+    <li>Journal abbreviation (e.g. <code>MPC</code>, <code>TRB</code>) — folder name and prefix</li>
+    <li>Original .tex for diff — graphical picker; cancel to skip diff</li>
+    <li>Revised (main) .tex — graphical picker if multiple candidates</li>
+    <li>Revision label — auto-detected from filename (<code>_R1C.tex</code> → <code>R1</code>); prompted only if undetectable</li>
   </ul>
+
+  <h3>Output location</h3>
+  <pre>Pub_XXX/
+  _submit_staging/           # staged AI content (.tex + .pdf); overwritten each run
+  _submissions/
+    2026-04-15_MPC/          # complete package — one folder per run, never overwritten
+    2026-05-01_MPC/          # re-submission after edits</pre>
 </div>
 
 <!-- ═══════════════════════════════════════════════════════════════ -->
@@ -1497,7 +1556,7 @@ claude --full-auto        # launch Claude Code without approval pauses
         <tr><td>helpi 3 Pub_XXX</td><td>Compile LaTeX &amp; open PDF</td></tr>
         <tr><td>helpi 4 Pub_XXX</td><td>Open project in VS Code</td></tr>
         <tr><td>helpi 12 Pub_XXX</td><td>Open project — VS Code + Explorer + PDF (all-in-one)</td></tr>
-        <tr><td>helpi 5 Pub_XXX</td><td>Generate handover HTML</td></tr>
+        <tr><td>helpi 5 Pub_XXX</td><td>Compile handover package from <code>_ai_log.md</code></td></tr>
         <tr><td>helpi 6 Pub_XXX</td><td>Open handover in browser</td></tr>
         <tr><td>helpi 11</td><td>Project status dashboard (all projects)</td></tr>
         <tr><td>helpi 13 Pub_XXX -N 1</td><td>Rollback N commits (previews before reverting)</td></tr>

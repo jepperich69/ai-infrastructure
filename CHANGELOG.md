@@ -39,7 +39,7 @@ A "change" is anything that affects how you or Claude interacts with the system.
 
 _Ongoing changes toward v0.3 go here. Move to a new `[vX.Y]` block when promoted._
 
-- (nothing yet)
+- `push_to_overleaf.ps1`: fixed a push detection bug where the script exited with "Nothing to push - working tree is clean" even when local commits were already ahead of `origin/<branch>`. It now pushes existing unpushed commits as expected.
 
 ---
 

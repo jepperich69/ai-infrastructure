@@ -45,29 +45,39 @@ Write-Host "Repo : $repoPath"
 Write-Host "Branch: $branch"
 
 # ---------------------------------------------------------------
-# Stage and check for changes
+# Stage and check for changes / existing unpushed commits
 # ---------------------------------------------------------------
+$hasStagedChanges = $true
 git -C $repoPath add . 2>&1 | Out-Null
 git -C $repoPath diff --cached --quiet 2>&1 | Out-Null
 if ($LASTEXITCODE -eq 0) {
-    Write-Host "OK   | Nothing to push - working tree is clean"
-    exit 0
+    $hasStagedChanges = $false
+    git -C $repoPath fetch origin $branch 2>&1 | Out-Null
+    $ahead = git -C $repoPath rev-list --count origin/$branch..HEAD 2>$null
+    if ($ahead -gt 0) {
+        Write-Host "INFO | Working tree is clean, but branch has $ahead unpushed commit(s)"
+    } else {
+        Write-Host "OK   | Nothing to push - working tree is clean"
+        exit 0
+    }
 }
 
-# Show what will be committed
-Write-Host ""
-Write-Host "Changes to push:"
-git -C $repoPath diff --cached --name-status
-Write-Host ""
+if ($hasStagedChanges) {
+    # Show what will be committed
+    Write-Host ""
+    Write-Host "Changes to push:"
+    git -C $repoPath diff --cached --name-status
+    Write-Host ""
 
-# ---------------------------------------------------------------
-# Commit
-# ---------------------------------------------------------------
-$timestamp = Get-Date -Format "yyyy-MM-dd HH:mm"
-git -C $repoPath commit --quiet -m "Local edits $timestamp"
-if ($LASTEXITCODE -ne 0) {
-    Write-Host "ERR  | Commit failed"
-    exit 1
+    # ---------------------------------------------------------------
+    # Commit
+    # ---------------------------------------------------------------
+    $timestamp = Get-Date -Format "yyyy-MM-dd HH:mm"
+    git -C $repoPath commit --quiet -m "Local edits $timestamp"
+    if ($LASTEXITCODE -ne 0) {
+        Write-Host "ERR  | Commit failed"
+        exit 1
+    }
 }
 
 # ---------------------------------------------------------------

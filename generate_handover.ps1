@@ -17,11 +17,14 @@ param(
     [int]$RecentCommits = 20
 )
 
+. "$PSScriptRoot\ai_log_tools.ps1"
+
 $pubRoot     = "C:\Users\rich\OneDrive - Danmarks Tekniske Universitet\JR\Publikationer"
 $projectRoot = Join-Path $pubRoot $Project
 $codeDir     = Join-Path $projectRoot "code"
 $logPath     = Join-Path $projectRoot "_ai_log.md"
 $htmlPath    = Join-Path $projectRoot "_handover.html"
+$jsonPath    = Join-Path $projectRoot "_handover.json"
 $generated   = Get-Date -Format "yyyy-MM-dd HH:mm"
 
 if (!(Test-Path $projectRoot)) {
@@ -34,6 +37,10 @@ if (!(Test-Path $projectRoot)) {
 # ---------------------------------------------------------------
 $sessionLogRaw = if (Test-Path $logPath) { Get-Content $logPath -Raw } else { "" }
 $sessionLogLines = if ($sessionLogRaw) { $sessionLogRaw -split "`n" } else { @("_No session log found (_ai_log.md missing)._") }
+$sessions = Get-AiLogSessions -Path $logPath
+$latestSession = Get-AiLogLatestSession -Path $logPath
+$latestSummary = if ($latestSession) { Convert-AiLogSessionToSummary -Session $latestSession } else { $null }
+$latestValidation = if ($latestSession) { Test-AiLogSessionComplete -Session $latestSession } else { $null }
 
 $codeGitLog = ""
 $codeDiffStat = ""
@@ -94,8 +101,45 @@ function ConvertTo-Html-Fragment {
     return $html
 }
 
+function Convert-LinesTo-HtmlList {
+    param([string[]]$Lines)
+    if (!$Lines -or $Lines.Count -eq 0) { return "<p><em>None recorded.</em></p>" }
+    $items = $Lines | ForEach-Object {
+        "  <li>$([System.Web.HttpUtility]::HtmlEncode($_))</li>"
+    }
+    return "<ul>`n$($items -join "`n")`n</ul>"
+}
+
 Add-Type -AssemblyName System.Web
 $sessionHtml = ConvertTo-Html-Fragment -mdLines $sessionLogLines
+
+$latestSessionHtml = if ($latestSummary) {
+    $statusText = if ($latestValidation.is_complete) { "Complete" } else { "Incomplete - missing: $($latestValidation.missing -join ', ')" }
+    $statusClass = if ($latestValidation.is_complete) { "ok" } else { "warn" }
+    $filesHtml = Convert-LinesTo-HtmlList -Lines $latestSummary.files_touched
+@"
+<div class="latest-session">
+  <div class="session-status $statusClass">$statusText</div>
+  <h2>Latest Session Snapshot</h2>
+  <p><strong>Session:</strong> $([System.Web.HttpUtility]::HtmlEncode($latestSummary.title))</p>
+  <p><strong>Agent:</strong> $([System.Web.HttpUtility]::HtmlEncode($latestSummary.agent))</p>
+  <p><strong>Goal:</strong> $([System.Web.HttpUtility]::HtmlEncode($latestSummary.goal))</p>
+  <p><strong>Outcome:</strong> $([System.Web.HttpUtility]::HtmlEncode($latestSummary.outcome))</p>
+  <p><strong>Next steps:</strong> $([System.Web.HttpUtility]::HtmlEncode($latestSummary.next_steps))</p>
+  $(if ($latestSummary.git_ref) { "<p><strong>Git ref:</strong> $([System.Web.HttpUtility]::HtmlEncode($latestSummary.git_ref))</p>" })
+  <h3>Files touched</h3>
+  $filesHtml
+</div>
+"@
+} else {
+    @"
+<div class="latest-session">
+  <div class="session-status warn">No sessions found</div>
+  <h2>Latest Session Snapshot</h2>
+  <p><em>No structured session entries were found in <code style="display:inline;padding:2px 4px">_ai_log.md</code>.</em></p>
+</div>
+"@
+}
 
 # ---------------------------------------------------------------
 # Build HTML
@@ -121,6 +165,11 @@ $html = @"
     p   { margin: 6px 0; line-height: 1.6; }
     .agent-box { background: #fffbe6; border: 1px solid #f0d060; border-radius: 6px; padding: 16px 20px; margin-bottom: 24px; }
     .agent-box h2 { color: #7a5c00; border-color: #f0d060; }
+    .latest-session { background: #eef5fb; border: 1px solid #c7dcef; border-radius: 6px; padding: 18px 20px; margin-bottom: 24px; }
+    .latest-session h2 { margin-top: 0; }
+    .session-status { display: inline-block; font-size: 0.8em; font-weight: bold; letter-spacing: 0.03em; padding: 4px 10px; border-radius: 12px; margin-bottom: 10px; }
+    .session-status.ok { background: #e3f3e8; color: #1d6238; border: 1px solid #8ac5a0; }
+    .session-status.warn { background: #fff1d8; color: #7a5c00; border: 1px solid #e0c06a; }
     textarea { width: 100%; height: 320px; font-family: "Consolas", monospace; font-size: 0.8em; padding: 12px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; background: #f9f9f9; }
     .label { font-size: 0.8em; color: #666; margin-bottom: 4px; }
   </style>
@@ -128,7 +177,7 @@ $html = @"
 <body>
 
 <h1>Handover Document &mdash; $Project</h1>
-<div class="meta">Generated: $generated &nbsp;|&nbsp; Source: <code style="display:inline;padding:2px 6px">_ai_log.md</code></div>
+<div class="meta">Generated: $generated &nbsp;|&nbsp; Source: <code style="display:inline;padding:2px 6px">_ai_log.md</code> &nbsp;|&nbsp; Sidecar: <code style="display:inline;padding:2px 6px">_handover.json</code></div>
 
 <!-- ============================================================ -->
 <!-- AGENT INSTRUCTIONS                                            -->
@@ -142,6 +191,7 @@ $html = @"
   <p><strong>To add a session entry:</strong> append a new <code style="display:inline;padding:2px 4px">## Session YYYY-MM-DD</code> block
   to the markdown below (in the textarea), following the existing format.
   Hand the updated markdown back to the user to paste into <code style="display:inline;padding:2px 4px">_ai_log.md</code>.</p>
+  <p><strong>What this command now compiles:</strong> a latest-session snapshot, validation of the newest log block, rendered session history, copyable markdown source, git history, and a structured <code style="display:inline;padding:2px 4px">_handover.json</code> sidecar for future tooling.</p>
   <p>Session block format:</p>
   <pre>## Session YYYY-MM-DD
 **Agent:** [Claude / GPT-4o / etc.]
@@ -152,6 +202,11 @@ $html = @"
 **Next steps:** [what remains open]
 **Git ref:** [short commit hash(es), if applicable]</pre>
 </div>
+
+<!-- ============================================================ -->
+<!-- LATEST SESSION SNAPSHOT                                       -->
+<!-- ============================================================ -->
+$latestSessionHtml
 
 <!-- ============================================================ -->
 <!-- SESSION LOG                                                   -->
@@ -194,10 +249,24 @@ $(if ($hasOverleafGit) { @"
 "@
 
 # ---------------------------------------------------------------
-# Write HTML
+# Write HTML + JSON sidecar
 # ---------------------------------------------------------------
+[PSCustomObject]@{
+    project = $Project
+    generated = $generated
+    source = "_ai_log.md"
+    latest_session = $latestSummary
+    latest_session_complete = if ($latestValidation) { $latestValidation.is_complete } else { $false }
+    latest_session_missing = if ($latestValidation) { $latestValidation.missing } else { @() }
+    session_count = $sessions.Count
+} | ConvertTo-Json -Depth 6 | Set-Content -Path $jsonPath -Encoding UTF8
+
 [System.IO.File]::WriteAllText($htmlPath, $html, [System.Text.Encoding]::UTF8)
 Write-Host "OK   | HTML handover written: $htmlPath"
+Write-Host "OK   | JSON handover written: $jsonPath"
+if ($latestValidation -and -not $latestValidation.is_complete) {
+    Write-Host "WARN | Latest session block is incomplete: $($latestValidation.missing -join ', ')" -ForegroundColor Yellow
+}
 
 # ---------------------------------------------------------------
 # Also print markdown to stdout

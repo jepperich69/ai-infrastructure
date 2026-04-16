@@ -94,3 +94,45 @@
 - `helpi.ps1`: wrap PSConsoleReadLine call in try/catch for non-interactive shell degradation (v0.3 candidate)
 - Extract hardcoded `$aiRoot` / `$pubRoot` paths to a shared `config.ps1` (v0.3 candidate)
 **Git ref:** 8519688
+
+---
+
+## Session 2026-04-14
+**Agent:** GPT-5 Codex
+**Goal:** Upgrade `helpi 5` so handover compilation is driven by a structured AI-log parser, then update the infrastructure guide to reflect the new behavior.
+**Files touched:**
+- `AI_auto/ai_log_tools.ps1` — created shared AI-log parser utilities: parse markdown session blocks, identify the latest session by date, validate required fields, and expose a compact latest-session summary
+- `AI_auto/generate_handover.ps1` — upgraded to use the shared parser; now compiles a latest-session snapshot, validates the newest log block, writes `_handover.html`, and emits a structured `_handover.json` sidecar
+- `AI_auto/helpi.ps1` — renamed command 5 in the menu from “Generate handover document” to “Compile handover package from AI log”
+- `AI_auto/infrastructure.html` — updated the AI logging / handover section, the command table, and the one-pager so they describe `helpi 5` as a compiler from `_ai_log.md` to `_handover.html` + `_handover.json`
+**Outcome:** `helpi 5` is now conceptually cleaner: `_ai_log.md` remains the source of truth, while the handover is compiled from it through a shared parser layer rather than treated as a separate parallel artifact. The upgraded generator was verified end-to-end on `Pub_MIPEntropy_MPC`, including correct latest-session detection and a structured `files_touched` array in `_handover.json`.
+**Next steps:**
+- Consider routing future `/close` implementations through the same parser/writer layer so log writing and handover compilation share one canonical schema
+- Decide whether `status.ps1`, feeder digests, and reviewer workflows should also consume `ai_log_tools.ps1` rather than parsing `_ai_log.md` ad hoc
+- If this becomes part of a formal release, update `CHANGELOG.md` and bump `VERSION`
+
+---
+
+## Session 2026-04-15
+**Agent:** Claude Sonnet 4.6
+**Goal:** Build and fully test the submission pipeline (`submit.ps1` + `/submit` skill + `helpi 17`); fix all bugs discovered during live test on `Pub_MIPEntropy_MPC`; final editorial pass on `Springer_R1C.tex`.
+**Files touched:**
+- `AI_auto/submit.ps1` — created; 7-step submission assembly script: (1) compile with BIBINPUTS+BSTINPUTS, (2) front-page via Ghostscript, (3) inline bbl using `[regex]::Replace` MatchEvaluator, (4) submission zip (tex as `main.tex`), (5) blind manuscript (line-by-line author stripping + compile + zip), (6) latexdiff with CRLF normalisation + bbl inlining, (7) copy staged AI content. File naming convention: `Type_Author_Journal_Year_Rev.*` (e.g. `Manus_Rich_MPC_2026_R1.pdf`). Revision auto-detected from tex filename.
+- `AI_auto/prompts/submit.md` — created; `/submit` skill prompt: generates cover letter, highlights, author statement into `_submit_staging/`, compiles PDFs, calls `submit.ps1`
+- `AI_auto/prompts/submit_stage_ai.md` — created; AI-only staging prompt (generates 3 files, does NOT call `submit.ps1`); used by `helpi 17` via `claude -p`
+- `AI_auto/helpi.ps1` — added command 17 "Build submission package"; command 17 block: checks for `_submit_staging/cover_letter.pdf`, calls `claude -p` with `submit_stage_ai.md` prompt if absent, then calls `submit.ps1`; fixed command count check to use `($commands | Measure-Object).Count`
+- `AI_auto/infrastructure.html` — rewrote §6c: new file naming convention, blind manuscript section, 7-step assembly description, known-gotchas table (4 bugs), updated dependencies table, updated usage examples
+- `Pub_MIPEntropy_MPC/Overleaf_source/Springer_R1C.tex` — editorial fixes: "We a method" → "We present a method"; `{llrrrr}` → `{llrrr}` in tab:ablation; "21. October" → "21 October"; expanded §2.2 with permutation enumeration table (3 of 6 candidates, cost + probability); added proof motivation paragraph to Appendix B (Theorem 2.1); added `\begin{remark}` before Theorem 2.2 attributing parts (a) and (c) to Carlier2017/PeyreCuturi2019
+- `Pub_MIPEntropy_MPC/_submit_staging/cover_letter.tex` + `.pdf` — generated
+- `Pub_MIPEntropy_MPC/_submit_staging/highlights.txt` — 5 bullets, all ≤85 chars
+- `Pub_MIPEntropy_MPC/_submit_staging/author_statement.tex` + `.pdf` — generated
+**Bugs found and fixed during live test:**
+1. **BSTINPUTS not set** — bibtex could not find `spmpsci.bst` in `Overleaf_source/` → empty .bbl → no references anywhere. Fix: `$env:BSTINPUTS = "$sourceDir;..."` added alongside BIBINPUTS.
+2. **CRLF/LF mismatch** — `Springer_R1B.tex` had 1964 CR characters (Windows), `Springer_R1C.tex` had 0 (Unix). Latexdiff saw every line as different, could not find anchors, silently dropped real changes. Fix: LF-normalised temp copies diffed; originals untouched.
+3. **PowerShell `-replace` corrupts .bbl** — `$` in reference titles (math) interpreted as regex back-references, erasing bibliography content. Fix: `[regex]::Replace` with MatchEvaluator for all .bbl substitutions.
+4. **diff.tex compiled from wrong folder** — compiled from `_submissions/` folder, missing `svjour3.cls` and figures. Fix: compiled from `Overleaf_source/`; temp files cleaned up in `finally` block.
+**Outcome:** Full submission pipeline verified end-to-end on `Pub_MIPEntropy_MPC`. Package `_submissions/2026-04-15_MPC/` contains 10 correctly named files including blind manuscript, diff with references, and AI-generated documents. `helpi 17` now calls `claude -p` automatically when staging is empty, making it a single-command full pipeline.
+**Next steps:**
+- Update `CHANGELOG.md` and bump `VERSION` to v0.3 (submit pipeline is a meaningful new feature)
+- `helpi.ps1`: wrap PSConsoleReadLine call in try/catch for non-interactive shell degradation (carried from v0.2)
+- Extract hardcoded `$aiRoot` / `$pubRoot` paths to a shared `config.ps1` (carried from v0.2)

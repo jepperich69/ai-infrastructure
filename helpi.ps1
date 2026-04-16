@@ -34,7 +34,7 @@ $commands = @(
     [PSCustomObject]@{ N=2;  NeedsProject=$true;  Tag="MANUAL";  Name="Push local edits to Overleaf";           Example="push_to_overleaf.ps1 -Project XXX" },
     [PSCustomObject]@{ N=3;  NeedsProject=$true;  Tag="MANUAL";  Name="Compile LaTeX + open PDF";               Example="compile_latex.ps1 -Project XXX" },
     [PSCustomObject]@{ N=4;  NeedsProject=$true;  Tag="MANUAL";  Name="Open in VS Code";                        Example='code "...\XXX\Overleaf_source"' },
-    [PSCustomObject]@{ N=5;  NeedsProject=$true;  Tag="MANUAL";  Name="Generate handover document";             Example="generate_handover.ps1 -Project XXX" },
+    [PSCustomObject]@{ N=5;  NeedsProject=$true;  Tag="MANUAL";  Name="Compile handover package from AI log";   Example="generate_handover.ps1 -Project XXX" },
     [PSCustomObject]@{ N=6;  NeedsProject=$true;  Tag="MANUAL";  Name="Open handover in browser";               Example='Start-Process "...\XXX\_handover.html"' },
     [PSCustomObject]@{ N=7;  NeedsProject=$true;  Tag="ONCE";    Name="Init code/ git repo";                    Example="init_project_git.ps1 -Project XXX" },
     [PSCustomObject]@{ N=8;  NeedsProject=$false; Tag="INFO";    Name="Open infrastructure guide";              Example="Start-Process infrastructure.html" },
@@ -45,7 +45,8 @@ $commands = @(
     [PSCustomObject]@{ N=13; NeedsProject=$true;  Tag="MANUAL";  Name="Rollback last N code commits";           Example="rollback.ps1 -Project XXX -N 1" },
     [PSCustomObject]@{ N=14; NeedsProject=$true;  Tag="MANUAL";  Name="Snapshot Overleaf source (git tag)";      Example="snapshot.ps1 -Project XXX [-Tag V2]" },
     [PSCustomObject]@{ N=15; NeedsProject=$false; Tag="INFO";    Name="Open project network graph";              Example="network.ps1" },
-    [PSCustomObject]@{ N=16; NeedsProject=$false; Tag="MANUAL";  Name="Generate docs (summary + full HTML/PDF)";  Example="generate_docs.ps1" }
+    [PSCustomObject]@{ N=16; NeedsProject=$false; Tag="MANUAL";  Name="Generate docs (summary + full HTML/PDF)";  Example="generate_docs.ps1" },
+    [PSCustomObject]@{ N=17; NeedsProject=$true;  Tag="MANUAL";  Name="Build submission package";                  Example="submit.ps1 -Project XXX" }
 )
 
 # ── Show menu (condensed: one line per command) ────────────────────
@@ -95,6 +96,7 @@ function Get-CommandPreview {
         14 { "snapshot.ps1 -Project $proj" }
         15 { "network.ps1" }
         16 { "generate_docs.ps1" }
+        17 { "submit.ps1 -Project $proj" }
     }
 }
 
@@ -167,6 +169,25 @@ function Invoke-Command-N {
            }
         15 { & "$aiRoot\network.ps1" }
         16 { & "$aiRoot\generate_docs.ps1" }
+        17 {
+               $projRoot   = Join-Path $pubRoot $proj
+               $stagingDir = Join-Path $projRoot "_submit_staging"
+               $hasCover   = Test-Path (Join-Path $stagingDir "cover_letter.pdf")
+
+               if (!$hasCover) {
+                   Write-Host ""
+                   Write-Host "  No staged AI content found -- generating via Claude..." -ForegroundColor Cyan
+                   $promptFile = Join-Path $aiRoot "prompts\submit_stage_ai.md"
+                   $promptText = Get-Content $promptFile -Raw -Encoding UTF8
+                   Push-Location $projRoot
+                   & claude -p $promptText
+                   Pop-Location
+               } else {
+                   Write-Host "  Staged AI content found -- skipping Claude generation." -ForegroundColor DarkGray
+               }
+
+               & "$aiRoot\submit.ps1" -Project $proj
+           }
     }
 }
 
@@ -178,7 +199,7 @@ if (-not $Cmd) {
 } elseif ($Cmd -match "^\d+$") {
     # Numeric command
     $n = [int]$Cmd
-    if ($n -lt 1 -or $n -gt $commands.Count) {
+    if ($n -lt 1 -or $n -gt ($commands | Measure-Object).Count) {
         Write-Host "ERR | Valid commands are 1-$($commands.Count)" -ForegroundColor Red
         Show-Menu -forProject $Project
     } else {
