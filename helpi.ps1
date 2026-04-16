@@ -46,7 +46,8 @@ $commands = @(
     [PSCustomObject]@{ N=14; NeedsProject=$true;  Tag="MANUAL";  Name="Snapshot Overleaf source (git tag)";      Example="snapshot.ps1 -Project XXX [-Tag V2]" },
     [PSCustomObject]@{ N=15; NeedsProject=$false; Tag="INFO";    Name="Open project network graph";              Example="network.ps1" },
     [PSCustomObject]@{ N=16; NeedsProject=$false; Tag="MANUAL";  Name="Generate docs (summary + full HTML/PDF)";  Example="generate_docs.ps1" },
-    [PSCustomObject]@{ N=17; NeedsProject=$true;  Tag="MANUAL";  Name="Build submission package";                  Example="submit.ps1 -Project XXX" }
+    [PSCustomObject]@{ N=17; NeedsProject=$true;  Tag="MANUAL";  Name="Build submission package";                  Example="submit.ps1 -Project XXX" },
+    [PSCustomObject]@{ N=18; NeedsProject=$true;  Tag="MANUAL";  Name="Reviewer response loop";                    Example="claude -p respond.md [R1/R2] in XXX" }
 )
 
 # ── Show menu (condensed: one line per command) ────────────────────
@@ -97,6 +98,7 @@ function Get-CommandPreview {
         15 { "network.ps1" }
         16 { "generate_docs.ps1" }
         17 { "submit.ps1 -Project $proj" }
+        18 { "claude -p prompts/respond.md  (round: R1/R2/...)" }
     }
 }
 
@@ -169,6 +171,19 @@ function Invoke-Command-N {
            }
         15 { & "$aiRoot\network.ps1" }
         16 { & "$aiRoot\generate_docs.ps1" }
+        18 {
+               $projRoot   = Join-Path $pubRoot $proj
+               $round = Read-Host "  Round? (e.g. R1, R2)"
+               if (!$round) { $round = "R1" }
+               $draft = Read-Host "  Draft file? (leave blank for clean start)"
+               $arg = if ($draft) { "$round --draft $draft" } else { $round }
+               $promptFile = Join-Path $aiRoot "prompts\respond.md"
+               $promptText = Get-Content $promptFile -Raw -Encoding UTF8
+               $promptText = $promptText -replace '\$ARGUMENTS', $arg
+               Push-Location $projRoot
+               & claude -p $promptText
+               Pop-Location
+           }
         17 {
                $projRoot   = Join-Path $pubRoot $proj
                $stagingDir = Join-Path $projRoot "_submit_staging"
