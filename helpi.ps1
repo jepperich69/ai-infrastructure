@@ -33,7 +33,7 @@ $commands = @(
     [PSCustomObject]@{ N=1;  NeedsProject=$false; Tag="AUTO 4h"; Name="Pull all projects from Overleaf";        Example="sync_all.ps1" },
     [PSCustomObject]@{ N=2;  NeedsProject=$true;  Tag="MANUAL";  Name="Push local edits to Overleaf";           Example="push_to_overleaf.ps1 -Project XXX" },
     [PSCustomObject]@{ N=3;  NeedsProject=$true;  Tag="MANUAL";  Name="Compile LaTeX + open PDF";               Example="compile_latex.ps1 -Project XXX" },
-    [PSCustomObject]@{ N=4;  NeedsProject=$true;  Tag="MANUAL";  Name="Close session (log + handover)";         Example="claude -p close.md  in XXX" },
+    [PSCustomObject]@{ N=4;  NeedsProject=$true;  Tag="MANUAL";  Name="Log + handover";                        Example="claude -p close.md  in XXX" },
     [PSCustomObject]@{ N=5;  NeedsProject=$true;  Tag="MANUAL";  Name="Compile handover package from AI log";   Example="generate_handover.ps1 -Project XXX" },
     [PSCustomObject]@{ N=6;  NeedsProject=$true;  Tag="MANUAL";  Name="Open handover in browser";               Example='Start-Process "...\XXX\_handover.html"' },
     [PSCustomObject]@{ N=7;  NeedsProject=$true;  Tag="ONCE";    Name="Init code/ git repo";                    Example="init_project_git.ps1 -Project XXX" },
