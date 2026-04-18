@@ -262,7 +262,7 @@
   <img src="Infra_frontpage.png" alt="Research Infrastructure Guide — overview infographic">
 </div>
 
-<div class="subtitle">Infrastructure version: <strong>v0.3</strong> &nbsp;&bull;&nbsp; Last updated: 2026-04-16 &nbsp;&bull;&nbsp; Scripts live in <code>JR\AI_auto\</code> &nbsp;&bull;&nbsp; Claude commands live in <code>~\.claude\commands\</code></div>
+<div class="subtitle">Infrastructure version: <strong>v0.4</strong> &nbsp;&bull;&nbsp; Last updated: 2026-04-18 &nbsp;&bull;&nbsp; Scripts live in <code>JR\AI_auto\</code> &nbsp;&bull;&nbsp; Claude commands live in <code>~\.claude\commands\</code></div>
 
 <!-- ═══════════════════════════════════════════════════════════════ -->
 <!-- PROBLEM FORMULATION                                             -->
@@ -566,14 +566,14 @@ co-author's version of the sentence
 
   <h3>Handover document <span class="tag auto">AUTO</span></h3>
   <p>
-    <code>helpi 5</code> now compiles the handoff package directly from the structured
-    session log. The source of truth remains <code>_ai_log.md</code>, but the command
-    also validates the newest session block and emits both <code>_handover.html</code>
-    and a machine-readable <code>_handover.json</code> sidecar. The package is regenerated
-    automatically at the end of every <code>/close</code>. You can also rebuild it manually
-    at any time:
+    <code>helpi 7</code> closes the session, regenerates the handover, and opens the browser in one step.
+    The source of truth remains <code>_ai_log.md</code>; the command runs <code>claude -p close.md</code>,
+    then <code>generate_handover.ps1</code>, emitting both <code>_handover.html</code>
+    and a machine-readable <code>_handover.json</code> sidecar. The handover also regenerates
+    automatically every 5 minutes via the auto-handover scheduled task (if <code>_ai_log.md</code>
+    has changed). You can also rebuild manually at any time:
   </p>
-  <pre>helpi 5 Pub_AssesTiming_Raoul_TBA</pre>
+  <pre>helpi 7 Pub_AssesTiming_Raoul_TBA</pre>
   <p>The handoff package contains:</p>
   <ul>
     <li>A latest-session snapshot (goal, outcome, next steps, files touched, git ref when present)</li>
@@ -587,7 +587,7 @@ co-author's version of the sentence
 
   <h3>AGENTS.md &mdash; automatic agent context file <span class="tag auto">AUTO on /close</span></h3>
   <p>
-    <code>helpi 5</code> also writes <code>AGENTS.md</code> to the project root. This file is
+    <code>helpi 7</code> also writes <code>AGENTS.md</code> to the project root. This file is
     auto-loaded by Codex CLI (and any agent following the <code>AGENTS.md</code> convention) when
     it starts in the project directory &mdash; the direct equivalent of how Claude Code reads
     <code>.claude/CLAUDE.md</code> automatically. It contains:
@@ -693,23 +693,22 @@ helpi 3 Pub_X main.tex             # run command 3 with a specific .tex file</pr
 
   <table class="cmd-table">
     <tr><th>#</th><th>What it does</th><th>Command</th><th>Type</th></tr>
-    <tr><td>1</td><td>Pull all projects from Overleaf</td><td><code>sync_all.ps1</code></td><td><span class="tag auto">auto 4h</span></td></tr>
-    <tr><td>2</td><td>Push local edits to Overleaf</td><td><code>push_to_overleaf.ps1 -Project Pub_XXX</code></td><td><span class="tag manual">manual</span></td></tr>
-    <tr><td>3</td><td>Compile LaTeX &amp; open PDF</td><td><code>compile_latex.ps1 -Project Pub_XXX</code> &mdash; graphical .tex picker if multiple files</td><td><span class="tag manual">manual</span></td></tr>
-    <tr><td>4</td><td>Open project in VS Code</td><td><code>code "...\Pub_XXX\Overleaf_source"</code></td><td><span class="tag manual">manual</span></td></tr>
-    <tr><td>5</td><td>Compile handover package from AI log</td><td><code>generate_handover.ps1 -Project Pub_XXX</code> &mdash; validates latest session, writes <code>_handover.html</code> + <code>_handover.json</code></td><td><span class="tag auto">auto on /close</span></td></tr>
-    <tr><td>6</td><td>Open handover in browser</td><td><code>Start-Process "...\Pub_XXX\_handover.html"</code></td><td><span class="tag manual">manual</span></td></tr>
-    <tr><td>7</td><td>Init code/ git repo (one-time)</td><td><code>init_project_git.ps1 -Project Pub_XXX</code></td><td><span class="tag once">once</span></td></tr>
-    <tr><td>8</td><td>Open infrastructure guide</td><td><code>Start-Process "AI_auto\infrastructure.html"</code></td><td><span class="tag manual">manual</span></td></tr>
-    <tr><td>9</td><td>Create new project</td><td><code>new_project.ps1 -Project Pub_XXX [-GitUrl url]</code> &mdash; scaffolds folders, inits git, creates <code>_ai_log.md</code> and <code>data/</code></td><td><span class="tag once">once</span></td></tr>
-    <tr><td>10</td><td>Pull one project from Overleaf</td><td><code>sync_one.ps1 -Project Pub_XXX</code> &mdash; instant pull without waiting for 4h scheduler</td><td><span class="tag manual">manual</span></td></tr>
-    <tr><td>11</td><td>Project status dashboard</td><td><code>status.ps1</code> &mdash; shows active projects, uncommitted changes, Overleaf sync state</td><td><span class="tag manual">manual</span></td></tr>
-    <tr><td>12</td><td>Open project (all-in-one)</td><td><code>open_project.ps1 -Project Pub_XXX</code> &mdash; VS Code + Explorer + PDF + graphical .tex picker</td><td><span class="tag manual">manual</span></td></tr>
-    <tr><td>13</td><td>Rollback code commits</td><td><code>rollback.ps1 -Project Pub_XXX -N 1</code> &mdash; previews changes before reverting</td><td><span class="tag manual">manual</span></td></tr>
-    <tr><td>14</td><td>Snapshot Overleaf source</td><td><code>snapshot.ps1 -Project Pub_XXX [-Tag V2]</code> &mdash; git-tags full Overleaf_source/ (.tex, .bib, figures); auto-increments version if Tag omitted</td><td><span class="tag manual">manual</span></td></tr>
-    <tr><td>15</td><td>Open project network graph</td><td><code>network.ps1</code> &mdash; generates and opens interactive HTML graph of all projects and feeder links</td><td><span class="tag manual">manual</span></td></tr>
+    <tr><td>1</td><td>Create new project</td><td><code>new_project.ps1 -Project Pub_XXX [-GitUrl url]</code> &mdash; scaffolds folders, inits git, creates <code>_ai_log.md</code>; auto-registers auto-handover task</td><td><span class="tag once">once</span></td></tr>
+    <tr><td>2</td><td>Pull all projects from Overleaf</td><td><code>sync_all.ps1</code></td><td><span class="tag auto">auto 4h</span></td></tr>
+    <tr><td>3</td><td>Pull one project from Overleaf</td><td><code>sync_one.ps1 -Project Pub_XXX</code> &mdash; instant pull without waiting for 4h scheduler</td><td><span class="tag manual">manual</span></td></tr>
+    <tr><td>4</td><td>Push local edits to Overleaf</td><td><code>push_to_overleaf.ps1 -Project Pub_XXX</code></td><td><span class="tag manual">manual</span></td></tr>
+    <tr><td>5</td><td>Compile + open project (VS Code + PDF)</td><td><code>open_project.ps1 -Project Pub_XXX</code> &mdash; compiles first, then opens VS Code + Explorer + PDF</td><td><span class="tag manual">manual</span></td></tr>
+    <tr><td>6</td><td>Compile LaTeX + open PDF</td><td><code>compile_latex.ps1 -Project Pub_XXX</code> &mdash; graphical .tex picker if multiple files</td><td><span class="tag manual">manual</span></td></tr>
+    <tr><td>7</td><td>Log + handover + open in browser</td><td><code>claude -p close.md</code> then <code>generate_handover.ps1</code> then opens <code>_handover.html</code> &mdash; one command to close session and refresh handover</td><td><span class="tag manual">manual</span></td></tr>
+    <tr><td>8</td><td>Snapshot Overleaf source (git tag)</td><td><code>snapshot.ps1 -Project Pub_XXX [-Tag V2]</code> &mdash; git-tags full Overleaf_source/ (.tex, .bib, figures); auto-increments version if Tag omitted</td><td><span class="tag manual">manual</span></td></tr>
+    <tr><td>9</td><td>Rollback last N code commits</td><td><code>rollback.ps1 -Project Pub_XXX -N 1</code> &mdash; previews changes before reverting</td><td><span class="tag manual">manual</span></td></tr>
+    <tr><td>10</td><td>Build submission package</td><td><code>submit.ps1 -Project Pub_XXX</code> &mdash; prompts for journal, main .tex, and original .tex (for diff); assembles complete package in <code>_submissions/YYYY-MM-DD_journal/</code>. Run <code>/submit</code> first to also generate cover letter, highlights, and author statement.</td><td><span class="tag manual">manual</span></td></tr>
+    <tr><td>11</td><td>Reviewer scaffold (.txt &rarr; LaTeX + push)</td><td>Reads reviewer <code>.txt</code> file, generates <code>Response_R1.tex</code> scaffold with <code>\TODO{}</code> slots, pushes to Overleaf &mdash; Step 1 of two-step review loop</td><td><span class="tag manual">manual</span></td></tr>
+    <tr><td>12</td><td>Reviewer draft loop (pull &rarr; draft &rarr; push)</td><td>Pulls latest from Overleaf, drafts all <code>\TODO{}</code> slots using manuscript context, pushes back &mdash; Step 2 of two-step review loop</td><td><span class="tag manual">manual</span></td></tr>
+    <tr><td>13</td><td>Project status dashboard</td><td><code>status.ps1</code> &mdash; shows active projects, uncommitted changes, Overleaf sync state</td><td><span class="tag manual">manual</span></td></tr>
+    <tr><td>14</td><td>Open project network graph</td><td><code>network.ps1</code> &mdash; generates and opens interactive HTML graph of all projects and feeder links, with cluster shading</td><td><span class="tag manual">manual</span></td></tr>
+    <tr><td>15</td><td>Open infrastructure guide</td><td><code>Start-Process "AI_auto\infrastructure.html"</code></td><td><span class="tag manual">manual</span></td></tr>
     <tr><td>16</td><td>Generate docs (summary + full HTML/PDF)</td><td><code>generate_docs.ps1</code> &mdash; rebuilds <code>infrastructure_summary.html/pdf</code> and <code>infrastructure_full.html/pdf</code></td><td><span class="tag manual">manual</span></td></tr>
-    <tr><td>17</td><td>Build submission package</td><td><code>submit.ps1 -Project Pub_XXX</code> &mdash; prompts for journal, main .tex, and original .tex (for diff); assembles complete package in <code>_submissions/YYYY-MM-DD_journal/</code>. Run <code>/submit</code> first to also generate cover letter, highlights, and author statement.</td><td><span class="tag manual">manual</span></td></tr>
   </table>
 </div>
 
@@ -752,7 +751,7 @@ C:\Users\rich\OneDrive - Danmarks Tekniske Universitet\JR\Publikationer\Pub_Asse
     Creates an annotated <strong>git tag</strong> on <code>Overleaf_source/</code>, capturing the complete
     state: all <code>.tex</code> files, <code>.bib</code> bibliography, figures, style files, and
     subdirectories. Auto-increments the version number if omitted. Calls <code>snapshot.ps1</code>
-    under the hood (also available as <code>helpi 14</code>).
+    under the hood (also available as <code>helpi 8</code>).
   </p>
   <pre>/snapshot V2
 /snapshot                          # auto-detects next version
@@ -771,8 +770,8 @@ git checkout snapshot-v2                     # restore everything</pre>
   <pre>/close</pre>
   <ul>
     <li><strong>Updates <code>.claude/CLAUDE.md</code></strong> &mdash; if the session changed the project phase, locked new notation, froze a file, or created a new manuscript version, Claude edits the relevant sections and reports what changed (or "CLAUDE.md unchanged")</li>
-    <li><strong>Regenerates <code>_handover.html</code></strong> &mdash; runs <code>helpi 5</code> automatically; no manual step needed</li>
-    <li>Reminds you to push to Overleaf if manuscript files were changed: <code>helpi 2 Pub_XXX</code></li>
+    <li><strong>Regenerates <code>_handover.html</code></strong> &mdash; run <code>helpi 7 Pub_XXX</code> to close session, regenerate handover, and open it in browser in one step</li>
+    <li>Reminds you to push to Overleaf if manuscript files were changed: <code>helpi 4 Pub_XXX</code></li>
   </ul>
 
   <table class="cmd-table" style="margin-top:18px;">
@@ -872,7 +871,7 @@ git checkout snapshot-v2                     # restore everything</pre>
 
   <h3>Overnight workflow</h3>
   <pre># Before sleeping:
-helpi 10 Pub_XXX          # pull latest (also done automatically inside /respond)
+helpi 3 Pub_XXX           # pull latest (also done automatically inside /respond)
 claude --full-auto        # launch Claude Code without approval pauses
 /respond R1               # kick off the loop — leave terminal open</pre>
   <div class="note">
@@ -1070,15 +1069,15 @@ claude --full-auto        # launch Claude Code without approval pauses
 <div class="section blue">
   <h2>8 &mdash; Typical Working Session</h2>
   <ol style="padding-left:1.4em;">
-    <li><strong>Open VS Code</strong> on the project (<code>helpi 4 Pub_XXX</code>) &mdash; LaTeX compiles on save automatically.</li>
+    <li><strong>Open project</strong>: <code>helpi 5 Pub_XXX</code> &mdash; compiles LaTeX, then opens VS Code + Explorer + PDF in one step.</li>
     <li><strong>Start Claude Code</strong> in the project folder. Type <code>/work Pub_XXX</code> (or paste the folder path). Claude reads the log, checks feeder digests for updates, summarises where you left off, and asks for today's goal.</li>
     <li><strong>Link feeder projects</strong> (first time only): <code>/family Pub_YYY1</code> — Claude reads that project and stores a digest. Future sessions only check for deltas.</li>
     <li><strong>Snapshot before risky edits</strong> (optional): <code>/snapshot V2</code> git-tags the full <code>Overleaf_source/</code> state (.tex, .bib, figures, styles) before a major rewrite.</li>
     <li><strong>Work</strong> &mdash; Claude edits code or LaTeX. Each response auto-commits to git (Stop hook).</li>
-    <li><strong>Compile &amp; preview</strong> as needed: save in VS Code, or <code>helpi 3 Pub_XXX</code> from the terminal.</li>
-    <li><strong>Close the session</strong>: type <code>/close</code>. Claude fills in the session block in <code>_ai_log.md</code>.</li>
-    <li><strong>Push to Overleaf</strong> (<code>helpi 2 Pub_XXX</code>).</li>
-    <li><strong>Hand off to GPT</strong>: run <code>helpi 5 Pub_XXX</code>, open the HTML (<code>helpi 6 Pub_XXX</code>), paste the markdown textarea into GPT. GPT adds its session block. Paste updated markdown back into <code>_ai_log.md</code>, rerun step 5.</li>
+    <li><strong>Compile &amp; preview</strong> as needed: save in VS Code, or <code>helpi 6 Pub_XXX</code> from the terminal.</li>
+    <li><strong>Close the session</strong>: <code>helpi 7 Pub_XXX</code> &mdash; runs <code>/close</code>, regenerates handover, and opens the browser in one step.</li>
+    <li><strong>Push to Overleaf</strong> (<code>helpi 4 Pub_XXX</code>).</li>
+    <li><strong>Hand off to GPT</strong>: run <code>helpi 7 Pub_XXX</code>, paste the markdown textarea into GPT. GPT adds its session block. Paste updated markdown back into <code>_ai_log.md</code>, rerun helpi 7.</li>
   </ol>
 </div>
 
@@ -1102,11 +1101,11 @@ claude --full-auto        # launch Claude Code without approval pauses
     <div class="ex-step-hdr">
       <span class="ex-num">1</span>
       <span class="ex-title">Check overall project status</span>
-      <span class="ex-ref ps">helpi 11</span>
+      <span class="ex-ref ps">helpi 13</span>
     </div>
     <p class="ex-why">Before opening anything, get a bird's-eye view — which projects have uncommitted changes or are behind Overleaf.</p>
     <div class="term">
-<span class="tc">PS&gt; </span><span class="tk">helpi 11</span>
+<span class="tc">PS&gt; </span><span class="tk">helpi 13</span>
 <span class="to">
   Project Status Dashboard  —  2026-04-04 09:12
   ──────────────────────────────────────────────────────────────────
@@ -1125,13 +1124,13 @@ claude --full-auto        # launch Claude Code without approval pauses
     <div class="ex-step-hdr">
       <span class="ex-num">2</span>
       <span class="ex-title">Pull Overleaf changes</span>
-      <span class="ex-ref ps">helpi 10</span>
+      <span class="ex-ref ps">helpi 3</span>
     </div>
     <p class="ex-why">Raoul may have edited the manuscript since the last session. Pull before touching anything locally.</p>
     <div class="term">
-<span class="tc">PS&gt; </span><span class="tk">helpi 10 Pub_AssesTiming_Raoul_TBA</span>
+<span class="tc">PS&gt; </span><span class="tk">helpi 3 Pub_AssesTiming_Raoul_TBA</span>
 <span class="to">
-  [10] Pull one project from Overleaf  ->  Pub_AssesTiming_Raoul_TBA
+  [3] Pull one project from Overleaf  ->  Pub_AssesTiming_Raoul_TBA
   sync_one.ps1 -Project Pub_AssesTiming_Raoul_TBA
 
   [Enter] run  |  [any other key] cancel
@@ -1215,7 +1214,7 @@ claude --full-auto        # launch Claude Code without approval pauses
       <span class="ex-num">5</span>
       <span class="ex-title">Snapshot before risky edits</span>
       <span class="ex-ref">/snapshot</span>
-      <span class="ex-ref ps">helpi 14</span>
+      <span class="ex-ref ps">helpi 8</span>
     </div>
     <p class="ex-why">The variance decomposition refactor will touch <code>surrogate.py</code> heavily and regenerate all figures. Tag the current full manuscript state — including <code>.bib</code> and all figures — before anything changes.</p>
     <div class="term">
@@ -1255,13 +1254,13 @@ claude --full-auto        # launch Claude Code without approval pauses
     <div class="ex-step-hdr">
       <span class="ex-num">7</span>
       <span class="ex-title">Compile LaTeX and check the PDF</span>
-      <span class="ex-ref ps">helpi 3</span>
+      <span class="ex-ref ps">helpi 6</span>
     </div>
     <p class="ex-why">Verify that the updated figure and caption compile cleanly before pushing anything to Overleaf.</p>
     <div class="term">
-<span class="tc">PS&gt; </span><span class="tk">helpi 3 Pub_AssesTiming_Raoul_TBA</span>
+<span class="tc">PS&gt; </span><span class="tk">helpi 6 Pub_AssesTiming_Raoul_TBA</span>
 <span class="to">
-  [3] Compile LaTeX + open PDF  ->  Pub_AssesTiming_Raoul_TBA
+  [6] Compile LaTeX + open PDF  ->  Pub_AssesTiming_Raoul_TBA
   compile_latex.ps1 -Project Pub_AssesTiming_Raoul_TBA
 
   [Enter] run  |  [any other key] cancel
@@ -1303,7 +1302,7 @@ claude --full-auto        # launch Claude Code without approval pauses
 <span class="to">  CLAUDE.md unchanged.
   </span><span class="tg">Handover regenerated: _handover.html</span>
 <span class="tb"></span>
-<span class="to">  Push to Overleaf if ready:  helpi 2 Pub_AssesTiming_Raoul_TBA</span>
+<span class="to">  Push to Overleaf if ready:  helpi 4 Pub_AssesTiming_Raoul_TBA</span>
     </div>
   </div>
 
@@ -1312,13 +1311,13 @@ claude --full-auto        # launch Claude Code without approval pauses
     <div class="ex-step-hdr">
       <span class="ex-num">9</span>
       <span class="ex-title">Push edits to Overleaf</span>
-      <span class="ex-ref ps">helpi 2</span>
+      <span class="ex-ref ps">helpi 4</span>
     </div>
     <p class="ex-why">Send the updated figure and LaTeX back to Overleaf so Raoul can see the changes and compile on his end.</p>
     <div class="term">
-<span class="tc">PS&gt; </span><span class="tk">helpi 2 Pub_AssesTiming_Raoul_TBA</span>
+<span class="tc">PS&gt; </span><span class="tk">helpi 4 Pub_AssesTiming_Raoul_TBA</span>
 <span class="to">
-  [2] Push local edits to Overleaf  ->  Pub_AssesTiming_Raoul_TBA
+  [4] Push local edits to Overleaf  ->  Pub_AssesTiming_Raoul_TBA
   push_to_overleaf.ps1 -Project Pub_AssesTiming_Raoul_TBA
 
   [Enter] run  |  [any other key] cancel
@@ -1340,13 +1339,13 @@ claude --full-auto        # launch Claude Code without approval pauses
     <div class="ex-step-hdr">
       <span class="ex-num">11</span>
       <span class="ex-title">View project network graph</span>
-      <span class="ex-ref ps">helpi 15</span>
+      <span class="ex-ref ps">helpi 14</span>
     </div>
     <p class="ex-why">See the full knowledge graph — all projects, feeder links, and activity. Useful to spot stale connections or find related projects you may have forgotten about.</p>
     <div class="term">
-<span class="tc">PS&gt; </span><span class="tk">helpi 15</span>
+<span class="tc">PS&gt; </span><span class="tk">helpi 14</span>
 <span class="to">
-  [15] Open project network graph
+  [14] Open project network graph
   network.ps1
 
   [Enter] run  |  [any other key] cancel
@@ -1402,14 +1401,14 @@ claude --full-auto        # launch Claude Code without approval pauses
   <p>
     Assembles a complete, journal-ready submission package in a timestamped subfolder
     <code>_submissions/YYYY-MM-DD_&lt;journal&gt;/</code> under the project root.
-    Two entry points exist: <code>/submit</code> (AI + file ops) and <code>helpi 17</code>
+    Two entry points exist: <code>/submit</code> (AI + file ops) and <code>helpi 10</code>
     (auto-generates AI content via <code>claude -p</code> if staging is empty, then runs file ops).
   </p>
 
   <div class="flow">
     <div class="box purple"><strong>/submit</strong><br><small>Claude reads manuscript,<br>generates AI content,<br>calls submit.ps1</small></div>
     <div class="arr">→</div>
-    <div class="box green"><strong>submit.ps1</strong><br><small>7-step file ops<br>(helpi 17 entry point)</small></div>
+    <div class="box green"><strong>submit.ps1</strong><br><small>7-step file ops<br>(helpi 10 entry point)</small></div>
     <div class="arr">→</div>
     <div class="box gold"><strong>_submissions/<br>YYYY-MM-DD_MPC/</strong><br><small>complete package</small></div>
   </div>
@@ -1418,7 +1417,7 @@ claude --full-auto        # launch Claude Code without approval pauses
   <p><strong>Step 1 — AI content:</strong> Claude reads the abstract and contributions,
   writes <code>cover_letter.tex</code>, <code>highlights.txt</code>, and <code>author_statement.tex</code>
   to <code>_submit_staging/</code>, and compiles them to PDF.
-  <code>/submit</code> triggers this directly; <code>helpi 17</code> triggers it automatically via
+  <code>/submit</code> triggers this directly; <code>helpi 10</code> triggers it automatically via
   <code>claude -p</code> if <code>_submit_staging/cover_letter.pdf</code> is absent.</p>
   <p><strong>Step 2 — File assembly</strong> (<code>submit.ps1</code>): prompts for journal abbreviation,
   revised .tex, and original .tex (for diff), then runs all 7 steps below.</p>
@@ -1474,7 +1473,7 @@ claude --full-auto        # launch Claude Code without approval pauses
 
   <h3>Usage</h3>
   <pre>/submit                    # AI content + full package (recommended)
-helpi 17                   # same — auto-calls claude -p if staging is empty, then submit.ps1</pre>
+helpi 10                   # same — auto-calls claude -p if staging is empty, then submit.ps1</pre>
 
   <h3>Prompts during submit.ps1</h3>
   <ul>
@@ -1531,7 +1530,7 @@ helpi 17                   # same — auto-calls claude -p if staging is empty, 
     <tr>
       <td><code>research-snapshot</code></td>
       <td><code>/snapshot V2</code>, "snapshot the manuscript", "save a version"</td>
-      <td>Runs <code>helpi 14</code> to create an annotated git tag on <code>Overleaf_source/</code></td>
+      <td>Runs <code>helpi 8</code> to create an annotated git tag on <code>Overleaf_source/</code></td>
       <td><code>/snapshot</code></td>
     </tr>
     <tr>
@@ -1580,7 +1579,7 @@ helpi 17                   # same — auto-calls claude -p if staging is empty, 
   <div class="note">
     <strong>Shared context &mdash; zero manual handover:</strong>
     <code>.claude/CLAUDE.md</code> is read automatically by Claude Code and as step 2 of the <code>research-work</code> skill by Codex.
-    <code>AGENTS.md</code> (auto-generated by <code>helpi 5</code> / <code>/close</code>) is loaded automatically by Codex CLI at session start
+    <code>AGENTS.md</code> (auto-generated by <code>helpi 7</code> / <code>/close</code>) is loaded automatically by Codex CLI at session start
     and contains the latest session snapshot plus the full log &mdash; so Codex is immediately oriented with no paste step.
     Both agents write to the same <code>_ai_log.md</code>; switching mid-project is seamless in either direction.
   </div>
@@ -1599,19 +1598,17 @@ helpi 17                   # same — auto-calls claude -p if staging is empty, 
     <div class="op-col">
       <h2>File Layer &mdash; <code>helpi</code> commands</h2>
       <table>
-        <tr><td>helpi 1</td><td>Pull ALL projects from Overleaf <span class="op-tag auto">auto 4h</span></td></tr>
-        <tr><td>helpi 10 Pub_XXX</td><td>Pull one project now</td></tr>
-        <tr><td>helpi 2 Pub_XXX</td><td>Push local edits to Overleaf (pulls first, rebases)</td></tr>
-        <tr><td>helpi 3 Pub_XXX</td><td>Compile LaTeX &amp; open PDF</td></tr>
-        <tr><td>helpi 4 Pub_XXX</td><td>Open project in VS Code</td></tr>
-        <tr><td>helpi 12 Pub_XXX</td><td>Open project — VS Code + Explorer + PDF (all-in-one)</td></tr>
-        <tr><td>helpi 5 Pub_XXX</td><td>Compile handover package from <code>_ai_log.md</code></td></tr>
-        <tr><td>helpi 6 Pub_XXX</td><td>Open handover in browser</td></tr>
-        <tr><td>helpi 11</td><td>Project status dashboard (all projects)</td></tr>
-        <tr><td>helpi 13 Pub_XXX -N 1</td><td>Rollback N commits (previews before reverting)</td></tr>
-        <tr><td>helpi 14 Pub_XXX</td><td>Snapshot full manuscript as git tag</td></tr>
-        <tr><td>helpi 15</td><td>Open project network graph</td></tr>
-        <tr><td>helpi 9 Pub_XXX</td><td>Create new project (folders, git, log)</td></tr>
+        <tr><td>helpi 1 Pub_XXX</td><td>Create new project (folders, git, log, auto-handover task)</td></tr>
+        <tr><td>helpi 2</td><td>Pull ALL projects from Overleaf <span class="op-tag auto">auto 4h</span></td></tr>
+        <tr><td>helpi 3 Pub_XXX</td><td>Pull one project now</td></tr>
+        <tr><td>helpi 4 Pub_XXX</td><td>Push local edits to Overleaf (pulls first, rebases)</td></tr>
+        <tr><td>helpi 5 Pub_XXX</td><td>Compile + open project (VS Code + Explorer + PDF)</td></tr>
+        <tr><td>helpi 6 Pub_XXX</td><td>Compile LaTeX &amp; open PDF</td></tr>
+        <tr><td>helpi 7 Pub_XXX</td><td>Log + handover + open in browser (end-of-session)</td></tr>
+        <tr><td>helpi 8 Pub_XXX</td><td>Snapshot full manuscript as git tag</td></tr>
+        <tr><td>helpi 9 Pub_XXX -N 1</td><td>Rollback N commits (previews before reverting)</td></tr>
+        <tr><td>helpi 13</td><td>Project status dashboard (all projects)</td></tr>
+        <tr><td>helpi 14</td><td>Open project network graph</td></tr>
       </table>
     </div>
 
@@ -1659,7 +1656,7 @@ helpi 17                   # same — auto-calls claude -p if staging is empty, 
     Typical session flow
   </h2>
   <div class="op-flow">
-    <div class="op-step"><code>helpi 10</code><small>pull from Overleaf</small></div>
+    <div class="op-step"><code>helpi 5</code><small>open project (compile + VS Code + PDF)</small></div>
     <span class="op-arr">&#8594;</span>
     <div class="op-step"><code>/work Pub_XXX</code><small>open &amp; set goal</small></div>
     <span class="op-arr">&#8594;</span>
@@ -1667,13 +1664,11 @@ helpi 17                   # same — auto-calls claude -p if staging is empty, 
     <span class="op-arr">&#8594;</span>
     <div class="op-step"><code style="color:#2a6b4a;">work with Claude</code><small>auto-commits every turn</small></div>
     <span class="op-arr">&#8594;</span>
-    <div class="op-step"><code>helpi 3</code><small>compile &amp; check PDF</small></div>
+    <div class="op-step"><code>helpi 6</code><small>compile &amp; check PDF</small></div>
     <span class="op-arr">&#8594;</span>
-    <div class="op-step"><code>/close</code><small>log session</small></div>
+    <div class="op-step"><code>helpi 4</code><small>push to Overleaf</small></div>
     <span class="op-arr">&#8594;</span>
-    <div class="op-step"><code>helpi 2</code><small>push to Overleaf</small></div>
-    <span class="op-arr">&#8594;</span>
-    <div class="op-step"><code>helpi 5</code><small>generate handover</small></div>
+    <div class="op-step"><code>helpi 7</code><small>log + handover + browser</small></div>
   </div>
 
   <!-- Key scenarios -->
@@ -1684,18 +1679,18 @@ helpi 17                   # same — auto-calls claude -p if staging is empty, 
   </h2>
   <dl class="op-scenarios">
     <dt>Co-author edited Overleaf while you were working locally</dt>
-    <dd><code>helpi 2</code> detects diverged history, rebases your changes on top, pushes cleanly. If same lines were edited, conflict markers appear in the .tex file — fix them, then push again.</dd>
+    <dd><code>helpi 4</code> detects diverged history, rebases your changes on top, pushes cleanly. If same lines were edited, conflict markers appear in the .tex file — fix them, then push again.</dd>
     <dt>Need to undo Claude's last few edits</dt>
-    <dd><code>helpi 13 Pub_XXX -N 2</code> — previews the rollback before committing. Every Claude turn is a separate auto-commit, so rollback is fine-grained.</dd>
+    <dd><code>helpi 9 Pub_XXX -N 2</code> — previews the rollback before committing. Every Claude turn is a separate auto-commit, so rollback is fine-grained.</dd>
     <dt>About to rewrite a section — want a safety net</dt>
-    <dd><code>/snapshot V2</code> or <code>helpi 14 Pub_XXX</code> — git-tags the full manuscript. Restore one file: <code>git checkout snapshot-v2 -- main.tex</code></dd>
+    <dd><code>/snapshot V2</code> or <code>helpi 8 Pub_XXX</code> — git-tags the full manuscript. Restore one file: <code>git checkout snapshot-v2 -- main.tex</code></dd>
     <dt>Using knowledge from another project</dt>
     <dd><code>/family Pub_YYY</code> once — Claude digests it and monitors for new sessions automatically. Ask deep questions about the feeder anytime; Claude reads the source on demand.</dd>
     <dt>Handing off to Codex / GPT</dt>
     <dd><code>/close</code> auto-regenerates <code>AGENTS.md</code> &mdash; Codex reads it automatically on next <code>/work</code>. No paste step needed. Both agents write to the same <code>_ai_log.md</code>; the context is always current.</dd>
   </dl>
 
-  <p class="op-print-note">Full reference: AI_auto\infrastructure.html &nbsp;&bull;&nbsp; Updated 2026-04-16</p>
+  <p class="op-print-note">Full reference: AI_auto\infrastructure.html &nbsp;&bull;&nbsp; Updated 2026-04-18</p>
 
 </div>
 
