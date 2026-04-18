@@ -46,7 +46,7 @@ $commands = @(
     [PSCustomObject]@{ N=15; NeedsProject=$false; Tag="INFO";    Name="Open project network graph";              Example="network.ps1" },
     [PSCustomObject]@{ N=16; NeedsProject=$false; Tag="MANUAL";  Name="Generate docs (summary + full HTML/PDF)";  Example="generate_docs.ps1" },
     [PSCustomObject]@{ N=17; NeedsProject=$true;  Tag="MANUAL";  Name="Build submission package";                  Example="submit.ps1 -Project XXX" },
-    [PSCustomObject]@{ N=18; NeedsProject=$true;  Tag="MANUAL";  Name="Reviewer response loop";                    Example="claude -p respond.md [R1/R2] in XXX" },
+    [PSCustomObject]@{ N=18; NeedsProject=$true;  Tag="MANUAL";  Name="Reviewer response (scaffold or draft)";     Example="respond_scaffold.md / respond_draft.md in XXX" },
     [PSCustomObject]@{ N=19; NeedsProject=$false; Tag="ONCE";    Name="Register auto-handover task (every 5 min)"; Example="auto_handover.ps1 --register" }
 )
 
@@ -379,14 +379,19 @@ function Invoke-Command-N {
         15 { & "$aiRoot\network.ps1" }
         16 { & "$aiRoot\generate_docs.ps1" }
         18 {
-               $projRoot   = Join-Path $pubRoot $proj
+               $projRoot = Join-Path $pubRoot $proj
                $round = Read-Host "  Round? (e.g. R1, R2)"
                if (!$round) { $round = "R1" }
-               $draft = Read-Host "  Draft file? (leave blank for clean start)"
-               $arg = if ($draft) { "$round --draft $draft" } else { $round }
-               $promptFile = Join-Path $aiRoot "prompts\respond.md"
+               Write-Host ""
+               Write-Host "  Step 1 = scaffold from .txt  |  Step 2 = draft responses" -ForegroundColor DarkGray
+               $step = Read-Host "  Step? (1/2)"
+               $promptFile = if ($step -eq "1") {
+                   Join-Path $aiRoot "prompts\respond_scaffold.md"
+               } else {
+                   Join-Path $aiRoot "prompts\respond_draft.md"
+               }
                $promptText = Get-Content $promptFile -Raw -Encoding UTF8
-               $promptText = $promptText -replace '\$ARGUMENTS', $arg
+               $promptText = $promptText -replace '\$ROUND', $round
                Push-Location $projRoot
                & claude -p $promptText
                Pop-Location
