@@ -10,7 +10,9 @@
 param(
     [string]$Cmd     = "",
     [string]$Project = "",
-    [string]$TexFile = ""
+    [string]$TexFile = "",
+    [switch]$h,
+    [switch]$help
 )
 
 $aiRoot  = "C:\Users\rich\OneDrive - Danmarks Tekniske Universitet\JR\AI_auto"
@@ -417,8 +419,8 @@ function Invoke-Command-N {
 # ── Entry point ───────────────────────────────────────────────────
 if (!$Project) { $Project = Get-ProjectFromCwd }
 
-# Help mode: helpi 4 --help  |  helpi 4 ?  |  helpi 4 -h
-if ($Project -in @('--help','-help','-h','?','help')) {
+# Help mode: helpi 4 -h  |  helpi 4 -help  |  helpi 4 ?
+if ($h -or $help -or $Project -in @('--help','?','help')) {
     if ($Cmd -match "^\d+$") {
         Show-CommandHelp -n ([int]$Cmd) -proj (Get-ProjectFromCwd)
     } else {
