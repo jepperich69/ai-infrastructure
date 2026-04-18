@@ -153,3 +153,18 @@
 - `helpi.ps1`: wrap PSConsoleReadLine call in try/catch for non-interactive shell degradation (carried)
 - Extract hardcoded `$aiRoot` / `$pubRoot` paths to a shared `config.ps1` (carried)
 **Git ref:** 9c33350
+
+---
+
+## Session 2026-04-18
+**Agent:** Claude Sonnet 4.6
+**Goal:** Add a collaboration section to the infrastructure guide; then restructure all section numbers to align with helpi 1–16 ordering.
+**Files touched:**
+- `infrastructure.html` — major restructuring: (1) added Section I: Collaborative Setup documenting the git-layer vs. personal-layer split, collaborator onboarding steps, branch discipline, shared `_ai_log.md` across contributors, and Overleaf co-authoring; (2) renumbered all file-layer sections to match helpi 1–16 exactly (previously sections 1–5 covered helpi 2, 4, 7, 5/6 in wrong order); (3) reordered sections to follow the project lifecycle story: create → pull → push → compile → logging → snapshot → rollback → submit → reviewer → status/docs; (4) added four new dedicated sections: helpi 1 (Create new project), 8/9 (Snapshot & Rollback), 10/11/12 (Submit & Reviewer Loop), 13–16 (Status/Network/Docs); (5) switched AI infrastructure sections from numeric labels (6, 6b, 6c, 7, 7b, 8, 9) to letters A–G to avoid conflict with helpi numbers; (6) merged Part 3 (Codex) and the new collaboration section into one Part 3 (H–I); (7) fixed all remaining v0.2 references → v0.5; bumped subtitle to v0.5.
+**Outcome:** The infrastructure guide now tells a coherent lifecycle story from project creation (1) to submission (10–12), section numbers match helpi exactly, AI sections are clearly separated with letters A–I, and the collaboration model (git as coordination layer, personal install per person) is documented.
+**Next steps:**
+- Update `CHANGELOG.md` and bump `VERSION` file to v0.5
+- Update the one-pager desk reference section labels to reflect A–G / H–I lettering
+- `helpi.ps1`: wrap PSConsoleReadLine in try/catch for non-interactive shell degradation (carried from v0.2)
+- Extract hardcoded `$aiRoot` / `$pubRoot` paths to a shared `config.ps1` (carried from v0.2)
+**Git ref:** ddafd54
