@@ -27,7 +27,7 @@ canvas { background: #fff; border: 1px solid #dde4ee; border-radius: 4px; box-sh
 <body>
 <div id="header">
   <h1>Research Project Network</h1>
-  <span class="sub">Generated 2026-04-18 16:10 &bull; 30 connected / 95 total &bull; 38 feeder links &bull; 6 clusters</span>
+  <span class="sub">Generated 2026-04-18 16:11 &bull; 30 connected / 95 total &bull; 38 feeder links &bull; 6 clusters</span>
 </div>
 <div id="legend">
   <strong style="color:#555">Last session:</strong>
@@ -140,7 +140,7 @@ RAW_NODES.forEach(function(n, i) {
 });
 
 // Force simulation
-for (var iter = 0; iter < 600; iter++) {
+for (var iter = 0; iter < 800; iter++) {
   var f = {};
   RAW_NODES.forEach(function(n) { f[n.name] = { x:0, y:0 }; });
 
@@ -170,10 +170,10 @@ for (var iter = 0; iter < 600; iter++) {
     f[n.name].y += (H/2 - pos[n.name].y) * 0.015;
   });
 
-  var cool = 1 - iter/600;
+  var cool = 1 - iter/800;
   RAW_NODES.forEach(function(n) {
-    vel[n.name].x = (vel[n.name].x + f[n.name].x) * 0.5;
-    vel[n.name].y = (vel[n.name].y + f[n.name].y) * 0.5;
+    vel[n.name].x = (vel[n.name].x + f[n.name].x) * 0.4;
+    vel[n.name].y = (vel[n.name].y + f[n.name].y) * 0.4;
     pos[n.name].x = Math.max(70, Math.min(W-70, pos[n.name].x + vel[n.name].x * cool));
     pos[n.name].y = Math.max(40, Math.min(H-40, pos[n.name].y + vel[n.name].y * cool));
   });

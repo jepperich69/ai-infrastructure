@@ -50,6 +50,208 @@ $commands = @(
     [PSCustomObject]@{ N=19; NeedsProject=$false; Tag="ONCE";    Name="Register auto-handover task (every 5 min)"; Example="auto_handover.ps1 --register" }
 )
 
+# ── Contextual help for a single command ─────────────────────────
+function Show-CommandHelp {
+    param([int]$n, [string]$proj)
+    $p = if ($proj) { $proj } else { "Pub_YourProject" }
+    $lines = switch ($n) {
+        1  { @(
+            "Pull all projects from Overleaf",
+            "Runs 'git pull' in every Overleaf_source/ folder registered in projects.json.",
+            "Safe to run anytime — only fast-forwards if there are no local edits.",
+            "",
+            "When to use: start of day, or before opening a project you haven't touched recently.",
+            "",
+            "Example:",
+            "  helpi 1"
+        )}
+        2  { @(
+            "Push local edits to Overleaf",
+            "Pushes changes in Overleaf_source/ back to the Overleaf git remote.",
+            "Use after editing .tex files locally that you want reflected on Overleaf.",
+            "",
+            "When to use: after editing manuscript files locally (e.g. via VS Code).",
+            "",
+            "Example:",
+            "  helpi 2 $p"
+        )}
+        3  { @(
+            "Compile LaTeX + open PDF",
+            "Runs latexmk on the chosen .tex file (with -g to force recompile) and opens",
+            "the resulting PDF. Prompts you to pick a .tex file if more than one exists.",
+            "",
+            "When to use: standalone compile without opening the full VS Code workspace.",
+            "",
+            "Example:",
+            "  helpi 3 $p"
+        )}
+        4  { @(
+            "Log + handover",
+            "Runs claude -p with the /close prompt in the project root. Claude writes a",
+            "session block to _ai_log.md, updates .claude/CLAUDE.md, and regenerates the",
+            "handover HTML + AGENTS.md. Equivalent to running /close inside Claude.",
+            "",
+            "When to use: end of a working session, or mid-session checkpoint.",
+            "",
+            "Example:",
+            "  helpi 4 $p"
+        )}
+        5  { @(
+            "Compile handover package from AI log",
+            "Reads _ai_log.md and regenerates _handover.html, _handover.json, and AGENTS.md.",
+            "No Claude call — pure PowerShell. Also what the auto-handover timer runs.",
+            "",
+            "When to use: after manually editing _ai_log.md, or to refresh the handover",
+            "without running a full /close.",
+            "",
+            "Example:",
+            "  helpi 5 $p"
+        )}
+        6  { @(
+            "Open handover in browser",
+            "Opens _handover.html for the project. Generates it first if it doesn't exist.",
+            "",
+            "When to use: to review session history before starting work, or to hand off",
+            "context to another agent.",
+            "",
+            "Example:",
+            "  helpi 6 $p"
+        )}
+        8  { @(
+            "Open infrastructure guide",
+            "Opens infrastructure.html in the default browser — the full reference guide",
+            "for this research infrastructure setup.",
+            "",
+            "Example:",
+            "  helpi 8"
+        )}
+        9  { @(
+            "Create new project",
+            "Scaffolds a complete project folder: code/, code/data/, Literature/,",
+            "Overleaf_source/, _ai_log.md, .claude/settings.json, .claude/CLAUDE.md.",
+            "Optionally clones an Overleaf git URL into Overleaf_source/.",
+            "",
+            "When to use: starting a new paper. Run once per project.",
+            "",
+            "Example:",
+            "  helpi 9 Pub_NewPaper_TBA",
+            "  helpi 9 Pub_NewPaper_TBA https://git.overleaf.com/abc123"
+        )}
+        10 { @(
+            "Pull one project from Overleaf",
+            "Runs 'git pull' in a single project's Overleaf_source/ folder.",
+            "Faster than helpi 1 when you only need one project up to date.",
+            "",
+            "Example:",
+            "  helpi 10 $p"
+        )}
+        11 { @(
+            "Project status dashboard",
+            "Shows a summary table of all projects: last sync, last session, open issues.",
+            "No project argument needed.",
+            "",
+            "Example:",
+            "  helpi 11"
+        )}
+        12 { @(
+            "Compile + open project (VS Code + PDF)",
+            "The main 'start working' command. Picks a .tex file, compiles it, opens VS Code",
+            "on the chosen file, opens File Explorer on the project root, and opens the",
+            "freshly compiled PDF. Also auto-inits code/ git repo if missing.",
+            "",
+            "When to use: beginning of a working session on a project.",
+            "",
+            "Example:",
+            "  helpi 12 $p"
+        )}
+        13 { @(
+            "Rollback last N code commits",
+            "Runs 'git reset --hard HEAD~N' in the project's code/ repo.",
+            "Prompts for N (default 1). PERMANENT — use with care.",
+            "",
+            "When to use: to undo recent code changes that broke something.",
+            "",
+            "Example:",
+            "  helpi 13 $p   # then enter N when prompted"
+        )}
+        14 { @(
+            "Snapshot Overleaf source (git tag)",
+            "Creates an annotated git tag (snapshot-v1, snapshot-v2, ...) on the current",
+            "HEAD of Overleaf_source/. Captures the full manuscript state: .tex, .bib,",
+            "figures, style files. Aborts if there are uncommitted changes.",
+            "",
+            "When to use: before submitting, before a major revision, or at any milestone.",
+            "Lets you diff or restore any file back to that exact state later.",
+            "",
+            "Example:",
+            "  helpi 14 $p              # auto-increments version",
+            "  helpi 14 $p V2-before-R1 # custom label"
+        )}
+        15 { @(
+            "Open project network graph",
+            "Generates network.html showing all projects with feeder links as directed",
+            "arrows. Connected projects are grouped into colour-coded clusters with convex",
+            "hull shading. Node colour = recency of last session. Drag, zoom, hover.",
+            "",
+            "Example:",
+            "  helpi 15"
+        )}
+        16 { @(
+            "Generate docs (summary + full HTML/PDF)",
+            "Runs generate_docs.ps1 to produce four files from infrastructure.html:",
+            "infrastructure_summary.html/.pdf (1-2 pager) and infrastructure_full.html/.pdf.",
+            "",
+            "When to use: after editing infrastructure.html and wanting fresh PDFs.",
+            "",
+            "Example:",
+            "  helpi 16"
+        )}
+        17 { @(
+            "Build submission package",
+            "Assembles a complete journal submission folder under _submissions/YYYY-MM-DD_Journal/.",
+            "Steps: (1) compile manuscript, (2) extract front page, (3) inline bibliography,",
+            "(4) submission zip, (5) blind manuscript + zip, (6) latexdiff vs previous version,",
+            "(7) copy AI-generated cover letter / highlights / author statement.",
+            "If no staged AI content exists, calls Claude first to generate it.",
+            "",
+            "When to use: ready to submit or resubmit a paper.",
+            "",
+            "Example:",
+            "  helpi 17 $p"
+        )}
+        18 { @(
+            "Reviewer response loop",
+            "Runs the /respond skill via claude -p in the project root. Guides Claude through",
+            "drafting a structured reviewer response letter for a given round (R1, R2, ...).",
+            "",
+            "When to use: after receiving reviewer comments, to draft the response letter.",
+            "",
+            "Example:",
+            "  helpi 18 $p   # then enter round (R1/R2) when prompted"
+        )}
+        19 { @(
+            "Register auto-handover task (every 5 min)",
+            "Installs a Windows scheduled task that runs auto_handover.ps1 every 5 minutes.",
+            "The task finds the most recently active project and regenerates its handover",
+            "HTML + AGENTS.md — but only if _ai_log.md is newer than _handover.html.",
+            "Run once. To remove: auto_handover.ps1 --unregister",
+            "",
+            "Example:",
+            "  helpi 19"
+        )}
+        default { @("No help available for command $n.") }
+    }
+
+    $c = $commands | Where-Object { $_.N -eq $n }
+    Write-Host ""
+    Write-Host ("  [{0}] {1}" -f $n, ($c ? $c.Name : "Unknown")) -ForegroundColor Cyan
+    Write-Host "  -----------------------------------------------------------------------" -ForegroundColor DarkGray
+    foreach ($l in $lines) { Write-Host "  $l" }
+    Write-Host "  -----------------------------------------------------------------------" -ForegroundColor DarkGray
+    Write-Host "  Tip: helpi $n $p   to run" -ForegroundColor DarkGray
+    Write-Host ""
+}
+
 # ── Show menu (condensed: one line per command) ────────────────────
 function Show-Menu {
     param([string]$forProject = "")
@@ -213,6 +415,16 @@ function Invoke-Command-N {
 
 # ── Entry point ───────────────────────────────────────────────────
 if (!$Project) { $Project = Get-ProjectFromCwd }
+
+# Help mode: helpi 4 --help  |  helpi 4 ?  |  helpi 4 -h
+if ($Project -in @('--help','-help','-h','?','help')) {
+    if ($Cmd -match "^\d+$") {
+        Show-CommandHelp -n ([int]$Cmd) -proj (Get-ProjectFromCwd)
+    } else {
+        Write-Host "  Usage: helpi <N> --help" -ForegroundColor Yellow
+    }
+    return
+}
 
 if (-not $Cmd) {
     Show-Menu -forProject $Project
