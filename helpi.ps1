@@ -33,6 +33,7 @@ $commands = @(
     [PSCustomObject]@{ N=1;  NeedsProject=$false; Tag="AUTO 4h"; Name="Pull all projects from Overleaf";        Example="sync_all.ps1" },
     [PSCustomObject]@{ N=2;  NeedsProject=$true;  Tag="MANUAL";  Name="Push local edits to Overleaf";           Example="push_to_overleaf.ps1 -Project XXX" },
     [PSCustomObject]@{ N=3;  NeedsProject=$true;  Tag="MANUAL";  Name="Compile LaTeX + open PDF";               Example="compile_latex.ps1 -Project XXX" },
+    [PSCustomObject]@{ N=4;  NeedsProject=$true;  Tag="MANUAL";  Name="Close session (log + handover)";         Example="claude -p close.md  in XXX" },
     [PSCustomObject]@{ N=5;  NeedsProject=$true;  Tag="MANUAL";  Name="Compile handover package from AI log";   Example="generate_handover.ps1 -Project XXX" },
     [PSCustomObject]@{ N=6;  NeedsProject=$true;  Tag="MANUAL";  Name="Open handover in browser";               Example='Start-Process "...\XXX\_handover.html"' },
     [PSCustomObject]@{ N=7;  NeedsProject=$true;  Tag="ONCE";    Name="Init code/ git repo";                    Example="init_project_git.ps1 -Project XXX" },
@@ -46,7 +47,8 @@ $commands = @(
     [PSCustomObject]@{ N=15; NeedsProject=$false; Tag="INFO";    Name="Open project network graph";              Example="network.ps1" },
     [PSCustomObject]@{ N=16; NeedsProject=$false; Tag="MANUAL";  Name="Generate docs (summary + full HTML/PDF)";  Example="generate_docs.ps1" },
     [PSCustomObject]@{ N=17; NeedsProject=$true;  Tag="MANUAL";  Name="Build submission package";                  Example="submit.ps1 -Project XXX" },
-    [PSCustomObject]@{ N=18; NeedsProject=$true;  Tag="MANUAL";  Name="Reviewer response loop";                    Example="claude -p respond.md [R1/R2] in XXX" }
+    [PSCustomObject]@{ N=18; NeedsProject=$true;  Tag="MANUAL";  Name="Reviewer response loop";                    Example="claude -p respond.md [R1/R2] in XXX" },
+    [PSCustomObject]@{ N=19; NeedsProject=$false; Tag="ONCE";    Name="Register auto-handover task (every 5 min)"; Example="auto_handover.ps1 --register" }
 )
 
 # ── Show menu (condensed: one line per command) ────────────────────
@@ -83,6 +85,7 @@ function Get-CommandPreview {
         2  { "push_to_overleaf.ps1 -Project $proj" }
         3  { if ($texFile) { "compile_latex.ps1 -Project $proj -TexFile $texFile" }
              else          { "compile_latex.ps1 -Project $proj" } }
+        4  { "claude -p ~/.claude/commands/close.md  (in $proj root)" }
         5  { "generate_handover.ps1 -Project $proj" }
         6  { "Start-Process `"$pubRoot\$proj\_handover.html`"" }
         7  { "init_project_git.ps1 -Project $proj" }
@@ -136,6 +139,17 @@ function Invoke-Command-N {
                    & "$aiRoot\compile_latex.ps1" -Project $proj
                }
            }
+        4  {
+               $projRoot      = Join-Path $pubRoot $proj
+               $closePromptPath = Join-Path $env:USERPROFILE ".claude\commands\close.md"
+               if (!(Test-Path $closePromptPath)) {
+                   Write-Host "ERR  | close.md not found: $closePromptPath" -ForegroundColor Red; return
+               }
+               $closePrompt = Get-Content $closePromptPath -Raw -Encoding UTF8
+               Push-Location $projRoot
+               & claude -p $closePrompt
+               Pop-Location
+           }
         5  { & "$aiRoot\generate_handover.ps1" -Project $proj }
         6  {
                $html = "$pubRoot\$proj\_handover.html"
@@ -177,6 +191,7 @@ function Invoke-Command-N {
                & claude -p $promptText
                Pop-Location
            }
+        19 { & "$aiRoot\auto_handover.ps1" --register }
         17 {
                $projRoot   = Join-Path $pubRoot $proj
                $stagingDir = Join-Path $projRoot "_submit_staging"
