@@ -8,15 +8,23 @@ $outFile = Join-Path $aiRoot "network.html"
 
 $projData = Get-Content "$aiRoot\projects.json" | ConvertFrom-Json
 
+# ── Helper: skip entries with path-illegal characters ─────────────
+function Test-ValidName([string]$n) {
+    return $n -and $n -notmatch '[<>:"|?*\x00-\x1f]'
+}
+
 # ── Last-session dates ────────────────────────────────────────────
 $lastSessions = @{}
 foreach ($proj in $projData) {
+    if (-not (Test-ValidName $proj.name)) { continue }
     $logPath = Join-Path $pubRoot "$($proj.name)\_ai_log.md"
-    if (Test-Path -LiteralPath $logPath) {
-        $m = Select-String -LiteralPath $logPath -Pattern '^## Session (\d{4}-\d{2}-\d{2})' |
-             Select-Object -Last 1
-        if ($m) { $lastSessions[$proj.name] = $m.Matches[0].Groups[1].Value }
-    }
+    try {
+        if (Test-Path -LiteralPath $logPath) {
+            $m = Select-String -LiteralPath $logPath -Pattern '^## Session (\d{4}-\d{2}-\d{2})' |
+                 Select-Object -Last 1
+            if ($m) { $lastSessions[$proj.name] = $m.Matches[0].Groups[1].Value }
+        }
+    } catch { }
 }
 
 # ── Edges ─────────────────────────────────────────────────────────
@@ -24,8 +32,10 @@ $edges    = [System.Collections.Generic.List[object]]::new()
 $involved = [System.Collections.Generic.HashSet[string]]::new()
 
 foreach ($proj in $projData) {
+    if (-not (Test-ValidName $proj.name)) { continue }
     $feedersFile = Join-Path $pubRoot "$($proj.name)\_feeders.json"
-    if (-not (Test-Path -LiteralPath $feedersFile)) { continue }
+    try { $exists = Test-Path -LiteralPath $feedersFile } catch { continue }
+    if (-not $exists) { continue }
 
     $raw = Get-Content -LiteralPath $feedersFile -Raw | ConvertFrom-Json
     $feederNames = @()
@@ -199,7 +209,7 @@ RAW_NODES.forEach(function(n, i) {
 });
 
 // Force simulation
-for (var iter = 0; iter < 600; iter++) {
+for (var iter = 0; iter < 800; iter++) {
   var f = {};
   RAW_NODES.forEach(function(n) { f[n.name] = { x:0, y:0 }; });
 
@@ -229,10 +239,10 @@ for (var iter = 0; iter < 600; iter++) {
     f[n.name].y += (H/2 - pos[n.name].y) * 0.015;
   });
 
-  var cool = 1 - iter/600;
+  var cool = 1 - iter/800;
   RAW_NODES.forEach(function(n) {
-    vel[n.name].x = (vel[n.name].x + f[n.name].x) * 0.5;
-    vel[n.name].y = (vel[n.name].y + f[n.name].y) * 0.5;
+    vel[n.name].x = (vel[n.name].x + f[n.name].x) * 0.4;
+    vel[n.name].y = (vel[n.name].y + f[n.name].y) * 0.4;
     pos[n.name].x = Math.max(70, Math.min(W-70, pos[n.name].x + vel[n.name].x * cool));
     pos[n.name].y = Math.max(40, Math.min(H-40, pos[n.name].y + vel[n.name].y * cool));
   });
