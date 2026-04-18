@@ -33,7 +33,6 @@ $commands = @(
     [PSCustomObject]@{ N=1;  NeedsProject=$false; Tag="AUTO 4h"; Name="Pull all projects from Overleaf";        Example="sync_all.ps1" },
     [PSCustomObject]@{ N=2;  NeedsProject=$true;  Tag="MANUAL";  Name="Push local edits to Overleaf";           Example="push_to_overleaf.ps1 -Project XXX" },
     [PSCustomObject]@{ N=3;  NeedsProject=$true;  Tag="MANUAL";  Name="Compile LaTeX + open PDF";               Example="compile_latex.ps1 -Project XXX" },
-    [PSCustomObject]@{ N=4;  NeedsProject=$true;  Tag="MANUAL";  Name="Open in VS Code";                        Example='code "...\XXX\Overleaf_source"' },
     [PSCustomObject]@{ N=5;  NeedsProject=$true;  Tag="MANUAL";  Name="Compile handover package from AI log";   Example="generate_handover.ps1 -Project XXX" },
     [PSCustomObject]@{ N=6;  NeedsProject=$true;  Tag="MANUAL";  Name="Open handover in browser";               Example='Start-Process "...\XXX\_handover.html"' },
     [PSCustomObject]@{ N=7;  NeedsProject=$true;  Tag="ONCE";    Name="Init code/ git repo";                    Example="init_project_git.ps1 -Project XXX" },
@@ -41,7 +40,7 @@ $commands = @(
     [PSCustomObject]@{ N=9;  NeedsProject=$true;  Tag="ONCE";    Name="Create new project";                     Example="new_project.ps1 -Project XXX" },
     [PSCustomObject]@{ N=10; NeedsProject=$true;  Tag="MANUAL";  Name="Pull one project from Overleaf";         Example="sync_one.ps1 -Project XXX" },
     [PSCustomObject]@{ N=11; NeedsProject=$false; Tag="INFO";    Name="Project status dashboard";               Example="status.ps1" },
-    [PSCustomObject]@{ N=12; NeedsProject=$true;  Tag="MANUAL";  Name="Open project (VS Code + Explorer + PDF)";Example="open_project.ps1 -Project XXX" },
+    [PSCustomObject]@{ N=12; NeedsProject=$true;  Tag="MANUAL";  Name="Compile + open project (VS Code + PDF)"; Example="open_project.ps1 -Project XXX" },
     [PSCustomObject]@{ N=13; NeedsProject=$true;  Tag="MANUAL";  Name="Rollback last N code commits";           Example="rollback.ps1 -Project XXX -N 1" },
     [PSCustomObject]@{ N=14; NeedsProject=$true;  Tag="MANUAL";  Name="Snapshot Overleaf source (git tag)";      Example="snapshot.ps1 -Project XXX [-Tag V2]" },
     [PSCustomObject]@{ N=15; NeedsProject=$false; Tag="INFO";    Name="Open project network graph";              Example="network.ps1" },
@@ -84,7 +83,6 @@ function Get-CommandPreview {
         2  { "push_to_overleaf.ps1 -Project $proj" }
         3  { if ($texFile) { "compile_latex.ps1 -Project $proj -TexFile $texFile" }
              else          { "compile_latex.ps1 -Project $proj" } }
-        4  { "code `"$pubRoot\$proj\Overleaf_source`"" }
         5  { "generate_handover.ps1 -Project $proj" }
         6  { "Start-Process `"$pubRoot\$proj\_handover.html`"" }
         7  { "init_project_git.ps1 -Project $proj" }
@@ -137,11 +135,6 @@ function Invoke-Command-N {
                } else {
                    & "$aiRoot\compile_latex.ps1" -Project $proj
                }
-           }
-        4  {
-               $path = "$pubRoot\$proj\Overleaf_source"
-               if (!(Test-Path $path)) { $path = "$pubRoot\$proj" }
-               if (Test-Path $vscode) { & $vscode $path } else { Start-Process "code" $path }
            }
         5  { & "$aiRoot\generate_handover.ps1" -Project $proj }
         6  {
