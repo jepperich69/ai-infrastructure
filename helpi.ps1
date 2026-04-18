@@ -46,8 +46,9 @@ $commands = @(
     [PSCustomObject]@{ N=15; NeedsProject=$false; Tag="INFO";    Name="Open project network graph";              Example="network.ps1" },
     [PSCustomObject]@{ N=16; NeedsProject=$false; Tag="MANUAL";  Name="Generate docs (summary + full HTML/PDF)";  Example="generate_docs.ps1" },
     [PSCustomObject]@{ N=17; NeedsProject=$true;  Tag="MANUAL";  Name="Build submission package";                  Example="submit.ps1 -Project XXX" },
-    [PSCustomObject]@{ N=18; NeedsProject=$true;  Tag="MANUAL";  Name="Reviewer response (scaffold or draft)";     Example="respond_scaffold.md / respond_draft.md in XXX" },
-    [PSCustomObject]@{ N=19; NeedsProject=$false; Tag="ONCE";    Name="Register auto-handover task (every 5 min)"; Example="auto_handover.ps1 --register" }
+    [PSCustomObject]@{ N=18; NeedsProject=$true;  Tag="MANUAL";  Name="Reviewer scaffold (.txt -> LaTeX + push)";  Example="respond_scaffold.md in XXX" },
+    [PSCustomObject]@{ N=19; NeedsProject=$false; Tag="ONCE";    Name="Register auto-handover task (every 5 min)"; Example="auto_handover.ps1 --register" },
+    [PSCustomObject]@{ N=20; NeedsProject=$true;  Tag="MANUAL";  Name="Reviewer draft loop (pull -> draft -> push)";Example="respond_draft.md in XXX" }
 )
 
 # ── Contextual help for a single command ─────────────────────────
@@ -220,14 +221,33 @@ function Show-CommandHelp {
             "  helpi 17 $p"
         )}
         18 { @(
-            "Reviewer response loop",
-            "Runs the /respond skill via claude -p in the project root. Guides Claude through",
-            "drafting a structured reviewer response letter for a given round (R1, R2, ...).",
+            "Reviewer scaffold (.txt -> LaTeX + push)",
+            "Parses a flat .txt file of reviewer comments, numbers them (R1.1, R2.1, AE.1...),",
+            "and generates Response_R1.tex using the standard reviewerbox/responsebox template.",
+            "Each comment gets a \TODO{} response slot. Pushes to Overleaf when done.",
             "",
-            "When to use: after receiving reviewer comments, to draft the response letter.",
+            "Authors then fill in \TODO{} slots in Overleaf:",
+            "  \TODO{Simple}         - Claude handles solo in step 2",
+            "  \TODO{[NOTE] ...}     - Claude follows your guidance",
+            "  \TODO{[SKIP]}         - you write manually",
+            "",
+            "When to use: immediately after receiving reviewer comments.",
             "",
             "Example:",
             "  helpi 18 $p   # then enter round (R1/R2) when prompted"
+        )}
+        20 { @(
+            "Reviewer draft loop (pull -> draft -> push)",
+            "Auto-pulls from Overleaf, reads the author-annotated Response_R1.tex,",
+            "and drafts a polished academic response for every \TODO{} slot.",
+            "Uses the manuscript for context (cites sections, equations, tables).",
+            "Skips \TODO{[SKIP]} slots and leaves already-written text untouched.",
+            "Pushes the completed draft back to Overleaf when done.",
+            "",
+            "When to use: after all authors have annotated the scaffold in Overleaf.",
+            "",
+            "Example:",
+            "  helpi 20 $p   # then enter round (R1/R2) when prompted"
         )}
         19 { @(
             "Register auto-handover task (every 5 min)",
@@ -300,7 +320,8 @@ function Get-CommandPreview {
         15 { "network.ps1" }
         16 { "generate_docs.ps1" }
         17 { "submit.ps1 -Project $proj" }
-        18 { "claude -p prompts/respond.md  (round: R1/R2/...)" }
+        18 { "claude -p prompts/respond_scaffold.md  (round: R1/R2/...)" }
+        20 { "claude -p prompts/respond_draft.md    (round: R1/R2/...)" }
     }
 }
 
@@ -379,19 +400,19 @@ function Invoke-Command-N {
         15 { & "$aiRoot\network.ps1" }
         16 { & "$aiRoot\generate_docs.ps1" }
         18 {
-               $projRoot = Join-Path $pubRoot $proj
-               $round = Read-Host "  Round? (e.g. R1, R2)"
+               $projRoot   = Join-Path $pubRoot $proj
+               $round      = Read-Host "  Round? (e.g. R1, R2)"
                if (!$round) { $round = "R1" }
-               Write-Host ""
-               Write-Host "  Step 1 = scaffold from .txt  |  Step 2 = draft responses" -ForegroundColor DarkGray
-               $step = Read-Host "  Step? (1/2)"
-               $promptFile = if ($step -eq "1") {
-                   Join-Path $aiRoot "prompts\respond_scaffold.md"
-               } else {
-                   Join-Path $aiRoot "prompts\respond_draft.md"
-               }
-               $promptText = Get-Content $promptFile -Raw -Encoding UTF8
-               $promptText = $promptText -replace '\$ROUND', $round
+               $promptText = (Get-Content (Join-Path $aiRoot "prompts\respond_scaffold.md") -Raw -Encoding UTF8) -replace '\$ROUND', $round
+               Push-Location $projRoot
+               & claude -p $promptText
+               Pop-Location
+           }
+        20 {
+               $projRoot   = Join-Path $pubRoot $proj
+               $round      = Read-Host "  Round? (e.g. R1, R2)"
+               if (!$round) { $round = "R1" }
+               $promptText = (Get-Content (Join-Path $aiRoot "prompts\respond_draft.md") -Raw -Encoding UTF8) -replace '\$ROUND', $round
                Push-Location $projRoot
                & claude -p $promptText
                Pop-Location
