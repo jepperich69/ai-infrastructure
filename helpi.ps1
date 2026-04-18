@@ -58,7 +58,7 @@ function Show-CommandHelp {
         1  { @(
             "Pull all projects from Overleaf",
             "Runs 'git pull' in every Overleaf_source/ folder registered in projects.json.",
-            "Safe to run anytime — only fast-forwards if there are no local edits.",
+            "Safe to run anytime - only fast-forwards if there are no local edits.",
             "",
             "When to use: start of day, or before opening a project you haven't touched recently.",
             "",
@@ -99,7 +99,7 @@ function Show-CommandHelp {
         5  { @(
             "Compile handover package from AI log",
             "Reads _ai_log.md and regenerates _handover.html, _handover.json, and AGENTS.md.",
-            "No Claude call — pure PowerShell. Also what the auto-handover timer runs.",
+            "No Claude call - pure PowerShell. Also what the auto-handover timer runs.",
             "",
             "When to use: after manually editing _ai_log.md, or to refresh the handover",
             "without running a full /close.",
@@ -119,7 +119,7 @@ function Show-CommandHelp {
         )}
         8  { @(
             "Open infrastructure guide",
-            "Opens infrastructure.html in the default browser — the full reference guide",
+            "Opens infrastructure.html in the default browser - the full reference guide",
             "for this research infrastructure setup.",
             "",
             "Example:",
@@ -167,7 +167,7 @@ function Show-CommandHelp {
         13 { @(
             "Rollback last N code commits",
             "Runs 'git reset --hard HEAD~N' in the project's code/ repo.",
-            "Prompts for N (default 1). PERMANENT — use with care.",
+            "Prompts for N (default 1). PERMANENT - use with care.",
             "",
             "When to use: to undo recent code changes that broke something.",
             "",
@@ -233,7 +233,7 @@ function Show-CommandHelp {
             "Register auto-handover task (every 5 min)",
             "Installs a Windows scheduled task that runs auto_handover.ps1 every 5 minutes.",
             "The task finds the most recently active project and regenerates its handover",
-            "HTML + AGENTS.md — but only if _ai_log.md is newer than _handover.html.",
+            "HTML + AGENTS.md - but only if _ai_log.md is newer than _handover.html.",
             "Run once. To remove: auto_handover.ps1 --unregister",
             "",
             "Example:",
