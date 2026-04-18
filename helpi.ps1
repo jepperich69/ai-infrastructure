@@ -243,8 +243,9 @@ function Show-CommandHelp {
     }
 
     $c = $commands | Where-Object { $_.N -eq $n }
+    $cName = if ($c) { $c.Name } else { "Unknown" }
     Write-Host ""
-    Write-Host ("  [{0}] {1}" -f $n, ($c ? $c.Name : "Unknown")) -ForegroundColor Cyan
+    Write-Host ("  [{0}] {1}" -f $n, $cName) -ForegroundColor Cyan
     Write-Host "  -----------------------------------------------------------------------" -ForegroundColor DarkGray
     foreach ($l in $lines) { Write-Host "  $l" }
     Write-Host "  -----------------------------------------------------------------------" -ForegroundColor DarkGray
