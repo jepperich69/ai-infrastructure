@@ -36,7 +36,6 @@ $commands = @(
     [PSCustomObject]@{ N=4;  NeedsProject=$true;  Tag="MANUAL";  Name="Log + handover";                        Example="claude -p close.md  in XXX" },
     [PSCustomObject]@{ N=5;  NeedsProject=$true;  Tag="MANUAL";  Name="Compile handover package from AI log";   Example="generate_handover.ps1 -Project XXX" },
     [PSCustomObject]@{ N=6;  NeedsProject=$true;  Tag="MANUAL";  Name="Open handover in browser";               Example='Start-Process "...\XXX\_handover.html"' },
-    [PSCustomObject]@{ N=7;  NeedsProject=$true;  Tag="ONCE";    Name="Init code/ git repo";                    Example="init_project_git.ps1 -Project XXX" },
     [PSCustomObject]@{ N=8;  NeedsProject=$false; Tag="INFO";    Name="Open infrastructure guide";              Example="Start-Process infrastructure.html" },
     [PSCustomObject]@{ N=9;  NeedsProject=$true;  Tag="ONCE";    Name="Create new project";                     Example="new_project.ps1 -Project XXX" },
     [PSCustomObject]@{ N=10; NeedsProject=$true;  Tag="MANUAL";  Name="Pull one project from Overleaf";         Example="sync_one.ps1 -Project XXX" },
@@ -88,7 +87,6 @@ function Get-CommandPreview {
         4  { "claude -p ~/.claude/commands/close.md  (in $proj root)" }
         5  { "generate_handover.ps1 -Project $proj" }
         6  { "Start-Process `"$pubRoot\$proj\_handover.html`"" }
-        7  { "init_project_git.ps1 -Project $proj" }
         8  { "Start-Process `"$aiRoot\infrastructure.html`"" }
         9  { "new_project.ps1 -Project $proj" }
         10 { "sync_one.ps1 -Project $proj" }
@@ -159,7 +157,6 @@ function Invoke-Command-N {
                }
                Start-Process $html
            }
-        7  { & "$aiRoot\init_project_git.ps1" -Project $proj }
         8  { Start-Process "$aiRoot\infrastructure.html" }
         9  { & "$aiRoot\new_project.ps1"      -Project $proj }
         10 { & "$aiRoot\sync_one.ps1"         -Project $proj }

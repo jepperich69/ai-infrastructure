@@ -51,6 +51,12 @@ if ($texFiles.Count -eq 0) {
     }
 }
 
+# ── Auto-init code/ git repo if missing ──────────────────────────
+$codeDir = Join-Path $projectRoot "code"
+if ((Test-Path $codeDir) -and !(Test-Path (Join-Path $codeDir ".git"))) {
+    & "$PSScriptRoot\init_project_git.ps1" -Project $Project
+}
+
 # ── Compile ───────────────────────────────────────────────────────
 $outDir = Join-Path $overleafDir "out"
 $pdfPath = $null

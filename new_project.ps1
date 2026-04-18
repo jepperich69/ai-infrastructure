@@ -152,5 +152,4 @@ if (!$GitUrl) {
     Write-Host "  - Add Overleaf git URL to Overleaf_source\README.md and run sync_all.ps1"
 }
 Write-Host "  - Fill in .claude\CLAUDE.md with project details (co-authors, venue, key files)"
-Write-Host "  - helpi 4 $Project   (open in VS Code)"
-Write-Host "  - helpi 3 $Project   (compile LaTeX)"
+Write-Host "  - helpi 12 $Project  (compile + open in VS Code)"
