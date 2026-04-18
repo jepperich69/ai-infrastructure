@@ -18,6 +18,7 @@
 #   Cover_Rich_MPC_2026_R1.pdf       from _submit_staging/
 #   Highlights_Rich_MPC_2026_R1.txt  from _submit_staging/
 #   AuthorStat_Rich_MPC_2026_R1.pdf  from _submit_staging/
+#   Response_Rich_MPC_2026_R1.pdf    compiled response letter, if present
 #   MANIFEST.txt                     contents summary
 #
 # Usage:
@@ -484,6 +485,63 @@ foreach ($entry in $aiMap.GetEnumerator()) {
 }
 if ($nCopied -eq 0) {
     SKIP "no staged content -- run /submit to generate cover letter, highlights, author statement"
+}
+
+# -- [7b] Response letter -----------------------------------------------------
+$responseTexFiles = Get-ChildItem $sourceDir -Filter "Response*.tex" -File -ErrorAction SilentlyContinue
+$responseToken = [regex]::Match($baseName, "R\d+[A-Za-z]*").Value
+$responseTex = $null
+if ($responseTexFiles.Count -gt 0) {
+    if ($responseToken) {
+        $responseTex = $responseTexFiles |
+            Where-Object { $_.BaseName -match [regex]::Escape($responseToken) } |
+            Sort-Object LastWriteTime -Descending |
+            Select-Object -First 1
+    }
+    if (!$responseTex) {
+        $responseTex = $responseTexFiles | Sort-Object LastWriteTime -Descending | Select-Object -First 1
+    }
+}
+
+$responsePdf = $null
+if ($responseTex) {
+    $responseBase = $responseTex.BaseName
+    if (Test-Path $latexmk) {
+        $fwd = $pdflatex -replace '\\', '/'
+        & $latexmk -pdf -g -f -cd "-pdflatex=$fwd" -interaction=nonstopmode -outdir="$buildDir" $responseTex.FullName *>$null
+    } else {
+        & $pdflatex -interaction=nonstopmode -output-directory="$buildDir" $responseTex.FullName *>$null
+        & $bibtex   (Join-Path $buildDir $responseBase)                                *>$null
+        & $pdflatex -interaction=nonstopmode -output-directory="$buildDir" $responseTex.FullName *>$null
+        & $pdflatex -interaction=nonstopmode -output-directory="$buildDir" $responseTex.FullName *>$null
+    }
+    $compiledResponsePdf = Join-Path $buildDir "$responseBase.pdf"
+    if (Test-Path $compiledResponsePdf) {
+        $responsePdf = Get-Item $compiledResponsePdf
+    } else {
+        WARN "Response letter compile failed -- check $buildDir\$responseBase.log"
+    }
+} else {
+    $responsePdfFiles = Get-ChildItem $buildDir -Filter "Response*.pdf" -File -ErrorAction SilentlyContinue
+    if ($responsePdfFiles.Count -gt 0) {
+        if ($responseToken) {
+            $responsePdf = $responsePdfFiles |
+                Where-Object { $_.BaseName -match [regex]::Escape($responseToken) } |
+                Sort-Object LastWriteTime -Descending |
+                Select-Object -First 1
+        }
+        if (!$responsePdf) {
+            $responsePdf = $responsePdfFiles | Sort-Object LastWriteTime -Descending | Select-Object -First 1
+        }
+    }
+}
+
+if ($responsePdf) {
+    $responseOut = Join-Path $outDir "Response_${prefix}.pdf"
+    Copy-Item $responsePdf.FullName $responseOut -Force
+    OK "Response_${prefix}.pdf"
+} else {
+    SKIP "no response letter found"
 }
 
 # -- Manifest -----------------------------------------------------------------
