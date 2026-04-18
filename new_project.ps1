@@ -143,6 +143,16 @@ $claudeMd = @"
 Set-Content -Path (Join-Path $claudeDir "CLAUDE.md") -Value $claudeMd
 Write-Host "OK   | .claude/CLAUDE.md created (fill in project details)"
 
+# ── Auto-register auto-handover scheduled task (once per machine) ──
+$taskName = "ResearchInfra_AutoHandover"
+$task = Get-ScheduledTask -TaskName $taskName -ErrorAction SilentlyContinue
+if (!$task) {
+    & "$aiRoot\auto_handover.ps1" --register
+    Write-Host "OK   | Auto-handover scheduled task registered ($taskName)"
+} else {
+    Write-Host "INFO | Auto-handover task already registered — skipping"
+}
+
 Write-Host ""
 Write-Host "Done. Project ready at:"
 Write-Host "  $projectRoot"
@@ -152,4 +162,4 @@ if (!$GitUrl) {
     Write-Host "  - Add Overleaf git URL to Overleaf_source\README.md and run sync_all.ps1"
 }
 Write-Host "  - Fill in .claude\CLAUDE.md with project details (co-authors, venue, key files)"
-Write-Host "  - helpi 12 $Project  (compile + open in VS Code)"
+Write-Host "  - helpi 5 $Project  (compile + open in VS Code)"

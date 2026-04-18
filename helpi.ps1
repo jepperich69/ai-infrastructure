@@ -2,10 +2,10 @@
 #
 # Usage:
 #   helpi                              show menu (auto-detects project from CWD)
-#   helpi 3                            run command 3 (uses detected project or prompts)
-#   helpi 3 Pub_AssesTiming_Raoul_TBA  run command 3 for a specific project
+#   helpi 5                            run command 5 (uses detected project or prompts)
+#   helpi 5 Pub_AssesTiming_Raoul_TBA  run command 5 for a specific project
+#   helpi 5 ?                          show help for command 5
 #   helpi compi                        partial-name match -> runs "Compile LaTeX + open PDF"
-#   helpi compi "" main.tex            partial-name match with explicit .tex file
 #
 param(
     [string]$Cmd     = "",
@@ -21,7 +21,6 @@ $vscode  = "$env:LOCALAPPDATA\Programs\Microsoft VS Code\bin\code.cmd"
 function Get-ProjectFromCwd {
     $cwd      = (Get-Location).Path
     $segments = $cwd -split '[\\\/]'
-    # Match known project prefixes in any path segment
     $match = $segments | Where-Object {
         $_ -match '^(Pub_|Pro_|PhD_|CHARGO|42180|DFF|Reagent|BeamerPres|hEART|IATBR|Cycling|Discrete|EV|Paulsen|Presentation|Aalborg|Bicycle|Slides)'
     } | Select-Object -First 1
@@ -30,33 +29,43 @@ function Get-ProjectFromCwd {
 
 # ── Command definitions ────────────────────────────────────────────
 $commands = @(
-    [PSCustomObject]@{ N=1;  NeedsProject=$false; Tag="AUTO 4h"; Name="Pull all projects from Overleaf";        Example="sync_all.ps1" },
-    [PSCustomObject]@{ N=2;  NeedsProject=$true;  Tag="MANUAL";  Name="Push local edits to Overleaf";           Example="push_to_overleaf.ps1 -Project XXX" },
-    [PSCustomObject]@{ N=3;  NeedsProject=$true;  Tag="MANUAL";  Name="Compile LaTeX + open PDF";               Example="compile_latex.ps1 -Project XXX" },
-    [PSCustomObject]@{ N=4;  NeedsProject=$true;  Tag="MANUAL";  Name="Log + handover";                        Example="claude -p close.md  in XXX" },
-    [PSCustomObject]@{ N=5;  NeedsProject=$true;  Tag="MANUAL";  Name="Compile handover package from AI log";   Example="generate_handover.ps1 -Project XXX" },
-    [PSCustomObject]@{ N=6;  NeedsProject=$true;  Tag="MANUAL";  Name="Open handover in browser";               Example='Start-Process "...\XXX\_handover.html"' },
-    [PSCustomObject]@{ N=8;  NeedsProject=$false; Tag="INFO";    Name="Open infrastructure guide";              Example="Start-Process infrastructure.html" },
-    [PSCustomObject]@{ N=9;  NeedsProject=$true;  Tag="ONCE";    Name="Create new project";                     Example="new_project.ps1 -Project XXX" },
-    [PSCustomObject]@{ N=10; NeedsProject=$true;  Tag="MANUAL";  Name="Pull one project from Overleaf";         Example="sync_one.ps1 -Project XXX" },
-    [PSCustomObject]@{ N=11; NeedsProject=$false; Tag="INFO";    Name="Project status dashboard";               Example="status.ps1" },
-    [PSCustomObject]@{ N=12; NeedsProject=$true;  Tag="MANUAL";  Name="Compile + open project (VS Code + PDF)"; Example="open_project.ps1 -Project XXX" },
-    [PSCustomObject]@{ N=13; NeedsProject=$true;  Tag="MANUAL";  Name="Rollback last N code commits";           Example="rollback.ps1 -Project XXX -N 1" },
-    [PSCustomObject]@{ N=14; NeedsProject=$true;  Tag="MANUAL";  Name="Snapshot Overleaf source (git tag)";      Example="snapshot.ps1 -Project XXX [-Tag V2]" },
-    [PSCustomObject]@{ N=15; NeedsProject=$false; Tag="INFO";    Name="Open project network graph";              Example="network.ps1" },
-    [PSCustomObject]@{ N=16; NeedsProject=$false; Tag="MANUAL";  Name="Generate docs (summary + full HTML/PDF)";  Example="generate_docs.ps1" },
-    [PSCustomObject]@{ N=17; NeedsProject=$true;  Tag="MANUAL";  Name="Build submission package";                  Example="submit.ps1 -Project XXX" },
-    [PSCustomObject]@{ N=18; NeedsProject=$true;  Tag="MANUAL";  Name="Reviewer scaffold (.txt -> LaTeX + push)";  Example="respond_scaffold.md in XXX" },
-    [PSCustomObject]@{ N=19; NeedsProject=$false; Tag="ONCE";    Name="Register auto-handover task (every 5 min)"; Example="auto_handover.ps1 --register" },
-    [PSCustomObject]@{ N=20; NeedsProject=$true;  Tag="MANUAL";  Name="Reviewer draft loop (pull -> draft -> push)";Example="respond_draft.md in XXX" }
+    [PSCustomObject]@{ N=1;  NeedsProject=$true;  Tag="ONCE";    Name="Create new project";                        Example="new_project.ps1 -Project XXX" },
+    [PSCustomObject]@{ N=2;  NeedsProject=$false; Tag="AUTO 4h"; Name="Pull all projects from Overleaf";           Example="sync_all.ps1" },
+    [PSCustomObject]@{ N=3;  NeedsProject=$true;  Tag="MANUAL";  Name="Pull one project from Overleaf";            Example="sync_one.ps1 -Project XXX" },
+    [PSCustomObject]@{ N=4;  NeedsProject=$true;  Tag="MANUAL";  Name="Push local edits to Overleaf";              Example="push_to_overleaf.ps1 -Project XXX" },
+    [PSCustomObject]@{ N=5;  NeedsProject=$true;  Tag="MANUAL";  Name="Compile + open project (VS Code + PDF)";    Example="open_project.ps1 -Project XXX" },
+    [PSCustomObject]@{ N=6;  NeedsProject=$true;  Tag="MANUAL";  Name="Compile LaTeX + open PDF";                  Example="compile_latex.ps1 -Project XXX" },
+    [PSCustomObject]@{ N=7;  NeedsProject=$true;  Tag="MANUAL";  Name="Log + handover + open in browser";          Example="claude -p close.md + handover in XXX" },
+    [PSCustomObject]@{ N=8;  NeedsProject=$true;  Tag="MANUAL";  Name="Snapshot Overleaf source (git tag)";        Example="snapshot.ps1 -Project XXX [-Tag V2]" },
+    [PSCustomObject]@{ N=9;  NeedsProject=$true;  Tag="MANUAL";  Name="Rollback last N code commits";              Example="rollback.ps1 -Project XXX -N 1" },
+    [PSCustomObject]@{ N=10; NeedsProject=$true;  Tag="MANUAL";  Name="Build submission package";                  Example="submit.ps1 -Project XXX" },
+    [PSCustomObject]@{ N=11; NeedsProject=$true;  Tag="MANUAL";  Name="Reviewer scaffold (.txt -> LaTeX + push)";  Example="respond_scaffold.md in XXX" },
+    [PSCustomObject]@{ N=12; NeedsProject=$true;  Tag="MANUAL";  Name="Reviewer draft loop (pull -> draft -> push)";Example="respond_draft.md in XXX" },
+    [PSCustomObject]@{ N=13; NeedsProject=$false; Tag="INFO";    Name="Project status dashboard";                  Example="status.ps1" },
+    [PSCustomObject]@{ N=14; NeedsProject=$false; Tag="INFO";    Name="Open project network graph";                Example="network.ps1" },
+    [PSCustomObject]@{ N=15; NeedsProject=$false; Tag="INFO";    Name="Open infrastructure guide";                 Example="Start-Process infrastructure.html" },
+    [PSCustomObject]@{ N=16; NeedsProject=$false; Tag="MANUAL";  Name="Generate docs (summary + full HTML/PDF)";   Example="generate_docs.ps1" }
 )
 
-# ── Contextual help for a single command ─────────────────────────
+# ── Contextual help for a single command ──────────────────────────
 function Show-CommandHelp {
     param([int]$n, [string]$proj)
     $p = if ($proj) { $proj } else { "Pub_YourProject" }
     $lines = switch ($n) {
         1  { @(
+            "Create new project",
+            "Scaffolds a complete project folder: code/, code/data/, Literature/,",
+            "Overleaf_source/, _ai_log.md, .claude/settings.json, .claude/CLAUDE.md.",
+            "Also registers the auto-handover scheduled task if not already set up.",
+            "Optionally clones an Overleaf git URL into Overleaf_source/.",
+            "",
+            "When to use: starting a new paper. Run once per project.",
+            "",
+            "Example:",
+            "  helpi 1 Pub_NewPaper_TBA",
+            "  helpi 1 Pub_NewPaper_TBA https://git.overleaf.com/abc123"
+        )}
+        2  { @(
             "Pull all projects from Overleaf",
             "Runs 'git pull' in every Overleaf_source/ folder registered in projects.json.",
             "Safe to run anytime - only fast-forwards if there are no local edits.",
@@ -64,97 +73,26 @@ function Show-CommandHelp {
             "When to use: start of day, or before opening a project you haven't touched recently.",
             "",
             "Example:",
-            "  helpi 1"
-        )}
-        2  { @(
-            "Push local edits to Overleaf",
-            "Pushes changes in Overleaf_source/ back to the Overleaf git remote.",
-            "Use after editing .tex files locally that you want reflected on Overleaf.",
-            "",
-            "When to use: after editing manuscript files locally (e.g. via VS Code).",
-            "",
-            "Example:",
-            "  helpi 2 $p"
+            "  helpi 2"
         )}
         3  { @(
-            "Compile LaTeX + open PDF",
-            "Runs latexmk on the chosen .tex file (with -g to force recompile) and opens",
-            "the resulting PDF. Prompts you to pick a .tex file if more than one exists.",
-            "",
-            "When to use: standalone compile without opening the full VS Code workspace.",
+            "Pull one project from Overleaf",
+            "Runs 'git pull' in a single project's Overleaf_source/ folder.",
+            "Faster than helpi 2 when you only need one project up to date.",
             "",
             "Example:",
             "  helpi 3 $p"
         )}
         4  { @(
-            "Log + handover",
-            "Runs claude -p with the /close prompt in the project root. Claude writes a",
-            "session block to _ai_log.md, updates .claude/CLAUDE.md, and regenerates the",
-            "handover HTML + AGENTS.md. Equivalent to running /close inside Claude.",
+            "Push local edits to Overleaf",
+            "Pushes changes in Overleaf_source/ back to the Overleaf git remote.",
             "",
-            "When to use: end of a working session, or mid-session checkpoint.",
+            "When to use: after editing manuscript files locally (e.g. via VS Code).",
             "",
             "Example:",
             "  helpi 4 $p"
         )}
         5  { @(
-            "Compile handover package from AI log",
-            "Reads _ai_log.md and regenerates _handover.html, _handover.json, and AGENTS.md.",
-            "No Claude call - pure PowerShell. Also what the auto-handover timer runs.",
-            "",
-            "When to use: after manually editing _ai_log.md, or to refresh the handover",
-            "without running a full /close.",
-            "",
-            "Example:",
-            "  helpi 5 $p"
-        )}
-        6  { @(
-            "Open handover in browser",
-            "Opens _handover.html for the project. Generates it first if it doesn't exist.",
-            "",
-            "When to use: to review session history before starting work, or to hand off",
-            "context to another agent.",
-            "",
-            "Example:",
-            "  helpi 6 $p"
-        )}
-        8  { @(
-            "Open infrastructure guide",
-            "Opens infrastructure.html in the default browser - the full reference guide",
-            "for this research infrastructure setup.",
-            "",
-            "Example:",
-            "  helpi 8"
-        )}
-        9  { @(
-            "Create new project",
-            "Scaffolds a complete project folder: code/, code/data/, Literature/,",
-            "Overleaf_source/, _ai_log.md, .claude/settings.json, .claude/CLAUDE.md.",
-            "Optionally clones an Overleaf git URL into Overleaf_source/.",
-            "",
-            "When to use: starting a new paper. Run once per project.",
-            "",
-            "Example:",
-            "  helpi 9 Pub_NewPaper_TBA",
-            "  helpi 9 Pub_NewPaper_TBA https://git.overleaf.com/abc123"
-        )}
-        10 { @(
-            "Pull one project from Overleaf",
-            "Runs 'git pull' in a single project's Overleaf_source/ folder.",
-            "Faster than helpi 1 when you only need one project up to date.",
-            "",
-            "Example:",
-            "  helpi 10 $p"
-        )}
-        11 { @(
-            "Project status dashboard",
-            "Shows a summary table of all projects: last sync, last session, open issues.",
-            "No project argument needed.",
-            "",
-            "Example:",
-            "  helpi 11"
-        )}
-        12 { @(
             "Compile + open project (VS Code + PDF)",
             "The main 'start working' command. Picks a .tex file, compiles it, opens VS Code",
             "on the chosen file, opens File Explorer on the project root, and opens the",
@@ -163,19 +101,30 @@ function Show-CommandHelp {
             "When to use: beginning of a working session on a project.",
             "",
             "Example:",
-            "  helpi 12 $p"
+            "  helpi 5 $p"
         )}
-        13 { @(
-            "Rollback last N code commits",
-            "Runs 'git reset --hard HEAD~N' in the project's code/ repo.",
-            "Prompts for N (default 1). PERMANENT - use with care.",
+        6  { @(
+            "Compile LaTeX + open PDF",
+            "Runs latexmk on the chosen .tex file (with -g to force recompile) and opens",
+            "the resulting PDF. Prompts you to pick a .tex file if more than one exists.",
             "",
-            "When to use: to undo recent code changes that broke something.",
+            "When to use: standalone compile without opening the full VS Code workspace.",
             "",
             "Example:",
-            "  helpi 13 $p   # then enter N when prompted"
+            "  helpi 6 $p"
         )}
-        14 { @(
+        7  { @(
+            "Log + handover + open in browser",
+            "Runs claude -p with the /close prompt: writes session block to _ai_log.md,",
+            "updates .claude/CLAUDE.md, regenerates _handover.html + AGENTS.md,",
+            "then opens the handover in the browser.",
+            "",
+            "When to use: end of a working session, or mid-session checkpoint.",
+            "",
+            "Example:",
+            "  helpi 7 $p"
+        )}
+        8  { @(
             "Snapshot Overleaf source (git tag)",
             "Creates an annotated git tag (snapshot-v1, snapshot-v2, ...) on the current",
             "HEAD of Overleaf_source/. Captures the full manuscript state: .tex, .bib,",
@@ -185,14 +134,81 @@ function Show-CommandHelp {
             "Lets you diff or restore any file back to that exact state later.",
             "",
             "Example:",
-            "  helpi 14 $p              # auto-increments version",
-            "  helpi 14 $p V2-before-R1 # custom label"
+            "  helpi 8 $p              # auto-increments version",
+            "  helpi 8 $p V2-before-R1 # custom label"
         )}
-        15 { @(
+        9  { @(
+            "Rollback last N code commits",
+            "Runs 'git reset --hard HEAD~N' in the project's code/ repo.",
+            "Prompts for N (default 1). PERMANENT - use with care.",
+            "",
+            "When to use: to undo recent code changes that broke something.",
+            "",
+            "Example:",
+            "  helpi 9 $p   # then enter N when prompted"
+        )}
+        10 { @(
+            "Build submission package",
+            "Assembles a complete journal submission folder under _submissions/YYYY-MM-DD_Journal/.",
+            "Steps: (1) compile manuscript, (2) extract front page, (3) inline bibliography,",
+            "(4) submission zip, (5) blind manuscript + zip, (6) latexdiff vs previous version,",
+            "(7) copy AI-generated cover letter / highlights / author statement.",
+            "If no staged AI content exists, calls Claude first to generate it.",
+            "",
+            "When to use: ready to submit or resubmit a paper.",
+            "",
+            "Example:",
+            "  helpi 10 $p"
+        )}
+        11 { @(
+            "Reviewer scaffold (.txt -> LaTeX + push)",
+            "Parses a flat .txt file of reviewer comments, numbers them (R1.1, R2.1, AE.1...),",
+            "and generates Response_R1.tex using the standard reviewerbox/responsebox template.",
+            "Each comment gets a \TODO{} response slot. Pushes to Overleaf when done.",
+            "",
+            "Authors then fill in \TODO{} slots in Overleaf:",
+            "  \TODO{Simple}         - Claude handles solo in helpi 12",
+            "  \TODO{[NOTE] ...}     - Claude follows your guidance",
+            "  \TODO{[SKIP]}         - you write manually",
+            "",
+            "When to use: immediately after receiving reviewer comments.",
+            "",
+            "Example:",
+            "  helpi 11 $p   # then enter round (R1/R2) when prompted"
+        )}
+        12 { @(
+            "Reviewer draft loop (pull -> draft -> push)",
+            "Auto-pulls from Overleaf, reads the author-annotated Response_R1.tex,",
+            "and drafts a polished academic response for every \TODO{} slot.",
+            "Uses the manuscript for context (cites sections, equations, tables).",
+            "Skips \TODO{[SKIP]} slots and leaves already-written text untouched.",
+            "Pushes the completed draft back to Overleaf when done.",
+            "",
+            "When to use: after all authors have annotated the scaffold in Overleaf.",
+            "",
+            "Example:",
+            "  helpi 12 $p   # then enter round (R1/R2) when prompted"
+        )}
+        13 { @(
+            "Project status dashboard",
+            "Shows a summary table of all projects: last sync, last session, open issues.",
+            "",
+            "Example:",
+            "  helpi 13"
+        )}
+        14 { @(
             "Open project network graph",
             "Generates network.html showing all projects with feeder links as directed",
             "arrows. Connected projects are grouped into colour-coded clusters with convex",
             "hull shading. Node colour = recency of last session. Drag, zoom, hover.",
+            "",
+            "Example:",
+            "  helpi 14"
+        )}
+        15 { @(
+            "Open infrastructure guide",
+            "Opens infrastructure.html in the default browser - the full reference guide",
+            "for this research infrastructure setup.",
             "",
             "Example:",
             "  helpi 15"
@@ -206,58 +222,6 @@ function Show-CommandHelp {
             "",
             "Example:",
             "  helpi 16"
-        )}
-        17 { @(
-            "Build submission package",
-            "Assembles a complete journal submission folder under _submissions/YYYY-MM-DD_Journal/.",
-            "Steps: (1) compile manuscript, (2) extract front page, (3) inline bibliography,",
-            "(4) submission zip, (5) blind manuscript + zip, (6) latexdiff vs previous version,",
-            "(7) copy AI-generated cover letter / highlights / author statement.",
-            "If no staged AI content exists, calls Claude first to generate it.",
-            "",
-            "When to use: ready to submit or resubmit a paper.",
-            "",
-            "Example:",
-            "  helpi 17 $p"
-        )}
-        18 { @(
-            "Reviewer scaffold (.txt -> LaTeX + push)",
-            "Parses a flat .txt file of reviewer comments, numbers them (R1.1, R2.1, AE.1...),",
-            "and generates Response_R1.tex using the standard reviewerbox/responsebox template.",
-            "Each comment gets a \TODO{} response slot. Pushes to Overleaf when done.",
-            "",
-            "Authors then fill in \TODO{} slots in Overleaf:",
-            "  \TODO{Simple}         - Claude handles solo in step 2",
-            "  \TODO{[NOTE] ...}     - Claude follows your guidance",
-            "  \TODO{[SKIP]}         - you write manually",
-            "",
-            "When to use: immediately after receiving reviewer comments.",
-            "",
-            "Example:",
-            "  helpi 18 $p   # then enter round (R1/R2) when prompted"
-        )}
-        20 { @(
-            "Reviewer draft loop (pull -> draft -> push)",
-            "Auto-pulls from Overleaf, reads the author-annotated Response_R1.tex,",
-            "and drafts a polished academic response for every \TODO{} slot.",
-            "Uses the manuscript for context (cites sections, equations, tables).",
-            "Skips \TODO{[SKIP]} slots and leaves already-written text untouched.",
-            "Pushes the completed draft back to Overleaf when done.",
-            "",
-            "When to use: after all authors have annotated the scaffold in Overleaf.",
-            "",
-            "Example:",
-            "  helpi 20 $p   # then enter round (R1/R2) when prompted"
-        )}
-        19 { @(
-            "Register auto-handover task (every 5 min)",
-            "Installs a Windows scheduled task that runs auto_handover.ps1 every 5 minutes.",
-            "The task finds the most recently active project and regenerates its handover",
-            "HTML + AGENTS.md - but only if _ai_log.md is newer than _handover.html.",
-            "Run once. To remove: auto_handover.ps1 --unregister",
-            "",
-            "Example:",
-            "  helpi 19"
         )}
         default { @("No help available for command $n.") }
     }
@@ -276,11 +240,11 @@ function Show-CommandHelp {
 # ── Show menu (condensed: one line per command) ────────────────────
 function Show-Menu {
     param([string]$forProject = "")
-    $label     = if ($forProject) { $forProject } else { "XXX" }
-    $detected  = $forProject -ne "" -and $forProject -ne "XXX"
+    $label    = if ($forProject) { $forProject } else { "XXX" }
+    $detected = $forProject -ne "" -and $forProject -ne "XXX"
 
     Write-Host ""
-    Write-Host "  Research Infrastructure  |  helpi <N> [Project]" -ForegroundColor Cyan
+    Write-Host "  Research Infrastructure  |  helpi <N> [Project]  |  helpi <N> ?" -ForegroundColor Cyan
     if ($detected) {
         Write-Host "  Detected project: $forProject" -ForegroundColor Yellow
     }
@@ -289,7 +253,7 @@ function Show-Menu {
         $ex      = $c.Example -replace "XXX", $label
         $tagCol  = switch ($c.Tag) { "AUTO 4h" {"DarkGreen"} "ONCE" {"DarkYellow"} "INFO" {"DarkCyan"} default {"DarkGray"} }
         $num     = ("[{0,2}]" -f $c.N)
-        $namepad = $c.Name.PadRight(42)
+        $namepad = $c.Name.PadRight(44)
         Write-Host -NoNewline "  $num " -ForegroundColor White
         Write-Host -NoNewline "$namepad" -ForegroundColor White
         Write-Host -NoNewline (" [{0,-8}]  " -f $c.Tag) -ForegroundColor $tagCol
@@ -299,33 +263,31 @@ function Show-Menu {
     Write-Host ""
 }
 
-# ── Preview string for a command (shown before execution) ─────────
+# ── Preview string for a command (shown before execution) ──────────
 function Get-CommandPreview {
     param([int]$n, [string]$proj, [string]$texFile = "")
     switch ($n) {
-        1  { "sync_all.ps1" }
-        2  { "push_to_overleaf.ps1 -Project $proj" }
-        3  { if ($texFile) { "compile_latex.ps1 -Project $proj -TexFile $texFile" }
+        1  { "new_project.ps1 -Project $proj" }
+        2  { "sync_all.ps1" }
+        3  { "sync_one.ps1 -Project $proj" }
+        4  { "push_to_overleaf.ps1 -Project $proj" }
+        5  { "open_project.ps1 -Project $proj" }
+        6  { if ($texFile) { "compile_latex.ps1 -Project $proj -TexFile $texFile" }
              else          { "compile_latex.ps1 -Project $proj" } }
-        4  { "claude -p ~/.claude/commands/close.md  (in $proj root)" }
-        5  { "generate_handover.ps1 -Project $proj" }
-        6  { "Start-Process `"$pubRoot\$proj\_handover.html`"" }
-        8  { "Start-Process `"$aiRoot\infrastructure.html`"" }
-        9  { "new_project.ps1 -Project $proj" }
-        10 { "sync_one.ps1 -Project $proj" }
-        11 { "status.ps1" }
-        12 { "open_project.ps1 -Project $proj" }
-        13 { "rollback.ps1 -Project $proj -N 1" }
-        14 { "snapshot.ps1 -Project $proj" }
-        15 { "network.ps1" }
+        7  { "claude -p close.md + generate_handover.ps1 + open browser  ($proj)" }
+        8  { "snapshot.ps1 -Project $proj" }
+        9  { "rollback.ps1 -Project $proj -N 1" }
+        10 { "submit.ps1 -Project $proj" }
+        11 { "claude -p prompts/respond_scaffold.md  (round: R1/R2/...)" }
+        12 { "claude -p prompts/respond_draft.md    (round: R1/R2/...)" }
+        13 { "status.ps1" }
+        14 { "network.ps1" }
+        15 { "Start-Process `"$aiRoot\infrastructure.html`"" }
         16 { "generate_docs.ps1" }
-        17 { "submit.ps1 -Project $proj" }
-        18 { "claude -p prompts/respond_scaffold.md  (round: R1/R2/...)" }
-        20 { "claude -p prompts/respond_draft.md    (round: R1/R2/...)" }
     }
 }
 
-# ── Execute a command ─────────────────────────────────────────────
+# ── Execute a command ──────────────────────────────────────────────
 function Invoke-Command-N {
     param([int]$n, [string]$proj, [string]$texFile = "")
 
@@ -336,7 +298,6 @@ function Invoke-Command-N {
         $proj = Read-Host "  Project name"
     }
 
-    # ── Preview + confirm ──────────────────────────────────────────
     $preview = Get-CommandPreview -n $n -proj $proj -texFile $texFile
     Write-Host ""
     Write-Host "  [$n] $($c.Name)$(if ($proj) { "  ->  $proj" })" -ForegroundColor Cyan
@@ -344,25 +305,24 @@ function Invoke-Command-N {
     Write-Host ""
     Write-Host "  [Enter] run  |  [any other key] cancel  (press Up to edit at prompt)" -ForegroundColor DarkGray
 
-    # Pre-load preview into history so Up arrow retrieves it for editing
     [Microsoft.PowerShell.PSConsoleReadLine]::AddToHistory($preview)
 
     $key = $host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
     Write-Host ""
-    if ($key.VirtualKeyCode -ne 13) { return }  # 13 = Enter
+    if ($key.VirtualKeyCode -ne 13) { return }
 
     switch ($n) {
-        1  { & "$aiRoot\sync_all.ps1" }
-        2  { & "$aiRoot\push_to_overleaf.ps1" -Project $proj }
-        3  {
-               if ($texFile) {
-                   & "$aiRoot\compile_latex.ps1" -Project $proj -TexFile $texFile
-               } else {
-                   & "$aiRoot\compile_latex.ps1" -Project $proj
-               }
+        1  { & "$aiRoot\new_project.ps1" -Project $proj }
+        2  { & "$aiRoot\sync_all.ps1" }
+        3  { & "$aiRoot\sync_one.ps1" -Project $proj }
+        4  { & "$aiRoot\push_to_overleaf.ps1" -Project $proj }
+        5  { & "$aiRoot\open_project.ps1" -Project $proj }
+        6  {
+               if ($texFile) { & "$aiRoot\compile_latex.ps1" -Project $proj -TexFile $texFile }
+               else           { & "$aiRoot\compile_latex.ps1" -Project $proj }
            }
-        4  {
-               $projRoot      = Join-Path $pubRoot $proj
+        7  {
+               $projRoot        = Join-Path $pubRoot $proj
                $closePromptPath = Join-Path $env:USERPROFILE ".claude\commands\close.md"
                if (!(Test-Path $closePromptPath)) {
                    Write-Host "ERR  | close.md not found: $closePromptPath" -ForegroundColor Red; return
@@ -371,35 +331,38 @@ function Invoke-Command-N {
                Push-Location $projRoot
                & claude -p $closePrompt
                Pop-Location
+               & "$aiRoot\generate_handover.ps1" -Project $proj
+               $html = Join-Path $projRoot "_handover.html"
+               if (Test-Path $html) { Start-Process $html }
            }
-        5  { & "$aiRoot\generate_handover.ps1" -Project $proj }
-        6  {
-               $html = "$pubRoot\$proj\_handover.html"
-               if (!(Test-Path $html)) {
-                   Write-Host "  Generating handover first..." -ForegroundColor Yellow
-                   & "$aiRoot\generate_handover.ps1" -Project $proj
-               }
-               Start-Process $html
+        8  {
+               $tag = Read-Host "  Version label? (e.g. V2, V2-before-submission; leave blank to auto)"
+               if ($tag) { & "$aiRoot\snapshot.ps1" -Project $proj -Tag $tag }
+               else      { & "$aiRoot\snapshot.ps1" -Project $proj }
            }
-        8  { Start-Process "$aiRoot\infrastructure.html" }
-        9  { & "$aiRoot\new_project.ps1"      -Project $proj }
-        10 { & "$aiRoot\sync_one.ps1"         -Project $proj }
-        11 { & "$aiRoot\status.ps1" }
-        12 { & "$aiRoot\open_project.ps1"     -Project $proj }
-        13 {
+        9  {
                $rollN = 1
                $input = Read-Host "  Commits to roll back? (default 1)"
                if ($input -match "^\d+$") { $rollN = [int]$input }
                & "$aiRoot\rollback.ps1" -Project $proj -N $rollN
            }
-        14 {
-               $tag = Read-Host "  Version label? (e.g. V2, V2-before-submission; leave blank to auto)"
-               if ($tag) { & "$aiRoot\snapshot.ps1" -Project $proj -Tag $tag }
-               else      { & "$aiRoot\snapshot.ps1" -Project $proj }
+        10 {
+               $projRoot   = Join-Path $pubRoot $proj
+               $stagingDir = Join-Path $projRoot "_submit_staging"
+               $hasCover   = Test-Path (Join-Path $stagingDir "cover_letter.pdf")
+               if (!$hasCover) {
+                   Write-Host ""
+                   Write-Host "  No staged AI content found -- generating via Claude..." -ForegroundColor Cyan
+                   $promptText = Get-Content (Join-Path $aiRoot "prompts\submit_stage_ai.md") -Raw -Encoding UTF8
+                   Push-Location $projRoot
+                   & claude -p $promptText
+                   Pop-Location
+               } else {
+                   Write-Host "  Staged AI content found -- skipping Claude generation." -ForegroundColor DarkGray
+               }
+               & "$aiRoot\submit.ps1" -Project $proj
            }
-        15 { & "$aiRoot\network.ps1" }
-        16 { & "$aiRoot\generate_docs.ps1" }
-        18 {
+        11 {
                $projRoot   = Join-Path $pubRoot $proj
                $round      = Read-Host "  Round? (e.g. R1, R2)"
                if (!$round) { $round = "R1" }
@@ -408,7 +371,7 @@ function Invoke-Command-N {
                & claude -p $promptText
                Pop-Location
            }
-        20 {
+        12 {
                $projRoot   = Join-Path $pubRoot $proj
                $round      = Read-Host "  Round? (e.g. R1, R2)"
                if (!$round) { $round = "R1" }
@@ -417,38 +380,22 @@ function Invoke-Command-N {
                & claude -p $promptText
                Pop-Location
            }
-        19 { & "$aiRoot\auto_handover.ps1" --register }
-        17 {
-               $projRoot   = Join-Path $pubRoot $proj
-               $stagingDir = Join-Path $projRoot "_submit_staging"
-               $hasCover   = Test-Path (Join-Path $stagingDir "cover_letter.pdf")
-
-               if (!$hasCover) {
-                   Write-Host ""
-                   Write-Host "  No staged AI content found -- generating via Claude..." -ForegroundColor Cyan
-                   $promptFile = Join-Path $aiRoot "prompts\submit_stage_ai.md"
-                   $promptText = Get-Content $promptFile -Raw -Encoding UTF8
-                   Push-Location $projRoot
-                   & claude -p $promptText
-                   Pop-Location
-               } else {
-                   Write-Host "  Staged AI content found -- skipping Claude generation." -ForegroundColor DarkGray
-               }
-
-               & "$aiRoot\submit.ps1" -Project $proj
-           }
+        13 { & "$aiRoot\status.ps1" }
+        14 { & "$aiRoot\network.ps1" }
+        15 { Start-Process "$aiRoot\infrastructure.html" }
+        16 { & "$aiRoot\generate_docs.ps1" }
     }
 }
 
-# ── Entry point ───────────────────────────────────────────────────
+# ── Entry point ────────────────────────────────────────────────────
 if (!$Project) { $Project = Get-ProjectFromCwd }
 
-# Help mode: helpi 4 ?
+# Help mode: helpi 5 ?
 if ($Project -in @('?','help')) {
     if ($Cmd -match "^\d+$") {
         Show-CommandHelp -n ([int]$Cmd) -proj (Get-ProjectFromCwd)
     } else {
-        Write-Host "  Usage: helpi <N> --help" -ForegroundColor Yellow
+        Write-Host "  Usage: helpi <N> ?" -ForegroundColor Yellow
     }
     return
 }
@@ -456,19 +403,16 @@ if ($Project -in @('?','help')) {
 if (-not $Cmd) {
     Show-Menu -forProject $Project
 } elseif ($Cmd -match "^\d+$") {
-    # Numeric command
     $n = [int]$Cmd
-    if ($n -lt 1 -or $n -gt ($commands | Measure-Object).Count) {
+    if ($n -lt 1 -or $n -gt $commands.Count) {
         Write-Host "ERR | Valid commands are 1-$($commands.Count)" -ForegroundColor Red
         Show-Menu -forProject $Project
     } else {
         Invoke-Command-N -n $n -proj $Project -texFile $TexFile
     }
 } else {
-    # Partial name match ($matches is reserved in PS; use $found instead)
     $fragment = $Cmd.ToLower()
     $found    = @($commands | Where-Object { $_.Name.ToLower() -like "$fragment*" })
-
     if ($found.Count -eq 0) {
         Write-Host "ERR | No command matches '$Cmd'" -ForegroundColor Red
         Show-Menu -forProject $Project
