@@ -59,8 +59,12 @@ if (!$candidate) {
 
 $age = (Get-Date) - $candidate.Modified
 if ($age.TotalHours -gt 24) {
-    # Skip if the most recent log hasn't been touched in over 24 hours
     exit 0
+}
+
+$handover = Join-Path $pubRoot "$($candidate.Project)\_handover.html"
+if ((Test-Path $handover) -and (Get-Item $handover).LastWriteTime -ge $candidate.Modified) {
+    exit 0  # handover already up-to-date
 }
 
 & "$aiRoot\generate_handover.ps1" -Project $candidate.Project
