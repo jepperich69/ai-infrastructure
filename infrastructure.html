@@ -265,9 +265,53 @@
 <div class="subtitle">Infrastructure version: <strong>v0.6</strong> &nbsp;&bull;&nbsp; Last updated: 2026-04-19 &nbsp;&bull;&nbsp; Scripts live in <code>JR\AI_auto\</code> &nbsp;&bull;&nbsp; Claude commands live in <code>~\.claude\commands\</code></div>
 
 <!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- CONTENTS                                                        -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="section blue" id="contents" style="padding:20px 28px;">
+  <h2 style="margin-bottom:14px;">Contents</h2>
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:0 32px; font-size:0.88em; line-height:1.7;">
+
+    <div>
+      <div style="font-weight:bold; text-transform:uppercase; letter-spacing:0.05em; color:var(--blue); font-size:0.82em; margin-bottom:4px;">Introduction</div>
+      <div><a href="#problem" style="color:inherit;">Problem Formulation</a></div>
+      <div><a href="#overview" style="color:inherit;">Overview &mdash; Two Complementary Infrastructures</a></div>
+
+      <div style="font-weight:bold; text-transform:uppercase; letter-spacing:0.05em; color:#2a6b4a; font-size:0.82em; margin:10px 0 4px;">File Layer &mdash; helpi commands</div>
+      <div><a href="#helpi1" style="color:inherit;">1 &mdash; Create New Project</a></div>
+      <div><a href="#helpi23" style="color:inherit;">2/3 &mdash; Overleaf Sync</a></div>
+      <div><a href="#helpi4" style="color:inherit;">4 &mdash; Push to Overleaf</a></div>
+      <div><a href="#helpi56" style="color:inherit;">5/6 &mdash; Compile &amp; Open</a></div>
+      <div><a href="#helpi7" style="color:inherit;">7 &mdash; Session Logging &amp; Handover</a></div>
+      <div><a href="#helpi89" style="color:inherit;">8/9 &mdash; Snapshot &amp; Rollback</a></div>
+      <div><a href="#helpi1012" style="color:inherit;">10–12 &mdash; Submit &amp; Reviewer Loop</a></div>
+      <div><a href="#helpi1319" style="color:inherit;">13–19 &mdash; Status, Network, Guide, Docs, Cheatsheet, Model-check, Slides</a></div>
+      <div><a href="#quickref" style="color:inherit;">Quick Command Reference (helpi 1–19)</a></div>
+    </div>
+
+    <div>
+      <div style="font-weight:bold; text-transform:uppercase; letter-spacing:0.05em; color:#4a4a9a; font-size:0.82em; margin-bottom:4px;">AI Layer &mdash; Claude Code &amp; Codex</div>
+      <div><a href="#secA" style="color:inherit;">A &mdash; Claude Code Commands</a></div>
+      <div><a href="#secB" style="color:inherit;">B &mdash; /submit &mdash; Submission package</a></div>
+      <div><a href="#secC" style="color:inherit;">C &mdash; /respond &mdash; Reviewer response loop</a></div>
+      <div><a href="#secD" style="color:inherit;">D &mdash; Cross-Project Memory &amp; Feeders</a></div>
+      <div><a href="#secE" style="color:inherit;">E &mdash; Proxy-Sandbox: File Isolation</a></div>
+      <div><a href="#secF" style="color:inherit;">F &mdash; Typical Working Session</a></div>
+      <div><a href="#secG" style="color:inherit;">G &mdash; Worked Example</a></div>
+      <div><a href="#secH" style="color:inherit;">H &mdash; GPT Codex CLI Skills</a></div>
+      <div><a href="#secI" style="color:inherit;">I &mdash; Collaborative Setup</a></div>
+
+      <div style="font-weight:bold; text-transform:uppercase; letter-spacing:0.05em; color:#2a7a7a; font-size:0.82em; margin:10px 0 4px;">Reference</div>
+      <div><a href="#versioning" style="color:inherit;">Infrastructure Versioning</a></div>
+      <div><a href="#deskref" style="color:inherit;">Desk Reference (printable)</a></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
 <!-- PROBLEM FORMULATION                                             -->
 <!-- ═══════════════════════════════════════════════════════════════ -->
-<div class="section gold">
+<div class="section gold" id="problem">
   <h2>Problem Formulation</h2>
   <p>
     A modern researcher writes papers in Overleaf, analyses data in Python, and increasingly relies
@@ -336,7 +380,7 @@
 <!-- ═══════════════════════════════════════════════════════════════ -->
 <!-- TWO-INFRASTRUCTURE OVERVIEW                                     -->
 <!-- ═══════════════════════════════════════════════════════════════ -->
-<div class="section blue">
+<div class="section blue" id="overview">
   <h2>Overview — Two Complementary Infrastructures</h2>
   <p>
     The research setup is split into two layers that are tightly coupled through a shared set of files.
@@ -478,7 +522,7 @@
 <!-- ═══════════════════════════════════════════════════════════════ -->
 <!-- CREATE NEW PROJECT                                              -->
 <!-- ═══════════════════════════════════════════════════════════════ -->
-<div class="section green">
+<div class="section green" id="helpi1">
   <h2>1 &mdash; Create New Project <span class="tag once">ONCE per project</span></h2>
   <p>
     Scaffolds the full project folder structure, initialises git, registers the project in
@@ -513,7 +557,7 @@ helpi 1 Pub_MyNewPaper_TBA -GitUrl https://git.overleaf.com/&lt;project-id&gt;</
 <!-- ═══════════════════════════════════════════════════════════════ -->
 <!-- OVERLEAF PULL                                                   -->
 <!-- ═══════════════════════════════════════════════════════════════ -->
-<div class="section green">
+<div class="section green" id="helpi23">
   <h2>2/3 &mdash; Overleaf Sync <span class="tag auto">AUTO every 4h</span></h2>
   <p>
     Every Overleaf project is cloned as a standard git repository into its
@@ -537,7 +581,7 @@ helpi 1 Pub_MyNewPaper_TBA -GitUrl https://git.overleaf.com/&lt;project-id&gt;</
 <!-- ═══════════════════════════════════════════════════════════════ -->
 <!-- OVERLEAF PUSH                                                   -->
 <!-- ═══════════════════════════════════════════════════════════════ -->
-<div class="section green">
+<div class="section green" id="helpi4">
   <h2>4 &mdash; Push to Overleaf <span class="tag manual">MANUAL</span></h2>
   <p>
     When you edit <code>Overleaf_source/</code> files locally (e.g. after a Claude session),
@@ -572,7 +616,7 @@ co-author's version of the sentence
 <!-- ═══════════════════════════════════════════════════════════════ -->
 <!-- LOCAL LATEX                                                     -->
 <!-- ═══════════════════════════════════════════════════════════════ -->
-<div class="section purple">
+<div class="section purple" id="helpi56">
   <h2>5/6 &mdash; Compile &amp; Open (MiKTeX + VS Code)</h2>
 
   <h3>Installation</h3>
@@ -600,7 +644,7 @@ co-author's version of the sentence
 <!-- ═══════════════════════════════════════════════════════════════ -->
 <!-- AI LOGGING                                                      -->
 <!-- ═══════════════════════════════════════════════════════════════ -->
-<div class="section gold">
+<div class="section gold" id="helpi7">
   <h2>7 &mdash; Session Logging &amp; Handover</h2>
 
   <h3>Session log &mdash; <code>_ai_log.md</code></h3>
@@ -676,7 +720,7 @@ co-author's version of the sentence
 <!-- ═══════════════════════════════════════════════════════════════ -->
 <!-- SNAPSHOT / ROLLBACK                                             -->
 <!-- ═══════════════════════════════════════════════════════════════ -->
-<div class="section blue">
+<div class="section blue" id="helpi89">
   <h2>8 &mdash; Snapshot <span class="tag manual">MANUAL</span> &nbsp;&amp;&nbsp; 9 &mdash; Rollback</h2>
 
   <h3>Snapshot (helpi 8) &mdash; freeze a named version</h3>
@@ -703,7 +747,7 @@ helpi 9 Pub_XXX -N 3      # undo last 3 commits</pre>
 <!-- ═══════════════════════════════════════════════════════════════ -->
 <!-- SUBMIT AND REVIEWER                                             -->
 <!-- ═══════════════════════════════════════════════════════════════ -->
-<div class="section gold">
+<div class="section gold" id="helpi1012">
   <h2>10 &mdash; Submit &nbsp;&amp;&nbsp; 11/12 &mdash; Reviewer Loop</h2>
 
   <h3>helpi 10 &mdash; Build submission package</h3>
@@ -735,8 +779,8 @@ helpi 9 Pub_XXX -N 3      # undo last 3 commits</pre>
 <!-- ═══════════════════════════════════════════════════════════════ -->
 <!-- STATUS / NETWORK / DOCS                                         -->
 <!-- ═══════════════════════════════════════════════════════════════ -->
-<div class="section teal">
-  <h2>13–16 &mdash; Status, Network, Guide &amp; Docs</h2>
+<div class="section teal" id="helpi1319">
+  <h2>13–19 &mdash; Status, Network, Guide, Docs, Cheatsheet, Model-check, Slides</h2>
 
   <table class="cmd-table">
     <tr><th>#</th><th>What it does</th><th>Usage</th></tr>
@@ -766,8 +810,8 @@ helpi 9 Pub_XXX -N 3      # undo last 3 commits</pre>
 <!-- ═══════════════════════════════════════════════════════════════ -->
 <!-- HELPI / COMMAND REFERENCE                                       -->
 <!-- ═══════════════════════════════════════════════════════════════ -->
-<div class="section teal">
-  <h2>Quick Command Reference &mdash; <code>helpi 1&ndash;16</code></h2>
+<div class="section teal" id="quickref">
+  <h2>Quick Command Reference &mdash; <code>helpi 1&ndash;19</code></h2>
 
   <h3>Calling conventions</h3>
   <pre>helpi                              # show all commands (project auto-detected from CWD)
@@ -852,7 +896,7 @@ helpi 3 Pub_X main.tex             # run command 3 with a specific .tex file</pr
 <!-- ═══════════════════════════════════════════════════════════════ -->
 <!-- CLAUDE CODE COMMANDS                                            -->
 <!-- ═══════════════════════════════════════════════════════════════ -->
-<div class="section indigo">
+<div class="section indigo" id="secA">
   <h2>A &mdash; Claude Code Commands</h2>
   <p>
     These are slash commands registered in <code>~\.claude\commands\</code> and are available
@@ -935,7 +979,7 @@ git checkout snapshot-v2                     # restore everything</pre>
 <!-- ═══════════════════════════════════════════════════════════════ -->
 <!-- SUBMIT COMMAND                                                  -->
 <!-- ═══════════════════════════════════════════════════════════════ -->
-<div class="section indigo">
+<div class="section indigo" id="secB">
   <h2>B &mdash; /submit &mdash; Submission package generator <span class="tag ai">AI</span></h2>
   <p>
     Assembles a complete, journal-ready submission package in a timestamped subfolder
@@ -1033,7 +1077,7 @@ helpi 10                   # same — auto-calls claude -p if staging is empty, 
 <!-- ═══════════════════════════════════════════════════════════════ -->
 <!-- RESPOND COMMAND                                                 -->
 <!-- ═══════════════════════════════════════════════════════════════ -->
-<div class="section indigo">
+<div class="section indigo" id="secC">
   <h2>C &mdash; /respond &mdash; Autonomous reviewer response loop <span class="tag ai">AI</span></h2>
   <p>
     Runs fully autonomously — launch before sleeping, wake up to a finished response letter.
@@ -1111,7 +1155,7 @@ claude --full-auto        # launch Claude Code without approval pauses
 <!-- ═══════════════════════════════════════════════════════════════ -->
 <!-- CROSS-PROJECT MEMORY                                            -->
 <!-- ═══════════════════════════════════════════════════════════════ -->
-<div class="section rose">
+<div class="section rose" id="secD">
   <h2>D &mdash; Cross-Project Memory &mdash; Feeder Projects</h2>
   <p>
     When a project builds on knowledge from earlier work, you can link those projects as
@@ -1189,7 +1233,7 @@ claude --full-auto        # launch Claude Code without approval pauses
 <!-- ═══════════════════════════════════════════════════════════════ -->
 <!-- PROXY-SANDBOX                                                    -->
 <!-- ═══════════════════════════════════════════════════════════════ -->
-<div class="section green">
+<div class="section green" id="secE">
   <h2>E &mdash; Proxy-Sandbox: Per-Project File Isolation <span class="tag once">AUTO on new_project</span></h2>
   <p>
     Claude Code is not an OS-level sandbox &mdash; it runs with your full user account permissions.
@@ -1292,7 +1336,7 @@ claude --full-auto        # launch Claude Code without approval pauses
 <!-- ═══════════════════════════════════════════════════════════════ -->
 <!-- TYPICAL WORKFLOW                                                 -->
 <!-- ═══════════════════════════════════════════════════════════════ -->
-<div class="section blue">
+<div class="section blue" id="secF">
   <h2>F &mdash; Typical Working Session</h2>
   <ol style="padding-left:1.4em;">
     <li><strong>Open project</strong>: <code>helpi 5 Pub_XXX</code> &mdash; compiles LaTeX, then opens VS Code + Explorer + PDF in one step.</li>
@@ -1310,7 +1354,7 @@ claude --full-auto        # launch Claude Code without approval pauses
 <!-- ═══════════════════════════════════════════════════════════════ -->
 <!-- WORKED EXAMPLE                                                   -->
 <!-- ═══════════════════════════════════════════════════════════════ -->
-<div class="section example">
+<div class="section example" id="secG">
   <h2>G &mdash; Worked Example: <code>Pub_AssesTiming_Raoul_TBA</code></h2>
 
   <div class="scenario-box">
@@ -1628,7 +1672,7 @@ claude --full-auto        # launch Claude Code without approval pauses
   <div class="part-line"></div>
 </div>
 
-<div class="section indigo">
+<div class="section indigo" id="secH">
   <h2>H &mdash; GPT Codex CLI Skills</h2>
   <p>
     GPT Codex CLI (<code>codex</code>, v0.118+, model gpt-5.4) runs as a terminal agent with full
@@ -1716,7 +1760,7 @@ claude --full-auto        # launch Claude Code without approval pauses
 <!-- ═══════════════════════════════════════════════════════════════ -->
 <!-- COLLABORATION                                                    -->
 <!-- ═══════════════════════════════════════════════════════════════ -->
-<div class="section rose">
+<div class="section rose" id="secI">
   <h2>I &mdash; Collaborative Setup</h2>
   <p>
     This infrastructure is designed for a single researcher, but it extends naturally to collaborative work.
@@ -1811,7 +1855,7 @@ Goal: Add robustness checks to results
 <!-- ═══════════════════════════════════════════════════════════════ -->
 <!-- ONE-PAGER — print with Ctrl+P                                   -->
 <!-- ═══════════════════════════════════════════════════════════════ -->
-<div class="one-pager">
+<div class="one-pager" id="deskref">
 
   <h1>Research Infrastructure — Desk Reference &nbsp;<span style="font-size:0.6em; color:#999; font-weight:normal;">print: Ctrl+P</span></h1>
 
@@ -1830,8 +1874,16 @@ Goal: Add robustness checks to results
         <tr><td>helpi 7 Pub_XXX</td><td>Log + handover + open in browser (end-of-session)</td></tr>
         <tr><td>helpi 8 Pub_XXX</td><td>Snapshot full manuscript as git tag</td></tr>
         <tr><td>helpi 9 Pub_XXX -N 1</td><td>Rollback N commits (previews before reverting)</td></tr>
+        <tr><td>helpi 10 Pub_XXX</td><td>Build submission package (zip, blind PDF, cover letter)</td></tr>
+        <tr><td>helpi 11 Pub_XXX</td><td>Reviewer scaffold — parse comments, generate LaTeX template</td></tr>
+        <tr><td>helpi 12 Pub_XXX</td><td>Reviewer draft loop — pull, draft responses, push</td></tr>
         <tr><td>helpi 13</td><td>Project status dashboard (all projects)</td></tr>
         <tr><td>helpi 14</td><td>Open project network graph</td></tr>
+        <tr><td>helpi 15</td><td>Open infrastructure guide in browser</td></tr>
+        <tr><td>helpi 16</td><td>Generate docs (summary + full HTML/PDF)</td></tr>
+        <tr><td>helpi 17</td><td>Claude Code in-session cheatsheet</td></tr>
+        <tr><td>helpi 18</td><td>Toggle Claude model-check on/off (persists to next session)</td></tr>
+        <tr><td>helpi 19 Pub_XXX [preset]</td><td>Generate Beamer slides — presets: quick / seminar / public</td></tr>
       </table>
     </div>
 
@@ -1915,14 +1967,14 @@ Goal: Add robustness checks to results
     <dd>They need: Claude Code installed, global <code>CLAUDE.md</code> copied, project repo cloned. Then <code>/work Pub_XXX</code> gives them full context immediately. <code>helpi</code> scripts are optional — only needed if they want local Overleaf sync and PDF compilation.</dd>
   </dl>
 
-  <p class="op-print-note">Full reference: AI_auto\infrastructure.html &nbsp;&bull;&nbsp; v0.5 &nbsp;&bull;&nbsp; Updated 2026-04-18</p>
+  <p class="op-print-note">Full reference: AI_auto\infrastructure.html &nbsp;&bull;&nbsp; v0.6 &nbsp;&bull;&nbsp; Updated 2026-04-19</p>
 
 </div>
 
 <!-- ═══════════════════════════════════════════════════════════════ -->
 <!-- VERSIONING                                                       -->
 <!-- ═══════════════════════════════════════════════════════════════ -->
-<div class="section teal">
+<div class="section teal" id="versioning">
   <h2>Infrastructure Versioning</h2>
   <p>
     The infrastructure itself is versioned so that you can recover a working state,
