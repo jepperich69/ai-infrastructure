@@ -198,4 +198,10 @@
 - Test `helpi 19` end-to-end on a real project
 - Test `helpi 21` on a fresh machine or in a scratch profile
 - `helpi.ps1`: wrap PSConsoleReadLine in try/catch for non-interactive shell degradation (carried from v0.2)
-**Git ref:** 9e596fb
+**Git ref:** cafb203
+
+**Continued (same session, install docs):**
+- `setup.ps1` — step 6/6 → 7/7; added Overleaf bulk-import offer at end of wizard
+- `infrastructure.html` — new "Install" section: Scenario A (restore), Scenario B (new colleague), Overleaf bulk vs. one-by-one flow, prerequisites table; TOC entry added
+- `setup_project.ps1` — hardcoded jsonPath fixed
+- `setup_tagged.ps1` + `config.ps1` — tagTargets moved to config; encoding fix
