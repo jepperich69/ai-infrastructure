@@ -198,4 +198,4 @@
 - Test `helpi 19` end-to-end on a real project
 - Test `helpi 21` on a fresh machine or in a scratch profile
 - `helpi.ps1`: wrap PSConsoleReadLine in try/catch for non-interactive shell degradation (carried from v0.2)
-**Git ref:** —
+**Git ref:** 9e596fb
