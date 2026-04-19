@@ -45,7 +45,8 @@ $commands = @(
     [PSCustomObject]@{ N=14; NeedsProject=$false; Tag="INFO";    Name="Open project network graph";                Example="network.ps1" },
     [PSCustomObject]@{ N=15; NeedsProject=$false; Tag="INFO";    Name="Open infrastructure guide";                 Example="Start-Process infrastructure.html" },
     [PSCustomObject]@{ N=16; NeedsProject=$false; Tag="MANUAL";  Name="Generate docs (summary + full HTML/PDF)";   Example="generate_docs.ps1" },
-    [PSCustomObject]@{ N=17; NeedsProject=$false; Tag="INFO";    Name="Claude Code in-session command reference";   Example="(cheatsheet -- no args needed)" }
+    [PSCustomObject]@{ N=17; NeedsProject=$false; Tag="INFO";    Name="Claude Code in-session command reference";   Example="(cheatsheet -- no args needed)" },
+    [PSCustomObject]@{ N=18; NeedsProject=$false; Tag="MANUAL";  Name="Toggle Claude model-check on/off";            Example="(edits memory -- persists to next session)" }
 )
 
 # ── Contextual help for a single command ──────────────────────────
@@ -232,6 +233,16 @@ function Show-CommandHelp {
             "Example:",
             "  helpi 17"
         )}
+        18 { @(
+            "Toggle Claude model-check on/off",
+            "Enables or disables the behavior where Claude assesses each task",
+            "and suggests switching to Haiku when appropriate.",
+            "Edits the memory file -- takes effect from the next session.",
+            "For the current session, just tell Claude 'model check off'.",
+            "",
+            "Example:",
+            "  helpi 18"
+        )}
         default { @("No help available for command $n.") }
     }
 
@@ -294,6 +305,7 @@ function Get-CommandPreview {
         15 { "Start-Process `"$aiRoot\infrastructure.html`"" }
         16 { "generate_docs.ps1" }
         17 { "(print Claude Code cheatsheet)" }
+        18 { "(toggle Claude model-check in memory file)" }
     }
 }
 
@@ -395,6 +407,7 @@ function Invoke-Command-N {
         15 { Start-Process "$aiRoot\infrastructure.html" }
         16 { & "$aiRoot\generate_docs.ps1" }
         17 { Show-ClaudeCheatsheet }
+        18 { Toggle-ModelCheck }
     }
 }
 
@@ -445,6 +458,29 @@ function Show-ClaudeCheatsheet {
     Write-Host "  - /model keeps history;  'claude --model X' starts a fresh session." -ForegroundColor DarkGray
     Write-Host "  - Run /compact every ~10 exchanges to keep costs low." -ForegroundColor DarkGray
     Write-Host "  - helpi 17 from terminal;  '! helpi 17' from inside Claude." -ForegroundColor DarkGray
+    Write-Host ""
+}
+
+# ── Toggle Claude model-check behavior ────────────────────────────
+function Toggle-ModelCheck {
+    $memFile = "$env:USERPROFILE\.claude\projects\C--Users-rich-OneDrive---Danmarks-Tekniske-Universitet-JR-AI-auto\memory\feedback_model_assessment.md"
+    if (!(Test-Path $memFile)) {
+        Write-Host "ERR | Memory file not found: $memFile" -ForegroundColor Red
+        return
+    }
+    $content = Get-Content $memFile -Raw -Encoding UTF8
+    if ($content -match "STATUS: DISABLED") {
+        $content = $content -replace "`nSTATUS: DISABLED`n", "`n"
+        Set-Content $memFile $content -Encoding UTF8 -NoNewline
+        Write-Host ""
+        Write-Host "  Model-check ENABLED -- Claude will suggest Haiku when appropriate." -ForegroundColor Green
+    } else {
+        $content = $content -replace "(\-\-\-\r?\n)", "`$1`nSTATUS: DISABLED`n"
+        Set-Content $memFile $content -Encoding UTF8 -NoNewline
+        Write-Host ""
+        Write-Host "  Model-check DISABLED -- Claude will skip model suggestions." -ForegroundColor Yellow
+    }
+    Write-Host "  Takes effect from the next Claude session. Tell Claude 'model check off/on' for the current session." -ForegroundColor DarkGray
     Write-Host ""
 }
 
