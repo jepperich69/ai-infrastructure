@@ -25,7 +25,7 @@ Write-Host $sep -ForegroundColor DarkGray
 
 # ── Step 1: Publications root ─────────────────────────────────────
 Write-Host ""
-Write-Host "  [1/6] Publications root folder" -ForegroundColor DarkYellow
+Write-Host "  [1/7] Publications root folder" -ForegroundColor DarkYellow
 Write-Host "  This is the folder that contains all your Pub_* / Pro_* / PhD_* project folders." -ForegroundColor DarkGray
 Write-Host "  Example: C:\Users\YourName\OneDrive\Research\Publikationer" -ForegroundColor DarkGray
 Write-Host ""
@@ -38,7 +38,7 @@ Write-Host "  OK: $pubRoot" -ForegroundColor Green
 
 # ── Step 2: Git identity ──────────────────────────────────────────
 Write-Host ""
-Write-Host "  [2/6] Git identity" -ForegroundColor DarkYellow
+Write-Host "  [2/7] Git identity" -ForegroundColor DarkYellow
 $defaultUser  = git config --global user.name  2>$null
 $defaultEmail = git config --global user.email 2>$null
 $gitUser  = (Read-Host "  Your name  (default: $defaultUser)").Trim()
@@ -51,7 +51,7 @@ Write-Host "  OK: $gitUser <$gitEmail>" -ForegroundColor Green
 
 # ── Step 3: Tool paths (detect or prompt) ────────────────────────
 Write-Host ""
-Write-Host "  [3/6] Tool paths" -ForegroundColor DarkYellow
+Write-Host "  [3/7] Tool paths" -ForegroundColor DarkYellow
 
 $vscode = "$env:LOCALAPPDATA\Programs\Microsoft VS Code\bin\code.cmd"
 if (!(Test-Path $vscode)) {
@@ -72,7 +72,7 @@ $strawberryPerl  = "C:\Strawberry\perl\bin\perl.exe"
 
 # ── Step 4: Write config.ps1 ─────────────────────────────────────
 Write-Host ""
-Write-Host "  [4/6] Writing config.ps1..." -ForegroundColor DarkYellow
+Write-Host "  [4/7] Writing config.ps1..." -ForegroundColor DarkYellow
 
 $claudeProjectKey = ($aiRoot -replace '[^a-zA-Z0-9]', '-')
 
@@ -102,7 +102,7 @@ Write-Host "  OK: config.ps1 written." -ForegroundColor Green
 
 # ── Step 5: PowerShell profile (helpi) ───────────────────────────
 Write-Host ""
-Write-Host "  [5/6] PowerShell profile (helpi function)" -ForegroundColor DarkYellow
+Write-Host "  [5/7] PowerShell profile (helpi function)" -ForegroundColor DarkYellow
 $profilePath = $PROFILE.CurrentUserAllHosts
 $helpiLine   = "function helpi { & `"$aiRoot\helpi.ps1`" @args }"
 $profileExists = Test-Path $profilePath
@@ -119,7 +119,7 @@ if ($profileContent -match 'helpi') {
 
 # ── Step 6: Scheduled task (auto-sync) ───────────────────────────
 Write-Host ""
-Write-Host "  [6/6] Scheduled task (auto-sync every 4h)" -ForegroundColor DarkYellow
+Write-Host "  [6/7] Scheduled task (auto-sync every 4h)" -ForegroundColor DarkYellow
 $task = Get-ScheduledTask -TaskName "AI_AutoSync" -ErrorAction SilentlyContinue
 if ($task) {
     Write-Host "  OK: Task already exists (skipped)." -ForegroundColor Green
@@ -139,6 +139,27 @@ if ($task) {
     }
 }
 
+# ── Step 7: Overleaf bulk-import ─────────────────────────────────
+Write-Host ""
+Write-Host "  [7/7] Overleaf project import" -ForegroundColor DarkYellow
+Write-Host "  This fetches all your Overleaf projects in one go and registers them automatically." -ForegroundColor DarkGray
+Write-Host "  You will need your overleaf_session2 cookie:" -ForegroundColor DarkGray
+Write-Host "    Log into overleaf.com -> F12 -> Application -> Cookies -> copy overleaf_session2" -ForegroundColor DarkGray
+Write-Host ""
+$runImport = (Read-Host "  Run Overleaf bulk-import now? [Y/n]").Trim().ToLower()
+if ($runImport -eq "" -or $runImport -eq "y") {
+    Write-Host ""
+    & "$aiRoot\fetch_overleaf_projects.ps1"
+    Write-Host ""
+    Write-Host "  Review the table above. If all matches look correct, run:" -ForegroundColor DarkGray
+    Write-Host "    .\link_projects.ps1" -ForegroundColor White
+    Write-Host "  to clone and register everything. Or re-run later: helpi 22" -ForegroundColor DarkGray
+} else {
+    Write-Host "  Skipped. Run later:" -ForegroundColor DarkGray
+    Write-Host "    .\fetch_overleaf_projects.ps1   # fetch + match" -ForegroundColor White
+    Write-Host "    .\link_projects.ps1              # clone + register" -ForegroundColor White
+}
+
 # ── Summary ───────────────────────────────────────────────────────
 Write-Host ""
 Write-Host $sep -ForegroundColor DarkGray
@@ -149,7 +170,7 @@ Write-Host "  1. Install Claude Code, Git, MiKTeX, VS Code if not done (see prer
 Write-Host "  2. Run: claude login" -ForegroundColor DarkGray
 Write-Host "  3. Copy ~/.claude/CLAUDE.md and ~/.claude/commands/ from the shared repo or a colleague." -ForegroundColor DarkGray
 Write-Host "  4. Restart your terminal, then run: helpi" -ForegroundColor DarkGray
-Write-Host "  5. Register your first project: helpi 1 Pub_YourProject" -ForegroundColor DarkGray
+Write-Host "  5. If you skipped Overleaf import: fetch_overleaf_projects.ps1, then link_projects.ps1" -ForegroundColor DarkGray
 Write-Host ""
 Write-Host "  GitHub repo (for reference / updates): https://github.com/jepperich69/ai-infrastructure" -ForegroundColor DarkGray
 Write-Host ""
