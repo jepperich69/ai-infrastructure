@@ -398,53 +398,53 @@ function Invoke-Command-N {
     }
 }
 
+# ── Claude Code cheatsheet row helper ─────────────────────────────
+function Write-CheatRow([string]$cmd, [string]$desc) {
+    Write-Host ("  {0,-26} {1}" -f $cmd, $desc) -ForegroundColor White
+}
+
 # ── Claude Code in-session cheatsheet ─────────────────────────────
 function Show-ClaudeCheatsheet {
-    $W = 71
-    $sep = "  " + ("-" * $W)
-
-    function Row([string]$cmd, [string]$desc, [string]$color="White") {
-        Write-Host ("  {0,-22} {1}" -f $cmd, $desc) -ForegroundColor $color
-    }
+    $sep = "  " + ("-" * 71)
 
     Write-Host ""
-    Write-Host "  Claude Code — in-session command reference" -ForegroundColor Cyan
+    Write-Host "  Claude Code -- in-session command reference" -ForegroundColor Cyan
     Write-Host $sep -ForegroundColor DarkGray
 
-    Write-Host "  SESSION & MODEL" -ForegroundColor DarkYellow
-    Row "/model"        "Switch model mid-session (keeps full history)"
-    Row "/fast"         "Toggle fast mode — Opus 4.6 with faster streaming"
-    Row "/compact"      "Compress history to save tokens (run at task breaks)"
-    Row "/clear"        "Wipe conversation history and start fresh"
-    Row "/cost"         "Show token usage + estimated cost for this session"
-    Row "/help"         "Built-in Claude Code help"
+    Write-Host "  SESSION + MODEL" -ForegroundColor DarkYellow
+    Write-CheatRow "/model"        "Switch model mid-session (keeps full history)"
+    Write-CheatRow "/fast"         "Toggle fast mode -- Opus 4.6 with faster streaming"
+    Write-CheatRow "/compact"      "Compress history to save tokens (run at task breaks)"
+    Write-CheatRow "/clear"        "Wipe conversation history and start fresh"
+    Write-CheatRow "/cost"         "Show token usage + estimated cost for this session"
+    Write-CheatRow "/help"         "Built-in Claude Code help"
     Write-Host $sep -ForegroundColor DarkGray
 
-    Write-Host "  PROJECT SKILLS  (custom — loaded from ~/.claude/commands/)" -ForegroundColor DarkYellow
-    Row "/work <path>"  "Load research project context + session discipline"
-    Row "/close"        "End session: write _ai_log.md block + handover"
-    Row "/snapshot"     "Git-tag current Overleaf source as named version"
-    Row "/submit"       "Build journal submission package"
-    Row "/respond"      "Reviewer response loop (scaffold -> draft)"
-    Row "/family"       "Link feeder projects + build digests"
-    Row "/add-memory"   "Add a file or note to project feeder memory"
+    Write-Host "  PROJECT SKILLS  (custom -- from ~/.claude/commands/)" -ForegroundColor DarkYellow
+    Write-CheatRow "/work [path]"  "Load research project context + session discipline"
+    Write-CheatRow "/close"        "End session: write _ai_log.md block + handover"
+    Write-CheatRow "/snapshot"     "Git-tag current Overleaf source as named version"
+    Write-CheatRow "/submit"       "Build journal submission package"
+    Write-CheatRow "/respond"      "Reviewer response loop (scaffold -> draft)"
+    Write-CheatRow "/family"       "Link feeder projects + build digests"
+    Write-CheatRow "/add-memory"   "Add a file or note to project feeder memory"
     Write-Host $sep -ForegroundColor DarkGray
 
-    Write-Host "  SHELL & FILES" -ForegroundColor DarkYellow
-    Row "! <cmd>"       "Run a shell command inline (e.g.  ! git log --oneline)"
-    Row "! helpi"       "Open this menu from inside a Claude session"
+    Write-Host "  SHELL" -ForegroundColor DarkYellow
+    Write-CheatRow "! [cmd]"       "Run a shell command inline  (e.g. ! git log --oneline)"
+    Write-CheatRow "! helpi 17"    "Show this cheatsheet from inside a Claude session"
     Write-Host $sep -ForegroundColor DarkGray
 
-    Write-Host "  MODEL IDS (for --model flag or /model)" -ForegroundColor DarkYellow
-    Row "claude-haiku-4-5-20251001"  "Haiku  — fast, cheap, simple tasks"
-    Row "claude-sonnet-4-6"          "Sonnet — default, balanced"
-    Row "claude-opus-4-7"            "Opus   — most capable, slower"
+    Write-Host "  MODEL IDS  (use with --model flag or /model)" -ForegroundColor DarkYellow
+    Write-CheatRow "claude-haiku-4-5-20251001"  "Haiku  -- fast, cheap, simple tasks"
+    Write-CheatRow "claude-sonnet-4-6"           "Sonnet -- default, balanced"
+    Write-CheatRow "claude-opus-4-7"             "Opus   -- most capable, slower"
     Write-Host $sep -ForegroundColor DarkGray
 
     Write-Host "  TIPS" -ForegroundColor DarkYellow
-    Write-Host "  - /model keeps history; 'claude --model X' starts fresh." -ForegroundColor DarkGray
+    Write-Host "  - /model keeps history;  'claude --model X' starts a fresh session." -ForegroundColor DarkGray
     Write-Host "  - Run /compact every ~10 exchanges to keep costs low." -ForegroundColor DarkGray
-    Write-Host "  - helpi 17 from terminal; '! helpi 17' from inside Claude." -ForegroundColor DarkGray
+    Write-Host "  - helpi 17 from terminal;  '! helpi 17' from inside Claude." -ForegroundColor DarkGray
     Write-Host ""
 }
 
