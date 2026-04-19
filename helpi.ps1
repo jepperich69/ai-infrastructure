@@ -46,7 +46,8 @@ $commands = @(
     [PSCustomObject]@{ N=15; NeedsProject=$false; Tag="INFO";    Name="Open infrastructure guide";                 Example="Start-Process infrastructure.html" },
     [PSCustomObject]@{ N=16; NeedsProject=$false; Tag="MANUAL";  Name="Generate docs (summary + full HTML/PDF)";   Example="generate_docs.ps1" },
     [PSCustomObject]@{ N=17; NeedsProject=$false; Tag="INFO";    Name="Claude Code in-session command reference";   Example="(cheatsheet -- no args needed)" },
-    [PSCustomObject]@{ N=18; NeedsProject=$false; Tag="MANUAL";  Name="Toggle Claude model-check on/off";            Example="(edits memory -- persists to next session)" }
+    [PSCustomObject]@{ N=18; NeedsProject=$false; Tag="MANUAL";  Name="Toggle Claude model-check on/off";            Example="(edits memory -- persists to next session)" },
+    [PSCustomObject]@{ N=19; NeedsProject=$true;  Tag="MANUAL";  Name="Generate Beamer slides from paper";            Example="generate_slides.ps1 -Project XXX" }
 )
 
 # ── Contextual help for a single command ──────────────────────────
@@ -233,6 +234,20 @@ function Show-CommandHelp {
             "Example:",
             "  helpi 17"
         )}
+        19 { @(
+            "Generate Beamer slides from paper",
+            "Safety-pulls from Overleaf first, then asks four controls:",
+            "  Duration:  12 min / 30 min / 45 min",
+            "  Depth:     overview / standard / deep-dive",
+            "  Audience:  conference / research-group / non-specialist",
+            "  Emphasis:  balanced / methods-heavy / results-heavy",
+            "Writes slides_main.tex into Overleaf_source/. Offers to push to Overleaf.",
+            "Regeneration overwrites slides_main.tex -- manual Overleaf edits are",
+            "preserved by the safety pull, but lost if you regenerate without pulling first.",
+            "",
+            "Example:",
+            "  helpi 19 $p"
+        )}
         18 { @(
             "Toggle Claude model-check on/off",
             "Enables or disables the behavior where Claude assesses each task",
@@ -306,6 +321,7 @@ function Get-CommandPreview {
         16 { "generate_docs.ps1" }
         17 { "(print Claude Code cheatsheet)" }
         18 { "(toggle Claude model-check in memory file)" }
+        19 { "generate_slides.ps1 -Project $proj" }
     }
 }
 
@@ -408,6 +424,7 @@ function Invoke-Command-N {
         16 { & "$aiRoot\generate_docs.ps1" }
         17 { Show-ClaudeCheatsheet }
         18 { Toggle-ModelCheck }
+        19 { & "$aiRoot\generate_slides.ps1" -Project $proj }
     }
 }
 
