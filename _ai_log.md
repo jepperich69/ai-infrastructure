@@ -173,19 +173,19 @@
 
 ## Session 2026-04-19
 **Agent:** Claude Sonnet 4.6
-**Goal:** Improve token efficiency and communication speed; add model-switching awareness; add Beamer slide generation.
+**Goal:** Improve token efficiency and communication speed; add model-switching awareness; add Beamer slide generation; overhaul infrastructure documentation.
 **Files touched:**
 - `helpi.ps1` — added commands 17 (Claude Code cheatsheet), 18 (toggle model-check), 19 (generate Beamer slides); added helper functions `Write-CheatRow`, `Show-ClaudeCheatsheet`, `Toggle-ModelCheck`; fixed Windows PS 5.1 parse errors (em-dash encoding, nested function, ampersand in strings)
 - `generate_slides.ps1` — new script: safety-pulls from Overleaf, detects main .tex, interactive controls (duration/depth/audience/emphasis) or named preset (quick/seminar/public), calls Claude via `-p`, offers git commit + push
 - `prompts/generate_slides.md` — new prompt: encodes all four control dimensions with explicit depth/audience/emphasis guides, Beamer output spec (16:9, Madrid theme, single self-contained file, backup slides after \appendix for deep-dive)
-- `infrastructure.html` — added commands 17, 18, 19 to command table; bumped to v0.6, date 2026-04-19
+- `infrastructure.html` — (1) bumped to v0.6; (2) added TOC with anchor links after subtitle; (3) added section IDs throughout; (4) completed desk reference (was missing helpi 10-12 and 15-19); (5) completed section 13-19 table (was missing rows 17-19); (6) fixed stale v0.5 reference in versioning section; (7) redesigned overview diagram: file layer now on top as foundation, AI layer replaced cramped boxes with clean OPEN/WORK/CLOSE phase table; (8) updated quick reference title to helpi 1-19
 - `VERSION` — bumped to v0.6
 - `CHANGELOG.md` — added v0.6 entry; backfilled v0.3, v0.4, v0.5 entries to close the gap from v0.2
 - `memory/feedback_model_assessment.md` — new memory file: instructs Claude to assess each task and suggest Haiku when appropriate (one-line prompt, user switches with /model)
 - `memory/MEMORY.md` — new memory index
-**Outcome:** Three new helpi commands: a Claude Code cheatsheet (17), a persistent model-check toggle (18), and a Beamer slide generator with preset support (19). Claude now flags Haiku-suitable tasks before starting. Slide generation pulls from Overleaf as a safety net before overwriting, supports four quality controls, and three presets for common talk formats. VERSION and CHANGELOG caught up from v0.2 to v0.6.
+**Outcome:** Three new helpi commands (17-19: cheatsheet, model-check toggle, Beamer slides with presets). Claude now flags Haiku-suitable tasks before starting. Infrastructure documentation overhauled: TOC added, desk reference completed, section 13-19 table filled, overview diagram redesigned with file layer as foundation and a readable AI phase table replacing the old scattered command boxes.
 **Next steps:**
 - Test `helpi 19` end-to-end on a real project
 - `helpi.ps1`: wrap PSConsoleReadLine in try/catch for non-interactive shell degradation (carried from v0.2)
 - Extract hardcoded `$aiRoot` / `$pubRoot` to a shared `config.ps1` (carried from v0.2)
-**Git ref:** 9f6ba94
+**Git ref:** 2771c14
