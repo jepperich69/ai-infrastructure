@@ -311,6 +311,7 @@
       <div><a href="#secF" style="color:inherit;">F &mdash; Typical Working Session</a></div>
       <div><a href="#secG" style="color:inherit;">G &mdash; Worked Example</a></div>
       <div><a href="#secH" style="color:inherit;">H &mdash; GPT Codex CLI Skills</a></div>
+      <div><a href="#secInstall" style="color:inherit;">Install &mdash; New machine / new colleague</a></div>
       <div><a href="#secI" style="color:inherit;">I &mdash; Collaborative Setup</a></div>
 
       <div style="font-weight:bold; text-transform:uppercase; letter-spacing:0.05em; color:#2a7a7a; font-size:0.82em; margin:10px 0 4px;">Reference</div>
@@ -1820,6 +1821,90 @@ claude --full-auto        # launch Claude Code without approval pauses
 <!-- ═══════════════════════════════════════════════════════════════ -->
 <!-- COLLABORATION                                                    -->
 <!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="section teal" id="secInstall">
+  <h2>Installing the Infrastructure</h2>
+  <p>
+    Two scenarios: <strong>new machine, files already present</strong> (OneDrive synced your folders back)
+    and <strong>first-time install for a new colleague</strong>. Both use the same two scripts.
+  </p>
+
+  <h3>Scenario A &mdash; Replacement machine (your files are intact via OneDrive)</h3>
+  <p>Your <code>AI_auto\</code> folder and all project folders are already synced. You just need to
+  re-wire the tooling:</p>
+  <pre>.\restore.ps1         # or: helpi 20</pre>
+  <p>This runs an 8-step checker and fixes what it can automatically:</p>
+  <ol>
+    <li>Claude Code CLI present and logged in</li>
+    <li>Git installed</li>
+    <li>MiKTeX installed</li>
+    <li>VS Code installed</li>
+    <li>PowerShell profile &mdash; adds <code>helpi</code> function if missing</li>
+    <li><code>~\.claude\</code> folder &mdash; checks <code>CLAUDE.md</code> and <code>commands\</code> are present</li>
+    <li>Scheduled task <code>AI_AutoSync</code> &mdash; re-registers if missing</li>
+    <li><code>projects.json</code> &mdash; confirms it is present (all project registrations travel with OneDrive)</li>
+  </ol>
+  <p>Fix any <code>[ERR]</code> items it reports, restart your terminal, and you are back.</p>
+
+  <h3>Scenario B &mdash; New colleague (clean machine, no files yet)</h3>
+  <p>Clone the <code>AI_auto</code> repo, then run the setup wizard:</p>
+  <pre>git clone https://github.com/jepperich69/ai-infrastructure AI_auto
+cd AI_auto
+.\setup.ps1           # or: helpi 21</pre>
+  <p>The wizard walks through 7 steps:</p>
+  <ol>
+    <li>Publications root folder (where all <code>Pub_*</code> / <code>Pro_*</code> / <code>PhD_*</code> folders live)</li>
+    <li>Git identity (name + email)</li>
+    <li>Tool path detection (VS Code, MiKTeX &mdash; prompts if not found at default locations)</li>
+    <li>Writes <code>config.ps1</code> with all machine-specific paths</li>
+    <li>Wires <code>helpi</code> into the PowerShell profile</li>
+    <li>Registers the <code>AI_AutoSync</code> scheduled task (auto-pull every 4h)</li>
+    <li>Offers to run the Overleaf bulk-import (see below)</li>
+  </ol>
+
+  <h3>Connecting Overleaf projects &mdash; two approaches</h3>
+
+  <h4>Option 1: Bulk import (recommended for &ge;3 projects)</h4>
+  <p>Fetches all your Overleaf projects in one go using your browser session cookie:</p>
+  <ol>
+    <li>Log into <code>overleaf.com</code> in your browser</li>
+    <li>Press <kbd>F12</kbd> &rarr; Application &rarr; Cookies &rarr; copy the value of <code>overleaf_session2</code></li>
+    <li>Run: <code>.\fetch_overleaf_projects.ps1</code> &mdash; paste the cookie when prompted</li>
+    <li>Review the printed table. Each Overleaf project is fuzzy-matched to a local folder.
+        Fix any <code>??? NO MATCH</code> rows in the exported <code>overleaf_projects.csv</code>.</li>
+    <li>Run: <code>.\link_projects.ps1</code> &mdash; clones every matched project into <code>Overleaf_source\</code>
+        and registers it in <code>projects.json</code></li>
+  </ol>
+  <p>The setup wizard (step 7) offers to run this inline so you can finish fully wired in one session.</p>
+
+  <h4>Option 2: One project at a time (fine for getting started)</h4>
+  <p>Register each project as you need it. The Overleaf Git URL is under
+  <strong>Menu &rarr; Git</strong> in any Overleaf project:</p>
+  <pre>helpi 1 Pub_MyPaper https://git.overleaf.com/abcdef123456</pre>
+  <p>This clones the project into <code>Publikationer\Pub_MyPaper\Overleaf_source\</code>
+  and adds it to <code>projects.json</code>. From that point:</p>
+  <table class="cmd-table">
+    <tr><th>Command</th><th>What it does</th></tr>
+    <tr><td><code>helpi 2 Pub_MyPaper</code></td><td>Push local edits &rarr; Overleaf (colleagues see them immediately)</td></tr>
+    <tr><td><code>helpi 3 Pub_MyPaper</code></td><td>Pull Overleaf &rarr; local (get edits made on Overleaf or by colleagues)</td></tr>
+    <tr><td><em>auto every 4h</em></td><td>Scheduled task runs helpi 3 for all registered projects silently</td></tr>
+  </table>
+  <div class="note">
+    <strong>Where does GitHub fit?</strong> The <code>AI_auto\</code> scripts repo lives on GitHub &mdash;
+    that is just for versioning the infrastructure itself. Paper content lives only in the Overleaf
+    Git remote. There is no separate GitHub repo per paper.
+  </div>
+
+  <h3>Prerequisites (install manually before running setup)</h3>
+  <table class="cmd-table">
+    <tr><th>Tool</th><th>Where to get it</th></tr>
+    <tr><td>Claude Code CLI</td><td><code>claude.ai/code</code> &mdash; then run <code>claude login</code></td></tr>
+    <tr><td>Git</td><td><code>git-scm.com/download/win</code></td></tr>
+    <tr><td>MiKTeX</td><td><code>miktex.org/download</code></td></tr>
+    <tr><td>VS Code</td><td><code>code.visualstudio.com</code></td></tr>
+    <tr><td>Strawberry Perl</td><td><code>strawberryperl.com</code> &mdash; needed for <code>latexdiff</code> in <code>submit.ps1</code></td></tr>
+  </table>
+</div>
+
 <div class="section rose" id="secI">
   <h2>I &mdash; Collaborative Setup</h2>
   <p>
