@@ -37,10 +37,7 @@ param(
     [string]$Revision        = ""       # e.g. R1, R2, Original; auto-detected from TexFile if blank
 )
 
-$miktexBin       = "C:\Users\rich\AppData\Local\Programs\MiKTeX\miktex\bin\x64"
-$latexdiffScript = "C:\Users\rich\AppData\Local\Programs\MiKTeX\scripts\latexdiff\latexdiff"
-$strawberryPerl  = "C:\Strawberry\perl\bin\perl.exe"
-$pubRoot         = "C:\Users\rich\OneDrive - Danmarks Tekniske Universitet\JR\Publikationer"
+. "$PSScriptRoot\config.ps1"
 $sourceDir       = Join-Path $pubRoot "$Project\Overleaf_source"
 $projRoot        = Join-Path $pubRoot $Project
 

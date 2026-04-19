@@ -1,4 +1,4 @@
-# compile_latex.ps1
+﻿# compile_latex.ps1
 # Compile the main .tex file for a project and open the resulting PDF.
 #
 # Usage:
@@ -12,8 +12,7 @@ param(
     [string]$TexFile = ""   # auto-detected if omitted
 )
 
-$miktexBin = "C:\Users\rich\AppData\Local\Programs\MiKTeX\miktex\bin\x64"
-$pubRoot   = "C:\Users\rich\OneDrive - Danmarks Tekniske Universitet\JR\Publikationer"
+. "$PSScriptRoot\config.ps1"
 $sourceDir = Join-Path $pubRoot "$Project\Overleaf_source"
 
 if (!(Test-Path $sourceDir)) {

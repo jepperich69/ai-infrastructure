@@ -184,8 +184,18 @@
 - `memory/feedback_model_assessment.md` — new memory file: instructs Claude to assess each task and suggest Haiku when appropriate (one-line prompt, user switches with /model)
 - `memory/MEMORY.md` — new memory index
 **Outcome:** Three new helpi commands (17-19: cheatsheet, model-check toggle, Beamer slides with presets). Claude now flags Haiku-suitable tasks before starting. Infrastructure documentation overhauled: TOC added, desk reference completed, section 13-19 table filled, overview diagram redesigned with file layer as foundation and a readable AI phase table replacing the old scattered command boxes.
+
+**Continued (same session, v0.7 work):**
+- `config.ps1` (new) — single source of truth for all machine-specific paths; all 22 scripts refactored to dot-source it
+- `restore.ps1` (new, helpi 20) — 8-step recovery checker for replacement-machine scenario
+- `setup.ps1` (new, helpi 21) — first-time setup wizard for new users/machines
+- `setup_project.ps1` — fixed remaining hardcoded `$jsonPath` (line 21)
+- `setup_tagged.ps1` — moved `$tagTargets` hashtable into `config.ps1`; fixed mojibake encoding in "Ansogninger"
+- `infrastructure.html` — added helpi 20/21 to command table and desk reference; bumped to v0.7
+- `VERSION` / `CHANGELOG.md` — bumped to v0.7
+
 **Next steps:**
 - Test `helpi 19` end-to-end on a real project
+- Test `helpi 21` on a fresh machine or in a scratch profile
 - `helpi.ps1`: wrap PSConsoleReadLine in try/catch for non-interactive shell degradation (carried from v0.2)
-- Extract hardcoded `$aiRoot` / `$pubRoot` to a shared `config.ps1` (carried from v0.2)
-**Git ref:** 2771c14
+**Git ref:** —

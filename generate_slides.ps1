@@ -1,4 +1,4 @@
-# generate_slides.ps1  --  Generate Beamer slides from a paper's .tex source
+﻿# generate_slides.ps1  --  Generate Beamer slides from a paper's .tex source
 #
 # Usage:
 #   generate_slides.ps1 -Project Pub_MyPaper_TBA
@@ -13,8 +13,7 @@ param(
     [string]$Preset  = ""
 )
 
-$aiRoot  = "C:\Users\rich\OneDrive - Danmarks Tekniske Universitet\JR\AI_auto"
-$pubRoot = "C:\Users\rich\OneDrive - Danmarks Tekniske Universitet\JR\Publikationer"
+. "$PSScriptRoot\config.ps1"
 
 if (!$Project) { $Project = Read-Host "  Project name" }
 $projRoot   = Join-Path $pubRoot $Project
@@ -25,7 +24,7 @@ if (!(Test-Path $overleafDir)) {
     return
 }
 
-# ── Safety net: pull from Overleaf first ──────────────────────────
+# â”€â”€ Safety net: pull from Overleaf first â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 Write-Host ""
 Write-Host "  [1/4] Pulling from Overleaf to avoid overwriting manual edits..." -ForegroundColor Cyan
 Push-Location $overleafDir
@@ -33,7 +32,7 @@ $pullResult = git pull 2>&1
 Write-Host "  $pullResult" -ForegroundColor DarkGray
 Pop-Location
 
-# ── Find main .tex file ───────────────────────────────────────────
+# â”€â”€ Find main .tex file â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 Write-Host "  [2/4] Locating main .tex file..." -ForegroundColor Cyan
 $texFiles = Get-ChildItem $overleafDir -Filter "*.tex" |
     Where-Object { $_.Name -notmatch "^(slides|response|Response)" } |
@@ -66,7 +65,7 @@ if ($texFiles.Count -eq 0) {
 }
 Write-Host "  Using: $mainTex" -ForegroundColor DarkGray
 
-# ── Controls (preset or interactive) ─────────────────────────────
+# â”€â”€ Controls (preset or interactive) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 Write-Host "  [3/4] Slide controls..." -ForegroundColor Cyan
 
 $presetLabel = ""
@@ -140,7 +139,7 @@ if ($presetLabel) {
     }
 }
 
-# ── Build and run prompt ──────────────────────────────────────────
+# â”€â”€ Build and run prompt â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 Write-Host ""
 Write-Host "  [4/4] Generating slides via Claude..." -ForegroundColor Cyan
 Write-Host "  Settings: $duration | depth=$depth | audience=$audience | emphasis=$emphasis" -ForegroundColor DarkGray
@@ -159,7 +158,7 @@ Push-Location $projRoot
 & claude -p $prompt
 Pop-Location
 
-# ── Confirm output and offer push ────────────────────────────────
+# â”€â”€ Confirm output and offer push â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 $slidesFile = Join-Path $overleafDir "slides_main.tex"
 if (!(Test-Path $slidesFile)) {
     Write-Host "WARN | slides_main.tex was not created. Check Claude output above." -ForegroundColor Yellow

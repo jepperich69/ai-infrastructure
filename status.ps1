@@ -1,4 +1,4 @@
-# status.ps1
+﻿# status.ps1
 # Dashboard: show all AI-active projects (those with _ai_log.md or code/.git).
 # Displays last session date, uncommitted code changes, and Overleaf sync state.
 #
@@ -8,7 +8,7 @@
 #
 param([switch]$All)
 
-$pubRoot = "C:\Users\rich\OneDrive - Danmarks Tekniske Universitet\JR\Publikationer"
+. "$PSScriptRoot\config.ps1"
 
 $projects = Get-ChildItem $pubRoot -Directory | Sort-Object Name
 
@@ -77,7 +77,7 @@ if ($rows.Count -eq 0) {
 
 Write-Host ""
 Write-Host "  Active Projects" -ForegroundColor Cyan
-Write-Host "  ═══════════════════════════════════════════════════════════" -ForegroundColor Cyan
+Write-Host "  â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•" -ForegroundColor Cyan
 Write-Host ""
 
 foreach ($r in $rows) {

@@ -1,4 +1,4 @@
-# snapshot.ps1  --  Git-tag the full Overleaf_source/ as a named version snapshot.
+﻿# snapshot.ps1  --  Git-tag the full Overleaf_source/ as a named version snapshot.
 # Captures everything: .tex, .bib, figures, style files, subdirectories.
 #
 # Usage:
@@ -11,10 +11,9 @@ param(
     [string]$Tag     = ""
 )
 
-$aiRoot  = Split-Path -Parent $MyInvocation.MyCommand.Path
-$pubRoot = "C:\Users\rich\OneDrive - Danmarks Tekniske Universitet\JR\Publikationer"
+. "$PSScriptRoot\config.ps1"
 
-# ── Resolve project ───────────────────────────────────────────────────────────
+# â”€â”€ Resolve project â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 if (-not $Project) {
     $parts   = (Get-Location).Path -split '\\'
     $Project = ($parts | Where-Object { $_ -match '^(Pub_|Pro_|PhD_)' } | Select-Object -Last 1)
@@ -31,7 +30,7 @@ if (-not (Test-Path (Join-Path $src ".git"))) {
     exit 1
 }
 
-# ── Auto-detect next version number ──────────────────────────────────────────
+# â”€â”€ Auto-detect next version number â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 if (-not $Tag) {
     $existing = @(git -C $src tag -l "snapshot-v*" 2>$null)
     $maxN = 0
@@ -44,13 +43,13 @@ if (-not $Tag) {
 
 $tagName = ("snapshot-" + $Tag).ToLower() -replace '[^a-z0-9\-]', '-'
 
-# ── Guard: duplicate ──────────────────────────────────────────────────────────
+# â”€â”€ Guard: duplicate â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 if (@(git -C $src tag -l $tagName 2>$null).Count -gt 0) {
     Write-Error "Tag '$tagName' already exists. Use a different label."
     exit 1
 }
 
-# ── Abort if working tree is dirty ────────────────────────────────────────────
+# â”€â”€ Abort if working tree is dirty â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 $dirty = @(git -C $src status --porcelain 2>$null)
 if ($dirty.Count -gt 0) {
     Write-Host ""
@@ -60,23 +59,23 @@ if ($dirty.Count -gt 0) {
     Write-Host "  Uncommitted files:" -ForegroundColor Yellow
     foreach ($line in $dirty) { Write-Host "    $line" -ForegroundColor DarkYellow }
     Write-Host ""
-    Write-Host "  Option 1 — commit them (recommended):" -ForegroundColor DarkGray
+    Write-Host "  Option 1 â€” commit them (recommended):" -ForegroundColor DarkGray
     Write-Host "    git -C `"$src`" add <file>" -ForegroundColor DarkGray
     Write-Host "    git -C `"$src`" commit -m `"your message`"" -ForegroundColor DarkGray
-    Write-Host "  Option 2 — stash them (reversible):" -ForegroundColor DarkGray
+    Write-Host "  Option 2 â€” stash them (reversible):" -ForegroundColor DarkGray
     Write-Host "    git -C `"$src`" stash" -ForegroundColor DarkGray
     Write-Host "    # then snapshot, then: git -C `"$src`" stash pop" -ForegroundColor DarkGray
-    Write-Host "  Option 3 — discard them (PERMANENT, cannot be undone):" -ForegroundColor DarkGray
+    Write-Host "  Option 3 â€” discard them (PERMANENT, cannot be undone):" -ForegroundColor DarkGray
     Write-Host "    git -C `"$src`" checkout -- ." -ForegroundColor DarkGray
     Write-Host ""
     exit 1
 }
 
-# ── Create annotated tag ──────────────────────────────────────────────────────
+# â”€â”€ Create annotated tag â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 git -C $src tag -a $tagName -m "Snapshot $Tag"
 if ($LASTEXITCODE -ne 0) { Write-Error "git tag failed"; exit 1 }
 
-# ── Report ────────────────────────────────────────────────────────────────────
+# â”€â”€ Report â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 $sha   = git -C $src rev-parse --short $tagName 2>$null
 $count = @(git -C $src ls-tree -r --name-only $tagName 2>$null).Count
 
@@ -85,7 +84,7 @@ Write-Host "  Snapshot created" -ForegroundColor Green
 Write-Host "  Project  : $Project"
 Write-Host "  Tag      : $tagName"
 Write-Host "  Commit   : $sha"
-Write-Host "  Captured : $count files (full Overleaf_source/ — .tex, .bib, figures, styles)"
+Write-Host "  Captured : $count files (full Overleaf_source/ â€” .tex, .bib, figures, styles)"
 Write-Host ""
 Write-Host "  List all snapshots : git -C `"$src`" tag -l `"snapshot-*`"" -ForegroundColor DarkGray
 Write-Host "  Diff vs now        : git -C `"$src`" diff $tagName HEAD" -ForegroundColor DarkGray

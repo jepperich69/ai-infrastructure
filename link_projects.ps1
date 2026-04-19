@@ -1,4 +1,4 @@
-# link_projects.ps1
+﻿# link_projects.ps1
 # Reads overleaf_projects.csv and clones + registers all matched projects.
 # Run AFTER reviewing/fixing the CSV from fetch_overleaf_projects.ps1.
 #
@@ -10,8 +10,7 @@ param(
     [switch]$Execute
 )
 
-$pubRoot  = "C:\Users\rich\OneDrive - Danmarks Tekniske Universitet\JR\Publikationer"
-$aiRoot   = "C:\Users\rich\OneDrive - Danmarks Tekniske Universitet\JR\AI_auto"
+. "$PSScriptRoot\config.ps1"
 $csvPath  = "$aiRoot\papers.csv"
 $jsonPath = "$aiRoot\projects.json"
 

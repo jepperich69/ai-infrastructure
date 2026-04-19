@@ -1,4 +1,4 @@
-# fetch_overleaf_projects.ps1
+﻿# fetch_overleaf_projects.ps1
 # Uses your browser session cookie to fetch all Overleaf projects.
 # Bypasses reCAPTCHA by reusing an existing browser login.
 #
@@ -11,8 +11,7 @@
 # Usage:
 #   .\fetch_overleaf_projects.ps1
 
-$pubRoot  = "C:\Users\rich\OneDrive - Danmarks Tekniske Universitet\JR\Publikationer"
-$aiRoot   = "C:\Users\rich\OneDrive - Danmarks Tekniske Universitet\JR\AI_auto"
+. "$PSScriptRoot\config.ps1"
 
 # --- Session cookie (never stored to disk) ---
 Write-Host "Paste your 'overleaf_session2' cookie value (F12 -> Application -> Cookies):" -ForegroundColor Cyan

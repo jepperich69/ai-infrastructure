@@ -1,4 +1,4 @@
-# push_to_overleaf.ps1
+﻿# push_to_overleaf.ps1
 # Push local edits in an Overleaf_source repo back to Overleaf.
 #
 # Usage:
@@ -10,7 +10,7 @@ param(
     [string]$Project
 )
 
-$aiRoot   = "C:\Users\rich\OneDrive - Danmarks Tekniske Universitet\JR\AI_auto"
+. "$PSScriptRoot\config.ps1"
 $jsonPath = "$aiRoot\projects.json"
 
 # ---------------------------------------------------------------

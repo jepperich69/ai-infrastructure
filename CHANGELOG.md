@@ -5,6 +5,16 @@ A "change" is anything that affects how you or Claude interacts with the system.
 
 ---
 
+## [v0.7] — 2026-04-19 — Portable installation: config.ps1 refactor + install scripts
+
+- **`config.ps1`** (new): Single source of truth for all machine-specific paths (`$pubRoot`, `$vscode`, `$miktexBin`, `$latexdiffScript`, `$strawberryPerl`, `$tagTargets`). All 22 scripts now dot-source this file instead of defining their own hardcoded paths.
+- **`restore.ps1`** (new, helpi 20): 8-step checker for replacement-machine recovery — verifies Claude CLI, Git, MiKTeX, VS Code, PS profile, `~/.claude/` folder, scheduled task, and `projects.json`. Fixes what it can automatically.
+- **`setup.ps1`** (new, helpi 21): First-time setup wizard for new users — collects publications root, git identity, detects tool paths, writes `config.ps1`, wires `helpi` into PS profile, registers auto-sync scheduled task.
+- All scripts bulk-refactored: hardcoded `$aiRoot`/`$pubRoot`/`$vscode`/`$miktexBin` lines replaced with `. "$PSScriptRoot\config.ps1"`.
+- **`infrastructure.html`**: helpi 20/21 added to command table and desk reference; quick reference heading updated to `helpi 1-21`.
+
+---
+
 ## [v0.1] — 2026-04-05 — Initial stable release
 
 ### What this infrastructure does

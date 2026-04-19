@@ -1,16 +1,10 @@
-# setup_tagged.ps1
+﻿# setup_tagged.ps1
 # Clones all Overleaf projects by tag into their target folders.
 # Uses the cached debug_projects_page.html (re-fetches if needed via cookie).
 #
 # Tag -> Target folder mapping:
-$tagTargets = @{
-    "Projects"      = "C:\Users\rich\OneDrive - Danmarks Tekniske Universitet\JR\Projekter DTU"
-    "Teaching"      = "C:\Users\rich\OneDrive - Danmarks Tekniske Universitet\JR\Kurser"
-    "Presentations" = "C:\Users\rich\OneDrive - Danmarks Tekniske Universitet\JR\Slides"
-    "Applications"  = "C:\Users\rich\OneDrive - Danmarks Tekniske Universitet\JR\Ansøgninger"
-}
-
-$aiRoot   = "C:\Users\rich\OneDrive - Danmarks Tekniske Universitet\JR\AI_auto"
+. "$PSScriptRoot\config.ps1"
+# $tagTargets is defined in config.ps1
 $jsonPath = "$aiRoot\projects.json"
 $htmlPath = "$aiRoot\debug_projects_page.html"
 

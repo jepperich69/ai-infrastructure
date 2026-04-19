@@ -1,4 +1,4 @@
-# open_project.ps1
+﻿# open_project.ps1
 # Compile, then open everything for a project in one shot:
 #   - Compile the chosen .tex file
 #   - VS Code on Overleaf_source/ with the chosen file
@@ -13,9 +13,7 @@ param(
     [string]$Project
 )
 
-$miktexBin   = "C:\Users\rich\AppData\Local\Programs\MiKTeX\miktex\bin\x64"
-$pubRoot     = "C:\Users\rich\OneDrive - Danmarks Tekniske Universitet\JR\Publikationer"
-$vscode      = "$env:LOCALAPPDATA\Programs\Microsoft VS Code\bin\code.cmd"
+. "$PSScriptRoot\config.ps1"
 $projectRoot = Join-Path $pubRoot $Project
 $overleafDir = Join-Path $projectRoot "Overleaf_source"
 
@@ -24,7 +22,7 @@ if (!(Test-Path $projectRoot)) {
     exit 1
 }
 
-# ── Pick .tex file ────────────────────────────────────────────────
+# â”€â”€ Pick .tex file â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 $texFiles = @()
 if (Test-Path $overleafDir) {
     $texFiles = Get-ChildItem $overleafDir -Filter "*.tex" -File |
@@ -51,13 +49,13 @@ if ($texFiles.Count -eq 0) {
     }
 }
 
-# ── Auto-init code/ git repo if missing ──────────────────────────
+# â”€â”€ Auto-init code/ git repo if missing â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 $codeDir = Join-Path $projectRoot "code"
 if ((Test-Path $codeDir) -and !(Test-Path (Join-Path $codeDir ".git"))) {
     & "$PSScriptRoot\init_project_git.ps1" -Project $Project
 }
 
-# ── Compile ───────────────────────────────────────────────────────
+# â”€â”€ Compile â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 $outDir = Join-Path $overleafDir "out"
 $pdfPath = $null
 
@@ -91,7 +89,7 @@ if ($chosenTex) {
     }
 }
 
-# ── Open VS Code ──────────────────────────────────────────────────
+# â”€â”€ Open VS Code â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 if (Test-Path $overleafDir) {
     if ($chosenTex) {
         if (Test-Path $vscode) { & $vscode $overleafDir ($chosenTex.FullName) }
@@ -103,11 +101,11 @@ if (Test-Path $overleafDir) {
     Write-Host "OK   | VS Code opened"
 }
 
-# ── Open File Explorer on project root ───────────────────────────
+# â”€â”€ Open File Explorer on project root â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 Start-Process explorer.exe $projectRoot
 Write-Host "OK   | Explorer opened: $projectRoot"
 
-# ── Open PDF ─────────────────────────────────────────────────────
+# â”€â”€ Open PDF â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 if ($pdfPath -and (Test-Path $pdfPath)) {
     Start-Process $pdfPath
     Write-Host "OK   | PDF opened: $(Split-Path $pdfPath -Leaf)"

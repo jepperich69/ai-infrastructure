@@ -1,4 +1,4 @@
-# sync_one.ps1
+﻿# sync_one.ps1
 # Pull the latest from Overleaf for a single project.
 #
 # Usage:
@@ -9,7 +9,7 @@ param(
     [string]$Project
 )
 
-$aiRoot   = "C:\Users\rich\OneDrive - Danmarks Tekniske Universitet\JR\AI_auto"
+. "$PSScriptRoot\config.ps1"
 $jsonPath = "$aiRoot\projects.json"
 
 $projects = Get-Content $jsonPath | ConvertFrom-Json

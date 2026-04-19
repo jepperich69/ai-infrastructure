@@ -1,9 +1,9 @@
-# generate_handover.ps1
+﻿# generate_handover.ps1
 # Packages the session log + git history into a handover document.
 # Writes _handover.html to the project root (nice to read).
 # Also prints markdown to stdout (pipe to a file if needed).
 #
-# The _ai_log.md is the editable source of truth — any agent (Claude, GPT, etc.)
+# The _ai_log.md is the editable source of truth â€” any agent (Claude, GPT, etc.)
 # can update it as plain text. The HTML is regenerated from it each run.
 #
 # Usage:
@@ -19,7 +19,7 @@ param(
 
 . "$PSScriptRoot\ai_log_tools.ps1"
 
-$pubRoot     = "C:\Users\rich\OneDrive - Danmarks Tekniske Universitet\JR\Publikationer"
+. "$PSScriptRoot\config.ps1"
 $projectRoot = Join-Path $pubRoot $Project
 $codeDir     = Join-Path $projectRoot "code"
 $logPath     = Join-Path $projectRoot "_ai_log.md"
@@ -197,7 +197,7 @@ $html = @"
 **Agent:** [Claude / GPT-4o / etc.]
 **Goal:** [what was worked on]
 **Files touched:**
-- \`code/file.py\` — [description of change]
+- \`code/file.py\` â€” [description of change]
 **Outcome:** [what was accomplished]
 **Next steps:** [what remains open]
 **Git ref:** [short commit hash(es), if applicable]</pre>

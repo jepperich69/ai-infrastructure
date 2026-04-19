@@ -1,4 +1,4 @@
-# rollback.ps1
+﻿# rollback.ps1
 # Roll back the last N commits in a project's code/ git repo.
 # Shows a preview of what will be reverted before doing anything.
 #
@@ -13,7 +13,7 @@ param(
     [int]$N = 1
 )
 
-$pubRoot = "C:\Users\rich\OneDrive - Danmarks Tekniske Universitet\JR\Publikationer"
+. "$PSScriptRoot\config.ps1"
 $codeDir = Join-Path $pubRoot "$Project\code"
 
 if (!(Test-Path (Join-Path $codeDir ".git"))) {

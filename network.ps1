@@ -1,19 +1,18 @@
-# network.ps1  --  Generate a project network graph with cluster shading.
+﻿# network.ps1  --  Generate a project network graph with cluster shading.
 #                  No external dependencies. Opens in default browser.
 # Usage:  network.ps1
 
-$aiRoot  = Split-Path -Parent $MyInvocation.MyCommand.Path
-$pubRoot = "C:\Users\rich\OneDrive - Danmarks Tekniske Universitet\JR\Publikationer"
+. "$PSScriptRoot\config.ps1"
 $outFile = Join-Path $aiRoot "network.html"
 
 $projData = Get-Content "$aiRoot\projects.json" | ConvertFrom-Json
 
-# ── Helper: skip entries with path-illegal characters ─────────────
+# â”€â”€ Helper: skip entries with path-illegal characters â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function Test-ValidName([string]$n) {
     return $n -and $n -notmatch '[<>:"|?*\x00-\x1f]'
 }
 
-# ── Last-session dates ────────────────────────────────────────────
+# â”€â”€ Last-session dates â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 $lastSessions = @{}
 foreach ($proj in $projData) {
     if (-not (Test-ValidName $proj.name)) { continue }
@@ -27,7 +26,7 @@ foreach ($proj in $projData) {
     } catch { }
 }
 
-# ── Edges ─────────────────────────────────────────────────────────
+# â”€â”€ Edges â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 $edges    = [System.Collections.Generic.List[object]]::new()
 $involved = [System.Collections.Generic.HashSet[string]]::new()
 
@@ -57,7 +56,7 @@ foreach ($proj in $projData) {
     }
 }
 
-# ── Connected-component clustering (union-find) ───────────────────
+# â”€â”€ Connected-component clustering (union-find) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 $parent = @{}
 function Find-Root([string]$x) {
     if (-not $parent.ContainsKey($x)) { $parent[$x] = $x }
@@ -81,7 +80,7 @@ foreach ($name in ($involved | Sort-Object)) {
     $clusterIdMap[$name] = $rootToCluster[$root]
 }
 
-# ── Node list ─────────────────────────────────────────────────────
+# â”€â”€ Node list â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 $nodeList = [System.Collections.Generic.List[object]]::new()
 foreach ($name in ($involved | Sort-Object)) {
     $session = if ($lastSessions.ContainsKey($name)) { $lastSessions[$name] } else { $null }
@@ -93,7 +92,7 @@ foreach ($name in ($involved | Sort-Object)) {
     $nodeList.Add([PSCustomObject]@{ name=$name; label=$label; color=$color; tip=$tip; cluster=$cluster })
 }
 
-# ── Standalone list ───────────────────────────────────────────────
+# â”€â”€ Standalone list â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 $standaloneHtml = ($projData |
     Where-Object { -not $involved.Contains($_.name) } |
     Sort-Object name |
@@ -102,7 +101,7 @@ $standaloneHtml = ($projData |
         "<li>$lbl</li>"
     }) -join "`n"
 
-# ── Serialise to JSON ─────────────────────────────────────────────
+# â”€â”€ Serialise to JSON â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 $nodesJson = ($nodeList | ForEach-Object {
     $n = $_.name    | ConvertTo-Json -Compress
     $l = $_.label   | ConvertTo-Json -Compress
@@ -291,7 +290,7 @@ function draw() {
   ctx.translate(tr.x, tr.y);
   ctx.scale(tr.s, tr.s);
 
-  // ── Cluster convex hulls ──────────────────────────────────────
+  // â”€â”€ Cluster convex hulls â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   var clusterPts = {};
   RAW_NODES.forEach(function(n) {
     var c = n.cluster;
@@ -320,7 +319,7 @@ function draw() {
     ctx.setLineDash([]);
   });
 
-  // ── Edges ─────────────────────────────────────────────────────
+  // â”€â”€ Edges â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   RAW_EDGES.forEach(function(e) {
     if (!pos[e.from] || !pos[e.to]) return;
     var fx=pos[e.from].x, fy=pos[e.from].y, tx=pos[e.to].x, ty=pos[e.to].y;
@@ -335,7 +334,7 @@ function draw() {
     ctx.closePath(); ctx.fillStyle='#5080a8'; ctx.fill();
   });
 
-  // ── Nodes ─────────────────────────────────────────────────────
+  // â”€â”€ Nodes â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   RAW_NODES.forEach(function(n) {
     var x=pos[n.name].x, y=pos[n.name].y;
     ctx.beginPath(); ctx.arc(x,y,R,0,2*Math.PI);

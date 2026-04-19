@@ -13,9 +13,7 @@ param(
     [string]$TexFile = ""
 )
 
-$aiRoot  = "C:\Users\rich\OneDrive - Danmarks Tekniske Universitet\JR\AI_auto"
-$pubRoot = "C:\Users\rich\OneDrive - Danmarks Tekniske Universitet\JR\Publikationer"
-$vscode  = "$env:LOCALAPPDATA\Programs\Microsoft VS Code\bin\code.cmd"
+. "$PSScriptRoot\config.ps1"
 
 # ── Auto-detect project from current working directory ─────────────
 function Get-ProjectFromCwd {
@@ -47,7 +45,9 @@ $commands = @(
     [PSCustomObject]@{ N=16; NeedsProject=$false; Tag="MANUAL";  Name="Generate docs (summary + full HTML/PDF)";   Example="generate_docs.ps1" },
     [PSCustomObject]@{ N=17; NeedsProject=$false; Tag="INFO";    Name="Claude Code in-session command reference";   Example="(cheatsheet -- no args needed)" },
     [PSCustomObject]@{ N=18; NeedsProject=$false; Tag="MANUAL";  Name="Toggle Claude model-check on/off";            Example="(edits memory -- persists to next session)" },
-    [PSCustomObject]@{ N=19; NeedsProject=$true;  Tag="MANUAL";  Name="Generate Beamer slides from paper";            Example="generate_slides.ps1 -Project XXX" }
+    [PSCustomObject]@{ N=19; NeedsProject=$true;  Tag="MANUAL";  Name="Generate Beamer slides from paper";            Example="generate_slides.ps1 -Project XXX" },
+    [PSCustomObject]@{ N=20; NeedsProject=$false; Tag="ONCE";    Name="Restore infrastructure on replacement machine"; Example="restore.ps1" },
+    [PSCustomObject]@{ N=21; NeedsProject=$false; Tag="ONCE";    Name="First-time setup for a new user/colleague";    Example="setup.ps1" }
 )
 
 # ── Contextual help for a single command ──────────────────────────
@@ -255,6 +255,36 @@ function Show-CommandHelp {
             "Example (interactive):",
             "  helpi 19 $p"
         )}
+        20 { @(
+            "Restore infrastructure on a replacement machine",
+            "Checks all dependencies and fixes what it can automatically:",
+            "  - Claude Code CLI, Git, MiKTeX, VS Code",
+            "  - PowerShell profile (helpi function)",
+            "  - Scheduled task (auto-sync every 4h)",
+            "  - ~/.claude/ folder (CLAUDE.md, commands/)",
+            "  - projects.json",
+            "Files are assumed intact (OneDrive sync). Only the local machine setup is restored.",
+            "",
+            "Example:",
+            "  helpi 20"
+        )}
+        21 { @(
+            "First-time setup for a new user or colleague",
+            "Interactive wizard that configures the infrastructure from scratch:",
+            "  1. Ask for publications root folder",
+            "  2. Set git user name + email",
+            "  3. Detect or prompt for tool paths (VS Code, MiKTeX, Perl)",
+            "  4. Write config.ps1 with all paths in one place",
+            "  5. Wire helpi into the PowerShell profile",
+            "  6. Register the auto-sync scheduled task",
+            "",
+            "Prerequisites (install manually first):",
+            "  Claude Code, Git, MiKTeX, VS Code, Strawberry Perl",
+            "  Then run: claude login",
+            "",
+            "Example:",
+            "  helpi 21"
+        )}
         18 { @(
             "Toggle Claude model-check on/off",
             "Enables or disables the behavior where Claude assesses each task",
@@ -330,6 +360,8 @@ function Get-CommandPreview {
         18 { "(toggle Claude model-check in memory file)" }
         19 { if ($texFile) { "generate_slides.ps1 -Project $proj -Preset $texFile" }
              else          { "generate_slides.ps1 -Project $proj  (interactive)" } }
+        20 { "restore.ps1" }
+        21 { "setup.ps1" }
     }
 }
 
@@ -434,6 +466,8 @@ function Invoke-Command-N {
         18 { Toggle-ModelCheck }
         19 { if ($texFile) { & "$aiRoot\generate_slides.ps1" -Project $proj -Preset $texFile }
              else          { & "$aiRoot\generate_slides.ps1" -Project $proj } }
+        20 { & "$aiRoot\restore.ps1" }
+        21 { & "$aiRoot\setup.ps1" }
     }
 }
 
@@ -489,7 +523,7 @@ function Show-ClaudeCheatsheet {
 
 # ── Toggle Claude model-check behavior ────────────────────────────
 function Toggle-ModelCheck {
-    $memFile = "$env:USERPROFILE\.claude\projects\C--Users-rich-OneDrive---Danmarks-Tekniske-Universitet-JR-AI-auto\memory\feedback_model_assessment.md"
+    $memFile = "$claudeDir\projects\$claudeProjectKey\memory\feedback_model_assessment.md"
     if (!(Test-Path $memFile)) {
         Write-Host "ERR | Memory file not found: $memFile" -ForegroundColor Red
         return

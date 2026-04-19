@@ -1,4 +1,4 @@
-# init_project_git.ps1
+﻿# init_project_git.ps1
 # One-time setup: initialise a git repo in a project's code/ folder.
 #
 # Usage:
@@ -9,7 +9,7 @@ param(
     [string]$Project
 )
 
-$pubRoot  = "C:\Users\rich\OneDrive - Danmarks Tekniske Universitet\JR\Publikationer"
+. "$PSScriptRoot\config.ps1"
 $codeDir  = Join-Path $pubRoot "$Project\code"
 
 if (!(Test-Path $codeDir)) {
@@ -55,7 +55,7 @@ $logPath     = Join-Path $projectRoot "_ai_log.md"
 
 if (!(Test-Path $logPath)) {
     $header = @"
-# AI Session Log — $Project
+# AI Session Log â€” $Project
 
 <!-- Claude updates this file at the start and end of every working session. -->
 <!-- Format: one ## Session block per date, with Goal / Changes / Outcome / Next steps. -->

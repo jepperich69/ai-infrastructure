@@ -1,4 +1,4 @@
-# generate_docs.ps1
+﻿# generate_docs.ps1
 # Generates infrastructure_summary.html, infrastructure_full.html,
 # infrastructure_summary.pdf, and infrastructure_full.pdf from infrastructure.html.
 #
@@ -8,7 +8,7 @@ param(
     [switch]$SkipPdf
 )
 
-$aiRoot = "C:\Users\rich\OneDrive - Danmarks Tekniske Universitet\JR\AI_auto"
+. "$PSScriptRoot\config.ps1"
 $src    = Join-Path $aiRoot "infrastructure.html"
 
 if (-not (Test-Path $src)) {
@@ -16,7 +16,7 @@ if (-not (Test-Path $src)) {
     exit 1
 }
 
-# ── Read source ────────────────────────────────────────────────────────────────
+# â”€â”€ Read source â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 $lines = Get-Content $src -Encoding UTF8
 
 # Find the @media print block boundaries (search for the known comment line)
@@ -39,7 +39,7 @@ if ($blockStart -lt 0 -or $blockEnd -lt 0) {
 
 Write-Host "  Found @media print block at lines $($blockStart+1)-$($blockEnd+1)" -ForegroundColor DarkGray
 
-# ── Build replacement blocks ───────────────────────────────────────────────────
+# â”€â”€ Build replacement blocks â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 # Summary: always hide non-one-pager content (not just on print); also clean up for print
 $summaryCss = @(
@@ -63,7 +63,7 @@ $fullCss = @(
     "  }"
 )
 
-# ── Helper: splice replacement into line array and write file ──────────────────
+# â”€â”€ Helper: splice replacement into line array and write file â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function Write-Spliced {
     param([string[]]$srcLines, [int]$start, [int]$end, [string[]]$replacement, [string]$outPath)
     $out = @()
@@ -82,7 +82,7 @@ Write-Host "  Written: infrastructure_summary.html" -ForegroundColor Green
 Write-Spliced -srcLines $lines -start $blockStart -end $blockEnd -replacement $fullCss -outPath $fullHtml
 Write-Host "  Written: infrastructure_full.html" -ForegroundColor Green
 
-# ── PDF generation via Edge headless ──────────────────────────────────────────
+# â”€â”€ PDF generation via Edge headless â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 if (-not $SkipPdf) {
     $edgePaths = @(
         "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe",

@@ -1,4 +1,4 @@
-# setup_project.ps1
+﻿# setup_project.ps1
 # Links an Overleaf project to a local publication folder and adds it to projects.json
 #
 # Usage:
@@ -17,8 +17,8 @@ param(
     [string]$Branch = "master"  # Branch name (master or main)
 )
 
-$pubRoot   = "C:\Users\rich\OneDrive - Danmarks Tekniske Universitet\JR\Publikationer"
-$jsonPath  = "C:\Users\rich\OneDrive - Danmarks Tekniske Universitet\JR\AI_auto\projects.json"
+. "$PSScriptRoot\config.ps1"
+$jsonPath  = Join-Path $aiRoot "projects.json"
 
 $targetDir = Join-Path $pubRoot $FolderName
 

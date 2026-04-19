@@ -1,4 +1,4 @@
-# auto_handover.ps1
+﻿# auto_handover.ps1
 # Finds the most recently active project (by _ai_log.md modification time)
 # and regenerates its handover + AGENTS.md.
 #
@@ -12,11 +12,10 @@
 #
 param([string]$Action = "")
 
-$aiRoot  = "C:\Users\rich\OneDrive - Danmarks Tekniske Universitet\JR\AI_auto"
-$pubRoot = "C:\Users\rich\OneDrive - Danmarks Tekniske Universitet\JR\Publikationer"
+. "$PSScriptRoot\config.ps1"
 $taskName = "ResearchInfra_AutoHandover"
 
-# ── Register scheduled task ───────────────────────────────────────
+# â”€â”€ Register scheduled task â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 if ($Action -eq "--register") {
     $ps   = (Get-Command powershell.exe).Source
     $script = Join-Path $aiRoot "auto_handover.ps1"
@@ -33,14 +32,14 @@ if ($Action -eq "--register") {
     return
 }
 
-# ── Unregister ───────────────────────────────────────────────────
+# â”€â”€ Unregister â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 if ($Action -eq "--unregister") {
     Unregister-ScheduledTask -TaskName $taskName -Confirm:$false -ErrorAction SilentlyContinue
     Write-Host "OK   | Scheduled task removed: '$taskName'" -ForegroundColor Green
     return
 }
 
-# ── Find most recently active project ────────────────────────────
+# â”€â”€ Find most recently active project â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 $candidate = Get-ChildItem $pubRoot -Directory |
     Where-Object { $_.Name -match '^(Pub_|Pro_|PhD_)' } |
     ForEach-Object {

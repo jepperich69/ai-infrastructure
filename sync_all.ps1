@@ -1,5 +1,4 @@
-$aiRoot   = "C:\Users\rich\OneDrive - Danmarks Tekniske Universitet\JR\AI_auto"
-$pubRoot  = "C:\Users\rich\OneDrive - Danmarks Tekniske Universitet\JR\Publikationer"
+﻿. "$PSScriptRoot\config.ps1"
 $jsonPath = "$aiRoot\projects.json"
 $csvPath  = "$aiRoot\papers.csv"
 $logDir   = "$aiRoot\logs"
@@ -40,7 +39,7 @@ if (Test-Path $csvPath) {
         # Skip if already cloned
         if (Test-Path (Join-Path $clonePath ".git")) { continue }
 
-        # New project — clone it
+        # New project â€” clone it
         Write-Log "NEW  | $($row.LocalFolder)"
         New-Item -ItemType Directory -Path $clonePath -Force | Out-Null
         git clone --quiet $row.GitUrl $clonePath 2>&1 | Out-Null
@@ -83,7 +82,7 @@ $syncScript = {
     }
 
     try {
-        # Pre-check: compare remote HEAD SHA to local — skip pull if identical
+        # Pre-check: compare remote HEAD SHA to local â€” skip pull if identical
         $remoteRef = git -C $project.path ls-remote origin HEAD 2>$null
         if ($remoteRef) {
             $remoteSHA = ($remoteRef -split '\s+')[0].Trim()
@@ -103,7 +102,7 @@ $syncScript = {
             }
         }
 
-        # Remote has new commits — pull
+        # Remote has new commits â€” pull
         git -C $project.path pull --quiet origin $project.branch 2>&1 | Out-Null
         if ($LASTEXITCODE -ne 0) {
             $logBag.Add("$(& $ts) - ERR  | $($project.name) - pull failed")
