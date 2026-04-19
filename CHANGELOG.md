@@ -35,11 +35,49 @@ A "change" is anything that affects how you or Claude interacts with the system.
 
 ---
 
+## [v0.6] — 2026-04-19
+
+### Token efficiency + Beamer slide generation
+
+**New helpi commands**
+- `helpi 17` — Claude Code in-session cheatsheet: prints all slash commands, custom skills, model IDs, and tips in one terminal view. Also callable as `! helpi 17` from inside a session.
+- `helpi 18` — Toggle model-check on/off: enables/disables the behavior where Claude assesses each incoming task and suggests switching to Haiku when appropriate. Edits the memory file — persists to next session.
+- `helpi 19` — Generate Beamer slides from paper: safety-pulls from Overleaf first, then asks four controls (duration / depth / audience / emphasis). Three presets skip the questions: `quick` (12 min conference), `seminar` (45 min deep-dive), `public` (30 min non-specialist). Writes `slides_main.tex` into `Overleaf_source/` and offers to push.
+
+**New scripts and prompts**
+- `generate_slides.ps1` — slide generation driver; handles Overleaf pull safety net, .tex file detection, interactive controls, preset resolution, and post-generation push offer.
+- `prompts/generate_slides.md` — Claude prompt for slide generation; encodes all four control dimensions with explicit depth/audience/emphasis guides and Beamer output requirements.
+
+**Behavioral change: model assessment**
+- Claude now assesses each incoming task and flags it as Haiku-suitable before starting (one-line prompt, user switches with `/model`). Applies to: mechanical parsing, file reads, scaffolding, context loading. Sonnet for logs/handovers. Opus for reviewer responses and cover letters.
+
+---
+
 ## [Unreleased] — develop
 
-_Ongoing changes toward v0.3 go here. Move to a new `[vX.Y]` block when promoted._
+- `push_to_overleaf.ps1`: fixed push detection bug — now pushes existing unpushed commits correctly.
 
-- `push_to_overleaf.ps1`: fixed a push detection bug where the script exited with "Nothing to push - working tree is clean" even when local commits were already ahead of `origin/<branch>`. It now pushes existing unpushed commits as expected.
+---
+
+## [v0.5] — 2026-04-18
+
+- `infrastructure.html` — major restructure: section numbers now match helpi 1–16 exactly; added collaboration section (git as coordination layer, personal install per person); AI sections relabelled A–I to avoid conflict with helpi numbers; lifecycle ordering (create → pull → push → compile → log → snapshot → rollback → submit → reviewer → status/docs).
+
+---
+
+## [v0.4] — 2026-04-18
+
+- `helpi.ps1` — renumbered all commands 1–16 in lifecycle order; merged project creation steps.
+
+---
+
+## [v0.3] — 2026-04-15
+
+- `submit.ps1` — 7-step submission assembly pipeline: compile, front-page, inline bib, submission zip, blind manuscript + zip, latexdiff, AI-staged content copy.
+- `prompts/submit.md` + `prompts/submit_stage_ai.md` — AI prompts for cover letter, highlights, author statement generation.
+- `generate_docs.ps1` — produces summary and full HTML/PDF exports of `infrastructure.html` via Edge headless.
+- `generate_handover.ps1` — upgraded to use shared AI-log parser (`ai_log_tools.ps1`); now writes `_handover.html` + `_handover.json` sidecar.
+- `ai_log_tools.ps1` — shared parser for `_ai_log.md` session blocks.
 
 ---
 
