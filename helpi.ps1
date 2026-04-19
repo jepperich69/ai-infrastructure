@@ -242,10 +242,17 @@ function Show-CommandHelp {
             "  Audience:  conference / research-group / non-specialist",
             "  Emphasis:  balanced / methods-heavy / results-heavy",
             "Writes slides_main.tex into Overleaf_source/. Offers to push to Overleaf.",
-            "Regeneration overwrites slides_main.tex -- manual Overleaf edits are",
-            "preserved by the safety pull, but lost if you regenerate without pulling first.",
+            "Regeneration overwrites slides_main.tex -- safety pull preserves Overleaf edits.",
             "",
-            "Example:",
+            "Presets (skip interactive questions):",
+            "  quick    12 min, overview, conference, balanced",
+            "           -> helpi 19 $p quick",
+            "  seminar  45 min, deep-dive, research-group, methods-heavy",
+            "           -> helpi 19 $p seminar",
+            "  public   30 min, overview, non-specialist, results-heavy",
+            "           -> helpi 19 $p public",
+            "",
+            "Example (interactive):",
             "  helpi 19 $p"
         )}
         18 { @(
@@ -321,7 +328,8 @@ function Get-CommandPreview {
         16 { "generate_docs.ps1" }
         17 { "(print Claude Code cheatsheet)" }
         18 { "(toggle Claude model-check in memory file)" }
-        19 { "generate_slides.ps1 -Project $proj" }
+        19 { if ($texFile) { "generate_slides.ps1 -Project $proj -Preset $texFile" }
+             else          { "generate_slides.ps1 -Project $proj  (interactive)" } }
     }
 }
 
@@ -424,7 +432,8 @@ function Invoke-Command-N {
         16 { & "$aiRoot\generate_docs.ps1" }
         17 { Show-ClaudeCheatsheet }
         18 { Toggle-ModelCheck }
-        19 { & "$aiRoot\generate_slides.ps1" -Project $proj }
+        19 { if ($texFile) { & "$aiRoot\generate_slides.ps1" -Project $proj -Preset $texFile }
+             else          { & "$aiRoot\generate_slides.ps1" -Project $proj } }
     }
 }
 

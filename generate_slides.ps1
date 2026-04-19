@@ -2,10 +2,15 @@
 #
 # Usage:
 #   generate_slides.ps1 -Project Pub_MyPaper_TBA
-#   helpi 19 Pub_MyPaper_TBA
+#   generate_slides.ps1 -Project Pub_MyPaper_TBA -Preset quick
+#   helpi 19 Pub_MyPaper_TBA          (interactive)
+#   helpi 19 Pub_MyPaper_TBA quick    (preset: 12 min, overview, conference, balanced)
+#   helpi 19 Pub_MyPaper_TBA seminar  (preset: 45 min, deep-dive, research-group, methods-heavy)
+#   helpi 19 Pub_MyPaper_TBA public   (preset: 30 min, overview, non-specialist, results-heavy)
 #
 param(
-    [string]$Project = ""
+    [string]$Project = "",
+    [string]$Preset  = ""
 )
 
 $aiRoot  = "C:\Users\rich\OneDrive - Danmarks Tekniske Universitet\JR\AI_auto"
@@ -61,55 +66,78 @@ if ($texFiles.Count -eq 0) {
 }
 Write-Host "  Using: $mainTex" -ForegroundColor DarkGray
 
-# ── Controls ──────────────────────────────────────────────────────
+# ── Controls (preset or interactive) ─────────────────────────────
 Write-Host "  [3/4] Slide controls..." -ForegroundColor Cyan
-Write-Host ""
 
-Write-Host "  Duration:" -ForegroundColor White
-Write-Host "    [1] 12 min  (~12 slides -- conference lightning)"
-Write-Host "    [2] 30 min  (~25 slides -- standard conference talk)"
-Write-Host "    [3] 45 min  (~35 slides -- seminar / research group)"
-$durPick = (Read-Host "  Pick [1-3]  (default 2)").Trim()
-switch ($durPick) {
-    "1" { $duration = "12 minutes"; $slides = "12" }
-    "3" { $duration = "45 minutes"; $slides = "35" }
-    default { $duration = "30 minutes"; $slides = "25" }
+$presetLabel = ""
+switch ($Preset.ToLower()) {
+    "quick" {
+        $duration = "12 minutes"; $slides = "12"
+        $depth    = "overview";   $audience = "conference"; $emphasis = "balanced"
+        $presetLabel = "quick  (12 min, overview, conference, balanced)"
+    }
+    "seminar" {
+        $duration = "45 minutes"; $slides = "35"
+        $depth    = "deep-dive";  $audience = "research-group"; $emphasis = "methods-heavy"
+        $presetLabel = "seminar  (45 min, deep-dive, research-group, methods-heavy)"
+    }
+    "public" {
+        $duration = "30 minutes"; $slides = "25"
+        $depth    = "overview";   $audience = "non-specialist"; $emphasis = "results-heavy"
+        $presetLabel = "public  (30 min, overview, non-specialist, results-heavy)"
+    }
 }
 
-Write-Host ""
-Write-Host "  Depth:" -ForegroundColor White
-Write-Host "    [1] overview   -- story arc + key result only"
-Write-Host "    [2] standard   -- methods + results + robustness  (default)"
-Write-Host "    [3] deep-dive  -- all details, backup slides, open questions"
-$depthPick = (Read-Host "  Pick [1-3]  (default 2)").Trim()
-switch ($depthPick) {
-    "1" { $depth = "overview" }
-    "3" { $depth = "deep-dive" }
-    default { $depth = "standard" }
-}
+if ($presetLabel) {
+    Write-Host "  Preset: $presetLabel" -ForegroundColor Yellow
+} else {
+    Write-Host ""
+    Write-Host "  Duration:" -ForegroundColor White
+    Write-Host "    [1] 12 min  (~12 slides -- conference lightning)"
+    Write-Host "    [2] 30 min  (~25 slides -- standard conference talk)"
+    Write-Host "    [3] 45 min  (~35 slides -- seminar / research group)"
+    $durPick = (Read-Host "  Pick [1-3]  (default 2)").Trim()
+    switch ($durPick) {
+        "1" { $duration = "12 minutes"; $slides = "12" }
+        "3" { $duration = "45 minutes"; $slides = "35" }
+        default { $duration = "30 minutes"; $slides = "25" }
+    }
 
-Write-Host ""
-Write-Host "  Audience:" -ForegroundColor White
-Write-Host "    [1] conference      -- assume field knowledge, tight narrative"
-Write-Host "    [2] research-group  -- open on methods, encourage discussion  (default)"
-Write-Host "    [3] non-specialist  -- explain from scratch, focus on implications"
-$audPick = (Read-Host "  Pick [1-3]  (default 2)").Trim()
-switch ($audPick) {
-    "1" { $audience = "conference" }
-    "3" { $audience = "non-specialist" }
-    default { $audience = "research-group" }
-}
+    Write-Host ""
+    Write-Host "  Depth:" -ForegroundColor White
+    Write-Host "    [1] overview   -- story arc + key result only"
+    Write-Host "    [2] standard   -- methods + results + robustness  (default)"
+    Write-Host "    [3] deep-dive  -- all details, backup slides, open questions"
+    $depthPick = (Read-Host "  Pick [1-3]  (default 2)").Trim()
+    switch ($depthPick) {
+        "1" { $depth = "overview" }
+        "3" { $depth = "deep-dive" }
+        default { $depth = "standard" }
+    }
 
-Write-Host ""
-Write-Host "  Emphasis:" -ForegroundColor White
-Write-Host "    [1] balanced        -- follow paper structure  (default)"
-Write-Host "    [2] methods-heavy   -- expand methods, data, identification"
-Write-Host "    [3] results-heavy   -- compress methods, lead with findings"
-$empPick = (Read-Host "  Pick [1-3]  (default 1)").Trim()
-switch ($empPick) {
-    "2" { $emphasis = "methods-heavy" }
-    "3" { $emphasis = "results-heavy" }
-    default { $emphasis = "balanced" }
+    Write-Host ""
+    Write-Host "  Audience:" -ForegroundColor White
+    Write-Host "    [1] conference      -- assume field knowledge, tight narrative"
+    Write-Host "    [2] research-group  -- open on methods, encourage discussion  (default)"
+    Write-Host "    [3] non-specialist  -- explain from scratch, focus on implications"
+    $audPick = (Read-Host "  Pick [1-3]  (default 2)").Trim()
+    switch ($audPick) {
+        "1" { $audience = "conference" }
+        "3" { $audience = "non-specialist" }
+        default { $audience = "research-group" }
+    }
+
+    Write-Host ""
+    Write-Host "  Emphasis:" -ForegroundColor White
+    Write-Host "    [1] balanced        -- follow paper structure  (default)"
+    Write-Host "    [2] methods-heavy   -- expand methods, data, identification"
+    Write-Host "    [3] results-heavy   -- compress methods, lead with findings"
+    $empPick = (Read-Host "  Pick [1-3]  (default 1)").Trim()
+    switch ($empPick) {
+        "2" { $emphasis = "methods-heavy" }
+        "3" { $emphasis = "results-heavy" }
+        default { $emphasis = "balanced" }
+    }
 }
 
 # ── Build and run prompt ──────────────────────────────────────────
