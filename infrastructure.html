@@ -168,6 +168,19 @@
     .diag-many-note { margin-top: 10px; font-size: 0.8em; color: #666; text-align: center;
                       font-style: italic; border-top: 1px dashed #ccd0d8; padding-top: 8px; }
 
+    /* ── AI phase table (inside ai-side layer) ── */
+    .diag-phase-tbl { width: 100%; border-collapse: collapse; font-size: 0.79em; margin-top: 8px; }
+    .diag-phase-tbl td { padding: 5px 8px; vertical-align: middle;
+                         border-bottom: 1px solid rgba(44,95,138,0.15); }
+    .diag-phase-tbl tr:last-child td { border-bottom: none; }
+    .diag-phase-tag { font-size: 0.68em; font-weight: bold; letter-spacing: 0.08em;
+                      text-align: center; white-space: nowrap; width: 48px;
+                      background: rgba(44,95,138,0.12); color: var(--blue);
+                      border-radius: 3px; }
+    .diag-phase-cmd { font-family: Consolas, monospace; font-weight: bold;
+                      color: var(--blue); white-space: nowrap; width: 160px; }
+    .diag-phase-desc { color: #445; font-family: Georgia, serif; font-size: 0.92em; }
+
     /* ── Worked example ── */
     .ex-step { margin-bottom: 30px; }
     .ex-step-hdr { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; flex-wrap: wrap; }
@@ -406,9 +419,9 @@
     <div class="diag-rag-col feeder">
       <div class="diag-rag-label">Feeder: Pub_YYY1</div>
       <div class="diag-mini">
-        <div class="diag-mini-ai">AI Layer<small>/work · /snapshot · /close · /family</small></div>
-        <div class="diag-mini-files">_ai_log.md · _handover.html<br>Overleaf_source/ · code/ · _feeders/</div>
         <div class="diag-mini-file">File Layer<small>sync · push · compile · handover</small></div>
+        <div class="diag-mini-files">_ai_log.md · _handover.html<br>Overleaf_source/ · code/ · _feeders/</div>
+        <div class="diag-mini-ai">AI Layer<small>/work · /close · /snapshot · /family</small></div>
       </div>
       <div class="diag-rag-sublabel">complete two-layer infrastructure<br>(may itself have feeders)</div>
     </div>
@@ -426,29 +439,31 @@
     <div class="diag-rag-col center">
       <div class="diag-rag-label main">Current Project: Pub_XXX</div>
 
-      <div class="diag-layer ai-side">
-        <div class="diag-layer-title">&#9670; AI Infrastructure &mdash; Claude Code</div>
+      <!-- File layer: the foundation -->
+      <div class="diag-layer file-side">
+        <div class="diag-layer-title">&#9670; File Infrastructure &mdash; PowerShell / helpi</div>
         <div class="diag-items">
-          <div class="diag-box ai-cmd">/work<small>load context &amp; open session</small></div>
-          <div class="diag-box ai-cmd">/snapshot V2<small>git tag full Overleaf_source/</small></div>
-          <div class="diag-box ai-cmd">/close<small>log session &amp; wrap up</small></div>
-          <div class="diag-box ai-dim">/family + /add-memory<small>ingest feeder digests</small></div>
-          <div class="diag-box ai-dim">auto-commit hook<small>git commit per response</small></div>
+          <div class="diag-box fi-cmd">sync_all / sync_one<small>pull Overleaf (auto 4h or manual)</small></div>
+          <div class="diag-box fi-cmd">push_to_overleaf<small>push local edits back</small></div>
+          <div class="diag-box fi-cmd">compile_latex<small>build PDF (MiKTeX)</small></div>
+          <div class="diag-box fi-cmd">generate_handover<small>compile _handover.html from log</small></div>
+          <div class="diag-box fi-dim">snapshot · rollback · submit · slides<small>versioning, submission, slides</small></div>
         </div>
       </div>
 
+      <!-- Shared files: the connection point between layers -->
       <div class="diag-connector">
         <div class="diag-conn-side">
           <div class="diag-conn-line"></div><div class="diag-conn-arrow">&#8597;</div><div class="diag-conn-line"></div>
         </div>
         <div class="diag-files-wrap">
-          <div class="diag-files-label">shared files</div>
+          <div class="diag-files-label">shared files — read &amp; written by both layers</div>
           <div class="diag-files">
             <span class="diag-file">_ai_log.md</span>
             <span class="diag-file">_handover.html</span>
             <span class="diag-file">Overleaf_source/</span>
             <span class="diag-file">code/ (git)</span>
-            <span class="diag-file">_feeders/ &larr; digests land here</span>
+            <span class="diag-file">_feeders/</span>
           </div>
         </div>
         <div class="diag-conn-side">
@@ -456,16 +471,36 @@
         </div>
       </div>
 
-      <div class="diag-layer file-side">
-        <div class="diag-layer-title">&#9670; File Infrastructure &mdash; PowerShell / helpi</div>
-        <div class="diag-items">
-          <div class="diag-box fi-cmd">sync_all<small>pull Overleaf (auto 4h)</small></div>
-          <div class="diag-box fi-cmd">push_to_overleaf<small>push edits back</small></div>
-          <div class="diag-box fi-cmd">compile_latex<small>build PDF</small></div>
-          <div class="diag-box fi-cmd">generate_handover<small>build _handover.html</small></div>
-          <div class="diag-box fi-dim">rollback / status<small>git &amp; project health</small></div>
-        </div>
+      <!-- AI layer: operates on the files -->
+      <div class="diag-layer ai-side">
+        <div class="diag-layer-title">&#9670; AI Infrastructure &mdash; Claude Code / Codex</div>
+        <table class="diag-phase-tbl">
+          <tr>
+            <td class="diag-phase-tag">OPEN</td>
+            <td class="diag-phase-cmd">/work Pub_XXX</td>
+            <td class="diag-phase-desc">reads _ai_log.md + _handover.html &mdash; fully oriented in seconds</td>
+          </tr>
+          <tr>
+            <td class="diag-phase-tag" rowspan="3">WORK</td>
+            <td class="diag-phase-cmd">auto-commit hook</td>
+            <td class="diag-phase-desc">every Claude response committed to git automatically</td>
+          </tr>
+          <tr>
+            <td class="diag-phase-cmd">/snapshot V2</td>
+            <td class="diag-phase-desc">git-tag the full manuscript at any milestone</td>
+          </tr>
+          <tr>
+            <td class="diag-phase-cmd">/family Pub_YYY</td>
+            <td class="diag-phase-desc">ingest feeder digest; monitor for new sessions as deltas</td>
+          </tr>
+          <tr>
+            <td class="diag-phase-tag">CLOSE</td>
+            <td class="diag-phase-cmd">/close</td>
+            <td class="diag-phase-desc">writes session block to _ai_log.md; regenerates _handover.html</td>
+          </tr>
+        </table>
       </div>
+
     </div><!-- /center -->
 
     <!-- ── Arrow right → center ── -->
@@ -481,9 +516,9 @@
     <div class="diag-rag-col feeder">
       <div class="diag-rag-label">Feeder: Pub_YYY2</div>
       <div class="diag-mini">
-        <div class="diag-mini-ai">AI Layer<small>/work · /snapshot · /close · /family</small></div>
-        <div class="diag-mini-files">_ai_log.md · _handover.html<br>Overleaf_source/ · code/ · _feeders/</div>
         <div class="diag-mini-file">File Layer<small>sync · push · compile · handover</small></div>
+        <div class="diag-mini-files">_ai_log.md · _handover.html<br>Overleaf_source/ · code/ · _feeders/</div>
+        <div class="diag-mini-ai">AI Layer<small>/work · /close · /snapshot · /family</small></div>
       </div>
       <div class="diag-rag-sublabel">complete two-layer infrastructure<br>(may itself have feeders)</div>
     </div>
