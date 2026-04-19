@@ -804,6 +804,21 @@ helpi 9 Pub_XXX -N 3      # undo last 3 commits</pre>
       <td>Regenerate infrastructure docs &mdash; rebuilds <code>infrastructure_summary.html/pdf</code> and <code>infrastructure_full.html/pdf</code> from source</td>
       <td><code>helpi 16</code></td>
     </tr>
+    <tr>
+      <td>17</td>
+      <td>Claude Code in-session cheatsheet &mdash; prints all slash commands, custom skills, model IDs, and tips. Also callable as <code>! helpi 17</code> from inside a Claude session.</td>
+      <td><code>helpi 17</code></td>
+    </tr>
+    <tr>
+      <td>18</td>
+      <td>Toggle Claude model-check on/off &mdash; enables or disables Claude suggesting Haiku for simple tasks. Edits the memory file; persists to the next session. Tell Claude &ldquo;model check off&rdquo; verbally for the current session only.</td>
+      <td><code>helpi 18</code></td>
+    </tr>
+    <tr>
+      <td>19</td>
+      <td>Generate Beamer slides from paper &mdash; safety-pulls from Overleaf first, then asks duration (12/30/45 min), depth (overview/standard/deep-dive), audience (conference/research-group/non-specialist), emphasis (balanced/methods-heavy/results-heavy). Writes <code>slides_main.tex</code> into <code>Overleaf_source/</code> and offers to push. Three presets skip the questions: <code>quick</code>, <code>seminar</code>, <code>public</code>.</td>
+      <td><code>helpi 19 Pub_XXX [preset]</code></td>
+    </tr>
   </table>
 </div>
 
@@ -1979,7 +1994,7 @@ Goal: Add robustness checks to results
   <p>
     The infrastructure itself is versioned so that you can recover a working state,
     understand what changed between sessions, and avoid accidentally breaking things
-    mid-project. The current version is <strong>v0.5</strong> (see <code>VERSION</code> file — single source of truth).
+    mid-project. The current version is <strong>v0.6</strong> (see <code>VERSION</code> file — single source of truth).
   </p>
 
   <h3>Workflow in plain language</h3>
