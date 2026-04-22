@@ -20,7 +20,7 @@ param(
 . "$PSScriptRoot\ai_log_tools.ps1"
 
 . "$PSScriptRoot\config.ps1"
-$projectRoot = Join-Path $pubRoot $Project
+$projectRoot = Resolve-ProjectRoot $Project
 $codeDir     = Join-Path $projectRoot "code"
 $logPath     = Join-Path $projectRoot "_ai_log.md"
 $htmlPath    = Join-Path $projectRoot "_handover.html"

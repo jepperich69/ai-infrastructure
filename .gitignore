@@ -4,6 +4,9 @@ logs/
 # Volatile data files regenerated from Overleaf
 overleaf_projects.csv
 
+# Overleaf clone for the infrastructure presentation/project
+Overleaf_source/
+
 # Generated doc exports (rebuilt by helpi 16 / generate_docs.ps1)
 infrastructure_summary.html
 infrastructure_full.html

@@ -13,7 +13,8 @@ param(
 )
 
 . "$PSScriptRoot\config.ps1"
-$sourceDir = Join-Path $pubRoot "$Project\Overleaf_source"
+$projectRoot = Resolve-ProjectRoot $Project
+$sourceDir = Join-Path $projectRoot "Overleaf_source"
 
 if (!(Test-Path $sourceDir)) {
     Write-Host "ERR  | Overleaf_source not found: $sourceDir"

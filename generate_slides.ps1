@@ -16,7 +16,7 @@ param(
 . "$PSScriptRoot\config.ps1"
 
 if (!$Project) { $Project = Read-Host "  Project name" }
-$projRoot   = Join-Path $pubRoot $Project
+$projRoot   = Resolve-ProjectRoot $Project
 $overleafDir = Join-Path $projRoot "Overleaf_source"
 
 if (!(Test-Path $overleafDir)) {

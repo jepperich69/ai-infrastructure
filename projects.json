@@ -473,5 +473,15 @@
         "name":  "Pub_ConditionalAgreement_TBA",
         "path":  "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Publikationer\\Pub_ConditionalAgreement_TBA\\Overleaf_source_2",
         "branch":  "master"
+    },
+    {
+        "name":  "Pub_AI_Research_Book",
+        "path":  "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Publikationer\\Pub_AI_Research_Book\\Overleaf_source",
+        "branch":  "master"
+    },
+    {
+        "name":  "AI_auto",
+        "path":  "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\AI_auto\\Overleaf_source",
+        "branch":  "master"
     }
 ]

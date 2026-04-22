@@ -27,6 +27,15 @@ $claudeProjectKey = ($aiRoot -replace '[^a-zA-Z0-9]', '-')  # Claude's encoded p
 
 # ── Edit these for your machine ───────────────────────────────────
 $pubRoot   = "C:\Users\rich\OneDrive - Danmarks Tekniske Universitet\JR\Publikationer"
+$jrRoot    = Split-Path $pubRoot -Parent  # parent of Publikationer (i.e. JR\)
+
+function Resolve-ProjectRoot([string]$proj) {
+    $candidate = Join-Path $pubRoot $proj
+    if (Test-Path $candidate) { return $candidate }
+    $fallback = Join-Path $jrRoot $proj
+    if (Test-Path $fallback) { return $fallback }
+    return $candidate
+}
 $gitUser   = "Jeppe Rich"
 $gitEmail  = "jeppe.rich@gmail.com"
 

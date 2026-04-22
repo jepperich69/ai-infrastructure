@@ -20,7 +20,7 @@ function Get-ProjectFromCwd {
     $cwd      = (Get-Location).Path
     $segments = $cwd -split '[\\\/]'
     $match = $segments | Where-Object {
-        $_ -match '^(Pub_|Pro_|PhD_|CHARGO|42180|DFF|Reagent|BeamerPres|hEART|IATBR|Cycling|Discrete|EV|Paulsen|Presentation|Aalborg|Bicycle|Slides)'
+        $_ -match '^(Pub_|Pro_|PhD_|AI_auto|CV|CHARGO|42180|DFF|Reagent|BeamerPres|hEART|IATBR|Cycling|Discrete|EV|Paulsen|Presentation|Aalborg|Bicycle|Slides)'
     } | Select-Object -First 1
     if ($match) { return $match } else { return "" }
 }
@@ -400,7 +400,7 @@ function Invoke-Command-N {
                else           { & "$aiRoot\compile_latex.ps1" -Project $proj }
            }
         7  {
-               $projRoot        = Join-Path $pubRoot $proj
+               $projRoot        = Resolve-ProjectRoot $proj
                $closePromptPath = Join-Path $env:USERPROFILE ".claude\commands\close.md"
                if (!(Test-Path $closePromptPath)) {
                    Write-Host "ERR  | close.md not found: $closePromptPath" -ForegroundColor Red; return
@@ -425,7 +425,7 @@ function Invoke-Command-N {
                & "$aiRoot\rollback.ps1" -Project $proj -N $rollN
            }
         10 {
-               $projRoot   = Join-Path $pubRoot $proj
+               $projRoot   = Resolve-ProjectRoot $proj
                $stagingDir = Join-Path $projRoot "_submit_staging"
                $hasCover   = Test-Path (Join-Path $stagingDir "cover_letter.pdf")
                if (!$hasCover) {
@@ -441,7 +441,7 @@ function Invoke-Command-N {
                & "$aiRoot\submit.ps1" -Project $proj
            }
         11 {
-               $projRoot   = Join-Path $pubRoot $proj
+               $projRoot   = Resolve-ProjectRoot $proj
                $round      = Read-Host "  Round? (e.g. R1, R2)"
                if (!$round) { $round = "R1" }
                $promptText = (Get-Content (Join-Path $aiRoot "prompts\respond_scaffold.md") -Raw -Encoding UTF8) -replace '\$ROUND', $round
@@ -450,7 +450,7 @@ function Invoke-Command-N {
                Pop-Location
            }
         12 {
-               $projRoot   = Join-Path $pubRoot $proj
+               $projRoot   = Resolve-ProjectRoot $proj
                $round      = Read-Host "  Round? (e.g. R1, R2)"
                if (!$round) { $round = "R1" }
                $promptText = (Get-Content (Join-Path $aiRoot "prompts\respond_draft.md") -Raw -Encoding UTF8) -replace '\$ROUND', $round
