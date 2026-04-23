@@ -1,5 +1,10 @@
 [
     {
+        "name":  "Pub_ML_Entropy",
+        "path":  "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Publikationer\\Pub_ML_Entropy\\Overleaf_source",
+        "branch":  "master"
+    },
+    {
         "name":  "Pub_SAA_PMIP_MC",
         "path":  "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Publikationer\\Pub_SAA_PMIP_MC\\Overleaf_source",
         "branch":  "master"
