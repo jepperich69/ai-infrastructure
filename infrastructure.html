@@ -297,8 +297,8 @@
       <div><a href="#helpi7" style="color:inherit;">7 &mdash; Session Logging &amp; Handover</a></div>
       <div><a href="#helpi89" style="color:inherit;">8/9 &mdash; Snapshot &amp; Rollback</a></div>
       <div><a href="#helpi1012" style="color:inherit;">10–12 &mdash; Submit &amp; Reviewer Loop</a></div>
-      <div><a href="#helpi1319" style="color:inherit;">13–22 &mdash; Status, Network, Guide, Docs, Cheatsheet, Model-check, Slides, Compress Log</a></div>
-      <div><a href="#quickref" style="color:inherit;">Quick Command Reference (helpi 1–22)</a></div>
+      <div><a href="#helpi1319" style="color:inherit;">13–23 &mdash; Status, Network, Guide, Docs, Cheatsheet, Model-check, Slides, Compress Log, Push GitHub</a></div>
+      <div><a href="#quickref" style="color:inherit;">Quick Command Reference (helpi 1–23)</a></div>
     </div>
 
     <div>
@@ -827,7 +827,7 @@ helpi 9 Pub_XXX -N 3      # undo last 3 commits</pre>
 <!-- STATUS / NETWORK / DOCS                                         -->
 <!-- ═══════════════════════════════════════════════════════════════ -->
 <div class="section teal" id="helpi1319">
-  <h2>13–22 &mdash; Status, Network, Guide, Docs, Cheatsheet, Model-check, Slides, Compress Log</h2>
+  <h2>13–23 &mdash; Status, Network, Guide, Docs, Cheatsheet, Model-check, Slides, Compress Log, Push GitHub</h2>
 
   <table class="cmd-table">
     <tr><th>#</th><th>What it does</th><th>Usage</th></tr>
@@ -881,6 +881,11 @@ helpi 9 Pub_XXX -N 3      # undo last 3 commits</pre>
       <td>Compress AI log &mdash; trims <code>_ai_log.md</code> to the last 4 sessions verbatim; older sessions are collapsed to one-liners under a <code>## Compressed sessions</code> header; entries beyond 16 are archived to <code>_ai_log_archive.md</code>. Runs automatically at <code>/close</code>; call manually to compress on demand.</td>
       <td><code>helpi 22 Pub_XXX</code></td>
     </tr>
+    <tr>
+      <td>23</td>
+      <td>Push code/ to GitHub &mdash; pushes the project's <code>code/</code> git repo to GitHub. If no remote exists, creates the GitHub repo via <code>gh</code> CLI (no browser needed), sets it as <code>origin</code>, and pushes in one step. Default repo name: <code>&lt;project&gt;-code</code> (private). Pass a custom name as third argument; <code>public</code> as fourth for a public repo. Requires <code>gh auth login</code>.</td>
+      <td><code>helpi 23 Pub_XXX</code></td>
+    </tr>
   </table>
 </div>
 
@@ -888,7 +893,7 @@ helpi 9 Pub_XXX -N 3      # undo last 3 commits</pre>
 <!-- HELPI / COMMAND REFERENCE                                       -->
 <!-- ═══════════════════════════════════════════════════════════════ -->
 <div class="section teal" id="quickref">
-  <h2>Quick Command Reference &mdash; <code>helpi 1&ndash;22</code></h2>
+  <h2>Quick Command Reference &mdash; <code>helpi 1&ndash;23</code></h2>
 
   <h3>Calling conventions</h3>
   <pre>helpi                              # show all commands (project auto-detected from CWD)
@@ -961,6 +966,7 @@ helpi 3 Pub_X main.tex             # run command 3 with a specific .tex file</pr
     <tr><td>20</td><td>Restore infrastructure on replacement machine</td><td><code>restore.ps1</code> &mdash; checks Claude CLI, Git, MiKTeX, VS Code, PowerShell profile, <code>~/.claude/</code> folder, scheduled task, and <code>projects.json</code>; fixes what it can automatically</td><td><span class="tag once">once</span></td></tr>
     <tr><td>21</td><td>First-time setup wizard (new user / new machine)</td><td><code>setup.ps1</code> &mdash; interactive wizard: sets publication root, git identity, tool paths, writes <code>config.ps1</code>, wires <code>helpi</code> into PowerShell profile, registers auto-sync task</td><td><span class="tag once">once</span></td></tr>
     <tr><td>22</td><td>Compress AI log (trim old sessions)</td><td><code>compress_log.ps1 -Project Pub_XXX</code> &mdash; keeps last 4 sessions verbatim; collapses older ones to one-liners; archives beyond 16. Runs automatically at <code>/close</code>.</td><td><span class="tag manual">manual</span></td></tr>
+    <tr><td>23</td><td>Push code/ to GitHub</td><td><code>push_to_github.ps1 -Project Pub_XXX</code> &mdash; creates GitHub repo via <code>gh</code> CLI if no remote exists, then pushes. No browser needed. Default: private repo named <code>&lt;project&gt;-code</code>.</td><td><span class="tag manual">manual</span></td></tr>
   </table>
 </div>
 
@@ -2051,6 +2057,7 @@ Goal: Add robustness checks to results
         <tr><td>helpi 20</td><td>Restore infrastructure on replacement machine</td></tr>
         <tr><td>helpi 21</td><td>First-time setup wizard (new user / new machine)</td></tr>
         <tr><td>helpi 22 Pub_XXX</td><td>Compress AI log — keeps last 4 sessions, one-liners for older</td></tr>
+        <tr><td>helpi 23 Pub_XXX</td><td>Push code/ to GitHub (creates repo via gh CLI if needed)</td></tr>
       </table>
     </div>
 

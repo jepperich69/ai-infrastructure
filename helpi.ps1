@@ -48,7 +48,8 @@ $commands = @(
     [PSCustomObject]@{ N=19; NeedsProject=$true;  Tag="MANUAL";  Name="Generate Beamer slides from paper";            Example="generate_slides.ps1 -Project XXX" },
     [PSCustomObject]@{ N=20; NeedsProject=$false; Tag="ONCE";    Name="Restore infrastructure on replacement machine"; Example="restore.ps1" },
     [PSCustomObject]@{ N=21; NeedsProject=$false; Tag="ONCE";    Name="First-time setup for a new user/colleague";    Example="setup.ps1" },
-    [PSCustomObject]@{ N=22; NeedsProject=$true;  Tag="MANUAL";  Name="Compress AI log (trim old sessions)";           Example="compress_log.ps1 -Project XXX" }
+    [PSCustomObject]@{ N=22; NeedsProject=$true;  Tag="MANUAL";  Name="Compress AI log (trim old sessions)";           Example="compress_log.ps1 -Project XXX" },
+    [PSCustomObject]@{ N=23; NeedsProject=$true;  Tag="MANUAL";  Name="Push code/ to GitHub";                          Example="push_to_github.ps1 -Project XXX" }
 )
 
 # ── Contextual help for a single command ──────────────────────────
@@ -307,6 +308,20 @@ function Show-CommandHelp {
             "Example:",
             "  helpi 22 $p"
         )}
+        23 { @(
+            "Push code/ to GitHub",
+            "Pushes the project's code/ git repo to GitHub.",
+            "If no remote exists, creates the GitHub repo via gh CLI (no browser needed),",
+            "sets it as origin, and pushes. If a remote already exists, just pushes.",
+            "",
+            "Default repo name: <project>-code (private). Override with -RepoName or -Visibility.",
+            "Requires: gh CLI authenticated (gh auth login).",
+            "",
+            "Examples:",
+            "  helpi 23 $p                           # push (create repo if needed)",
+            "  helpi 23 $p my-repo-name              # custom repo name",
+            "  helpi 23 $p my-repo-name public       # public repo"
+        )}
         default { @("No help available for command $n.") }
     }
 
@@ -375,6 +390,8 @@ function Get-CommandPreview {
         20 { "restore.ps1" }
         21 { "setup.ps1" }
         22 { "compress_log.ps1 -Project $proj" }
+        23 { if ($texFile) { "push_to_github.ps1 -Project $proj -RepoName $texFile" }
+             else          { "push_to_github.ps1 -Project $proj" } }
     }
 }
 
@@ -482,6 +499,8 @@ function Invoke-Command-N {
         20 { & "$aiRoot\restore.ps1" }
         21 { & "$aiRoot\setup.ps1" }
         22 { & "$aiRoot\compress_log.ps1" -Project $proj }
+        23 { if ($texFile) { & "$aiRoot\push_to_github.ps1" -Project $proj -RepoName $texFile }
+             else          { & "$aiRoot\push_to_github.ps1" -Project $proj } }
     }
 }
 
