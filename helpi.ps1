@@ -10,7 +10,8 @@
 param(
     [string]$Cmd     = "",
     [string]$Project = "",
-    [string]$TexFile = ""
+    [string]$TexFile = "",
+    [switch]$Force
 )
 
 . "$PSScriptRoot\config.ps1"
@@ -411,13 +412,15 @@ function Invoke-Command-N {
     Write-Host "  [$n] $($c.Name)$(if ($proj) { "  ->  $proj" })" -ForegroundColor Cyan
     Write-Host "  $preview" -ForegroundColor DarkYellow
     Write-Host ""
-    Write-Host "  [Enter] run  |  [any other key] cancel  (press Up to edit at prompt)" -ForegroundColor DarkGray
-
-    [Microsoft.PowerShell.PSConsoleReadLine]::AddToHistory($preview)
-
-    $key = $host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
-    Write-Host ""
-    if ($key.VirtualKeyCode -ne 13) { return }
+    if ($Force) {
+        Write-Host "  Running..." -ForegroundColor DarkGray
+    } else {
+        Write-Host "  [Enter] run  |  [any other key] cancel  (press Up to edit at prompt)" -ForegroundColor DarkGray
+        [Microsoft.PowerShell.PSConsoleReadLine]::AddToHistory($preview)
+        $key = $host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
+        Write-Host ""
+        if ($key.VirtualKeyCode -ne 13) { return }
+    }
 
     switch ($n) {
         1  { & "$aiRoot\new_project.ps1" -Project $proj }
