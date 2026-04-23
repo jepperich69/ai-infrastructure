@@ -932,6 +932,12 @@ helpi 3 Pub_X main.tex             # run command 3 with a specific .tex file</pr
     <li><strong>Enter</strong> &mdash; runs the command as shown.</li>
     <li><strong>Any other key</strong> &mdash; cancels. The command is pre-loaded into shell history: press <kbd>&uarr;</kbd> at the next prompt to retrieve it, edit freely, then press Enter.</li>
   </ul>
+  <p>
+    <strong>From inside Claude Code</strong> &mdash; the confirmation prompt is automatically skipped
+    when <code>helpi</code> detects a non-interactive context (stdin redirected). Running
+    <code>! helpi 13</code> from the Claude prompt executes immediately with no keypress required.
+    The <code>-Force</code> flag achieves the same effect explicitly.
+  </p>
 
   <h3>Tab completion</h3>
   <p>Registered in PowerShell profile:</p>
@@ -1048,6 +1054,16 @@ git checkout snapshot-v2                     # restore everything</pre>
       <td><code>/close</code></td>
       <td>&mdash;</td>
       <td>Complete session block in _ai_log.md; auto-update .claude/CLAUDE.md if project state changed; auto-regenerate _handover.html</td>
+    </tr>
+    <tr>
+      <td><code>/helpi [N] [proj]</code></td>
+      <td>command number + optional project (auto-detected from CWD if omitted)</td>
+      <td>Run any helpi command without leaving Claude. Skips the confirmation prompt automatically. <code>/helpi</code> alone shows the full menu.</td>
+    </tr>
+    <tr>
+      <td><code>/shell</code></td>
+      <td>&mdash;</td>
+      <td>Enter shell passthrough mode &mdash; every subsequent message is executed as a shell command. Type <code>exit</code> or <code>done</code> to return to normal conversation.</td>
     </tr>
     <tr>
       <td><code>/respond</code></td>
@@ -2067,6 +2083,7 @@ Goal: Add robustness checks to results
       <table>
         <tr><td>/work Pub_XXX</td><td>Open session — reads log &amp; feeders, asks for goal</td></tr>
         <tr><td>/helpi [N] [proj]</td><td>Run any helpi command without leaving Claude</td></tr>
+        <tr><td>/shell</td><td>Shell passthrough mode — type commands directly, type done to exit</td></tr>
         <tr><td>/snapshot V2</td><td>Version the full manuscript as a named git tag</td></tr>
         <tr><td>/close</td><td>Log session outcome, files touched, next steps</td></tr>
         <tr><td>/family Pub_YYY</td><td>Link feeder project — digests it once, monitors for deltas</td></tr>
