@@ -30,7 +30,7 @@
 <body>
 
 <h1>Handover Document &mdash; AI_auto</h1>
-<div class="meta">Generated: 2026-04-22 16:13 &nbsp;|&nbsp; Source: <code style="display:inline;padding:2px 6px">_ai_log.md</code> &nbsp;|&nbsp; Sidecar: <code style="display:inline;padding:2px 6px">_handover.json</code></div>
+<div class="meta">Generated: 2026-04-23 08:58 &nbsp;|&nbsp; Source: <code style="display:inline;padding:2px 6px">_ai_log.md</code> &nbsp;|&nbsp; Sidecar: <code style="display:inline;padding:2px 6px">_handover.json</code></div>
 
 <!-- ============================================================ -->
 <!-- AGENT INSTRUCTIONS                                            -->
@@ -62,22 +62,15 @@
 <div class="latest-session">
   <div class="session-status ok">Complete</div>
   <h2>Latest Session Snapshot</h2>
-  <p><strong>Session:</strong> 2026-04-22 Close</p>
-  <p><strong>Agent:</strong> GPT-5 Codex</p>
-  <p><strong>Goal:</strong> Close the AI_auto working session after linking Overleaf and preparing the DTU AI infrastructure slides.</p>
-  <p><strong>Outcome:</strong> `AI_auto` is linked to Overleaf, the Overleaf clone is clean and synced, and `slides_main_v2.tex` is available in Overleaf for the April 23 technical discussion. The main infrastructure repo still has existing uncommitted changes, including pre-existing changes outside this session.</p>
-  <p><strong>Next steps:</strong> Compile `slides_main_v2.tex` in Overleaf, use it for the DTU meeting, then decide whether to clean up and test the installation package with a few real users before presenting it as a reusable workflow.</p>
-  <p><strong>Git ref:</strong> c2c80a8 ---</p>
+  <p><strong>Session:</strong> 2026-04-23</p>
+  <p><strong>Agent:</strong> Claude Sonnet 4.6</p>
+  <p><strong>Goal:</strong> Design discussion &#226;€” AI log as a certificate of conduct; immutability and the self-reporting circularity problem.</p>
+  <p><strong>Outcome:</strong> Identified five properties that would make the log certificate-grade (scope declaration, file-touch manifest, deny-event pipeline from the proxy-sandbox, commit-anchored attestation, human countersign); concluded that git already provides tamper-evidence, but true certification requires a human countersign as the trust anchor &#226;€” no purely technical fix resolves the self-reporting circularity.</p>
+  <p><strong>Next steps:</strong> Consider piping sandbox deny-events (from `.claude/settings.json` block rules) into the log as a separate &quot;Access denied&quot; section &#226;€” this is the one piece the agent cannot fabricate Consider adding a &quot;Reviewed: JR &#226;œ“&quot; countersign prompt to `/close` as a lightweight two-party record</p>
+  <p><strong>Git ref:</strong> f5a7d50</p>
   <h3>Files touched</h3>
   <ul>
-  <li>`AI_auto/Overleaf_source/` &#226;€” linked to Overleaf project `https://git.overleaf.com/69e4cd88646aa324de75fc2c`; pushed `slides_main.tex` and later `slides_main_v2.tex`.</li>
-  <li>`AI_auto/Overleaf_source/slides_main_v2.tex` &#226;€” created a separate Beamer deck version with the installation-package slide as the second-last slide.</li>
-  <li>`AI_auto/Overleaf_source/.gitignore` &#226;€” added `*.pdf` so generated PDFs are not committed from the Overleaf clone.</li>
-  <li>`AI_auto/projects.json` &#226;€” registered `AI_auto` as a normal Overleaf-backed project.</li>
-  <li>`AI_auto/helpi.ps1` &#226;€” added `AI_auto` to current-working-directory project detection.</li>
-  <li>`AI_auto/open_project.ps1`, `AI_auto/compile_latex.ps1`, `AI_auto/generate_slides.ps1` &#226;€” changed project-root resolution to shared `Resolve-ProjectRoot` so projects under `JR\` work like projects under `Publikationer\`.</li>
-  <li>`AI_auto/.gitignore` &#226;€” ignored nested `Overleaf_source/` in the infrastructure repo.</li>
-  <li>`AI_auto/_ai_log.md` &#226;€” recorded the session work.</li>
+  <li>none</li>
 </ul>
 </div>
 
@@ -468,6 +461,55 @@
 <p><strong>Next steps:</strong> Compile `slides<em>main</em>v2_10slides.tex` in Overleaf, check density on slides 2, 3, and 9, then push if it is the version to use for the meeting.</p>
 <p><strong>Git ref:</strong> d9affeb</p>
 <br>
+<hr>
+<br>
+<h2>Session 2026-04-22 Close</h2>
+<p><strong>Agent:</strong> GPT-5 Codex</p>
+<p><strong>Goal:</strong> Close the AI_auto slide-editing session after preparing the condensed DTU meeting deck.</p>
+<p><strong>Files touched:</strong></p>
+<ul>
+  <li>`AI_auto/Overleaf_source/slides_main_v2.tex` &#226;€” revised earlier so the DTU quotes sit on the front page and the duplicate second DTU-rule slide is removed.</li>
+  <li>`AI_auto/Overleaf_source/slides_main_v2_10slides.tex` &#226;€” new 10-slide condensed version for the meeting.</li>
+  <li>`AI_auto/_handover.html`, `AI_auto/_handover.json`, `AI_auto/AGENTS.md` &#226;€” updated by the user&#39;s `helpi 7` run before closing.</li>
+  <li>`AI_auto/_ai_log.md` &#226;€” recorded the slide edits and this close block.</li>
+</ul>
+<p><strong>Outcome:</strong> The full V2 deck and the condensed 10-slide deck are in place. The Overleaf source repo is clean at `0757ad8`; the AI_auto infrastructure repo has the handover updates from `helpi 7` pending locally.</p>
+<p><strong>Next steps:</strong> Compile `slides<em>main</em>v2_10slides.tex` in Overleaf, inspect slides 2, 3, and 9 for density, then push the deck if it is the meeting version to use.</p>
+<p><strong>Git ref:</strong> AI<em>auto `b822a06`; Overleaf</em>source `0757ad8`</p>
+<br>
+<hr>
+<br>
+<h2>Session 2026-04-22</h2>
+<p><strong>Agent:</strong> GPT-5 Codex</p>
+<p><strong>Goal:</strong> Make Codex automatically use the project implied by the directory it is opened in, matching the Claude Code habit.</p>
+<p><strong>Files touched:</strong></p>
+<ul>
+  <li>`C:\Users\rich\.codex\config.toml` &#226;€” extended global Codex developer instructions so a session opened inside a `Pub_`, `Pro_`, or `PhD_` folder treats that folder as the active research project and loads `.claude/CLAUDE.md`, `_ai_log.md`, feeder state, and git status automatically.</li>
+  <li>`C:\Users\rich\.codex\config.toml` &#226;€” extended the `AI_auto` rule so opening Codex inside `AI_auto` starts an infrastructure-project session and reads `infrastructure.html`.</li>
+  <li>`AI_auto/_ai_log.md` &#226;€” recorded this global Codex habit change.</li>
+</ul>
+<p><strong>Outcome:</strong> Future Codex sessions should infer the active project from the current working directory, not only from pasted paths or explicit `/work` commands.</p>
+<p><strong>Next steps:</strong> Test by opening Codex directly inside a publication project folder and confirming it loads that project context before making changes.</p>
+<p><strong>Git ref:</strong> AI_auto `b822a06`</p>
+<br>
+<p><strong>Follow-up fix:</strong> The PowerShell `codex` wrappers in `C:\Users\rich\Documents\PowerShell\Microsoft.PowerShell<em>profile.ps1` and `C:\Users\rich\Documents\WindowsPowerShell\Microsoft.PowerShell</em>profile.ps1` were still forcing `codex -C C:\Users\rich\OneDrive - Danmarks Tekniske Universitet\JR` on launch. Changed both wrapper targets to `(Get-Location).Path`, so plain `codex` now forwards the current directory to Codex while explicit `codex -C &lt;path&gt;` still works.</p>
+<br>
+<p><strong>Follow-up note:</strong> Verified that the active sensitive-data convention is the shared human-only folder `JR\Sensitive<em>Data\`, outside individual paper projects. Updated `slides</em>main<em>v2.tex` and `slides</em>main<em>v2</em>10slides.tex` so the project tree no longer shows `Sensitive<em>Data/` inside `Pub</em>XXX/`, and the sensitive-data boundary slide points to `JR/Sensitive_Data/`.</p>
+<br>
+<hr>
+<br>
+<h2>Session 2026-04-23</h2>
+<p><strong>Agent:</strong> Claude Sonnet 4.6</p>
+<p><strong>Goal:</strong> Design discussion &#226;€” AI log as a certificate of conduct; immutability and the self-reporting circularity problem.</p>
+<p><strong>Files touched:</strong> none</p>
+<p><strong>Outcome:</strong> Identified five properties that would make the log certificate-grade (scope declaration, file-touch manifest, deny-event pipeline from the proxy-sandbox, commit-anchored attestation, human countersign); concluded that git already provides tamper-evidence, but true certification requires a human countersign as the trust anchor &#226;€” no purely technical fix resolves the self-reporting circularity.</p>
+<p><strong>Next steps:</strong></p>
+<ul>
+  <li>Consider piping sandbox deny-events (from `.claude/settings.json` block rules) into the log as a separate &quot;Access denied&quot; section &#226;€” this is the one piece the agent cannot fabricate</li>
+  <li>Consider adding a &quot;Reviewed: JR &#226;œ“&quot; countersign prompt to `/close` as a lightweight two-party record</li>
+</ul>
+<p><strong>Git ref:</strong> f5a7d50</p>
+<br>
 
 </div>
 
@@ -789,6 +831,49 @@
 **Outcome:** New file `slides_main_v2_10slides.tex` exists locally with exactly 10 frames. It has not been committed or pushed.
 **Next steps:** Compile `slides_main_v2_10slides.tex` in Overleaf, check density on slides 2, 3, and 9, then push if it is the version to use for the meeting.
 **Git ref:** d9affeb
+
+---
+
+## Session 2026-04-22 Close
+**Agent:** GPT-5 Codex
+**Goal:** Close the AI_auto slide-editing session after preparing the condensed DTU meeting deck.
+**Files touched:**
+- `AI_auto/Overleaf_source/slides_main_v2.tex` â€” revised earlier so the DTU quotes sit on the front page and the duplicate second DTU-rule slide is removed.
+- `AI_auto/Overleaf_source/slides_main_v2_10slides.tex` â€” new 10-slide condensed version for the meeting.
+- `AI_auto/_handover.html`, `AI_auto/_handover.json`, `AI_auto/AGENTS.md` â€” updated by the user's `helpi 7` run before closing.
+- `AI_auto/_ai_log.md` â€” recorded the slide edits and this close block.
+**Outcome:** The full V2 deck and the condensed 10-slide deck are in place. The Overleaf source repo is clean at `0757ad8`; the AI_auto infrastructure repo has the handover updates from `helpi 7` pending locally.
+**Next steps:** Compile `slides_main_v2_10slides.tex` in Overleaf, inspect slides 2, 3, and 9 for density, then push the deck if it is the meeting version to use.
+**Git ref:** AI_auto `b822a06`; Overleaf_source `0757ad8`
+
+---
+
+## Session 2026-04-22
+**Agent:** GPT-5 Codex
+**Goal:** Make Codex automatically use the project implied by the directory it is opened in, matching the Claude Code habit.
+**Files touched:**
+- `C:\Users\rich\.codex\config.toml` â€” extended global Codex developer instructions so a session opened inside a `Pub_`, `Pro_`, or `PhD_` folder treats that folder as the active research project and loads `.claude/CLAUDE.md`, `_ai_log.md`, feeder state, and git status automatically.
+- `C:\Users\rich\.codex\config.toml` â€” extended the `AI_auto` rule so opening Codex inside `AI_auto` starts an infrastructure-project session and reads `infrastructure.html`.
+- `AI_auto/_ai_log.md` â€” recorded this global Codex habit change.
+**Outcome:** Future Codex sessions should infer the active project from the current working directory, not only from pasted paths or explicit `/work` commands.
+**Next steps:** Test by opening Codex directly inside a publication project folder and confirming it loads that project context before making changes.
+**Git ref:** AI_auto `b822a06`
+
+**Follow-up fix:** The PowerShell `codex` wrappers in `C:\Users\rich\Documents\PowerShell\Microsoft.PowerShell_profile.ps1` and `C:\Users\rich\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1` were still forcing `codex -C C:\Users\rich\OneDrive - Danmarks Tekniske Universitet\JR` on launch. Changed both wrapper targets to `(Get-Location).Path`, so plain `codex` now forwards the current directory to Codex while explicit `codex -C &lt;path&gt;` still works.
+
+**Follow-up note:** Verified that the active sensitive-data convention is the shared human-only folder `JR\Sensitive_Data\`, outside individual paper projects. Updated `slides_main_v2.tex` and `slides_main_v2_10slides.tex` so the project tree no longer shows `Sensitive_Data/` inside `Pub_XXX/`, and the sensitive-data boundary slide points to `JR/Sensitive_Data/`.
+
+---
+
+## Session 2026-04-23
+**Agent:** Claude Sonnet 4.6
+**Goal:** Design discussion â€” AI log as a certificate of conduct; immutability and the self-reporting circularity problem.
+**Files touched:** none
+**Outcome:** Identified five properties that would make the log certificate-grade (scope declaration, file-touch manifest, deny-event pipeline from the proxy-sandbox, commit-anchored attestation, human countersign); concluded that git already provides tamper-evidence, but true certification requires a human countersign as the trust anchor â€” no purely technical fix resolves the self-reporting circularity.
+**Next steps:**
+- Consider piping sandbox deny-events (from `.claude/settings.json` block rules) into the log as a separate "Access denied" section â€” this is the one piece the agent cannot fabricate
+- Consider adding a "Reviewed: JR âœ“" countersign prompt to `/close` as a lightweight two-party record
+**Git ref:** f5a7d50
 </textarea>
 </div>
 
@@ -806,7 +891,8 @@
 <!-- ============================================================ -->
 <div class="section">
   <h2>Overleaf Git History (last 20 commits)</h2>
-  <pre>0757ad8 Local edits 2026-04-22 16:09
+  <pre>6b78218 Local edits 2026-04-22 16:34
+0757ad8 Local edits 2026-04-22 16:09
 4748504 Local edits 2026-04-22 16:04
 d9affeb Revise V2 title slide
 acc9685 Local edits 2026-04-22 15:56
@@ -824,8 +910,7 @@ fb4534f Local edits 2026-04-22 13:42
 735e5be Local edits 2026-04-19 15:48
 d3b5ef8 Local edits 2026-04-19 15:45
 3502e2a Local edits 2026-04-19 15:35
-6c08179 Local edits 2026-04-19 15:24
-2cc8ffe Update on Overleaf.</pre>
+6c08179 Local edits 2026-04-19 15:24</pre>
 </div>
 
 </body>

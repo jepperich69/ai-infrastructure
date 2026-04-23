@@ -341,3 +341,15 @@
 **Follow-up fix:** The PowerShell `codex` wrappers in `C:\Users\rich\Documents\PowerShell\Microsoft.PowerShell_profile.ps1` and `C:\Users\rich\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1` were still forcing `codex -C C:\Users\rich\OneDrive - Danmarks Tekniske Universitet\JR` on launch. Changed both wrapper targets to `(Get-Location).Path`, so plain `codex` now forwards the current directory to Codex while explicit `codex -C <path>` still works.
 
 **Follow-up note:** Verified that the active sensitive-data convention is the shared human-only folder `JR\Sensitive_Data\`, outside individual paper projects. Updated `slides_main_v2.tex` and `slides_main_v2_10slides.tex` so the project tree no longer shows `Sensitive_Data/` inside `Pub_XXX/`, and the sensitive-data boundary slide points to `JR/Sensitive_Data/`.
+
+---
+
+## Session 2026-04-23
+**Agent:** Claude Sonnet 4.6
+**Goal:** Design discussion — AI log as a certificate of conduct; immutability and the self-reporting circularity problem.
+**Files touched:** none
+**Outcome:** Identified five properties that would make the log certificate-grade (scope declaration, file-touch manifest, deny-event pipeline from the proxy-sandbox, commit-anchored attestation, human countersign); concluded that git already provides tamper-evidence, but true certification requires a human countersign as the trust anchor — no purely technical fix resolves the self-reporting circularity.
+**Next steps:**
+- Consider piping sandbox deny-events (from `.claude/settings.json` block rules) into the log as a separate "Access denied" section — this is the one piece the agent cannot fabricate
+- Consider adding a "Reviewed: JR ✓" countersign prompt to `/close` as a lightweight two-party record
+**Git ref:** f5a7d50
