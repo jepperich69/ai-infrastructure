@@ -510,6 +510,7 @@ function Show-ClaudeCheatsheet {
     Write-Host "  PROJECT SKILLS  (custom -- from ~/.claude/commands/)" -ForegroundColor DarkYellow
     Write-CheatRow "/work [path]"  "Load research project context + session discipline"
     Write-CheatRow "/close"        "End session: write _ai_log.md block + handover"
+    Write-CheatRow "/helpi [N] [proj]" "Run any helpi command without leaving Claude"
     Write-CheatRow "/snapshot"     "Git-tag current Overleaf source as named version"
     Write-CheatRow "/submit"       "Build journal submission package"
     Write-CheatRow "/respond"      "Reviewer response loop (scaffold -> draft)"
@@ -519,7 +520,7 @@ function Show-ClaudeCheatsheet {
 
     Write-Host "  SHELL" -ForegroundColor DarkYellow
     Write-CheatRow "! [cmd]"       "Run a shell command inline  (e.g. ! git log --oneline)"
-    Write-CheatRow "! helpi 17"    "Show this cheatsheet from inside a Claude session"
+    Write-CheatRow "/helpi 17"     "Show this cheatsheet from inside a Claude session"
     Write-Host $sep -ForegroundColor DarkGray
 
     Write-Host "  MODEL IDS  (use with --model flag or /model)" -ForegroundColor DarkYellow
