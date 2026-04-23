@@ -47,7 +47,8 @@ $commands = @(
     [PSCustomObject]@{ N=18; NeedsProject=$false; Tag="MANUAL";  Name="Toggle Claude model-check on/off";            Example="(edits memory -- persists to next session)" },
     [PSCustomObject]@{ N=19; NeedsProject=$true;  Tag="MANUAL";  Name="Generate Beamer slides from paper";            Example="generate_slides.ps1 -Project XXX" },
     [PSCustomObject]@{ N=20; NeedsProject=$false; Tag="ONCE";    Name="Restore infrastructure on replacement machine"; Example="restore.ps1" },
-    [PSCustomObject]@{ N=21; NeedsProject=$false; Tag="ONCE";    Name="First-time setup for a new user/colleague";    Example="setup.ps1" }
+    [PSCustomObject]@{ N=21; NeedsProject=$false; Tag="ONCE";    Name="First-time setup for a new user/colleague";    Example="setup.ps1" },
+    [PSCustomObject]@{ N=22; NeedsProject=$true;  Tag="MANUAL";  Name="Compress AI log (trim old sessions)";           Example="compress_log.ps1 -Project XXX" }
 )
 
 # ── Contextual help for a single command ──────────────────────────
@@ -295,6 +296,17 @@ function Show-CommandHelp {
             "Example:",
             "  helpi 18"
         )}
+        22 { @(
+            "Compress AI log (trim old sessions)",
+            "Keeps the last 4 sessions in _ai_log.md verbatim.",
+            "Compresses older sessions into one-liners under ## Compressed sessions.",
+            "Archives one-liners to _ai_log_archive.md once they exceed 16.",
+            "",
+            "Runs automatically at /close. Use manually to compress a log on demand.",
+            "",
+            "Example:",
+            "  helpi 22 $p"
+        )}
         default { @("No help available for command $n.") }
     }
 
@@ -362,6 +374,7 @@ function Get-CommandPreview {
              else          { "generate_slides.ps1 -Project $proj  (interactive)" } }
         20 { "restore.ps1" }
         21 { "setup.ps1" }
+        22 { "compress_log.ps1 -Project $proj" }
     }
 }
 
@@ -468,6 +481,7 @@ function Invoke-Command-N {
              else          { & "$aiRoot\generate_slides.ps1" -Project $proj } }
         20 { & "$aiRoot\restore.ps1" }
         21 { & "$aiRoot\setup.ps1" }
+        22 { & "$aiRoot\compress_log.ps1" -Project $proj }
     }
 }
 
