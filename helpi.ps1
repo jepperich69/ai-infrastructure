@@ -412,7 +412,7 @@ function Invoke-Command-N {
     Write-Host "  [$n] $($c.Name)$(if ($proj) { "  ->  $proj" })" -ForegroundColor Cyan
     Write-Host "  $preview" -ForegroundColor DarkYellow
     Write-Host ""
-    if ($Force) {
+    if ($Force -or [Console]::IsInputRedirected) {
         Write-Host "  Running..." -ForegroundColor DarkGray
     } else {
         Write-Host "  [Enter] run  |  [any other key] cancel  (press Up to edit at prompt)" -ForegroundColor DarkGray
