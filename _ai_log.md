@@ -310,3 +310,34 @@
 **Outcome:** New file `slides_main_v2_10slides.tex` exists locally with exactly 10 frames. It has not been committed or pushed.
 **Next steps:** Compile `slides_main_v2_10slides.tex` in Overleaf, check density on slides 2, 3, and 9, then push if it is the version to use for the meeting.
 **Git ref:** d9affeb
+
+---
+
+## Session 2026-04-22 Close
+**Agent:** GPT-5 Codex
+**Goal:** Close the AI_auto slide-editing session after preparing the condensed DTU meeting deck.
+**Files touched:**
+- `AI_auto/Overleaf_source/slides_main_v2.tex` — revised earlier so the DTU quotes sit on the front page and the duplicate second DTU-rule slide is removed.
+- `AI_auto/Overleaf_source/slides_main_v2_10slides.tex` — new 10-slide condensed version for the meeting.
+- `AI_auto/_handover.html`, `AI_auto/_handover.json`, `AI_auto/AGENTS.md` — updated by the user's `helpi 7` run before closing.
+- `AI_auto/_ai_log.md` — recorded the slide edits and this close block.
+**Outcome:** The full V2 deck and the condensed 10-slide deck are in place. The Overleaf source repo is clean at `0757ad8`; the AI_auto infrastructure repo has the handover updates from `helpi 7` pending locally.
+**Next steps:** Compile `slides_main_v2_10slides.tex` in Overleaf, inspect slides 2, 3, and 9 for density, then push the deck if it is the meeting version to use.
+**Git ref:** AI_auto `b822a06`; Overleaf_source `0757ad8`
+
+---
+
+## Session 2026-04-22
+**Agent:** GPT-5 Codex
+**Goal:** Make Codex automatically use the project implied by the directory it is opened in, matching the Claude Code habit.
+**Files touched:**
+- `C:\Users\rich\.codex\config.toml` — extended global Codex developer instructions so a session opened inside a `Pub_`, `Pro_`, or `PhD_` folder treats that folder as the active research project and loads `.claude/CLAUDE.md`, `_ai_log.md`, feeder state, and git status automatically.
+- `C:\Users\rich\.codex\config.toml` — extended the `AI_auto` rule so opening Codex inside `AI_auto` starts an infrastructure-project session and reads `infrastructure.html`.
+- `AI_auto/_ai_log.md` — recorded this global Codex habit change.
+**Outcome:** Future Codex sessions should infer the active project from the current working directory, not only from pasted paths or explicit `/work` commands.
+**Next steps:** Test by opening Codex directly inside a publication project folder and confirming it loads that project context before making changes.
+**Git ref:** AI_auto `b822a06`
+
+**Follow-up fix:** The PowerShell `codex` wrappers in `C:\Users\rich\Documents\PowerShell\Microsoft.PowerShell_profile.ps1` and `C:\Users\rich\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1` were still forcing `codex -C C:\Users\rich\OneDrive - Danmarks Tekniske Universitet\JR` on launch. Changed both wrapper targets to `(Get-Location).Path`, so plain `codex` now forwards the current directory to Codex while explicit `codex -C <path>` still works.
+
+**Follow-up note:** Verified that the active sensitive-data convention is the shared human-only folder `JR\Sensitive_Data\`, outside individual paper projects. Updated `slides_main_v2.tex` and `slides_main_v2_10slides.tex` so the project tree no longer shows `Sensitive_Data/` inside `Pub_XXX/`, and the sensitive-data boundary slide points to `JR/Sensitive_Data/`.

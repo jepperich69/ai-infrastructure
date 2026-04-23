@@ -30,7 +30,7 @@
 <body>
 
 <h1>Handover Document &mdash; AI_auto</h1>
-<div class="meta">Generated: 2026-04-22 15:20 &nbsp;|&nbsp; Source: <code style="display:inline;padding:2px 6px">_ai_log.md</code> &nbsp;|&nbsp; Sidecar: <code style="display:inline;padding:2px 6px">_handover.json</code></div>
+<div class="meta">Generated: 2026-04-22 16:13 &nbsp;|&nbsp; Source: <code style="display:inline;padding:2px 6px">_ai_log.md</code> &nbsp;|&nbsp; Sidecar: <code style="display:inline;padding:2px 6px">_handover.json</code></div>
 
 <!-- ============================================================ -->
 <!-- AGENT INSTRUCTIONS                                            -->
@@ -67,17 +67,17 @@
   <p><strong>Goal:</strong> Close the AI_auto working session after linking Overleaf and preparing the DTU AI infrastructure slides.</p>
   <p><strong>Outcome:</strong> `AI_auto` is linked to Overleaf, the Overleaf clone is clean and synced, and `slides_main_v2.tex` is available in Overleaf for the April 23 technical discussion. The main infrastructure repo still has existing uncommitted changes, including pre-existing changes outside this session.</p>
   <p><strong>Next steps:</strong> Compile `slides_main_v2.tex` in Overleaf, use it for the DTU meeting, then decide whether to clean up and test the installation package with a few real users before presenting it as a reusable workflow.</p>
-  <p><strong>Git ref:</strong> c2c80a8</p>
+  <p><strong>Git ref:</strong> c2c80a8 ---</p>
   <h3>Files touched</h3>
   <ul>
-  <li>`AI_auto/Overleaf_source/` — linked to Overleaf project `https://git.overleaf.com/69e4cd88646aa324de75fc2c`; pushed `slides_main.tex` and later `slides_main_v2.tex`.</li>
-  <li>`AI_auto/Overleaf_source/slides_main_v2.tex` — created a separate Beamer deck version with the installation-package slide as the second-last slide.</li>
-  <li>`AI_auto/Overleaf_source/.gitignore` — added `*.pdf` so generated PDFs are not committed from the Overleaf clone.</li>
-  <li>`AI_auto/projects.json` — registered `AI_auto` as a normal Overleaf-backed project.</li>
-  <li>`AI_auto/helpi.ps1` — added `AI_auto` to current-working-directory project detection.</li>
-  <li>`AI_auto/open_project.ps1`, `AI_auto/compile_latex.ps1`, `AI_auto/generate_slides.ps1` — changed project-root resolution to shared `Resolve-ProjectRoot` so projects under `JR\` work like projects under `Publikationer\`.</li>
-  <li>`AI_auto/.gitignore` — ignored nested `Overleaf_source/` in the infrastructure repo.</li>
-  <li>`AI_auto/_ai_log.md` — recorded the session work.</li>
+  <li>`AI_auto/Overleaf_source/` &#226;€” linked to Overleaf project `https://git.overleaf.com/69e4cd88646aa324de75fc2c`; pushed `slides_main.tex` and later `slides_main_v2.tex`.</li>
+  <li>`AI_auto/Overleaf_source/slides_main_v2.tex` &#226;€” created a separate Beamer deck version with the installation-package slide as the second-last slide.</li>
+  <li>`AI_auto/Overleaf_source/.gitignore` &#226;€” added `*.pdf` so generated PDFs are not committed from the Overleaf clone.</li>
+  <li>`AI_auto/projects.json` &#226;€” registered `AI_auto` as a normal Overleaf-backed project.</li>
+  <li>`AI_auto/helpi.ps1` &#226;€” added `AI_auto` to current-working-directory project detection.</li>
+  <li>`AI_auto/open_project.ps1`, `AI_auto/compile_latex.ps1`, `AI_auto/generate_slides.ps1` &#226;€” changed project-root resolution to shared `Resolve-ProjectRoot` so projects under `JR\` work like projects under `Publikationer\`.</li>
+  <li>`AI_auto/.gitignore` &#226;€” ignored nested `Overleaf_source/` in the infrastructure repo.</li>
+  <li>`AI_auto/_ai_log.md` &#226;€” recorded the session work.</li>
 </ul>
 </div>
 
@@ -94,13 +94,13 @@
 <p><strong>Goal:</strong> Set up lightweight versioning for the AI infrastructure; implement a stable/develop branch model; act on GPT&#39;s code review findings.</p>
 <p><strong>Files touched:</strong></p>
 <ul>
-  <li>`CHANGELOG.md` — created; documents v0.1 and v0.2 releases with a running unreleased section</li>
-  <li>`VERSION` — created; current value v0.2</li>
-  <li>`RELEASING.md` — created; plain-language instructions for making a new release</li>
-  <li>`infrastructure.html` — version field added to subtitle; new versioning section added at the bottom</li>
-  <li>`.gitignore` — created; excludes logs/ and overleaf_projects.csv</li>
-  <li>`snapshot.ps1` — removed silent auto-commit of dirty state before tagging; now aborts with a clear file list and commit/discard instructions</li>
-  <li>`C:\Users\rich\.claude\CLAUDE.md` — added session length management section: Claude proposes ⚠ close+restart at ~20 exchanges on a natural break</li>
+  <li>`CHANGELOG.md` &#226;€” created; documents v0.1 and v0.2 releases with a running unreleased section</li>
+  <li>`VERSION` &#226;€” created; current value v0.2</li>
+  <li>`RELEASING.md` &#226;€” created; plain-language instructions for making a new release</li>
+  <li>`infrastructure.html` &#226;€” version field added to subtitle; new versioning section added at the bottom</li>
+  <li>`.gitignore` &#226;€” created; excludes logs/ and overleaf_projects.csv</li>
+  <li>`snapshot.ps1` &#226;€” removed silent auto-commit of dirty state before tagging; now aborts with a clear file list and commit/discard instructions</li>
+  <li>`C:\Users\rich\.claude\CLAUDE.md` &#226;€” added session length management section: Claude proposes &#226;š&#160; close+restart at ~20 exchanges on a natural break</li>
 </ul>
 <p><strong>Outcome:</strong> Infrastructure is now git-versioned (GitHub: jepperich69/ai-infrastructure), released at v0.2, with a working stable/develop branch model and the main operational footgun in snapshot.ps1 fixed.</p>
 <p><strong>Next steps:</strong></p>
@@ -117,9 +117,9 @@
 <p><strong>Goal:</strong> Consistency-cleanup pass on v0.2 based on GPT code review recommendations.</p>
 <p><strong>Files touched:</strong></p>
 <ul>
-  <li>`RELEASING.md` — updated &quot;Current state&quot; to v0.2, rewired &quot;Working toward&quot; to v0.3, made VERSION the explicit single source of truth in release steps</li>
-  <li>`infrastructure.html` — updated version string to v0.2 (with VERSION SOT note), fixed snapshot diagram label from &quot;copy main.tex&quot; to &quot;git tag full Overleaf_source/&quot;, fixed snapshot workflow description from &quot;saves main.tex as frozen copy&quot; to &quot;git-tags full Overleaf_source/ state&quot;</li>
-  <li>`snapshot.ps1` — tightened abort guidance: replaced single destructive `checkout -- .` suggestion with three labelled options (commit / stash / discard), stash marked reversible, discard marked PERMANENT</li>
+  <li>`RELEASING.md` &#226;€” updated &quot;Current state&quot; to v0.2, rewired &quot;Working toward&quot; to v0.3, made VERSION the explicit single source of truth in release steps</li>
+  <li>`infrastructure.html` &#226;€” updated version string to v0.2 (with VERSION SOT note), fixed snapshot diagram label from &quot;copy main.tex&quot; to &quot;git tag full Overleaf_source/&quot;, fixed snapshot workflow description from &quot;saves main.tex as frozen copy&quot; to &quot;git-tags full Overleaf_source/ state&quot;</li>
+  <li>`snapshot.ps1` &#226;€” tightened abort guidance: replaced single destructive `checkout -- .` suggestion with three labelled options (commit / stash / discard), stash marked reversible, discard marked PERMANENT</li>
 </ul>
 <p><strong>Outcome:</strong> v0.2 is now consistent across all docs and scripts; snapshot safety posture improved.</p>
 <p><strong>Next steps:</strong></p>
@@ -136,9 +136,9 @@
 <p><strong>Goal:</strong> Auto-generate separate PDF and HTML exports for the 1-2 pager and the full infrastructure guide.</p>
 <p><strong>Files touched:</strong></p>
 <ul>
-  <li>`generate_docs.ps1` — created; reads infrastructure.html, splices two CSS variants into the @media print block, writes infrastructure_summary.html and infrastructure_full.html, then calls Edge headless to produce matching PDFs</li>
-  <li>`helpi.ps1` — added command 16 &quot;Generate docs (summary + full HTML/PDF)&quot; wired to generate_docs.ps1; preview and bounds-check updated automatically via `$commands.Count`</li>
-  <li>`.gitignore` — added the four generated output files (infrastructure_summary/full .html/.pdf) as gitignored artifacts</li>
+  <li>`generate_docs.ps1` &#226;€” created; reads infrastructure.html, splices two CSS variants into the @media print block, writes infrastructure_summary.html and infrastructure_full.html, then calls Edge headless to produce matching PDFs</li>
+  <li>`helpi.ps1` &#226;€” added command 16 &quot;Generate docs (summary + full HTML/PDF)&quot; wired to generate_docs.ps1; preview and bounds-check updated automatically via `$commands.Count`</li>
+  <li>`.gitignore` &#226;€” added the four generated output files (infrastructure_summary/full .html/.pdf) as gitignored artifacts</li>
 </ul>
 <p><strong>Outcome:</strong> Running `helpi 16` (or `.\generate_docs.ps1`) now produces four files: a summary HTML/PDF showing only the 1-2 pager and a full HTML/PDF showing the complete guide.</p>
 <p><strong>Next steps:</strong></p>
@@ -155,16 +155,16 @@
 <p><strong>Goal:</strong> Design and implement a proxy-sandbox for per-project Claude file isolation; document DTU AI data policy compliance; set up shared Sensitive_Data folder.</p>
 <p><strong>Files touched:</strong></p>
 <ul>
-  <li>`new_project.ps1` — added `.claude/settings.json` scaffold step: denies reads from AI_auto, AppData, and ~/.claude on every new project</li>
-  <li>`infrastructure.html` — added &#167;7b (proxy-sandbox design, two-level deny rules, DTU policy compliance table, Sensitive_Data folder convention); updated project folder structure listing to include `.claude/settings.json`</li>
-  <li>`infrastructure_summary.html` / `infrastructure_full.html` / `_summary.pdf` / `_full.pdf` — regenerated via `generate_docs.ps1`</li>
-  <li>`C:/Users/rich/.claude/settings.json` — added global deny rule for `JR/Sensitive_Data/**`</li>
-  <li>`JR/Sensitive_Data/code/` — folder created as shared human-only zone for sensitive source data and analysis scripts</li>
+  <li>`new_project.ps1` &#226;€” added `.claude/settings.json` scaffold step: denies reads from AI_auto, AppData, and ~/.claude on every new project</li>
+  <li>`infrastructure.html` &#226;€” added &#194;&#167;7b (proxy-sandbox design, two-level deny rules, DTU policy compliance table, Sensitive_Data folder convention); updated project folder structure listing to include `.claude/settings.json`</li>
+  <li>`infrastructure_summary.html` / `infrastructure_full.html` / `_summary.pdf` / `_full.pdf` &#226;€” regenerated via `generate_docs.ps1`</li>
+  <li>`C:/Users/rich/.claude/settings.json` &#226;€” added global deny rule for `JR/Sensitive_Data/**`</li>
+  <li>`JR/Sensitive_Data/code/` &#226;€” folder created as shared human-only zone for sensitive source data and analysis scripts</li>
 </ul>
-<p><strong>Outcome:</strong> Claude Code is now structurally confined to project folders via a per-project deny list and a global block on the shared Sensitive_Data folder; DTU AI data policy compliance is documented in &#167;7b as a structural property of the setup, not a matter of discipline.</p>
+<p><strong>Outcome:</strong> Claude Code is now structurally confined to project folders via a per-project deny list and a global block on the shared Sensitive_Data folder; DTU AI data policy compliance is documented in &#194;&#167;7b as a structural property of the setup, not a matter of discipline.</p>
 <p><strong>Next steps:</strong></p>
 <ul>
-  <li>Write `Sensitive_Data/code/generate_testdata.py` — synthetic test data generator supporting CSV, Excel, and Access (.accdb) input; CSV output; profile-based sampling per column</li>
+  <li>Write `Sensitive_Data/code/generate_testdata.py` &#226;€” synthetic test data generator supporting CSV, Excel, and Access (.accdb) input; CSV output; profile-based sampling per column</li>
   <li>`helpi.ps1`: wrap PSConsoleReadLine call in try/catch for non-interactive shell degradation (v0.3 candidate)</li>
   <li>Extract hardcoded `$aiRoot` / `$pubRoot` paths to a shared `config.ps1` (v0.3 candidate)</li>
 </ul>
@@ -177,21 +177,21 @@
 <p><strong>Goal:</strong> Explore Claude Code features being underused; implement per-project CLAUDE.md system; extend it to Codex; update infrastructure docs.</p>
 <p><strong>Files touched:</strong></p>
 <ul>
-  <li>`AI_auto/prompts/project_claude_md_template.md` — created; blank template for per-project Claude briefs</li>
-  <li>`AI_auto/new_project.ps1` — added `.claude/CLAUDE.md` scaffolding step to project creation</li>
-  <li>`AI_auto/infrastructure.html` — updated: handover tag manual→auto, /close description, Codex skill table, capability comparison table, worked example terminal output</li>
-  <li>`~/.claude/CLAUDE.md` — added per-project auto-fill instruction (fills blank CLAUDE.md from manuscript at session start) and AGENTS.md convention note</li>
-  <li>`~/.claude/commands/close.md` — added step 4 (CLAUDE.md sync) and step 5 (auto-regenerate handover via helpi 5)</li>
-  <li>`~/.codex/skills/research-work/SKILL.md` — added step 2: read `.claude/CLAUDE.md` before `_ai_log.md`</li>
-  <li>`~/.codex/config.toml` — added &quot;Per-project brief&quot; section to developer_instructions</li>
-  <li>`89&#215; &lt;project&gt;/.claude/settings.json` — scaffolded across all projects (proxy-sandbox deny rules)</li>
-  <li>`89&#215; &lt;project&gt;/.claude/CLAUDE.md` — scaffolded with placeholder template; 6 filled with real content</li>
-  <li>`Pub_AssesTiming_Raoul_TBA/.claude/CLAUDE.md` — filled: R1 revision, Raoul co-author, call-option payoff fix, β notation, frozen sections</li>
-  <li>`Pub_PMIP_AOR/.claude/CLAUDE.md` — filled: under review AOR, MH=probabilistic-inference, mh_swap_repair() location</li>
-  <li>`Pub_MIPEntropy_MPC/.claude/CLAUDE.md` — filled: R1 ready to submit, 47 comments, Springer_R1B.tex active, Stage 4 MH</li>
-  <li>`Pub_ActionSpace_NatComm/.claude/CLAUDE.md` — filled: NatComm R1B complete, 56+ label, SI numbering, kernel provenance</li>
-  <li>`Pub_NapstiGranularity_TBA/.claude/CLAUDE.md` — filled: V6 complete, 4 contributions, S-shape explanation, 14-city dataset</li>
-  <li>`Pub_PopInt_PartB/.claude/CLAUDE.md` — filled: TR Part B under review, floor/ceiling proof, submitted version frozen, cross-bib constraints</li>
+  <li>`AI_auto/prompts/project_claude_md_template.md` &#226;€” created; blank template for per-project Claude briefs</li>
+  <li>`AI_auto/new_project.ps1` &#226;€” added `.claude/CLAUDE.md` scaffolding step to project creation</li>
+  <li>`AI_auto/infrastructure.html` &#226;€” updated: handover tag manual&#226;†’auto, /close description, Codex skill table, capability comparison table, worked example terminal output</li>
+  <li>`~/.claude/CLAUDE.md` &#226;€” added per-project auto-fill instruction (fills blank CLAUDE.md from manuscript at session start) and AGENTS.md convention note</li>
+  <li>`~/.claude/commands/close.md` &#226;€” added step 4 (CLAUDE.md sync) and step 5 (auto-regenerate handover via helpi 5)</li>
+  <li>`~/.codex/skills/research-work/SKILL.md` &#226;€” added step 2: read `.claude/CLAUDE.md` before `_ai_log.md`</li>
+  <li>`~/.codex/config.toml` &#226;€” added &quot;Per-project brief&quot; section to developer_instructions</li>
+  <li>`89&#195;— &lt;project&gt;/.claude/settings.json` &#226;€” scaffolded across all projects (proxy-sandbox deny rules)</li>
+  <li>`89&#195;— &lt;project&gt;/.claude/CLAUDE.md` &#226;€” scaffolded with placeholder template; 6 filled with real content</li>
+  <li>`Pub_AssesTiming_Raoul_TBA/.claude/CLAUDE.md` &#226;€” filled: R1 revision, Raoul co-author, call-option payoff fix, &#206;&#178; notation, frozen sections</li>
+  <li>`Pub_PMIP_AOR/.claude/CLAUDE.md` &#226;€” filled: under review AOR, MH=probabilistic-inference, mh_swap_repair() location</li>
+  <li>`Pub_MIPEntropy_MPC/.claude/CLAUDE.md` &#226;€” filled: R1 ready to submit, 47 comments, Springer_R1B.tex active, Stage 4 MH</li>
+  <li>`Pub_ActionSpace_NatComm/.claude/CLAUDE.md` &#226;€” filled: NatComm R1B complete, 56+ label, SI numbering, kernel provenance</li>
+  <li>`Pub_NapstiGranularity_TBA/.claude/CLAUDE.md` &#226;€” filled: V6 complete, 4 contributions, S-shape explanation, 14-city dataset</li>
+  <li>`Pub_PopInt_PartB/.claude/CLAUDE.md` &#226;€” filled: TR Part B under review, floor/ceiling proof, submitted version frozen, cross-bib constraints</li>
 </ul>
 <p><strong>Outcome:</strong> Per-project CLAUDE.md system fully deployed across 89 projects; both Claude Code and Codex now read the same brief at session start, eliminating cold-start on agent switches; /close now auto-updates CLAUDE.md and auto-regenerates handover.</p>
 <p><strong>Next steps:</strong></p>
@@ -209,10 +209,10 @@
 <p><strong>Goal:</strong> Upgrade `helpi 5` so handover compilation is driven by a structured AI-log parser, then update the infrastructure guide to reflect the new behavior.</p>
 <p><strong>Files touched:</strong></p>
 <ul>
-  <li>`AI_auto/ai_log_tools.ps1` — created shared AI-log parser utilities: parse markdown session blocks, identify the latest session by date, validate required fields, and expose a compact latest-session summary</li>
-  <li>`AI_auto/generate_handover.ps1` — upgraded to use the shared parser; now compiles a latest-session snapshot, validates the newest log block, writes `_handover.html`, and emits a structured `_handover.json` sidecar</li>
-  <li>`AI_auto/helpi.ps1` — renamed command 5 in the menu from “Generate handover document” to “Compile handover package from AI log”</li>
-  <li>`AI_auto/infrastructure.html` — updated the AI logging / handover section, the command table, and the one-pager so they describe `helpi 5` as a compiler from `_ai_log.md` to `_handover.html` + `_handover.json`</li>
+  <li>`AI_auto/ai_log_tools.ps1` &#226;€” created shared AI-log parser utilities: parse markdown session blocks, identify the latest session by date, validate required fields, and expose a compact latest-session summary</li>
+  <li>`AI_auto/generate_handover.ps1` &#226;€” upgraded to use the shared parser; now compiles a latest-session snapshot, validates the newest log block, writes `_handover.html`, and emits a structured `_handover.json` sidecar</li>
+  <li>`AI_auto/helpi.ps1` &#226;€” renamed command 5 in the menu from &#226;€œGenerate handover document&#226;€ to &#226;€œCompile handover package from AI log&#226;€</li>
+  <li>`AI_auto/infrastructure.html` &#226;€” updated the AI logging / handover section, the command table, and the one-pager so they describe `helpi 5` as a compiler from `_ai_log.md` to `_handover.html` + `_handover.json`</li>
 </ul>
 <p><strong>Outcome:</strong> `helpi 5` is now conceptually cleaner: `<em>ai</em>log.md` remains the source of truth, while the handover is compiled from it through a shared parser layer rather than treated as a separate parallel artifact. The upgraded generator was verified end-to-end on `Pub<em>MIPEntropy</em>MPC`, including correct latest-session detection and a structured `files<em>touched` array in `</em>handover.json`.</p>
 <p><strong>Next steps:</strong></p>
@@ -229,21 +229,21 @@
 <p><strong>Goal:</strong> Build and fully test the submission pipeline (`submit.ps1` + `/submit` skill + `helpi 17`); fix all bugs discovered during live test on `Pub<em>MIPEntropy</em>MPC`; final editorial pass on `Springer_R1C.tex`.</p>
 <p><strong>Files touched:</strong></p>
 <ul>
-  <li>`AI_auto/submit.ps1` — created; 7-step submission assembly script: (1) compile with BIBINPUTS+BSTINPUTS, (2) front-page via Ghostscript, (3) inline bbl using `[regex]::Replace` MatchEvaluator, (4) submission zip (tex as `main.tex`), (5) blind manuscript (line-by-line author stripping + compile + zip), (6) latexdiff with CRLF normalisation + bbl inlining, (7) copy staged AI content. File naming convention: `Type_Author_Journal_Year_Rev.*` (e.g. `Manus_Rich_MPC_2026_R1.pdf`). Revision auto-detected from tex filename.</li>
-  <li>`AI_auto/prompts/submit.md` — created; `/submit` skill prompt: generates cover letter, highlights, author statement into `_submit_staging/`, compiles PDFs, calls `submit.ps1`</li>
-  <li>`AI_auto/prompts/submit_stage_ai.md` — created; AI-only staging prompt (generates 3 files, does NOT call `submit.ps1`); used by `helpi 17` via `claude -p`</li>
-  <li>`AI_auto/helpi.ps1` — added command 17 &quot;Build submission package&quot;; command 17 block: checks for `_submit_staging/cover_letter.pdf`, calls `claude -p` with `submit_stage_ai.md` prompt if absent, then calls `submit.ps1`; fixed command count check to use `($commands | Measure-Object).Count`</li>
-  <li>`AI_auto/infrastructure.html` — rewrote &#167;6c: new file naming convention, blind manuscript section, 7-step assembly description, known-gotchas table (4 bugs), updated dependencies table, updated usage examples</li>
-  <li>`Pub_MIPEntropy_MPC/Overleaf_source/Springer_R1C.tex` — editorial fixes: &quot;We a method&quot; → &quot;We present a method&quot;; `{llrrrr}` → `{llrrr}` in tab:ablation; &quot;21. October&quot; → &quot;21 October&quot;; expanded &#167;2.2 with permutation enumeration table (3 of 6 candidates, cost + probability); added proof motivation paragraph to Appendix B (Theorem 2.1); added `\begin{remark}` before Theorem 2.2 attributing parts (a) and (c) to Carlier2017/PeyreCuturi2019</li>
-  <li>`Pub_MIPEntropy_MPC/_submit_staging/cover_letter.tex` + `.pdf` — generated</li>
-  <li>`Pub_MIPEntropy_MPC/_submit_staging/highlights.txt` — 5 bullets, all ≤85 chars</li>
-  <li>`Pub_MIPEntropy_MPC/_submit_staging/author_statement.tex` + `.pdf` — generated</li>
+  <li>`AI_auto/submit.ps1` &#226;€” created; 7-step submission assembly script: (1) compile with BIBINPUTS+BSTINPUTS, (2) front-page via Ghostscript, (3) inline bbl using `[regex]::Replace` MatchEvaluator, (4) submission zip (tex as `main.tex`), (5) blind manuscript (line-by-line author stripping + compile + zip), (6) latexdiff with CRLF normalisation + bbl inlining, (7) copy staged AI content. File naming convention: `Type_Author_Journal_Year_Rev.*` (e.g. `Manus_Rich_MPC_2026_R1.pdf`). Revision auto-detected from tex filename.</li>
+  <li>`AI_auto/prompts/submit.md` &#226;€” created; `/submit` skill prompt: generates cover letter, highlights, author statement into `_submit_staging/`, compiles PDFs, calls `submit.ps1`</li>
+  <li>`AI_auto/prompts/submit_stage_ai.md` &#226;€” created; AI-only staging prompt (generates 3 files, does NOT call `submit.ps1`); used by `helpi 17` via `claude -p`</li>
+  <li>`AI_auto/helpi.ps1` &#226;€” added command 17 &quot;Build submission package&quot;; command 17 block: checks for `_submit_staging/cover_letter.pdf`, calls `claude -p` with `submit_stage_ai.md` prompt if absent, then calls `submit.ps1`; fixed command count check to use `($commands | Measure-Object).Count`</li>
+  <li>`AI_auto/infrastructure.html` &#226;€” rewrote &#194;&#167;6c: new file naming convention, blind manuscript section, 7-step assembly description, known-gotchas table (4 bugs), updated dependencies table, updated usage examples</li>
+  <li>`Pub_MIPEntropy_MPC/Overleaf_source/Springer_R1C.tex` &#226;€” editorial fixes: &quot;We a method&quot; &#226;†’ &quot;We present a method&quot;; `{llrrrr}` &#226;†’ `{llrrr}` in tab:ablation; &quot;21. October&quot; &#226;†’ &quot;21 October&quot;; expanded &#194;&#167;2.2 with permutation enumeration table (3 of 6 candidates, cost + probability); added proof motivation paragraph to Appendix B (Theorem 2.1); added `\begin{remark}` before Theorem 2.2 attributing parts (a) and (c) to Carlier2017/PeyreCuturi2019</li>
+  <li>`Pub_MIPEntropy_MPC/_submit_staging/cover_letter.tex` + `.pdf` &#226;€” generated</li>
+  <li>`Pub_MIPEntropy_MPC/_submit_staging/highlights.txt` &#226;€” 5 bullets, all &#226;‰&#164;85 chars</li>
+  <li>`Pub_MIPEntropy_MPC/_submit_staging/author_statement.tex` + `.pdf` &#226;€” generated</li>
 </ul>
 <p><strong>Bugs found and fixed during live test:</strong></p>
-<p>1. <strong>BSTINPUTS not set</strong> — bibtex could not find `spmpsci.bst` in `Overleaf_source/` → empty .bbl → no references anywhere. Fix: `$env:BSTINPUTS = &quot;$sourceDir;...&quot;` added alongside BIBINPUTS.</p>
-<p>2. <strong>CRLF/LF mismatch</strong> — `Springer<em>R1B.tex` had 1964 CR characters (Windows), `Springer</em>R1C.tex` had 0 (Unix). Latexdiff saw every line as different, could not find anchors, silently dropped real changes. Fix: LF-normalised temp copies diffed; originals untouched.</p>
-<p>3. <strong>PowerShell `-replace` corrupts .bbl</strong> — `$` in reference titles (math) interpreted as regex back-references, erasing bibliography content. Fix: `[regex]::Replace` with MatchEvaluator for all .bbl substitutions.</p>
-<p>4. <strong>diff.tex compiled from wrong folder</strong> — compiled from `<em>submissions/` folder, missing `svjour3.cls` and figures. Fix: compiled from `Overleaf</em>source/`; temp files cleaned up in `finally` block.</p>
+<p>1. <strong>BSTINPUTS not set</strong> &#226;€” bibtex could not find `spmpsci.bst` in `Overleaf_source/` &#226;†’ empty .bbl &#226;†’ no references anywhere. Fix: `$env:BSTINPUTS = &quot;$sourceDir;...&quot;` added alongside BIBINPUTS.</p>
+<p>2. <strong>CRLF/LF mismatch</strong> &#226;€” `Springer<em>R1B.tex` had 1964 CR characters (Windows), `Springer</em>R1C.tex` had 0 (Unix). Latexdiff saw every line as different, could not find anchors, silently dropped real changes. Fix: LF-normalised temp copies diffed; originals untouched.</p>
+<p>3. <strong>PowerShell `-replace` corrupts .bbl</strong> &#226;€” `$` in reference titles (math) interpreted as regex back-references, erasing bibliography content. Fix: `[regex]::Replace` with MatchEvaluator for all .bbl substitutions.</p>
+<p>4. <strong>diff.tex compiled from wrong folder</strong> &#226;€” compiled from `<em>submissions/` folder, missing `svjour3.cls` and figures. Fix: compiled from `Overleaf</em>source/`; temp files cleaned up in `finally` block.</p>
 <p><strong>Outcome:</strong> Full submission pipeline verified end-to-end on `Pub<em>MIPEntropy</em>MPC`. Package `<em>submissions/2026-04-15</em>MPC/` contains 10 correctly named files including blind manuscript, diff with references, and AI-generated documents. `helpi 17` now calls `claude -p` automatically when staging is empty, making it a single-command full pipeline.</p>
 <p><strong>Next steps:</strong></p>
 <ul>
@@ -259,11 +259,11 @@
 <p><strong>Goal:</strong> Improve agent-switching context (AGENTS.md auto-generation), add feeder network visualization to infrastructure docs, integrate frontpage image, discuss packaging feasibility.</p>
 <p><strong>Files touched:</strong></p>
 <ul>
-  <li>`AI_auto/generate_handover.ps1` — added AGENTS.md generation: writes paper description (from `.claude/CLAUDE.md`), latest session snapshot, full log, and session-entry instructions to project root on every `helpi 5` / `/close`</li>
-  <li>`AI_auto/infrastructure.html` — v0.2 → v0.3: added AGENTS.md subsection in &#167;3, added interactive D3.js feeder network graph in &#167;7 (41 nodes, 7 clusters, convex hulls, zoom/drag), updated &#167;10 shared-context note, updated one-pager handover scenario, integrated `Infra_frontpage.png` as cover page (HTML + full PDF, print-only h1/subtitle hide, `page-break-after: always`)</li>
-  <li>`AI_auto/infrastructure_full.html` / `infrastructure_summary.html` / `_full.pdf` / `_summary.pdf` — regenerated via `generate_docs.ps1`</li>
+  <li>`AI_auto/generate_handover.ps1` &#226;€” added AGENTS.md generation: writes paper description (from `.claude/CLAUDE.md`), latest session snapshot, full log, and session-entry instructions to project root on every `helpi 5` / `/close`</li>
+  <li>`AI_auto/infrastructure.html` &#226;€” v0.2 &#226;†’ v0.3: added AGENTS.md subsection in &#194;&#167;3, added interactive D3.js feeder network graph in &#194;&#167;7 (41 nodes, 7 clusters, convex hulls, zoom/drag), updated &#194;&#167;10 shared-context note, updated one-pager handover scenario, integrated `Infra_frontpage.png` as cover page (HTML + full PDF, print-only h1/subtitle hide, `page-break-after: always`)</li>
+  <li>`AI_auto/infrastructure_full.html` / `infrastructure_summary.html` / `_full.pdf` / `_summary.pdf` &#226;€” regenerated via `generate_docs.ps1`</li>
 </ul>
-<p><strong>Outcome:</strong> Agent switching (Claude ↔ Codex) is now fully automatic in both directions — AGENTS.md is regenerated on every close and auto-loaded by Codex; the infrastructure guide is visually richer with a cover page and an interactive feeder graph showing the full cross-project knowledge network.</p>
+<p><strong>Outcome:</strong> Agent switching (Claude &#226;†” Codex) is now fully automatic in both directions &#226;€” AGENTS.md is regenerated on every close and auto-loaded by Codex; the infrastructure guide is visually richer with a cover page and an interactive feeder graph showing the full cross-project knowledge network.</p>
 <p><strong>Next steps:</strong></p>
 <ul>
   <li>Consider packaging the infrastructure as a GitHub template repo + installer script for external use (discussed: parameterise paths via `config.ps1`, write a `setup.ps1`, Windows-first)</li>
@@ -277,16 +277,16 @@
 <br>
 <h2>Session 2026-04-18</h2>
 <p><strong>Agent:</strong> Claude Sonnet 4.6</p>
-<p><strong>Goal:</strong> Add a collaboration section to the infrastructure guide; then restructure all section numbers to align with helpi 1–16 ordering.</p>
+<p><strong>Goal:</strong> Add a collaboration section to the infrastructure guide; then restructure all section numbers to align with helpi 1&#226;€“16 ordering.</p>
 <p><strong>Files touched:</strong></p>
 <ul>
-  <li>`infrastructure.html` — major restructuring: (1) added Section I: Collaborative Setup documenting the git-layer vs. personal-layer split, collaborator onboarding steps, branch discipline, shared `_ai_log.md` across contributors, and Overleaf co-authoring; (2) renumbered all file-layer sections to match helpi 1–16 exactly (previously sections 1–5 covered helpi 2, 4, 7, 5/6 in wrong order); (3) reordered sections to follow the project lifecycle story: create → pull → push → compile → logging → snapshot → rollback → submit → reviewer → status/docs; (4) added four new dedicated sections: helpi 1 (Create new project), 8/9 (Snapshot &amp; Rollback), 10/11/12 (Submit &amp; Reviewer Loop), 13–16 (Status/Network/Docs); (5) switched AI infrastructure sections from numeric labels (6, 6b, 6c, 7, 7b, 8, 9) to letters A–G to avoid conflict with helpi numbers; (6) merged Part 3 (Codex) and the new collaboration section into one Part 3 (H–I); (7) fixed all remaining v0.2 references → v0.5; bumped subtitle to v0.5.</li>
+  <li>`infrastructure.html` &#226;€” major restructuring: (1) added Section I: Collaborative Setup documenting the git-layer vs. personal-layer split, collaborator onboarding steps, branch discipline, shared `_ai_log.md` across contributors, and Overleaf co-authoring; (2) renumbered all file-layer sections to match helpi 1&#226;€“16 exactly (previously sections 1&#226;€“5 covered helpi 2, 4, 7, 5/6 in wrong order); (3) reordered sections to follow the project lifecycle story: create &#226;†’ pull &#226;†’ push &#226;†’ compile &#226;†’ logging &#226;†’ snapshot &#226;†’ rollback &#226;†’ submit &#226;†’ reviewer &#226;†’ status/docs; (4) added four new dedicated sections: helpi 1 (Create new project), 8/9 (Snapshot &amp; Rollback), 10/11/12 (Submit &amp; Reviewer Loop), 13&#226;€“16 (Status/Network/Docs); (5) switched AI infrastructure sections from numeric labels (6, 6b, 6c, 7, 7b, 8, 9) to letters A&#226;€“G to avoid conflict with helpi numbers; (6) merged Part 3 (Codex) and the new collaboration section into one Part 3 (H&#226;€“I); (7) fixed all remaining v0.2 references &#226;†’ v0.5; bumped subtitle to v0.5.</li>
 </ul>
-<p><strong>Outcome:</strong> The infrastructure guide now tells a coherent lifecycle story from project creation (1) to submission (10–12), section numbers match helpi exactly, AI sections are clearly separated with letters A–I, and the collaboration model (git as coordination layer, personal install per person) is documented.</p>
+<p><strong>Outcome:</strong> The infrastructure guide now tells a coherent lifecycle story from project creation (1) to submission (10&#226;€“12), section numbers match helpi exactly, AI sections are clearly separated with letters A&#226;€“I, and the collaboration model (git as coordination layer, personal install per person) is documented.</p>
 <p><strong>Next steps:</strong></p>
 <ul>
   <li>Update `CHANGELOG.md` and bump `VERSION` file to v0.5</li>
-  <li>Update the one-pager desk reference section labels to reflect A–G / H–I lettering</li>
+  <li>Update the one-pager desk reference section labels to reflect A&#226;€“G / H&#226;€“I lettering</li>
   <li>`helpi.ps1`: wrap PSConsoleReadLine in try/catch for non-interactive shell degradation (carried from v0.2)</li>
   <li>Extract hardcoded `$aiRoot` / `$pubRoot` paths to a shared `config.ps1` (carried from v0.2)</li>
 </ul>
@@ -299,26 +299,26 @@
 <p><strong>Goal:</strong> Improve token efficiency and communication speed; add model-switching awareness; add Beamer slide generation; overhaul infrastructure documentation.</p>
 <p><strong>Files touched:</strong></p>
 <ul>
-  <li>`helpi.ps1` — added commands 17 (Claude Code cheatsheet), 18 (toggle model-check), 19 (generate Beamer slides); added helper functions `Write-CheatRow`, `Show-ClaudeCheatsheet`, `Toggle-ModelCheck`; fixed Windows PS 5.1 parse errors (em-dash encoding, nested function, ampersand in strings)</li>
-  <li>`generate_slides.ps1` — new script: safety-pulls from Overleaf, detects main .tex, interactive controls (duration/depth/audience/emphasis) or named preset (quick/seminar/public), calls Claude via `-p`, offers git commit + push</li>
-  <li>`prompts/generate_slides.md` — new prompt: encodes all four control dimensions with explicit depth/audience/emphasis guides, Beamer output spec (16:9, Madrid theme, single self-contained file, backup slides after \appendix for deep-dive)</li>
-  <li>`infrastructure.html` — (1) bumped to v0.6; (2) added TOC with anchor links after subtitle; (3) added section IDs throughout; (4) completed desk reference (was missing helpi 10-12 and 15-19); (5) completed section 13-19 table (was missing rows 17-19); (6) fixed stale v0.5 reference in versioning section; (7) redesigned overview diagram: file layer now on top as foundation, AI layer replaced cramped boxes with clean OPEN/WORK/CLOSE phase table; (8) updated quick reference title to helpi 1-19</li>
-  <li>`VERSION` — bumped to v0.6</li>
-  <li>`CHANGELOG.md` — added v0.6 entry; backfilled v0.3, v0.4, v0.5 entries to close the gap from v0.2</li>
-  <li>`memory/feedback_model_assessment.md` — new memory file: instructs Claude to assess each task and suggest Haiku when appropriate (one-line prompt, user switches with /model)</li>
-  <li>`memory/MEMORY.md` — new memory index</li>
+  <li>`helpi.ps1` &#226;€” added commands 17 (Claude Code cheatsheet), 18 (toggle model-check), 19 (generate Beamer slides); added helper functions `Write-CheatRow`, `Show-ClaudeCheatsheet`, `Toggle-ModelCheck`; fixed Windows PS 5.1 parse errors (em-dash encoding, nested function, ampersand in strings)</li>
+  <li>`generate_slides.ps1` &#226;€” new script: safety-pulls from Overleaf, detects main .tex, interactive controls (duration/depth/audience/emphasis) or named preset (quick/seminar/public), calls Claude via `-p`, offers git commit + push</li>
+  <li>`prompts/generate_slides.md` &#226;€” new prompt: encodes all four control dimensions with explicit depth/audience/emphasis guides, Beamer output spec (16:9, Madrid theme, single self-contained file, backup slides after \appendix for deep-dive)</li>
+  <li>`infrastructure.html` &#226;€” (1) bumped to v0.6; (2) added TOC with anchor links after subtitle; (3) added section IDs throughout; (4) completed desk reference (was missing helpi 10-12 and 15-19); (5) completed section 13-19 table (was missing rows 17-19); (6) fixed stale v0.5 reference in versioning section; (7) redesigned overview diagram: file layer now on top as foundation, AI layer replaced cramped boxes with clean OPEN/WORK/CLOSE phase table; (8) updated quick reference title to helpi 1-19</li>
+  <li>`VERSION` &#226;€” bumped to v0.6</li>
+  <li>`CHANGELOG.md` &#226;€” added v0.6 entry; backfilled v0.3, v0.4, v0.5 entries to close the gap from v0.2</li>
+  <li>`memory/feedback_model_assessment.md` &#226;€” new memory file: instructs Claude to assess each task and suggest Haiku when appropriate (one-line prompt, user switches with /model)</li>
+  <li>`memory/MEMORY.md` &#226;€” new memory index</li>
 </ul>
 <p><strong>Outcome:</strong> Three new helpi commands (17-19: cheatsheet, model-check toggle, Beamer slides with presets). Claude now flags Haiku-suitable tasks before starting. Infrastructure documentation overhauled: TOC added, desk reference completed, section 13-19 table filled, overview diagram redesigned with file layer as foundation and a readable AI phase table replacing the old scattered command boxes.</p>
 <br>
 <p><strong>Continued (same session, v0.7 work):</strong></p>
 <ul>
-  <li>`config.ps1` (new) — single source of truth for all machine-specific paths; all 22 scripts refactored to dot-source it</li>
-  <li>`restore.ps1` (new, helpi 20) — 8-step recovery checker for replacement-machine scenario</li>
-  <li>`setup.ps1` (new, helpi 21) — first-time setup wizard for new users/machines</li>
-  <li>`setup_project.ps1` — fixed remaining hardcoded `$jsonPath` (line 21)</li>
-  <li>`setup_tagged.ps1` — moved `$tagTargets` hashtable into `config.ps1`; fixed mojibake encoding in &quot;Ansogninger&quot;</li>
-  <li>`infrastructure.html` — added helpi 20/21 to command table and desk reference; bumped to v0.7</li>
-  <li>`VERSION` / `CHANGELOG.md` — bumped to v0.7</li>
+  <li>`config.ps1` (new) &#226;€” single source of truth for all machine-specific paths; all 22 scripts refactored to dot-source it</li>
+  <li>`restore.ps1` (new, helpi 20) &#226;€” 8-step recovery checker for replacement-machine scenario</li>
+  <li>`setup.ps1` (new, helpi 21) &#226;€” first-time setup wizard for new users/machines</li>
+  <li>`setup_project.ps1` &#226;€” fixed remaining hardcoded `$jsonPath` (line 21)</li>
+  <li>`setup_tagged.ps1` &#226;€” moved `$tagTargets` hashtable into `config.ps1`; fixed mojibake encoding in &quot;Ansogninger&quot;</li>
+  <li>`infrastructure.html` &#226;€” added helpi 20/21 to command table and desk reference; bumped to v0.7</li>
+  <li>`VERSION` / `CHANGELOG.md` &#226;€” bumped to v0.7</li>
 </ul>
 <br>
 <p><strong>Next steps:</strong></p>
@@ -331,10 +331,10 @@
 <br>
 <p><strong>Continued (same session, install docs):</strong></p>
 <ul>
-  <li>`setup.ps1` — step 6/6 → 7/7; added Overleaf bulk-import offer at end of wizard</li>
-  <li>`infrastructure.html` — new &quot;Install&quot; section: Scenario A (restore), Scenario B (new colleague), Overleaf bulk vs. one-by-one flow, prerequisites table; TOC entry added</li>
-  <li>`setup_project.ps1` — hardcoded jsonPath fixed</li>
-  <li>`setup_tagged.ps1` + `config.ps1` — tagTargets moved to config; encoding fix</li>
+  <li>`setup.ps1` &#226;€” step 6/6 &#226;†’ 7/7; added Overleaf bulk-import offer at end of wizard</li>
+  <li>`infrastructure.html` &#226;€” new &quot;Install&quot; section: Scenario A (restore), Scenario B (new colleague), Overleaf bulk vs. one-by-one flow, prerequisites table; TOC entry added</li>
+  <li>`setup_project.ps1` &#226;€” hardcoded jsonPath fixed</li>
+  <li>`setup_tagged.ps1` + `config.ps1` &#226;€” tagTargets moved to config; encoding fix</li>
 </ul>
 <br>
 <hr>
@@ -344,8 +344,8 @@
 <p><strong>Goal:</strong> Draft a down-to-earth book concept on research life with AI, grounded in the full infrastructure guide and supported by current productivity and research-computing literature.</p>
 <p><strong>Files touched:</strong></p>
 <ul>
-  <li>`AI_auto/book_draft_researcher_ai_infrastructure.md` — created first full Markdown draft, working title &quot;The Down-to-Earth AI Researcher&quot;; includes book premise, AI Productivity Law, modern researcher infrastructure problem, API vs local/license discussion, Git/Overleaf pull-push chapter, logging/handover chapter, feeder-vs-RAG chapter, prompting guidance, paper-writing lifecycle, setup/install chapter, CV/public-record chapter, and working references.</li>
-  <li>`AI_auto/_ai_log.md` — appended this session log entry.</li>
+  <li>`AI_auto/book_draft_researcher_ai_infrastructure.md` &#226;€” created first full Markdown draft, working title &quot;The Down-to-Earth AI Researcher&quot;; includes book premise, AI Productivity Law, modern researcher infrastructure problem, API vs local/license discussion, Git/Overleaf pull-push chapter, logging/handover chapter, feeder-vs-RAG chapter, prompting guidance, paper-writing lifecycle, setup/install chapter, CV/public-record chapter, and working references.</li>
+  <li>`AI_auto/_ai_log.md` &#226;€” appended this session log entry.</li>
 </ul>
 <p><strong>Outcome:</strong> First book draft created and verified. It uses `infrastructure_full.html` as the running implementation example and cites literature including Noy and Zhang (2023), Brynjolfsson et al. (2023), Peng et al. (2023), Dell&#39;Acqua et al. (2023), Lewis et al. (2020), Wilkinson et al. (2016), Wilson et al. (2017), and Overleaf Git documentation.</p>
 <p><strong>Next steps:</strong></p>
@@ -364,14 +364,14 @@
 <p><strong>Goal:</strong> Link the AI_auto infrastructure project to its Overleaf project and make it work with the normal helpi project facilities.</p>
 <p><strong>Files touched:</strong></p>
 <ul>
-  <li>`AI_auto/Overleaf_source/` — created by cloning Overleaf git project `https://git.overleaf.com/69e4cd88646aa324de75fc2c`; current branch is `master`; contains `main.tex`, `main_v2.tex`, and `figures/`.</li>
-  <li>`AI_auto/.gitignore` — added `Overleaf_source/` so the nested Overleaf git clone is not accidentally tracked by the infrastructure repo.</li>
-  <li>`AI_auto/projects.json` — registered `AI_auto` with path `JR\AI_auto\Overleaf_source` and branch `master`, enabling `sync_one.ps1`, `push_to_overleaf.ps1`, snapshots, and other registry-based commands.</li>
-  <li>`AI_auto/helpi.ps1` — added `AI_auto` to current-working-directory project detection.</li>
-  <li>`AI_auto/open_project.ps1` — changed project-root resolution from `Publikationer\$Project` to shared `Resolve-ProjectRoot`, so `helpi 5 AI_auto` can find projects directly under `JR`.</li>
-  <li>`AI_auto/compile_latex.ps1` — changed source-folder resolution to shared `Resolve-ProjectRoot`, so `helpi 6 AI_auto` can compile `AI_auto\Overleaf_source`.</li>
-  <li>`AI_auto/generate_slides.ps1` — changed project-root resolution to shared `Resolve-ProjectRoot`, so `helpi 19 AI_auto` works for the infrastructure deck/project.</li>
-  <li>`AI_auto/_ai_log.md` — appended this session log entry.</li>
+  <li>`AI_auto/Overleaf_source/` &#226;€” created by cloning Overleaf git project `https://git.overleaf.com/69e4cd88646aa324de75fc2c`; current branch is `master`; contains `main.tex`, `main_v2.tex`, and `figures/`.</li>
+  <li>`AI_auto/.gitignore` &#226;€” added `Overleaf_source/` so the nested Overleaf git clone is not accidentally tracked by the infrastructure repo.</li>
+  <li>`AI_auto/projects.json` &#226;€” registered `AI_auto` with path `JR\AI_auto\Overleaf_source` and branch `master`, enabling `sync_one.ps1`, `push_to_overleaf.ps1`, snapshots, and other registry-based commands.</li>
+  <li>`AI_auto/helpi.ps1` &#226;€” added `AI_auto` to current-working-directory project detection.</li>
+  <li>`AI_auto/open_project.ps1` &#226;€” changed project-root resolution from `Publikationer\$Project` to shared `Resolve-ProjectRoot`, so `helpi 5 AI_auto` can find projects directly under `JR`.</li>
+  <li>`AI_auto/compile_latex.ps1` &#226;€” changed source-folder resolution to shared `Resolve-ProjectRoot`, so `helpi 6 AI_auto` can compile `AI_auto\Overleaf_source`.</li>
+  <li>`AI_auto/generate_slides.ps1` &#226;€” changed project-root resolution to shared `Resolve-ProjectRoot`, so `helpi 19 AI_auto` works for the infrastructure deck/project.</li>
+  <li>`AI_auto/_ai_log.md` &#226;€” appended this session log entry.</li>
 </ul>
 <p><strong>Outcome:</strong> `AI<em>auto` is now linked to the Overleaf project through a real `Overleaf</em>source/` clone and a `projects.json` entry. Verified `sync<em>one.ps1 -Project AI</em>auto`; it reports the project is already up to date with Overleaf. PowerShell parse checks passed for `helpi.ps1`, `open<em>project.ps1`, `compile</em>latex.ps1`, and `generate_slides.ps1`.</p>
 <p><strong>Next steps:</strong></p>
@@ -384,8 +384,8 @@
 <br>
 <p><strong>Continued (same session, DTU technical meeting slides):</strong></p>
 <ul>
-  <li>`AI_auto/Overleaf_source/slides_main.tex` — created a 13-slide Beamer deck for the DTU technical meeting. The deck uses `infrastructure_full.html` as the operational source, includes `figures/Infra_frontpage.png`, and builds editable TikZ diagrams for Overleaf sync, sensitive-data boundaries, logging/handover, feeder projects, and the publication pipeline.</li>
-  <li>`AI_auto/Overleaf_source/` — committed and pushed `slides_main.tex` to the linked Overleaf project (`master`, pushed `4216e7c..fb4534f`).</li>
+  <li>`AI_auto/Overleaf_source/slides_main.tex` &#226;€” created a 13-slide Beamer deck for the DTU technical meeting. The deck uses `infrastructure_full.html` as the operational source, includes `figures/Infra_frontpage.png`, and builds editable TikZ diagrams for Overleaf sync, sensitive-data boundaries, logging/handover, feeder projects, and the publication pipeline.</li>
+  <li>`AI_auto/Overleaf_source/` &#226;€” committed and pushed `slides_main.tex` to the linked Overleaf project (`master`, pushed `4216e7c..fb4534f`).</li>
 </ul>
 <p><strong>Outcome:</strong> A compressed 13-slide operational deck is now available in Overleaf as `slides<em>main.tex`. The deck deliberately does not use the `Pub</em>AI<em>Research</em>Book` book project or its `main_v2` draft. Local compile was attempted but blocked by MiKTeX first-time setup (&quot;fresh TeX installation&quot;); static source checks found no non-ASCII typography or obvious frame-count issues.</p>
 <p><strong>Next steps:</strong></p>
@@ -397,9 +397,9 @@
 <br>
 <p><strong>Continued (same session, first slide revision):</strong></p>
 <ul>
-  <li>`AI_auto/Overleaf_source/slides_main.tex` — simplified the language throughout; removed the front-page image; replaced the DTU rule summary with the direct Danish quote; reframed the &quot;real problem&quot; slide as a normal research day; added the coding-assistant role explicitly; strengthened the productivity/competitiveness wording in plain English; clarified feeder updates through logs and handovers; added the DTU license question and noted that Copilot is useful but limited for this workflow.</li>
-  <li>`AI_auto/Overleaf_source/.gitignore` — added `*.pdf` so generated PDFs are not committed from the Overleaf clone.</li>
-  <li>`AI_auto/Overleaf_source/Pub_AI_Research_Book.pdf` — accidentally picked up by the first push because it was placed in the Overleaf Git folder; removed from Git tracking and pushed the cleanup while keeping the local file on disk.</li>
+  <li>`AI_auto/Overleaf_source/slides_main.tex` &#226;€” simplified the language throughout; removed the front-page image; replaced the DTU rule summary with the direct Danish quote; reframed the &quot;real problem&quot; slide as a normal research day; added the coding-assistant role explicitly; strengthened the productivity/competitiveness wording in plain English; clarified feeder updates through logs and handovers; added the DTU license question and noted that Copilot is useful but limited for this workflow.</li>
+  <li>`AI_auto/Overleaf_source/.gitignore` &#226;€” added `*.pdf` so generated PDFs are not committed from the Overleaf clone.</li>
+  <li>`AI_auto/Overleaf_source/Pub_AI_Research_Book.pdf` &#226;€” accidentally picked up by the first push because it was placed in the Overleaf Git folder; removed from Git tracking and pushed the cleanup while keeping the local file on disk.</li>
 </ul>
 <p><strong>Outcome:</strong> Revised slides were pushed to Overleaf. The Overleaf repo is clean at commit `e2d56cf`; the local PDF remains available but is ignored by Git.</p>
 <p><strong>Next steps:</strong></p>
@@ -410,8 +410,8 @@
 <br>
 <p><strong>Continued (same session, slides<em>main</em>v2):</strong></p>
 <ul>
-  <li>`AI_auto/Overleaf_source/slides_main_v2.tex` — created from the locally copied Overleaf slide source, including the new second-last &quot;Installation Package&quot; slide.</li>
-  <li>`AI_auto/Overleaf_source/` — fetched and fast-forwarded to the current Overleaf master before pushing `slides_main_v2.tex`; pushed commit `abe0241`.</li>
+  <li>`AI_auto/Overleaf_source/slides_main_v2.tex` &#226;€” created from the locally copied Overleaf slide source, including the new second-last &quot;Installation Package&quot; slide.</li>
+  <li>`AI_auto/Overleaf_source/` &#226;€” fetched and fast-forwarded to the current Overleaf master before pushing `slides_main_v2.tex`; pushed commit `abe0241`.</li>
 </ul>
 <p><strong>Outcome:</strong> `slides<em>main</em>v2.tex` is now available in Overleaf as a separate file, leaving `slides<em>main.tex` as the current Overleaf-edited version. The Overleaf clone is clean. A temporary Git stash named `preserve local slides</em>main before v2 push` remains in the Overleaf clone, but its relevant content is preserved in `slides<em>main</em>v2.tex`.</p>
 <p><strong>Next steps:</strong></p>
@@ -427,18 +427,46 @@
 <p><strong>Goal:</strong> Close the AI_auto working session after linking Overleaf and preparing the DTU AI infrastructure slides.</p>
 <p><strong>Files touched:</strong></p>
 <ul>
-  <li>`AI_auto/Overleaf_source/` — linked to Overleaf project `https://git.overleaf.com/69e4cd88646aa324de75fc2c`; pushed `slides_main.tex` and later `slides_main_v2.tex`.</li>
-  <li>`AI_auto/Overleaf_source/slides_main_v2.tex` — created a separate Beamer deck version with the installation-package slide as the second-last slide.</li>
-  <li>`AI_auto/Overleaf_source/.gitignore` — added `*.pdf` so generated PDFs are not committed from the Overleaf clone.</li>
-  <li>`AI_auto/projects.json` — registered `AI_auto` as a normal Overleaf-backed project.</li>
-  <li>`AI_auto/helpi.ps1` — added `AI_auto` to current-working-directory project detection.</li>
-  <li>`AI_auto/open_project.ps1`, `AI_auto/compile_latex.ps1`, `AI_auto/generate_slides.ps1` — changed project-root resolution to shared `Resolve-ProjectRoot` so projects under `JR\` work like projects under `Publikationer\`.</li>
-  <li>`AI_auto/.gitignore` — ignored nested `Overleaf_source/` in the infrastructure repo.</li>
-  <li>`AI_auto/_ai_log.md` — recorded the session work.</li>
+  <li>`AI_auto/Overleaf_source/` &#226;€” linked to Overleaf project `https://git.overleaf.com/69e4cd88646aa324de75fc2c`; pushed `slides_main.tex` and later `slides_main_v2.tex`.</li>
+  <li>`AI_auto/Overleaf_source/slides_main_v2.tex` &#226;€” created a separate Beamer deck version with the installation-package slide as the second-last slide.</li>
+  <li>`AI_auto/Overleaf_source/.gitignore` &#226;€” added `*.pdf` so generated PDFs are not committed from the Overleaf clone.</li>
+  <li>`AI_auto/projects.json` &#226;€” registered `AI_auto` as a normal Overleaf-backed project.</li>
+  <li>`AI_auto/helpi.ps1` &#226;€” added `AI_auto` to current-working-directory project detection.</li>
+  <li>`AI_auto/open_project.ps1`, `AI_auto/compile_latex.ps1`, `AI_auto/generate_slides.ps1` &#226;€” changed project-root resolution to shared `Resolve-ProjectRoot` so projects under `JR\` work like projects under `Publikationer\`.</li>
+  <li>`AI_auto/.gitignore` &#226;€” ignored nested `Overleaf_source/` in the infrastructure repo.</li>
+  <li>`AI_auto/_ai_log.md` &#226;€” recorded the session work.</li>
 </ul>
 <p><strong>Outcome:</strong> `AI<em>auto` is linked to Overleaf, the Overleaf clone is clean and synced, and `slides</em>main_v2.tex` is available in Overleaf for the April 23 technical discussion. The main infrastructure repo still has existing uncommitted changes, including pre-existing changes outside this session.</p>
 <p><strong>Next steps:</strong> Compile `slides<em>main</em>v2.tex` in Overleaf, use it for the DTU meeting, then decide whether to clean up and test the installation package with a few real users before presenting it as a reusable workflow.</p>
 <p><strong>Git ref:</strong> c2c80a8</p>
+<br>
+<hr>
+<br>
+<h2>Session 2026-04-22</h2>
+<p><strong>Agent:</strong> GPT-5 Codex</p>
+<p><strong>Goal:</strong> Revise `slides<em>main</em>v2.tex` so the DTU quotes appear on the front page and the separate second slide is removed.</p>
+<p><strong>Files touched:</strong></p>
+<ul>
+  <li>`AI_auto/Overleaf_source/slides_main_v2.tex` &#226;€” replaced the opening DTU-rule slide with a plain title/front page containing the two DTU quote paragraphs; removed the duplicate second DTU-rule slide and its &quot;My reading&quot; block.</li>
+  <li>`AI_auto/_ai_log.md` &#226;€” recorded this short slide-edit session.</li>
+</ul>
+<p><strong>Outcome:</strong> `slides<em>main</em>v2.tex` now starts with the title page plus DTU rule quote, followed directly by &quot;A Normal Research Day&quot;. Static frame count is 13. The Overleaf source commit `d9affeb` was pushed to the linked Overleaf project.</p>
+<p><strong>Next steps:</strong> Recompile `slides<em>main</em>v2.tex` in Overleaf and check whether the title page quote block is visually comfortable; reduce the quote font or shorten the block if it feels too dense.</p>
+<p><strong>Git ref:</strong> d9affeb</p>
+<br>
+<hr>
+<br>
+<h2>Session 2026-04-22</h2>
+<p><strong>Agent:</strong> GPT-5 Codex</p>
+<p><strong>Goal:</strong> Create a condensed 10-slide version of the DTU AI infrastructure meeting deck without pushing it.</p>
+<p><strong>Files touched:</strong></p>
+<ul>
+  <li>`AI_auto/Overleaf_source/slides_main_v2_10slides.tex` &#226;€” new 10-frame Beamer deck derived from `slides_main_v2.tex`; keeps the DTU quote title page and condenses the narrative by merging normal research work with motivation, combining browser-vs-agent material, and merging installation/publication support into one &quot;What Exists Now&quot; slide.</li>
+  <li>`AI_auto/_ai_log.md` &#226;€” recorded this short slide-edit session.</li>
+</ul>
+<p><strong>Outcome:</strong> New file `slides<em>main</em>v2_10slides.tex` exists locally with exactly 10 frames. It has not been committed or pushed.</p>
+<p><strong>Next steps:</strong> Compile `slides<em>main</em>v2_10slides.tex` in Overleaf, check density on slides 2, 3, and 9, then push if it is the version to use for the meeting.</p>
+<p><strong>Git ref:</strong> d9affeb</p>
 <br>
 
 </div>
@@ -449,7 +477,7 @@
 <div class="section">
   <h2>Editable Source (_ai_log.md)</h2>
   <div class="label">Copy this, update it with your session entry, and paste back into _ai_log.md</div>
-  <textarea id="mdSource" spellcheck="false"># AI Session Log — AI Infrastructure Project
+  <textarea id="mdSource" spellcheck="false"># AI Session Log â€” AI Infrastructure Project
 
 ---
 
@@ -457,13 +485,13 @@
 **Agent:** Claude Sonnet 4.6
 **Goal:** Set up lightweight versioning for the AI infrastructure; implement a stable/develop branch model; act on GPT's code review findings.
 **Files touched:**
-- `CHANGELOG.md` — created; documents v0.1 and v0.2 releases with a running unreleased section
-- `VERSION` — created; current value v0.2
-- `RELEASING.md` — created; plain-language instructions for making a new release
-- `infrastructure.html` — version field added to subtitle; new versioning section added at the bottom
-- `.gitignore` — created; excludes logs/ and overleaf_projects.csv
-- `snapshot.ps1` — removed silent auto-commit of dirty state before tagging; now aborts with a clear file list and commit/discard instructions
-- `C:\Users\rich\.claude\CLAUDE.md` — added session length management section: Claude proposes ⚠ close+restart at ~20 exchanges on a natural break
+- `CHANGELOG.md` â€” created; documents v0.1 and v0.2 releases with a running unreleased section
+- `VERSION` â€” created; current value v0.2
+- `RELEASING.md` â€” created; plain-language instructions for making a new release
+- `infrastructure.html` â€” version field added to subtitle; new versioning section added at the bottom
+- `.gitignore` â€” created; excludes logs/ and overleaf_projects.csv
+- `snapshot.ps1` â€” removed silent auto-commit of dirty state before tagging; now aborts with a clear file list and commit/discard instructions
+- `C:\Users\rich\.claude\CLAUDE.md` â€” added session length management section: Claude proposes âš  close+restart at ~20 exchanges on a natural break
 **Outcome:** Infrastructure is now git-versioned (GitHub: jepperich69/ai-infrastructure), released at v0.2, with a working stable/develop branch model and the main operational footgun in snapshot.ps1 fixed.
 **Next steps:**
 - `helpi.ps1`: wrap PSConsoleReadLine call in try/catch so it degrades gracefully in non-interactive shells (v0.3 candidate)
@@ -476,9 +504,9 @@
 **Agent:** Claude Sonnet 4.6
 **Goal:** Consistency-cleanup pass on v0.2 based on GPT code review recommendations.
 **Files touched:**
-- `RELEASING.md` — updated "Current state" to v0.2, rewired "Working toward" to v0.3, made VERSION the explicit single source of truth in release steps
-- `infrastructure.html` — updated version string to v0.2 (with VERSION SOT note), fixed snapshot diagram label from "copy main.tex" to "git tag full Overleaf_source/", fixed snapshot workflow description from "saves main.tex as frozen copy" to "git-tags full Overleaf_source/ state"
-- `snapshot.ps1` — tightened abort guidance: replaced single destructive `checkout -- .` suggestion with three labelled options (commit / stash / discard), stash marked reversible, discard marked PERMANENT
+- `RELEASING.md` â€” updated "Current state" to v0.2, rewired "Working toward" to v0.3, made VERSION the explicit single source of truth in release steps
+- `infrastructure.html` â€” updated version string to v0.2 (with VERSION SOT note), fixed snapshot diagram label from "copy main.tex" to "git tag full Overleaf_source/", fixed snapshot workflow description from "saves main.tex as frozen copy" to "git-tags full Overleaf_source/ state"
+- `snapshot.ps1` â€” tightened abort guidance: replaced single destructive `checkout -- .` suggestion with three labelled options (commit / stash / discard), stash marked reversible, discard marked PERMANENT
 **Outcome:** v0.2 is now consistent across all docs and scripts; snapshot safety posture improved.
 **Next steps:**
 - `helpi.ps1`: wrap PSConsoleReadLine call in try/catch for non-interactive shell degradation (v0.3 candidate)
@@ -491,9 +519,9 @@
 **Agent:** Claude Sonnet 4.6
 **Goal:** Auto-generate separate PDF and HTML exports for the 1-2 pager and the full infrastructure guide.
 **Files touched:**
-- `generate_docs.ps1` — created; reads infrastructure.html, splices two CSS variants into the @media print block, writes infrastructure_summary.html and infrastructure_full.html, then calls Edge headless to produce matching PDFs
-- `helpi.ps1` — added command 16 "Generate docs (summary + full HTML/PDF)" wired to generate_docs.ps1; preview and bounds-check updated automatically via `$commands.Count`
-- `.gitignore` — added the four generated output files (infrastructure_summary/full .html/.pdf) as gitignored artifacts
+- `generate_docs.ps1` â€” created; reads infrastructure.html, splices two CSS variants into the @media print block, writes infrastructure_summary.html and infrastructure_full.html, then calls Edge headless to produce matching PDFs
+- `helpi.ps1` â€” added command 16 "Generate docs (summary + full HTML/PDF)" wired to generate_docs.ps1; preview and bounds-check updated automatically via `$commands.Count`
+- `.gitignore` â€” added the four generated output files (infrastructure_summary/full .html/.pdf) as gitignored artifacts
 **Outcome:** Running `helpi 16` (or `.\generate_docs.ps1`) now produces four files: a summary HTML/PDF showing only the 1-2 pager and a full HTML/PDF showing the complete guide.
 **Next steps:**
 - `helpi.ps1`: wrap PSConsoleReadLine call in try/catch for non-interactive shell degradation (v0.3 candidate)
@@ -506,14 +534,14 @@
 **Agent:** Claude Sonnet 4.6
 **Goal:** Design and implement a proxy-sandbox for per-project Claude file isolation; document DTU AI data policy compliance; set up shared Sensitive_Data folder.
 **Files touched:**
-- `new_project.ps1` — added `.claude/settings.json` scaffold step: denies reads from AI_auto, AppData, and ~/.claude on every new project
-- `infrastructure.html` — added §7b (proxy-sandbox design, two-level deny rules, DTU policy compliance table, Sensitive_Data folder convention); updated project folder structure listing to include `.claude/settings.json`
-- `infrastructure_summary.html` / `infrastructure_full.html` / `_summary.pdf` / `_full.pdf` — regenerated via `generate_docs.ps1`
-- `C:/Users/rich/.claude/settings.json` — added global deny rule for `JR/Sensitive_Data/**`
-- `JR/Sensitive_Data/code/` — folder created as shared human-only zone for sensitive source data and analysis scripts
-**Outcome:** Claude Code is now structurally confined to project folders via a per-project deny list and a global block on the shared Sensitive_Data folder; DTU AI data policy compliance is documented in §7b as a structural property of the setup, not a matter of discipline.
+- `new_project.ps1` â€” added `.claude/settings.json` scaffold step: denies reads from AI_auto, AppData, and ~/.claude on every new project
+- `infrastructure.html` â€” added Â§7b (proxy-sandbox design, two-level deny rules, DTU policy compliance table, Sensitive_Data folder convention); updated project folder structure listing to include `.claude/settings.json`
+- `infrastructure_summary.html` / `infrastructure_full.html` / `_summary.pdf` / `_full.pdf` â€” regenerated via `generate_docs.ps1`
+- `C:/Users/rich/.claude/settings.json` â€” added global deny rule for `JR/Sensitive_Data/**`
+- `JR/Sensitive_Data/code/` â€” folder created as shared human-only zone for sensitive source data and analysis scripts
+**Outcome:** Claude Code is now structurally confined to project folders via a per-project deny list and a global block on the shared Sensitive_Data folder; DTU AI data policy compliance is documented in Â§7b as a structural property of the setup, not a matter of discipline.
 **Next steps:**
-- Write `Sensitive_Data/code/generate_testdata.py` — synthetic test data generator supporting CSV, Excel, and Access (.accdb) input; CSV output; profile-based sampling per column
+- Write `Sensitive_Data/code/generate_testdata.py` â€” synthetic test data generator supporting CSV, Excel, and Access (.accdb) input; CSV output; profile-based sampling per column
 - `helpi.ps1`: wrap PSConsoleReadLine call in try/catch for non-interactive shell degradation (v0.3 candidate)
 - Extract hardcoded `$aiRoot` / `$pubRoot` paths to a shared `config.ps1` (v0.3 candidate)
 **Git ref:** a56d604
@@ -524,21 +552,21 @@
 **Agent:** Claude Sonnet 4.6
 **Goal:** Explore Claude Code features being underused; implement per-project CLAUDE.md system; extend it to Codex; update infrastructure docs.
 **Files touched:**
-- `AI_auto/prompts/project_claude_md_template.md` — created; blank template for per-project Claude briefs
-- `AI_auto/new_project.ps1` — added `.claude/CLAUDE.md` scaffolding step to project creation
-- `AI_auto/infrastructure.html` — updated: handover tag manual→auto, /close description, Codex skill table, capability comparison table, worked example terminal output
-- `~/.claude/CLAUDE.md` — added per-project auto-fill instruction (fills blank CLAUDE.md from manuscript at session start) and AGENTS.md convention note
-- `~/.claude/commands/close.md` — added step 4 (CLAUDE.md sync) and step 5 (auto-regenerate handover via helpi 5)
-- `~/.codex/skills/research-work/SKILL.md` — added step 2: read `.claude/CLAUDE.md` before `_ai_log.md`
-- `~/.codex/config.toml` — added "Per-project brief" section to developer_instructions
-- `89× &lt;project&gt;/.claude/settings.json` — scaffolded across all projects (proxy-sandbox deny rules)
-- `89× &lt;project&gt;/.claude/CLAUDE.md` — scaffolded with placeholder template; 6 filled with real content
-- `Pub_AssesTiming_Raoul_TBA/.claude/CLAUDE.md` — filled: R1 revision, Raoul co-author, call-option payoff fix, β notation, frozen sections
-- `Pub_PMIP_AOR/.claude/CLAUDE.md` — filled: under review AOR, MH=probabilistic-inference, mh_swap_repair() location
-- `Pub_MIPEntropy_MPC/.claude/CLAUDE.md` — filled: R1 ready to submit, 47 comments, Springer_R1B.tex active, Stage 4 MH
-- `Pub_ActionSpace_NatComm/.claude/CLAUDE.md` — filled: NatComm R1B complete, 56+ label, SI numbering, kernel provenance
-- `Pub_NapstiGranularity_TBA/.claude/CLAUDE.md` — filled: V6 complete, 4 contributions, S-shape explanation, 14-city dataset
-- `Pub_PopInt_PartB/.claude/CLAUDE.md` — filled: TR Part B under review, floor/ceiling proof, submitted version frozen, cross-bib constraints
+- `AI_auto/prompts/project_claude_md_template.md` â€” created; blank template for per-project Claude briefs
+- `AI_auto/new_project.ps1` â€” added `.claude/CLAUDE.md` scaffolding step to project creation
+- `AI_auto/infrastructure.html` â€” updated: handover tag manualâ†’auto, /close description, Codex skill table, capability comparison table, worked example terminal output
+- `~/.claude/CLAUDE.md` â€” added per-project auto-fill instruction (fills blank CLAUDE.md from manuscript at session start) and AGENTS.md convention note
+- `~/.claude/commands/close.md` â€” added step 4 (CLAUDE.md sync) and step 5 (auto-regenerate handover via helpi 5)
+- `~/.codex/skills/research-work/SKILL.md` â€” added step 2: read `.claude/CLAUDE.md` before `_ai_log.md`
+- `~/.codex/config.toml` â€” added "Per-project brief" section to developer_instructions
+- `89Ã— &lt;project&gt;/.claude/settings.json` â€” scaffolded across all projects (proxy-sandbox deny rules)
+- `89Ã— &lt;project&gt;/.claude/CLAUDE.md` â€” scaffolded with placeholder template; 6 filled with real content
+- `Pub_AssesTiming_Raoul_TBA/.claude/CLAUDE.md` â€” filled: R1 revision, Raoul co-author, call-option payoff fix, Î² notation, frozen sections
+- `Pub_PMIP_AOR/.claude/CLAUDE.md` â€” filled: under review AOR, MH=probabilistic-inference, mh_swap_repair() location
+- `Pub_MIPEntropy_MPC/.claude/CLAUDE.md` â€” filled: R1 ready to submit, 47 comments, Springer_R1B.tex active, Stage 4 MH
+- `Pub_ActionSpace_NatComm/.claude/CLAUDE.md` â€” filled: NatComm R1B complete, 56+ label, SI numbering, kernel provenance
+- `Pub_NapstiGranularity_TBA/.claude/CLAUDE.md` â€” filled: V6 complete, 4 contributions, S-shape explanation, 14-city dataset
+- `Pub_PopInt_PartB/.claude/CLAUDE.md` â€” filled: TR Part B under review, floor/ceiling proof, submitted version frozen, cross-bib constraints
 **Outcome:** Per-project CLAUDE.md system fully deployed across 89 projects; both Claude Code and Codex now read the same brief at session start, eliminating cold-start on agent switches; /close now auto-updates CLAUDE.md and auto-regenerates handover.
 **Next steps:**
 - Fill in `.claude/CLAUDE.md` for other projects as you work on them (auto-fill kicks in at first `/work`)
@@ -552,10 +580,10 @@
 **Agent:** GPT-5 Codex
 **Goal:** Upgrade `helpi 5` so handover compilation is driven by a structured AI-log parser, then update the infrastructure guide to reflect the new behavior.
 **Files touched:**
-- `AI_auto/ai_log_tools.ps1` — created shared AI-log parser utilities: parse markdown session blocks, identify the latest session by date, validate required fields, and expose a compact latest-session summary
-- `AI_auto/generate_handover.ps1` — upgraded to use the shared parser; now compiles a latest-session snapshot, validates the newest log block, writes `_handover.html`, and emits a structured `_handover.json` sidecar
-- `AI_auto/helpi.ps1` — renamed command 5 in the menu from “Generate handover document” to “Compile handover package from AI log”
-- `AI_auto/infrastructure.html` — updated the AI logging / handover section, the command table, and the one-pager so they describe `helpi 5` as a compiler from `_ai_log.md` to `_handover.html` + `_handover.json`
+- `AI_auto/ai_log_tools.ps1` â€” created shared AI-log parser utilities: parse markdown session blocks, identify the latest session by date, validate required fields, and expose a compact latest-session summary
+- `AI_auto/generate_handover.ps1` â€” upgraded to use the shared parser; now compiles a latest-session snapshot, validates the newest log block, writes `_handover.html`, and emits a structured `_handover.json` sidecar
+- `AI_auto/helpi.ps1` â€” renamed command 5 in the menu from â€œGenerate handover documentâ€ to â€œCompile handover package from AI logâ€
+- `AI_auto/infrastructure.html` â€” updated the AI logging / handover section, the command table, and the one-pager so they describe `helpi 5` as a compiler from `_ai_log.md` to `_handover.html` + `_handover.json`
 **Outcome:** `helpi 5` is now conceptually cleaner: `_ai_log.md` remains the source of truth, while the handover is compiled from it through a shared parser layer rather than treated as a separate parallel artifact. The upgraded generator was verified end-to-end on `Pub_MIPEntropy_MPC`, including correct latest-session detection and a structured `files_touched` array in `_handover.json`.
 **Next steps:**
 - Consider routing future `/close` implementations through the same parser/writer layer so log writing and handover compilation share one canonical schema
@@ -568,20 +596,20 @@
 **Agent:** Claude Sonnet 4.6
 **Goal:** Build and fully test the submission pipeline (`submit.ps1` + `/submit` skill + `helpi 17`); fix all bugs discovered during live test on `Pub_MIPEntropy_MPC`; final editorial pass on `Springer_R1C.tex`.
 **Files touched:**
-- `AI_auto/submit.ps1` — created; 7-step submission assembly script: (1) compile with BIBINPUTS+BSTINPUTS, (2) front-page via Ghostscript, (3) inline bbl using `[regex]::Replace` MatchEvaluator, (4) submission zip (tex as `main.tex`), (5) blind manuscript (line-by-line author stripping + compile + zip), (6) latexdiff with CRLF normalisation + bbl inlining, (7) copy staged AI content. File naming convention: `Type_Author_Journal_Year_Rev.*` (e.g. `Manus_Rich_MPC_2026_R1.pdf`). Revision auto-detected from tex filename.
-- `AI_auto/prompts/submit.md` — created; `/submit` skill prompt: generates cover letter, highlights, author statement into `_submit_staging/`, compiles PDFs, calls `submit.ps1`
-- `AI_auto/prompts/submit_stage_ai.md` — created; AI-only staging prompt (generates 3 files, does NOT call `submit.ps1`); used by `helpi 17` via `claude -p`
-- `AI_auto/helpi.ps1` — added command 17 "Build submission package"; command 17 block: checks for `_submit_staging/cover_letter.pdf`, calls `claude -p` with `submit_stage_ai.md` prompt if absent, then calls `submit.ps1`; fixed command count check to use `($commands | Measure-Object).Count`
-- `AI_auto/infrastructure.html` — rewrote §6c: new file naming convention, blind manuscript section, 7-step assembly description, known-gotchas table (4 bugs), updated dependencies table, updated usage examples
-- `Pub_MIPEntropy_MPC/Overleaf_source/Springer_R1C.tex` — editorial fixes: "We a method" → "We present a method"; `{llrrrr}` → `{llrrr}` in tab:ablation; "21. October" → "21 October"; expanded §2.2 with permutation enumeration table (3 of 6 candidates, cost + probability); added proof motivation paragraph to Appendix B (Theorem 2.1); added `\begin{remark}` before Theorem 2.2 attributing parts (a) and (c) to Carlier2017/PeyreCuturi2019
-- `Pub_MIPEntropy_MPC/_submit_staging/cover_letter.tex` + `.pdf` — generated
-- `Pub_MIPEntropy_MPC/_submit_staging/highlights.txt` — 5 bullets, all ≤85 chars
-- `Pub_MIPEntropy_MPC/_submit_staging/author_statement.tex` + `.pdf` — generated
+- `AI_auto/submit.ps1` â€” created; 7-step submission assembly script: (1) compile with BIBINPUTS+BSTINPUTS, (2) front-page via Ghostscript, (3) inline bbl using `[regex]::Replace` MatchEvaluator, (4) submission zip (tex as `main.tex`), (5) blind manuscript (line-by-line author stripping + compile + zip), (6) latexdiff with CRLF normalisation + bbl inlining, (7) copy staged AI content. File naming convention: `Type_Author_Journal_Year_Rev.*` (e.g. `Manus_Rich_MPC_2026_R1.pdf`). Revision auto-detected from tex filename.
+- `AI_auto/prompts/submit.md` â€” created; `/submit` skill prompt: generates cover letter, highlights, author statement into `_submit_staging/`, compiles PDFs, calls `submit.ps1`
+- `AI_auto/prompts/submit_stage_ai.md` â€” created; AI-only staging prompt (generates 3 files, does NOT call `submit.ps1`); used by `helpi 17` via `claude -p`
+- `AI_auto/helpi.ps1` â€” added command 17 "Build submission package"; command 17 block: checks for `_submit_staging/cover_letter.pdf`, calls `claude -p` with `submit_stage_ai.md` prompt if absent, then calls `submit.ps1`; fixed command count check to use `($commands | Measure-Object).Count`
+- `AI_auto/infrastructure.html` â€” rewrote Â§6c: new file naming convention, blind manuscript section, 7-step assembly description, known-gotchas table (4 bugs), updated dependencies table, updated usage examples
+- `Pub_MIPEntropy_MPC/Overleaf_source/Springer_R1C.tex` â€” editorial fixes: "We a method" â†’ "We present a method"; `{llrrrr}` â†’ `{llrrr}` in tab:ablation; "21. October" â†’ "21 October"; expanded Â§2.2 with permutation enumeration table (3 of 6 candidates, cost + probability); added proof motivation paragraph to Appendix B (Theorem 2.1); added `\begin{remark}` before Theorem 2.2 attributing parts (a) and (c) to Carlier2017/PeyreCuturi2019
+- `Pub_MIPEntropy_MPC/_submit_staging/cover_letter.tex` + `.pdf` â€” generated
+- `Pub_MIPEntropy_MPC/_submit_staging/highlights.txt` â€” 5 bullets, all â‰¤85 chars
+- `Pub_MIPEntropy_MPC/_submit_staging/author_statement.tex` + `.pdf` â€” generated
 **Bugs found and fixed during live test:**
-1. **BSTINPUTS not set** — bibtex could not find `spmpsci.bst` in `Overleaf_source/` → empty .bbl → no references anywhere. Fix: `$env:BSTINPUTS = "$sourceDir;..."` added alongside BIBINPUTS.
-2. **CRLF/LF mismatch** — `Springer_R1B.tex` had 1964 CR characters (Windows), `Springer_R1C.tex` had 0 (Unix). Latexdiff saw every line as different, could not find anchors, silently dropped real changes. Fix: LF-normalised temp copies diffed; originals untouched.
-3. **PowerShell `-replace` corrupts .bbl** — `$` in reference titles (math) interpreted as regex back-references, erasing bibliography content. Fix: `[regex]::Replace` with MatchEvaluator for all .bbl substitutions.
-4. **diff.tex compiled from wrong folder** — compiled from `_submissions/` folder, missing `svjour3.cls` and figures. Fix: compiled from `Overleaf_source/`; temp files cleaned up in `finally` block.
+1. **BSTINPUTS not set** â€” bibtex could not find `spmpsci.bst` in `Overleaf_source/` â†’ empty .bbl â†’ no references anywhere. Fix: `$env:BSTINPUTS = "$sourceDir;..."` added alongside BIBINPUTS.
+2. **CRLF/LF mismatch** â€” `Springer_R1B.tex` had 1964 CR characters (Windows), `Springer_R1C.tex` had 0 (Unix). Latexdiff saw every line as different, could not find anchors, silently dropped real changes. Fix: LF-normalised temp copies diffed; originals untouched.
+3. **PowerShell `-replace` corrupts .bbl** â€” `$` in reference titles (math) interpreted as regex back-references, erasing bibliography content. Fix: `[regex]::Replace` with MatchEvaluator for all .bbl substitutions.
+4. **diff.tex compiled from wrong folder** â€” compiled from `_submissions/` folder, missing `svjour3.cls` and figures. Fix: compiled from `Overleaf_source/`; temp files cleaned up in `finally` block.
 **Outcome:** Full submission pipeline verified end-to-end on `Pub_MIPEntropy_MPC`. Package `_submissions/2026-04-15_MPC/` contains 10 correctly named files including blind manuscript, diff with references, and AI-generated documents. `helpi 17` now calls `claude -p` automatically when staging is empty, making it a single-command full pipeline.
 **Next steps:**
 - Update `CHANGELOG.md` and bump `VERSION` to v0.3 (submit pipeline is a meaningful new feature)
@@ -594,10 +622,10 @@
 **Agent:** Claude Sonnet 4.6
 **Goal:** Improve agent-switching context (AGENTS.md auto-generation), add feeder network visualization to infrastructure docs, integrate frontpage image, discuss packaging feasibility.
 **Files touched:**
-- `AI_auto/generate_handover.ps1` — added AGENTS.md generation: writes paper description (from `.claude/CLAUDE.md`), latest session snapshot, full log, and session-entry instructions to project root on every `helpi 5` / `/close`
-- `AI_auto/infrastructure.html` — v0.2 → v0.3: added AGENTS.md subsection in §3, added interactive D3.js feeder network graph in §7 (41 nodes, 7 clusters, convex hulls, zoom/drag), updated §10 shared-context note, updated one-pager handover scenario, integrated `Infra_frontpage.png` as cover page (HTML + full PDF, print-only h1/subtitle hide, `page-break-after: always`)
-- `AI_auto/infrastructure_full.html` / `infrastructure_summary.html` / `_full.pdf` / `_summary.pdf` — regenerated via `generate_docs.ps1`
-**Outcome:** Agent switching (Claude ↔ Codex) is now fully automatic in both directions — AGENTS.md is regenerated on every close and auto-loaded by Codex; the infrastructure guide is visually richer with a cover page and an interactive feeder graph showing the full cross-project knowledge network.
+- `AI_auto/generate_handover.ps1` â€” added AGENTS.md generation: writes paper description (from `.claude/CLAUDE.md`), latest session snapshot, full log, and session-entry instructions to project root on every `helpi 5` / `/close`
+- `AI_auto/infrastructure.html` â€” v0.2 â†’ v0.3: added AGENTS.md subsection in Â§3, added interactive D3.js feeder network graph in Â§7 (41 nodes, 7 clusters, convex hulls, zoom/drag), updated Â§10 shared-context note, updated one-pager handover scenario, integrated `Infra_frontpage.png` as cover page (HTML + full PDF, print-only h1/subtitle hide, `page-break-after: always`)
+- `AI_auto/infrastructure_full.html` / `infrastructure_summary.html` / `_full.pdf` / `_summary.pdf` â€” regenerated via `generate_docs.ps1`
+**Outcome:** Agent switching (Claude â†” Codex) is now fully automatic in both directions â€” AGENTS.md is regenerated on every close and auto-loaded by Codex; the infrastructure guide is visually richer with a cover page and an interactive feeder graph showing the full cross-project knowledge network.
 **Next steps:**
 - Consider packaging the infrastructure as a GitHub template repo + installer script for external use (discussed: parameterise paths via `config.ps1`, write a `setup.ps1`, Windows-first)
 - Update `CHANGELOG.md` and bump `VERSION` to v0.3
@@ -609,13 +637,13 @@
 
 ## Session 2026-04-18
 **Agent:** Claude Sonnet 4.6
-**Goal:** Add a collaboration section to the infrastructure guide; then restructure all section numbers to align with helpi 1–16 ordering.
+**Goal:** Add a collaboration section to the infrastructure guide; then restructure all section numbers to align with helpi 1â€“16 ordering.
 **Files touched:**
-- `infrastructure.html` — major restructuring: (1) added Section I: Collaborative Setup documenting the git-layer vs. personal-layer split, collaborator onboarding steps, branch discipline, shared `_ai_log.md` across contributors, and Overleaf co-authoring; (2) renumbered all file-layer sections to match helpi 1–16 exactly (previously sections 1–5 covered helpi 2, 4, 7, 5/6 in wrong order); (3) reordered sections to follow the project lifecycle story: create → pull → push → compile → logging → snapshot → rollback → submit → reviewer → status/docs; (4) added four new dedicated sections: helpi 1 (Create new project), 8/9 (Snapshot & Rollback), 10/11/12 (Submit & Reviewer Loop), 13–16 (Status/Network/Docs); (5) switched AI infrastructure sections from numeric labels (6, 6b, 6c, 7, 7b, 8, 9) to letters A–G to avoid conflict with helpi numbers; (6) merged Part 3 (Codex) and the new collaboration section into one Part 3 (H–I); (7) fixed all remaining v0.2 references → v0.5; bumped subtitle to v0.5.
-**Outcome:** The infrastructure guide now tells a coherent lifecycle story from project creation (1) to submission (10–12), section numbers match helpi exactly, AI sections are clearly separated with letters A–I, and the collaboration model (git as coordination layer, personal install per person) is documented.
+- `infrastructure.html` â€” major restructuring: (1) added Section I: Collaborative Setup documenting the git-layer vs. personal-layer split, collaborator onboarding steps, branch discipline, shared `_ai_log.md` across contributors, and Overleaf co-authoring; (2) renumbered all file-layer sections to match helpi 1â€“16 exactly (previously sections 1â€“5 covered helpi 2, 4, 7, 5/6 in wrong order); (3) reordered sections to follow the project lifecycle story: create â†’ pull â†’ push â†’ compile â†’ logging â†’ snapshot â†’ rollback â†’ submit â†’ reviewer â†’ status/docs; (4) added four new dedicated sections: helpi 1 (Create new project), 8/9 (Snapshot & Rollback), 10/11/12 (Submit & Reviewer Loop), 13â€“16 (Status/Network/Docs); (5) switched AI infrastructure sections from numeric labels (6, 6b, 6c, 7, 7b, 8, 9) to letters Aâ€“G to avoid conflict with helpi numbers; (6) merged Part 3 (Codex) and the new collaboration section into one Part 3 (Hâ€“I); (7) fixed all remaining v0.2 references â†’ v0.5; bumped subtitle to v0.5.
+**Outcome:** The infrastructure guide now tells a coherent lifecycle story from project creation (1) to submission (10â€“12), section numbers match helpi exactly, AI sections are clearly separated with letters Aâ€“I, and the collaboration model (git as coordination layer, personal install per person) is documented.
 **Next steps:**
 - Update `CHANGELOG.md` and bump `VERSION` file to v0.5
-- Update the one-pager desk reference section labels to reflect A–G / H–I lettering
+- Update the one-pager desk reference section labels to reflect Aâ€“G / Hâ€“I lettering
 - `helpi.ps1`: wrap PSConsoleReadLine in try/catch for non-interactive shell degradation (carried from v0.2)
 - Extract hardcoded `$aiRoot` / `$pubRoot` paths to a shared `config.ps1` (carried from v0.2)
 **Git ref:** ddafd54
@@ -626,24 +654,24 @@
 **Agent:** Claude Sonnet 4.6
 **Goal:** Improve token efficiency and communication speed; add model-switching awareness; add Beamer slide generation; overhaul infrastructure documentation.
 **Files touched:**
-- `helpi.ps1` — added commands 17 (Claude Code cheatsheet), 18 (toggle model-check), 19 (generate Beamer slides); added helper functions `Write-CheatRow`, `Show-ClaudeCheatsheet`, `Toggle-ModelCheck`; fixed Windows PS 5.1 parse errors (em-dash encoding, nested function, ampersand in strings)
-- `generate_slides.ps1` — new script: safety-pulls from Overleaf, detects main .tex, interactive controls (duration/depth/audience/emphasis) or named preset (quick/seminar/public), calls Claude via `-p`, offers git commit + push
-- `prompts/generate_slides.md` — new prompt: encodes all four control dimensions with explicit depth/audience/emphasis guides, Beamer output spec (16:9, Madrid theme, single self-contained file, backup slides after \appendix for deep-dive)
-- `infrastructure.html` — (1) bumped to v0.6; (2) added TOC with anchor links after subtitle; (3) added section IDs throughout; (4) completed desk reference (was missing helpi 10-12 and 15-19); (5) completed section 13-19 table (was missing rows 17-19); (6) fixed stale v0.5 reference in versioning section; (7) redesigned overview diagram: file layer now on top as foundation, AI layer replaced cramped boxes with clean OPEN/WORK/CLOSE phase table; (8) updated quick reference title to helpi 1-19
-- `VERSION` — bumped to v0.6
-- `CHANGELOG.md` — added v0.6 entry; backfilled v0.3, v0.4, v0.5 entries to close the gap from v0.2
-- `memory/feedback_model_assessment.md` — new memory file: instructs Claude to assess each task and suggest Haiku when appropriate (one-line prompt, user switches with /model)
-- `memory/MEMORY.md` — new memory index
+- `helpi.ps1` â€” added commands 17 (Claude Code cheatsheet), 18 (toggle model-check), 19 (generate Beamer slides); added helper functions `Write-CheatRow`, `Show-ClaudeCheatsheet`, `Toggle-ModelCheck`; fixed Windows PS 5.1 parse errors (em-dash encoding, nested function, ampersand in strings)
+- `generate_slides.ps1` â€” new script: safety-pulls from Overleaf, detects main .tex, interactive controls (duration/depth/audience/emphasis) or named preset (quick/seminar/public), calls Claude via `-p`, offers git commit + push
+- `prompts/generate_slides.md` â€” new prompt: encodes all four control dimensions with explicit depth/audience/emphasis guides, Beamer output spec (16:9, Madrid theme, single self-contained file, backup slides after \appendix for deep-dive)
+- `infrastructure.html` â€” (1) bumped to v0.6; (2) added TOC with anchor links after subtitle; (3) added section IDs throughout; (4) completed desk reference (was missing helpi 10-12 and 15-19); (5) completed section 13-19 table (was missing rows 17-19); (6) fixed stale v0.5 reference in versioning section; (7) redesigned overview diagram: file layer now on top as foundation, AI layer replaced cramped boxes with clean OPEN/WORK/CLOSE phase table; (8) updated quick reference title to helpi 1-19
+- `VERSION` â€” bumped to v0.6
+- `CHANGELOG.md` â€” added v0.6 entry; backfilled v0.3, v0.4, v0.5 entries to close the gap from v0.2
+- `memory/feedback_model_assessment.md` â€” new memory file: instructs Claude to assess each task and suggest Haiku when appropriate (one-line prompt, user switches with /model)
+- `memory/MEMORY.md` â€” new memory index
 **Outcome:** Three new helpi commands (17-19: cheatsheet, model-check toggle, Beamer slides with presets). Claude now flags Haiku-suitable tasks before starting. Infrastructure documentation overhauled: TOC added, desk reference completed, section 13-19 table filled, overview diagram redesigned with file layer as foundation and a readable AI phase table replacing the old scattered command boxes.
 
 **Continued (same session, v0.7 work):**
-- `config.ps1` (new) — single source of truth for all machine-specific paths; all 22 scripts refactored to dot-source it
-- `restore.ps1` (new, helpi 20) — 8-step recovery checker for replacement-machine scenario
-- `setup.ps1` (new, helpi 21) — first-time setup wizard for new users/machines
-- `setup_project.ps1` — fixed remaining hardcoded `$jsonPath` (line 21)
-- `setup_tagged.ps1` — moved `$tagTargets` hashtable into `config.ps1`; fixed mojibake encoding in "Ansogninger"
-- `infrastructure.html` — added helpi 20/21 to command table and desk reference; bumped to v0.7
-- `VERSION` / `CHANGELOG.md` — bumped to v0.7
+- `config.ps1` (new) â€” single source of truth for all machine-specific paths; all 22 scripts refactored to dot-source it
+- `restore.ps1` (new, helpi 20) â€” 8-step recovery checker for replacement-machine scenario
+- `setup.ps1` (new, helpi 21) â€” first-time setup wizard for new users/machines
+- `setup_project.ps1` â€” fixed remaining hardcoded `$jsonPath` (line 21)
+- `setup_tagged.ps1` â€” moved `$tagTargets` hashtable into `config.ps1`; fixed mojibake encoding in "Ansogninger"
+- `infrastructure.html` â€” added helpi 20/21 to command table and desk reference; bumped to v0.7
+- `VERSION` / `CHANGELOG.md` â€” bumped to v0.7
 
 **Next steps:**
 - Test `helpi 19` end-to-end on a real project
@@ -652,10 +680,10 @@
 **Git ref:** cafb203
 
 **Continued (same session, install docs):**
-- `setup.ps1` — step 6/6 → 7/7; added Overleaf bulk-import offer at end of wizard
-- `infrastructure.html` — new "Install" section: Scenario A (restore), Scenario B (new colleague), Overleaf bulk vs. one-by-one flow, prerequisites table; TOC entry added
-- `setup_project.ps1` — hardcoded jsonPath fixed
-- `setup_tagged.ps1` + `config.ps1` — tagTargets moved to config; encoding fix
+- `setup.ps1` â€” step 6/6 â†’ 7/7; added Overleaf bulk-import offer at end of wizard
+- `infrastructure.html` â€” new "Install" section: Scenario A (restore), Scenario B (new colleague), Overleaf bulk vs. one-by-one flow, prerequisites table; TOC entry added
+- `setup_project.ps1` â€” hardcoded jsonPath fixed
+- `setup_tagged.ps1` + `config.ps1` â€” tagTargets moved to config; encoding fix
 
 ---
 
@@ -663,8 +691,8 @@
 **Agent:** GPT-5 Codex
 **Goal:** Draft a down-to-earth book concept on research life with AI, grounded in the full infrastructure guide and supported by current productivity and research-computing literature.
 **Files touched:**
-- `AI_auto/book_draft_researcher_ai_infrastructure.md` — created first full Markdown draft, working title "The Down-to-Earth AI Researcher"; includes book premise, AI Productivity Law, modern researcher infrastructure problem, API vs local/license discussion, Git/Overleaf pull-push chapter, logging/handover chapter, feeder-vs-RAG chapter, prompting guidance, paper-writing lifecycle, setup/install chapter, CV/public-record chapter, and working references.
-- `AI_auto/_ai_log.md` — appended this session log entry.
+- `AI_auto/book_draft_researcher_ai_infrastructure.md` â€” created first full Markdown draft, working title "The Down-to-Earth AI Researcher"; includes book premise, AI Productivity Law, modern researcher infrastructure problem, API vs local/license discussion, Git/Overleaf pull-push chapter, logging/handover chapter, feeder-vs-RAG chapter, prompting guidance, paper-writing lifecycle, setup/install chapter, CV/public-record chapter, and working references.
+- `AI_auto/_ai_log.md` â€” appended this session log entry.
 **Outcome:** First book draft created and verified. It uses `infrastructure_full.html` as the running implementation example and cites literature including Noy and Zhang (2023), Brynjolfsson et al. (2023), Peng et al. (2023), Dell'Acqua et al. (2023), Lewis et al. (2020), Wilkinson et al. (2016), Wilson et al. (2017), and Overleaf Git documentation.
 **Next steps:**
 - Expand Chapter 1 into a polished opening chapter with the AI Productivity Law as the hook.
@@ -679,14 +707,14 @@
 **Agent:** GPT-5 Codex
 **Goal:** Link the AI_auto infrastructure project to its Overleaf project and make it work with the normal helpi project facilities.
 **Files touched:**
-- `AI_auto/Overleaf_source/` — created by cloning Overleaf git project `https://git.overleaf.com/69e4cd88646aa324de75fc2c`; current branch is `master`; contains `main.tex`, `main_v2.tex`, and `figures/`.
-- `AI_auto/.gitignore` — added `Overleaf_source/` so the nested Overleaf git clone is not accidentally tracked by the infrastructure repo.
-- `AI_auto/projects.json` — registered `AI_auto` with path `JR\AI_auto\Overleaf_source` and branch `master`, enabling `sync_one.ps1`, `push_to_overleaf.ps1`, snapshots, and other registry-based commands.
-- `AI_auto/helpi.ps1` — added `AI_auto` to current-working-directory project detection.
-- `AI_auto/open_project.ps1` — changed project-root resolution from `Publikationer\$Project` to shared `Resolve-ProjectRoot`, so `helpi 5 AI_auto` can find projects directly under `JR`.
-- `AI_auto/compile_latex.ps1` — changed source-folder resolution to shared `Resolve-ProjectRoot`, so `helpi 6 AI_auto` can compile `AI_auto\Overleaf_source`.
-- `AI_auto/generate_slides.ps1` — changed project-root resolution to shared `Resolve-ProjectRoot`, so `helpi 19 AI_auto` works for the infrastructure deck/project.
-- `AI_auto/_ai_log.md` — appended this session log entry.
+- `AI_auto/Overleaf_source/` â€” created by cloning Overleaf git project `https://git.overleaf.com/69e4cd88646aa324de75fc2c`; current branch is `master`; contains `main.tex`, `main_v2.tex`, and `figures/`.
+- `AI_auto/.gitignore` â€” added `Overleaf_source/` so the nested Overleaf git clone is not accidentally tracked by the infrastructure repo.
+- `AI_auto/projects.json` â€” registered `AI_auto` with path `JR\AI_auto\Overleaf_source` and branch `master`, enabling `sync_one.ps1`, `push_to_overleaf.ps1`, snapshots, and other registry-based commands.
+- `AI_auto/helpi.ps1` â€” added `AI_auto` to current-working-directory project detection.
+- `AI_auto/open_project.ps1` â€” changed project-root resolution from `Publikationer\$Project` to shared `Resolve-ProjectRoot`, so `helpi 5 AI_auto` can find projects directly under `JR`.
+- `AI_auto/compile_latex.ps1` â€” changed source-folder resolution to shared `Resolve-ProjectRoot`, so `helpi 6 AI_auto` can compile `AI_auto\Overleaf_source`.
+- `AI_auto/generate_slides.ps1` â€” changed project-root resolution to shared `Resolve-ProjectRoot`, so `helpi 19 AI_auto` works for the infrastructure deck/project.
+- `AI_auto/_ai_log.md` â€” appended this session log entry.
 **Outcome:** `AI_auto` is now linked to the Overleaf project through a real `Overleaf_source/` clone and a `projects.json` entry. Verified `sync_one.ps1 -Project AI_auto`; it reports the project is already up to date with Overleaf. PowerShell parse checks passed for `helpi.ps1`, `open_project.ps1`, `compile_latex.ps1`, and `generate_slides.ps1`.
 **Next steps:**
 - Decide whether the technical-meeting slides should be developed in `AI_auto\Overleaf_source\main.tex` or `main_v2.tex`.
@@ -695,8 +723,8 @@
 **Git ref:** c2c80a8
 
 **Continued (same session, DTU technical meeting slides):**
-- `AI_auto/Overleaf_source/slides_main.tex` — created a 13-slide Beamer deck for the DTU technical meeting. The deck uses `infrastructure_full.html` as the operational source, includes `figures/Infra_frontpage.png`, and builds editable TikZ diagrams for Overleaf sync, sensitive-data boundaries, logging/handover, feeder projects, and the publication pipeline.
-- `AI_auto/Overleaf_source/` — committed and pushed `slides_main.tex` to the linked Overleaf project (`master`, pushed `4216e7c..fb4534f`).
+- `AI_auto/Overleaf_source/slides_main.tex` â€” created a 13-slide Beamer deck for the DTU technical meeting. The deck uses `infrastructure_full.html` as the operational source, includes `figures/Infra_frontpage.png`, and builds editable TikZ diagrams for Overleaf sync, sensitive-data boundaries, logging/handover, feeder projects, and the publication pipeline.
+- `AI_auto/Overleaf_source/` â€” committed and pushed `slides_main.tex` to the linked Overleaf project (`master`, pushed `4216e7c..fb4534f`).
 **Outcome:** A compressed 13-slide operational deck is now available in Overleaf as `slides_main.tex`. The deck deliberately does not use the `Pub_AI_Research_Book` book project or its `main_v2` draft. Local compile was attempted but blocked by MiKTeX first-time setup ("fresh TeX installation"); static source checks found no non-ASCII typography or obvious frame-count issues.
 **Next steps:**
 - Open the Overleaf project and compile `slides_main.tex`.
@@ -704,17 +732,17 @@
 - Add a screenshot/export of the live project network graph if a more visual feeder slide is needed.
 
 **Continued (same session, first slide revision):**
-- `AI_auto/Overleaf_source/slides_main.tex` — simplified the language throughout; removed the front-page image; replaced the DTU rule summary with the direct Danish quote; reframed the "real problem" slide as a normal research day; added the coding-assistant role explicitly; strengthened the productivity/competitiveness wording in plain English; clarified feeder updates through logs and handovers; added the DTU license question and noted that Copilot is useful but limited for this workflow.
-- `AI_auto/Overleaf_source/.gitignore` — added `*.pdf` so generated PDFs are not committed from the Overleaf clone.
-- `AI_auto/Overleaf_source/Pub_AI_Research_Book.pdf` — accidentally picked up by the first push because it was placed in the Overleaf Git folder; removed from Git tracking and pushed the cleanup while keeping the local file on disk.
+- `AI_auto/Overleaf_source/slides_main.tex` â€” simplified the language throughout; removed the front-page image; replaced the DTU rule summary with the direct Danish quote; reframed the "real problem" slide as a normal research day; added the coding-assistant role explicitly; strengthened the productivity/competitiveness wording in plain English; clarified feeder updates through logs and handovers; added the DTU license question and noted that Copilot is useful but limited for this workflow.
+- `AI_auto/Overleaf_source/.gitignore` â€” added `*.pdf` so generated PDFs are not committed from the Overleaf clone.
+- `AI_auto/Overleaf_source/Pub_AI_Research_Book.pdf` â€” accidentally picked up by the first push because it was placed in the Overleaf Git folder; removed from Git tracking and pushed the cleanup while keeping the local file on disk.
 **Outcome:** Revised slides were pushed to Overleaf. The Overleaf repo is clean at commit `e2d56cf`; the local PDF remains available but is ignored by Git.
 **Next steps:**
 - Recompile `slides_main.tex` in Overleaf and check whether the simplified slides remove the overlap problems.
 - If overlap remains, the next likely fixes are to split slide 2 or reduce the TikZ diagrams further on slides 7, 9, 10, and 11.
 
 **Continued (same session, slides_main_v2):**
-- `AI_auto/Overleaf_source/slides_main_v2.tex` — created from the locally copied Overleaf slide source, including the new second-last "Installation Package" slide.
-- `AI_auto/Overleaf_source/` — fetched and fast-forwarded to the current Overleaf master before pushing `slides_main_v2.tex`; pushed commit `abe0241`.
+- `AI_auto/Overleaf_source/slides_main_v2.tex` â€” created from the locally copied Overleaf slide source, including the new second-last "Installation Package" slide.
+- `AI_auto/Overleaf_source/` â€” fetched and fast-forwarded to the current Overleaf master before pushing `slides_main_v2.tex`; pushed commit `abe0241`.
 **Outcome:** `slides_main_v2.tex` is now available in Overleaf as a separate file, leaving `slides_main.tex` as the current Overleaf-edited version. The Overleaf clone is clean. A temporary Git stash named `preserve local slides_main before v2 push` remains in the Overleaf clone, but its relevant content is preserved in `slides_main_v2.tex`.
 **Next steps:**
 - Compile `slides_main_v2.tex` in Overleaf if you want to use the version with the installation-package slide.
@@ -726,17 +754,41 @@
 **Agent:** GPT-5 Codex
 **Goal:** Close the AI_auto working session after linking Overleaf and preparing the DTU AI infrastructure slides.
 **Files touched:**
-- `AI_auto/Overleaf_source/` — linked to Overleaf project `https://git.overleaf.com/69e4cd88646aa324de75fc2c`; pushed `slides_main.tex` and later `slides_main_v2.tex`.
-- `AI_auto/Overleaf_source/slides_main_v2.tex` — created a separate Beamer deck version with the installation-package slide as the second-last slide.
-- `AI_auto/Overleaf_source/.gitignore` — added `*.pdf` so generated PDFs are not committed from the Overleaf clone.
-- `AI_auto/projects.json` — registered `AI_auto` as a normal Overleaf-backed project.
-- `AI_auto/helpi.ps1` — added `AI_auto` to current-working-directory project detection.
-- `AI_auto/open_project.ps1`, `AI_auto/compile_latex.ps1`, `AI_auto/generate_slides.ps1` — changed project-root resolution to shared `Resolve-ProjectRoot` so projects under `JR\` work like projects under `Publikationer\`.
-- `AI_auto/.gitignore` — ignored nested `Overleaf_source/` in the infrastructure repo.
-- `AI_auto/_ai_log.md` — recorded the session work.
+- `AI_auto/Overleaf_source/` â€” linked to Overleaf project `https://git.overleaf.com/69e4cd88646aa324de75fc2c`; pushed `slides_main.tex` and later `slides_main_v2.tex`.
+- `AI_auto/Overleaf_source/slides_main_v2.tex` â€” created a separate Beamer deck version with the installation-package slide as the second-last slide.
+- `AI_auto/Overleaf_source/.gitignore` â€” added `*.pdf` so generated PDFs are not committed from the Overleaf clone.
+- `AI_auto/projects.json` â€” registered `AI_auto` as a normal Overleaf-backed project.
+- `AI_auto/helpi.ps1` â€” added `AI_auto` to current-working-directory project detection.
+- `AI_auto/open_project.ps1`, `AI_auto/compile_latex.ps1`, `AI_auto/generate_slides.ps1` â€” changed project-root resolution to shared `Resolve-ProjectRoot` so projects under `JR\` work like projects under `Publikationer\`.
+- `AI_auto/.gitignore` â€” ignored nested `Overleaf_source/` in the infrastructure repo.
+- `AI_auto/_ai_log.md` â€” recorded the session work.
 **Outcome:** `AI_auto` is linked to Overleaf, the Overleaf clone is clean and synced, and `slides_main_v2.tex` is available in Overleaf for the April 23 technical discussion. The main infrastructure repo still has existing uncommitted changes, including pre-existing changes outside this session.
 **Next steps:** Compile `slides_main_v2.tex` in Overleaf, use it for the DTU meeting, then decide whether to clean up and test the installation package with a few real users before presenting it as a reusable workflow.
 **Git ref:** c2c80a8
+
+---
+
+## Session 2026-04-22
+**Agent:** GPT-5 Codex
+**Goal:** Revise `slides_main_v2.tex` so the DTU quotes appear on the front page and the separate second slide is removed.
+**Files touched:**
+- `AI_auto/Overleaf_source/slides_main_v2.tex` â€” replaced the opening DTU-rule slide with a plain title/front page containing the two DTU quote paragraphs; removed the duplicate second DTU-rule slide and its "My reading" block.
+- `AI_auto/_ai_log.md` â€” recorded this short slide-edit session.
+**Outcome:** `slides_main_v2.tex` now starts with the title page plus DTU rule quote, followed directly by "A Normal Research Day". Static frame count is 13. The Overleaf source commit `d9affeb` was pushed to the linked Overleaf project.
+**Next steps:** Recompile `slides_main_v2.tex` in Overleaf and check whether the title page quote block is visually comfortable; reduce the quote font or shorten the block if it feels too dense.
+**Git ref:** d9affeb
+
+---
+
+## Session 2026-04-22
+**Agent:** GPT-5 Codex
+**Goal:** Create a condensed 10-slide version of the DTU AI infrastructure meeting deck without pushing it.
+**Files touched:**
+- `AI_auto/Overleaf_source/slides_main_v2_10slides.tex` â€” new 10-frame Beamer deck derived from `slides_main_v2.tex`; keeps the DTU quote title page and condenses the narrative by merging normal research work with motivation, combining browser-vs-agent material, and merging installation/publication support into one "What Exists Now" slide.
+- `AI_auto/_ai_log.md` â€” recorded this short slide-edit session.
+**Outcome:** New file `slides_main_v2_10slides.tex` exists locally with exactly 10 frames. It has not been committed or pushed.
+**Next steps:** Compile `slides_main_v2_10slides.tex` in Overleaf, check density on slides 2, 3, and 9, then push if it is the version to use for the meeting.
+**Git ref:** d9affeb
 </textarea>
 </div>
 
@@ -754,7 +806,26 @@
 <!-- ============================================================ -->
 <div class="section">
   <h2>Overleaf Git History (last 20 commits)</h2>
-  <pre></pre>
+  <pre>0757ad8 Local edits 2026-04-22 16:09
+4748504 Local edits 2026-04-22 16:04
+d9affeb Revise V2 title slide
+acc9685 Local edits 2026-04-22 15:56
+06c5265 Local edits 2026-04-22 15:55
+e4bb1a2 Local edits 2026-04-22 15:42
+dd5249f Local edits 2026-04-22 15:41
+abe0241 Local edits 2026-04-22 15:18
+aa00230 Update on Overleaf.
+3920196 Update on Overleaf.
+e2d56cf Local edits 2026-04-22 14:02
+65cfb3f Local edits 2026-04-22 14:01
+fb4534f Local edits 2026-04-22 13:42
+4216e7c Local edits 2026-04-19 16:23
+697f643 Local edits 2026-04-19 15:55
+735e5be Local edits 2026-04-19 15:48
+d3b5ef8 Local edits 2026-04-19 15:45
+3502e2a Local edits 2026-04-19 15:35
+6c08179 Local edits 2026-04-19 15:24
+2cc8ffe Update on Overleaf.</pre>
 </div>
 
 </body>
