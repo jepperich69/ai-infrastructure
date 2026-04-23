@@ -297,8 +297,8 @@
       <div><a href="#helpi7" style="color:inherit;">7 &mdash; Session Logging &amp; Handover</a></div>
       <div><a href="#helpi89" style="color:inherit;">8/9 &mdash; Snapshot &amp; Rollback</a></div>
       <div><a href="#helpi1012" style="color:inherit;">10–12 &mdash; Submit &amp; Reviewer Loop</a></div>
-      <div><a href="#helpi1319" style="color:inherit;">13–19 &mdash; Status, Network, Guide, Docs, Cheatsheet, Model-check, Slides</a></div>
-      <div><a href="#quickref" style="color:inherit;">Quick Command Reference (helpi 1–19)</a></div>
+      <div><a href="#helpi1319" style="color:inherit;">13–22 &mdash; Status, Network, Guide, Docs, Cheatsheet, Model-check, Slides, Compress Log</a></div>
+      <div><a href="#quickref" style="color:inherit;">Quick Command Reference (helpi 1–22)</a></div>
     </div>
 
     <div>
@@ -699,6 +699,17 @@ co-author's version of the sentence
 **Next steps:** Run full PMIP sweep with new surrogate
 **Git ref:** a3f9c12</pre>
 
+  <h3>Log compression <span class="tag auto">AUTO on /close</span></h3>
+  <p>
+    As a project matures, <code>_ai_log.md</code> grows and starts consuming tokens on every session start.
+    <code>compress_log.ps1</code> (called automatically by <code>/close</code> via <code>helpi 22</code>) keeps
+    the log lean with three tiers: the <strong>last 4 sessions verbatim</strong> (active tier),
+    older sessions compressed to <strong>one-liners</strong> under <code>## Compressed sessions</code>,
+    and entries beyond 16 one-liners <strong>archived</strong> to <code>_ai_log_archive.md</code>.
+    The handover is always compiled from current state, so it stays focused on recent activity.
+  </p>
+  <pre>helpi 22 Pub_XXX    # compress on demand; also runs automatically at /close</pre>
+
   <h3>Auto-commit hook <span class="tag auto">AUTO</span></h3>
   <p>
     A Claude Code <em>Stop hook</em> runs <code>auto_commit_hook.ps1</code> after every Claude
@@ -816,7 +827,7 @@ helpi 9 Pub_XXX -N 3      # undo last 3 commits</pre>
 <!-- STATUS / NETWORK / DOCS                                         -->
 <!-- ═══════════════════════════════════════════════════════════════ -->
 <div class="section teal" id="helpi1319">
-  <h2>13–19 &mdash; Status, Network, Guide, Docs, Cheatsheet, Model-check, Slides</h2>
+  <h2>13–22 &mdash; Status, Network, Guide, Docs, Cheatsheet, Model-check, Slides, Compress Log</h2>
 
   <table class="cmd-table">
     <tr><th>#</th><th>What it does</th><th>Usage</th></tr>
@@ -842,7 +853,7 @@ helpi 9 Pub_XXX -N 3      # undo last 3 commits</pre>
     </tr>
     <tr>
       <td>17</td>
-      <td>Claude Code in-session cheatsheet &mdash; prints all slash commands, custom skills, model IDs, and tips. Also callable as <code>! helpi 17</code> from inside a Claude session.</td>
+      <td>Claude Code in-session cheatsheet &mdash; prints all slash commands, custom skills, model IDs, and tips. Also callable as <code>/helpi 17</code> from inside a Claude session.</td>
       <td><code>helpi 17</code></td>
     </tr>
     <tr>
@@ -865,6 +876,11 @@ helpi 9 Pub_XXX -N 3      # undo last 3 commits</pre>
       <td>First-time setup wizard for a new user or machine &mdash; guides through: publications root, git identity, tool path detection, writes <code>config.ps1</code>, wires the <code>helpi</code> function into the PowerShell profile, and registers the auto-sync scheduled task.</td>
       <td><code>helpi 21</code></td>
     </tr>
+    <tr>
+      <td>22</td>
+      <td>Compress AI log &mdash; trims <code>_ai_log.md</code> to the last 4 sessions verbatim; older sessions are collapsed to one-liners under a <code>## Compressed sessions</code> header; entries beyond 16 are archived to <code>_ai_log_archive.md</code>. Runs automatically at <code>/close</code>; call manually to compress on demand.</td>
+      <td><code>helpi 22 Pub_XXX</code></td>
+    </tr>
   </table>
 </div>
 
@@ -872,7 +888,7 @@ helpi 9 Pub_XXX -N 3      # undo last 3 commits</pre>
 <!-- HELPI / COMMAND REFERENCE                                       -->
 <!-- ═══════════════════════════════════════════════════════════════ -->
 <div class="section teal" id="quickref">
-  <h2>Quick Command Reference &mdash; <code>helpi 1&ndash;21</code></h2>
+  <h2>Quick Command Reference &mdash; <code>helpi 1&ndash;22</code></h2>
 
   <h3>Calling conventions</h3>
   <pre>helpi                              # show all commands (project auto-detected from CWD)
@@ -939,9 +955,12 @@ helpi 3 Pub_X main.tex             # run command 3 with a specific .tex file</pr
     <tr><td>14</td><td>Open project network graph</td><td><code>network.ps1</code> &mdash; generates and opens interactive HTML graph of all projects and feeder links, with cluster shading</td><td><span class="tag manual">manual</span></td></tr>
     <tr><td>15</td><td>Open infrastructure guide</td><td><code>Start-Process "AI_auto\infrastructure.html"</code></td><td><span class="tag manual">manual</span></td></tr>
     <tr><td>16</td><td>Generate docs (summary + full HTML/PDF)</td><td><code>generate_docs.ps1</code> &mdash; rebuilds <code>infrastructure_summary.html/pdf</code> and <code>infrastructure_full.html/pdf</code></td><td><span class="tag manual">manual</span></td></tr>
-    <tr><td>17</td><td>Claude Code in-session command reference</td><td>Prints a cheatsheet of all slash commands, custom skills, model IDs, and keyboard tips. Also callable as <code>! helpi 17</code> from inside a Claude session.</td><td><span class="tag manual">manual</span></td></tr>
+    <tr><td>17</td><td>Claude Code in-session command reference</td><td>Prints a cheatsheet of all slash commands, custom skills, model IDs, and keyboard tips. Also callable as <code>/helpi 17</code> from inside a Claude session.</td><td><span class="tag manual">manual</span></td></tr>
     <tr><td>18</td><td>Toggle Claude model-check on/off</td><td>Enables or disables the behavior where Claude suggests switching to Haiku for simple tasks. Edits the memory file -- persists to the next session. For the current session, tell Claude "model check off" verbally.</td><td><span class="tag manual">manual</span></td></tr>
     <tr><td>19</td><td>Generate Beamer slides from paper</td><td>Pulls from Overleaf (safety net), then asks: duration (12/30/45 min), depth (overview/standard/deep-dive), audience (conference/research-group/non-specialist), emphasis (balanced/methods-heavy/results-heavy). Writes <code>slides_main.tex</code> into <code>Overleaf_source/</code> and offers to push. Regeneration overwrites slides -- manual Overleaf edits survive only if you pull before regenerating.</td><td><span class="tag manual">manual</span></td></tr>
+    <tr><td>20</td><td>Restore infrastructure on replacement machine</td><td><code>restore.ps1</code> &mdash; checks Claude CLI, Git, MiKTeX, VS Code, PowerShell profile, <code>~/.claude/</code> folder, scheduled task, and <code>projects.json</code>; fixes what it can automatically</td><td><span class="tag once">once</span></td></tr>
+    <tr><td>21</td><td>First-time setup wizard (new user / new machine)</td><td><code>setup.ps1</code> &mdash; interactive wizard: sets publication root, git identity, tool paths, writes <code>config.ps1</code>, wires <code>helpi</code> into PowerShell profile, registers auto-sync task</td><td><span class="tag once">once</span></td></tr>
+    <tr><td>22</td><td>Compress AI log (trim old sessions)</td><td><code>compress_log.ps1 -Project Pub_XXX</code> &mdash; keeps last 4 sessions verbatim; collapses older ones to one-liners; archives beyond 16. Runs automatically at <code>/close</code>.</td><td><span class="tag manual">manual</span></td></tr>
   </table>
 </div>
 
@@ -2031,6 +2050,7 @@ Goal: Add robustness checks to results
         <tr><td>helpi 19 Pub_XXX [preset]</td><td>Generate Beamer slides — presets: quick / seminar / public</td></tr>
         <tr><td>helpi 20</td><td>Restore infrastructure on replacement machine</td></tr>
         <tr><td>helpi 21</td><td>First-time setup wizard (new user / new machine)</td></tr>
+        <tr><td>helpi 22 Pub_XXX</td><td>Compress AI log — keeps last 4 sessions, one-liners for older</td></tr>
       </table>
     </div>
 
@@ -2039,6 +2059,7 @@ Goal: Add robustness checks to results
       <h2>AI Layer &mdash; Claude Code commands <span class="op-tag ai">AI</span></h2>
       <table>
         <tr><td>/work Pub_XXX</td><td>Open session — reads log &amp; feeders, asks for goal</td></tr>
+        <tr><td>/helpi [N] [proj]</td><td>Run any helpi command without leaving Claude</td></tr>
         <tr><td>/snapshot V2</td><td>Version the full manuscript as a named git tag</td></tr>
         <tr><td>/close</td><td>Log session outcome, files touched, next steps</td></tr>
         <tr><td>/family Pub_YYY</td><td>Link feeder project — digests it once, monitors for deltas</td></tr>
