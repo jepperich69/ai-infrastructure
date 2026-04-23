@@ -1,4 +1,4 @@
-# AI Session Log — AI Infrastructure Project
+﻿# AI Session Log — AI Infrastructure Project
 
 ---
 
@@ -18,18 +18,7 @@
 - **2026-04-22** (Codex): Link the AI_auto infrastructure project to its Overleaf project and... → `AI_auto` is now linked to the Overleaf project through a real `Overleaf_source/` clone...
 - **2026-04-22 Close** (Codex): Close the AI_auto working session after linking Overleaf and prepar... → `AI_auto` is linked to Overleaf, the Overleaf clone is clean and synced, and `slides_ma...
 - **2026-04-22** (Codex): Revise `slides_main_v2.tex` so the DTU quotes appear on the front p... → `slides_main_v2.tex` now starts with the title page plus DTU rule quote, followed direc...
-
----
-
-## Session 2026-04-22
-**Agent:** GPT-5 Codex
-**Goal:** Create a condensed 10-slide version of the DTU AI infrastructure meeting deck without pushing it.
-**Files touched:**
-- `AI_auto/Overleaf_source/slides_main_v2_10slides.tex` — new 10-frame Beamer deck derived from `slides_main_v2.tex`; keeps the DTU quote title page and condenses the narrative by merging normal research work with motivation, combining browser-vs-agent material, and merging installation/publication support into one "What Exists Now" slide.
-- `AI_auto/_ai_log.md` — recorded this short slide-edit session.
-**Outcome:** New file `slides_main_v2_10slides.tex` exists locally with exactly 10 frames. It has not been committed or pushed.
-**Next steps:** Compile `slides_main_v2_10slides.tex` in Overleaf, check density on slides 2, 3, and 9, then push if it is the version to use for the meeting.
-**Git ref:** d9affeb
+- **2026-04-22** (Codex): Create a condensed 10-slide version of the DTU AI infrastructure me... -> New file `slides_main_v2_10slides.tex` exists locally with exactly 10 frames. It has no...
 
 ---
 
@@ -73,3 +62,24 @@
 - Consider piping sandbox deny-events (from `.claude/settings.json` block rules) into the log as a separate "Access denied" section — this is the one piece the agent cannot fabricate
 - Consider adding a "Reviewed: JR ✓" countersign prompt to `/close` as a lightweight two-party record
 **Git ref:** f5a7d50
+
+---
+
+## Session 2026-04-23
+**Agent:** Claude Sonnet 4.6
+**Goal:** Professionalise the infrastructure — log compression, /helpi command, push-to-GitHub, shell UX improvements, documentation updates.
+**Files touched:**
+- `compress_log.ps1` — new; tiered log compression: keeps last 4 sessions verbatim, older → one-liners, 16+ → archived to `_ai_log_archive.md`; runs automatically at `/close`
+- `push_to_github.ps1` — new; pushes `code/` to GitHub, creates repo via `gh` CLI if no remote exists (no browser needed)
+- `helpi.ps1` — added commands 22 (compress log) and 23 (push to GitHub); added `-Force` flag; added `[Console]::IsInputRedirected` auto-detect to skip confirmation in non-interactive contexts; updated cheatsheet (`! helpi 17` → `/helpi 17`, added `/helpi` entry)
+- `~/.claude/commands/helpi.md` — new; `/helpi [N] [proj]` slash command, passes `-Force` automatically
+- `~/.claude/commands/shell.md` — new; `/shell` passthrough mode — messages executed as shell commands until `exit`/`done`
+- `~/.claude/commands/close.md` — fixed step 5 (was `helpi 5` → now calls `generate_handover.ps1` directly); added step 3.5 (compress log via `helpi 22`)
+- `~/.claude/settings.json` — fixed allowlist (`Bash(helpi.cmd*)` → `Bash(helpi*)`); added `Bash(git *)` and `Bash(git)`
+- `infrastructure.html` — added helpi 22/23 rows everywhere; updated section headings to 13–23; added log compression paragraph in §7; added `/helpi` and `/shell` to commands table and desk reference; added non-interactive auto-detect note; regenerated full/summary HTML+PDF
+- `_ai_log.md` — compressed 14 old sessions to one-liners (first run of compress_log.ps1)
+**Outcome:** Infrastructure professionalised: log compression keeps `_ai_log.md` lean automatically; `/helpi` and `! helpi N` both work from inside Claude without confirmation prompts; `/shell` mode available for command sequences; GitHub push added as helpi 23; all documentation updated.
+**Next steps:**
+- Test `helpi 23` end-to-end on a real project with a `code/` repo
+- Mac compatibility remains a known gap (documented)
+**Git ref:** 9ad8a55

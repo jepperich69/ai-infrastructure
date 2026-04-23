@@ -1,4 +1,4 @@
-# compress_log.ps1 — Tiered compression for _ai_log.md
+﻿# compress_log.ps1 — Tiered compression for _ai_log.md
 #
 # Keeps the last $ActiveCount sessions verbatim (default: 4).
 # Compresses older sessions into one-liners under ## Compressed sessions.
@@ -70,16 +70,16 @@ for ($i = 0; $i -lt $sessionMatches.Count; $i++) {
 function Get-OneLiner([string]$block) {
     $date    = if ($block -match '## Session ([^\r\n]+)')         { $Matches[1].Trim() } else { "?" }
     $agent   = if ($block -match '\*\*Agent:\*\*\s*([^\r\n]+)')   { $Matches[1].Trim() } else { "?" }
-    $goal    = if ($block -match '\*\*Goal:\*\*\s*([^\r\n]+)')    { $Matches[1].Trim() } else { "—" }
-    $outcome = if ($block -match '\*\*Outcome:\*\*\s*([^\r\n]+)') { $Matches[1].Trim() } else { "—" }
+    $goal    = if ($block -match '\*\*Goal:\*\*\s*([^\r\n]+)')    { $Matches[1].Trim() } else { '--' }
+    $outcome = if ($block -match '\*\*Outcome:\*\*\s*([^\r\n]+)') { $Matches[1].Trim() } else { '--' }
 
     $agentShort = $agent -replace 'Claude (Sonnet|Opus|Haiku) \d+\.\d+', 'Claude' `
                          -replace 'GPT-\d+(\.\d+)? Codex', 'Codex'
 
-    if ($goal.Length    -gt 70) { $goal    = $goal.Substring(0, 67)    + "..." }
-    if ($outcome.Length -gt 90) { $outcome = $outcome.Substring(0, 87) + "..." }
+    if ($goal.Length    -gt 70) { $goal    = $goal.Substring(0, 67)    + '...' }
+    if ($outcome.Length -gt 90) { $outcome = $outcome.Substring(0, 87) + '...' }
 
-    return "- **$date** ($agentShort): $goal → $outcome"
+    return "- **$date** (${agentShort}): $goal -> $outcome"
 }
 
 # Sessions to compress: all but the last $ActiveCount
@@ -99,11 +99,13 @@ if ($allCompressed.Count -gt $MaxCompressed) {
     $toArchive      = $allCompressed.GetRange(0, $overflowCount)
     $allCompressed.RemoveRange(0, $overflowCount)
 
-    $archiveHeader = "`n`n---`n`n## Archived $(Get-Date -Format 'yyyy-MM-dd') ($overflowCount entr$(if ($overflowCount -eq 1) {'y'} else {'ies'}))`n`n"
+    $entryWord     = if ($overflowCount -eq 1) { 'entry' } else { 'entries' }
+    $archiveDate   = Get-Date -Format 'yyyy-MM-dd'
+    $archiveHeader = "`n`n---`n`n## Archived $archiveDate ($overflowCount $entryWord)`n`n"
     $archiveBody   = $toArchive -join "`n"
     if (!(Test-Path $archivePath)) {
         $logName = Split-Path (Split-Path $logPath) -Leaf
-        Set-Content $archivePath "# AI Session Log Archive — $logName$archiveHeader$archiveBody" -Encoding UTF8
+        Set-Content $archivePath "# AI Session Log Archive - $logName$archiveHeader$archiveBody" -Encoding UTF8
     } else {
         Add-Content $archivePath "$archiveHeader$archiveBody" -Encoding UTF8
     }
