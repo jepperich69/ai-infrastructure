@@ -316,6 +316,33 @@ Write-Host "OK   | AGENTS.md written:        $agentsPath"
 [System.IO.File]::WriteAllText($htmlPath, $html, [System.Text.Encoding]::UTF8)
 Write-Host "OK   | HTML handover written: $htmlPath"
 Write-Host "OK   | JSON handover written: $jsonPath"
+
+# ---------------------------------------------------------------
+# Write _handover_JR.md to Overleaf_source/ for collaborators
+# ---------------------------------------------------------------
+if ((Test-Path $overleafDir) -and $latestSummary) {
+    $collabPath = Join-Path $overleafDir "_handover_JR.md"
+    $collabLines = @()
+    $collabLines += "# Handover — JR — $generated"
+    $collabLines += ""
+    $collabLines += "## Last session"
+    $collabLines += "**Goal:** $($latestSummary.goal)"
+    $collabLines += "**Outcome:** $($latestSummary.outcome)"
+    if ($latestSummary.files_touched -and $latestSummary.files_touched.Count -gt 0) {
+        $collabLines += "**Files touched:**"
+        foreach ($f in $latestSummary.files_touched) { $collabLines += "- $f" }
+    }
+    $collabLines += ""
+    $collabLines += "## Next steps"
+    $collabLines += $latestSummary.next_steps
+    if ($latestSummary.git_ref) {
+        $collabLines += ""
+        $collabLines += "## Git ref"
+        $collabLines += $latestSummary.git_ref
+    }
+    [System.IO.File]::WriteAllText($collabPath, ($collabLines -join "`n"), [System.Text.Encoding]::UTF8)
+    Write-Host "OK   | Collab handover written: $collabPath"
+}
 if ($latestValidation -and -not $latestValidation.is_complete) {
     Write-Host "WARN | Latest session block is incomplete: $($latestValidation.missing -join ', ')" -ForegroundColor Yellow
 }
