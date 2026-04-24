@@ -1,4 +1,4 @@
-# push_to_github.ps1 — Push project code/ repo to GitHub
+# push_to_github.ps1 - Push project code/ repo to GitHub
 #
 # If no remote exists, creates the GitHub repo via gh CLI (no browser needed).
 # If a remote already exists, just pushes.
@@ -45,7 +45,7 @@ if ($hasRemote) {
     if ($LASTEXITCODE -eq 0) {
         Write-Host "  Pushed." -ForegroundColor Green
     } else {
-        Write-Host "  Push failed — check the error above." -ForegroundColor Red
+        Write-Host "  Push failed - check the error above." -ForegroundColor Red
         exit 1
     }
 } else {

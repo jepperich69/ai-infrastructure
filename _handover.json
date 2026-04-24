@@ -1,6 +1,6 @@
 {
   "project": "AI_auto",
-  "generated": "2026-04-24 08:37",
+  "generated": "2026-04-24 10:41",
   "source": "_ai_log.md",
   "latest_session": {
     "title": "2026-04-24",
@@ -8,7 +8,7 @@
     "goal": "Design the paper project naming convention and onboarding guide for group rollout.",
     "outcome": "Convention settled as `Pub_Topic_YourInitials` (driver = the person keeping the paper moving, not the PI by default); two local-folder strategies documented: automatic provisioning for new papers, key-table linking for legacy papers.",
     "next_steps": "Build automatic local folder provisioning triggered by a new tagged Overleaf project Draft the group email pointing people to the onboarding guide",
-    "git_ref": "be3aef6",
+    "git_ref": "be3aef6 ---",
     "files_touched": "`onboarding_paper_projects.md` — new; onboarding guide covering the `Pub_Topic_Driver` naming convention, Overleaf tagging, one-project-per-paper rule, and both the provision-on-creation and key-table paths for local folder linking."
   },
   "latest_session_complete": true,

@@ -275,7 +275,7 @@
   <img src="Infra_frontpage.png" alt="Research Infrastructure Guide — overview infographic">
 </div>
 
-<div class="subtitle">Infrastructure version: <strong>v0.7</strong> &nbsp;&bull;&nbsp; Last updated: 2026-04-19 &nbsp;&bull;&nbsp; Scripts live in <code>JR\AI_auto\</code> &nbsp;&bull;&nbsp; Claude commands live in <code>~\.claude\commands\</code></div>
+<div class="subtitle">Infrastructure version: <strong>v0.8</strong> &nbsp;&bull;&nbsp; Last updated: 2026-04-24 &nbsp;&bull;&nbsp; Scripts live in <code>JR\AI_auto\</code> &nbsp;&bull;&nbsp; Claude commands live in <code>~\.claude\commands\</code></div>
 
 <!-- ═══════════════════════════════════════════════════════════════ -->
 <!-- CONTENTS                                                        -->
@@ -718,6 +718,22 @@ co-author's version of the sentence
     granularity at the turn level.
   </p>
 
+  <h3>Incremental session draft <span class="tag auto">AUTO</span></h3>
+  <p>
+    A <em>PostToolUse hook</em> fires after every Edit, Write, or Bash tool call and appends
+    a timestamped line to <code>_session_draft.md</code> in the project root. This gives a
+    real-time, crash-safe record of what happened during the session &mdash; independent of
+    whether <code>/close</code> is run. At <code>/close</code>, the draft becomes the
+    authoritative file-touch manifest for the session block, then is deleted.
+  </p>
+  <pre>[2026-04-24 09:15] Edit:  Overleaf_source/main.tex
+[2026-04-24 09:22] Bash:  helpi 2 Pub_XXX
+[2026-04-24 09:31] Write: code/model.R</pre>
+  <p>
+    If a session ends without <code>/close</code>, the draft survives and is picked up next time.
+    Nothing is lost.
+  </p>
+
   <h3>Handover document <span class="tag auto">AUTO</span></h3>
   <p>
     <code>helpi 7</code> closes the session, regenerates the handover, and opens the browser in one step.
@@ -757,6 +773,31 @@ co-author's version of the sentence
     requires no manual handover step. Both agents read the same files, write to the same
     <code>_ai_log.md</code>, and regenerate <code>AGENTS.md</code> on every <code>/close</code>.
     The context is always current.
+  </p>
+
+  <h3>Collaborator handover via Overleaf <span class="tag auto">AUTO on /close</span></h3>
+  <p>
+    At <code>/close</code>, a compact <code>_handover_JR.md</code> is written into
+    <code>Overleaf_source/</code>. The next <code>helpi 2</code> push carries it to Overleaf
+    alongside the manuscript. When a collaborator who also uses the infrastructure runs
+    <code>/work</code>, their session start automatically scans for peer handover files and
+    surfaces them:
+  </p>
+  <pre>&gt; Collaborator handover found: _handover_MN.md (2026-04-23)
+  Goal: Add robustness checks &mdash; Outcome: Done &mdash; Next steps: Check Table 3</pre>
+  <p>
+    Collaborators without the infrastructure simply see extra files in Overleaf and can ignore
+    them. No friction either way.
+  </p>
+
+  <h3>Platform map auto-update <span class="tag auto">AUTO on /close</span></h3>
+  <p>
+    At <code>/close</code>, Claude scans the session for new platform or environment discoveries
+    (tool failures, missing software, path issues) and cross-checks against the known-issues
+    list. If a genuinely new, reusable pattern is found, it is added silently to both the inline
+    <em>Platform facts</em> block in <code>~/.claude/CLAUDE.md</code> and the full reference in
+    <code>AI_auto/known_issues.md</code>. At most 1&ndash;2 entries per session; one-off flukes
+    are ignored.
   </p>
 
   <h3>One-time project setup <span class="tag once">ONCE</span></h3>
@@ -2023,6 +2064,17 @@ Goal: Add robustness checks to results
     reads the full log and picks up exactly where the other left off.
   </p>
 
+  <h3>Per-person handovers via Overleaf</h3>
+  <p>
+    Each infrastructure user produces a <code>_handover_[initials].md</code> in
+    <code>Overleaf_source/</code> at every <code>/close</code>. These files sync to Overleaf
+    with the next <code>helpi 2</code> push. When you start a session on a paper a collaborator
+    worked on the night before, <code>/work</code> reads their handover file and surfaces it at
+    session start &mdash; goal, outcome, next steps &mdash; without any manual coordination.
+    Collaborators who do not use the infrastructure produce no such file; <code>/work</code>
+    skips silently.
+  </p>
+
   <h3>Overleaf co-authoring</h3>
   <p>
     Overleaf remains the shared editing surface for collaborators who do not use the local
@@ -2035,6 +2087,50 @@ Goal: Add robustness checks to results
   <p>
     Co-authors who only use Overleaf need no infrastructure at all — they just write in Overleaf
     as normal. The infrastructure user pulls their changes in, works with Claude, and pushes back.
+  </p>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- J — ENVIRONMENT MAP                                              -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="section" id="envmap">
+  <h2>J &mdash; Environment Map &amp; Known Issues</h2>
+  <p>
+    A compact <em>Platform facts</em> block is embedded at the top of <code>~/.claude/CLAUDE.md</code>
+    and <code>~/.codex/config.toml</code> so every agent session starts with current knowledge of
+    this machine &mdash; no probing, no rediscovery. The full reference lives in
+    <code>AI_auto/known_issues.md</code>.
+  </p>
+
+  <h3>Software on this machine</h3>
+  <table class="cmd-table">
+    <tr><th>Tool</th><th>Version</th><th>In PATH?</th><th>Full path (if not in PATH)</th></tr>
+    <tr><td>PowerShell</td><td>7.6.1</td><td>Yes</td><td>&mdash;</td></tr>
+    <tr><td>R</td><td>4.5.2</td><td><strong>No</strong></td><td><code>C:\Users\rich\AppData\Local\Programs\R\R-4.5.2\bin\R.exe</code></td></tr>
+    <tr><td>Python (miniconda)</td><td>3.13.9</td><td><strong>No</strong></td><td><code>C:\Users\rich\AppData\Local\miniconda3\python.exe</code></td></tr>
+    <tr><td>LaTeX (MiKTeX)</td><td>&mdash;</td><td>Yes</td><td><code>pdflatex</code>, <code>latexmk</code>, <code>xelatex</code> all work</td></tr>
+    <tr><td>git</td><td>2.54.0</td><td>Yes</td><td>&mdash;</td></tr>
+    <tr><td>gh (GitHub CLI)</td><td>2.88.1</td><td>Yes</td><td>&mdash;</td></tr>
+    <tr><td>Node.js</td><td>v24</td><td>Yes</td><td>&mdash;</td></tr>
+    <tr><td>Stata</td><td>&mdash;</td><td>&mdash;</td><td>Not installed</td></tr>
+    <tr><td>Julia</td><td>&mdash;</td><td>&mdash;</td><td>Not installed</td></tr>
+  </table>
+  <p>Conda environments: <code>base</code> (default), <code>pyopt</code>.</p>
+
+  <h3>Key platform rules</h3>
+  <ul>
+    <li><code>python3</code> is a Windows Store alias &mdash; returns exit 49. Always use the full miniconda path.</li>
+    <li>Use the <strong>PowerShell tool</strong> (not Bash) for any non-trivial PS command &mdash; quoting breaks inside Bash.</li>
+    <li>After writing or editing any <code>.ps1</code> file, check for curly quotes and fix them.</li>
+    <li>Paths contain spaces (<code>OneDrive - Danmarks Tekniske Universitet</code>) &mdash; always double-quote.</li>
+    <li>Never use <code>pwsh -EncodedCommand</code> inline &mdash; write a <code>.ps1</code> file and call with <code>-File</code>.</li>
+  </ul>
+
+  <h3>Map maintenance</h3>
+  <p>
+    At <code>/close</code>, Claude automatically checks whether any new platform fact was
+    discovered this session and adds it to both the inline block and <code>known_issues.md</code>
+    (1&ndash;2 entries max; one-off flukes ignored). The map grows without manual upkeep.
   </p>
 </div>
 

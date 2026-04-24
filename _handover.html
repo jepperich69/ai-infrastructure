@@ -30,7 +30,7 @@
 <body>
 
 <h1>Handover Document &mdash; AI_auto</h1>
-<div class="meta">Generated: 2026-04-24 08:37 &nbsp;|&nbsp; Source: <code style="display:inline;padding:2px 6px">_ai_log.md</code> &nbsp;|&nbsp; Sidecar: <code style="display:inline;padding:2px 6px">_handover.json</code></div>
+<div class="meta">Generated: 2026-04-24 10:41 &nbsp;|&nbsp; Source: <code style="display:inline;padding:2px 6px">_ai_log.md</code> &nbsp;|&nbsp; Sidecar: <code style="display:inline;padding:2px 6px">_handover.json</code></div>
 
 <!-- ============================================================ -->
 <!-- AGENT INSTRUCTIONS                                            -->
@@ -67,7 +67,7 @@
   <p><strong>Goal:</strong> Design the paper project naming convention and onboarding guide for group rollout.</p>
   <p><strong>Outcome:</strong> Convention settled as `Pub_Topic_YourInitials` (driver = the person keeping the paper moving, not the PI by default); two local-folder strategies documented: automatic provisioning for new papers, key-table linking for legacy papers.</p>
   <p><strong>Next steps:</strong> Build automatic local folder provisioning triggered by a new tagged Overleaf project Draft the group email pointing people to the onboarding guide</p>
-  <p><strong>Git ref:</strong> be3aef6</p>
+  <p><strong>Git ref:</strong> be3aef6 ---</p>
   <h3>Files touched</h3>
   <ul>
   <li>`onboarding_paper_projects.md` — new; onboarding guide covering the `Pub_Topic_Driver` naming convention, Overleaf tagging, one-project-per-paper rule, and both the provision-on-creation and key-table paths for local folder linking.</li>
@@ -85,7 +85,6 @@
 <h2>Compressed sessions</h2>
 <br>
 <ul>
-  <li><strong>2026-04-05</strong> (Claude): Set up lightweight versioning for the AI infrastructure; implement ... → Infrastructure is now git-versioned (GitHub: jepperich69/ai-infrastructure), released a...</li>
   <li><strong>2026-04-05 (evening)</strong> (Claude): Consistency-cleanup pass on v0.2 based on GPT code review recommend... → v0.2 is now consistent across all docs and scripts; snapshot safety posture improved.</li>
   <li><strong>2026-04-07</strong> (Claude): Auto-generate separate PDF and HTML exports for the 1-2 pager and t... → Running `helpi 16` (or `.\generate_docs.ps1`) now produces four files: a summary HTML/P...</li>
   <li><strong>2026-04-08</strong> (Claude): Design and implement a proxy-sandbox for per-project Claude file is... → Claude Code is now structurally confined to project folders via a per-project deny list...</li>
@@ -101,26 +100,8 @@
   <li><strong>2026-04-22</strong> (Codex): Revise `slides_main_v2.tex` so the DTU quotes appear on the front p... → `slides_main_v2.tex` now starts with the title page plus DTU rule quote, followed direc...</li>
   <li><strong>2026-04-22</strong> (Codex): Create a condensed 10-slide version of the DTU AI infrastructure me... -&gt; New file `slides_main_v2_10slides.tex` exists locally with exactly 10 frames. It has no...</li>
   <li><strong>2026-04-22 Close</strong> (Codex): Close the AI_auto slide-editing session after preparing the condens... -&gt; The full V2 deck and the condensed 10-slide deck are in place. The Overleaf source repo...</li>
+  <li><strong>2026-04-22</strong> (Codex): Make Codex automatically use the project implied by the directory i... -&gt; Future Codex sessions should infer the active project from the current working director...</li>
 </ul>
-<br>
-<hr>
-<br>
-<h2>Session 2026-04-22</h2>
-<p><strong>Agent:</strong> GPT-5 Codex</p>
-<p><strong>Goal:</strong> Make Codex automatically use the project implied by the directory it is opened in, matching the Claude Code habit.</p>
-<p><strong>Files touched:</strong></p>
-<ul>
-  <li>`C:\Users\rich\.codex\config.toml` — extended global Codex developer instructions so a session opened inside a `Pub_`, `Pro_`, or `PhD_` folder treats that folder as the active research project and loads `.claude/CLAUDE.md`, `_ai_log.md`, feeder state, and git status automatically.</li>
-  <li>`C:\Users\rich\.codex\config.toml` — extended the `AI_auto` rule so opening Codex inside `AI_auto` starts an infrastructure-project session and reads `infrastructure.html`.</li>
-  <li>`AI_auto/_ai_log.md` — recorded this global Codex habit change.</li>
-</ul>
-<p><strong>Outcome:</strong> Future Codex sessions should infer the active project from the current working directory, not only from pasted paths or explicit `/work` commands.</p>
-<p><strong>Next steps:</strong> Test by opening Codex directly inside a publication project folder and confirming it loads that project context before making changes.</p>
-<p><strong>Git ref:</strong> AI_auto `b822a06`</p>
-<br>
-<p><strong>Follow-up fix:</strong> The PowerShell `codex` wrappers in `C:\Users\rich\Documents\PowerShell\Microsoft.PowerShell<em>profile.ps1` and `C:\Users\rich\Documents\WindowsPowerShell\Microsoft.PowerShell</em>profile.ps1` were still forcing `codex -C C:\Users\rich\OneDrive - Danmarks Tekniske Universitet\JR` on launch. Changed both wrapper targets to `(Get-Location).Path`, so plain `codex` now forwards the current directory to Codex while explicit `codex -C &lt;path&gt;` still works.</p>
-<br>
-<p><strong>Follow-up note:</strong> Verified that the active sensitive-data convention is the shared human-only folder `JR\Sensitive<em>Data\`, outside individual paper projects. Updated `slides</em>main<em>v2.tex` and `slides</em>main<em>v2</em>10slides.tex` so the project tree no longer shows `Sensitive<em>Data/` inside `Pub</em>XXX/`, and the sensitive-data boundary slide points to `JR/Sensitive_Data/`.</p>
 <br>
 <hr>
 <br>
@@ -176,7 +157,36 @@
   <li>Build automatic local folder provisioning triggered by a new tagged Overleaf project</li>
   <li>Draft the group email pointing people to the onboarding guide</li>
 </ul>
-<p><strong>Git ref:</strong> be3aef6</p>
+<p><strong>Git ref:</strong> be3aef6</p>
+<br>
+<hr>
+<br>
+<h2>Session 2026-04-24</h2>
+<p><strong>Agent:</strong> Claude Sonnet 4.6</p>
+<p><strong>Goal:</strong> Multiple infrastructure improvements: incremental session draft logging, collaborator handovers via Overleaf, environment map baked into agent configs, platform map auto-update at close, infrastructure v0.8 docs, GitHub push.</p>
+<p><strong>Files touched:</strong></p>
+<ul>
+  <li>`log_tool_use.ps1` — new PostToolUse hook; appends timestamped lines to `_session_draft.md`; takes `-Agent` param</li>
+  <li>`known_issues.md` — new; full environment map with software inventory, key paths, drive map, and known platform issues</li>
+  <li>`generate_handover.ps1` — now writes `_handover_JR.md` to `Overleaf_source/` for collaborator sharing</li>
+  <li>`~/.claude/commands/close.md` — added step 0 (read session draft), step 3.2 (platform map update), step 3.5 (clear draft)</li>
+  <li>`~/.claude/commands/work.md` — added step 1b (scan for collaborator handovers in Overleaf_source/)</li>
+  <li>`~/.claude/settings.json` — PostToolUse hook wired to `log_tool_use.ps1 -Agent Claude`</li>
+  <li>`~/.claude/CLAUDE.md` — platform facts block added; software locations, tool rules, em-dash PS5 warning</li>
+  <li>`~/.codex/config.toml` — platform facts added; Codex-specific Unix-on-Windows rule</li>
+  <li>`infrastructure.html` — bumped to v0.8; added &#167;J (environment map), session draft subsection, collaborator handover subsections in &#167;7 and &#167;I, platform map auto-update subsection</li>
+  <li>`helpi.cmd` — fixed `powershell` → `pwsh` (PS5 read UTF-8 as Windows-1252, causing em-dash bytes to close string literals)</li>
+  <li>`push_to_github.ps1` — removed em-dashes from string literals; same root cause</li>
+</ul>
+<p><strong>Outcome:</strong> Session draft logging is live; collaborator handovers will appear in Overleaf after next helpi 2 push; environment map is baked into both agent configs and grows automatically at close; helpi.cmd PS5/UTF-8 encoding bug fixed.</p>
+<p><strong>Next steps:</strong></p>
+<ul>
+  <li>Test session draft hook fires correctly in next session</li>
+  <li>Test `_handover_JR.md` generation on a paper project that has Overleaf_source/</li>
+  <li>Roll out `Pub_Topic_Driver` naming convention to group — draft email using `onboarding_paper_projects.md`</li>
+  <li>Build automatic local folder provisioning triggered by a new tagged Overleaf project</li>
+</ul>
+<p><strong>Git ref:</strong> 731ed64</p>
 <br>
 
 </div>
@@ -193,7 +203,6 @@
 
 ## Compressed sessions
 
-- **2026-04-05** (Claude): Set up lightweight versioning for the AI infrastructure; implement ... → Infrastructure is now git-versioned (GitHub: jepperich69/ai-infrastructure), released a...
 - **2026-04-05 (evening)** (Claude): Consistency-cleanup pass on v0.2 based on GPT code review recommend... → v0.2 is now consistent across all docs and scripts; snapshot safety posture improved.
 - **2026-04-07** (Claude): Auto-generate separate PDF and HTML exports for the 1-2 pager and t... → Running `helpi 16` (or `.\generate_docs.ps1`) now produces four files: a summary HTML/P...
 - **2026-04-08** (Claude): Design and implement a proxy-sandbox for per-project Claude file is... → Claude Code is now structurally confined to project folders via a per-project deny list...
@@ -209,23 +218,7 @@
 - **2026-04-22** (Codex): Revise `slides_main_v2.tex` so the DTU quotes appear on the front p... → `slides_main_v2.tex` now starts with the title page plus DTU rule quote, followed direc...
 - **2026-04-22** (Codex): Create a condensed 10-slide version of the DTU AI infrastructure me... -&gt; New file `slides_main_v2_10slides.tex` exists locally with exactly 10 frames. It has no...
 - **2026-04-22 Close** (Codex): Close the AI_auto slide-editing session after preparing the condens... -&gt; The full V2 deck and the condensed 10-slide deck are in place. The Overleaf source repo...
-
----
-
-## Session 2026-04-22
-**Agent:** GPT-5 Codex
-**Goal:** Make Codex automatically use the project implied by the directory it is opened in, matching the Claude Code habit.
-**Files touched:**
-- `C:\Users\rich\.codex\config.toml` — extended global Codex developer instructions so a session opened inside a `Pub_`, `Pro_`, or `PhD_` folder treats that folder as the active research project and loads `.claude/CLAUDE.md`, `_ai_log.md`, feeder state, and git status automatically.
-- `C:\Users\rich\.codex\config.toml` — extended the `AI_auto` rule so opening Codex inside `AI_auto` starts an infrastructure-project session and reads `infrastructure.html`.
-- `AI_auto/_ai_log.md` — recorded this global Codex habit change.
-**Outcome:** Future Codex sessions should infer the active project from the current working directory, not only from pasted paths or explicit `/work` commands.
-**Next steps:** Test by opening Codex directly inside a publication project folder and confirming it loads that project context before making changes.
-**Git ref:** AI_auto `b822a06`
-
-**Follow-up fix:** The PowerShell `codex` wrappers in `C:\Users\rich\Documents\PowerShell\Microsoft.PowerShell_profile.ps1` and `C:\Users\rich\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1` were still forcing `codex -C C:\Users\rich\OneDrive - Danmarks Tekniske Universitet\JR` on launch. Changed both wrapper targets to `(Get-Location).Path`, so plain `codex` now forwards the current directory to Codex while explicit `codex -C &lt;path&gt;` still works.
-
-**Follow-up note:** Verified that the active sensitive-data convention is the shared human-only folder `JR\Sensitive_Data\`, outside individual paper projects. Updated `slides_main_v2.tex` and `slides_main_v2_10slides.tex` so the project tree no longer shows `Sensitive_Data/` inside `Pub_XXX/`, and the sensitive-data boundary slide points to `JR/Sensitive_Data/`.
+- **2026-04-22** (Codex): Make Codex automatically use the project implied by the directory i... -&gt; Future Codex sessions should infer the active project from the current working director...
 
 ---
 
@@ -272,6 +265,31 @@
 - Build automatic local folder provisioning triggered by a new tagged Overleaf project
 - Draft the group email pointing people to the onboarding guide
 **Git ref:** be3aef6
+
+---
+
+## Session 2026-04-24
+**Agent:** Claude Sonnet 4.6
+**Goal:** Multiple infrastructure improvements: incremental session draft logging, collaborator handovers via Overleaf, environment map baked into agent configs, platform map auto-update at close, infrastructure v0.8 docs, GitHub push.
+**Files touched:**
+- `log_tool_use.ps1` — new PostToolUse hook; appends timestamped lines to `_session_draft.md`; takes `-Agent` param
+- `known_issues.md` — new; full environment map with software inventory, key paths, drive map, and known platform issues
+- `generate_handover.ps1` — now writes `_handover_JR.md` to `Overleaf_source/` for collaborator sharing
+- `~/.claude/commands/close.md` — added step 0 (read session draft), step 3.2 (platform map update), step 3.5 (clear draft)
+- `~/.claude/commands/work.md` — added step 1b (scan for collaborator handovers in Overleaf_source/)
+- `~/.claude/settings.json` — PostToolUse hook wired to `log_tool_use.ps1 -Agent Claude`
+- `~/.claude/CLAUDE.md` — platform facts block added; software locations, tool rules, em-dash PS5 warning
+- `~/.codex/config.toml` — platform facts added; Codex-specific Unix-on-Windows rule
+- `infrastructure.html` — bumped to v0.8; added §J (environment map), session draft subsection, collaborator handover subsections in §7 and §I, platform map auto-update subsection
+- `helpi.cmd` — fixed `powershell` → `pwsh` (PS5 read UTF-8 as Windows-1252, causing em-dash bytes to close string literals)
+- `push_to_github.ps1` — removed em-dashes from string literals; same root cause
+**Outcome:** Session draft logging is live; collaborator handovers will appear in Overleaf after next helpi 2 push; environment map is baked into both agent configs and grows automatically at close; helpi.cmd PS5/UTF-8 encoding bug fixed.
+**Next steps:**
+- Test session draft hook fires correctly in next session
+- Test `_handover_JR.md` generation on a paper project that has Overleaf_source/
+- Roll out `Pub_Topic_Driver` naming convention to group — draft email using `onboarding_paper_projects.md`
+- Build automatic local folder provisioning triggered by a new tagged Overleaf project
+**Git ref:** 731ed64
 </textarea>
 </div>
 
