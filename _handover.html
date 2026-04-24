@@ -30,7 +30,7 @@
 <body>
 
 <h1>Handover Document &mdash; AI_auto</h1>
-<div class="meta">Generated: 2026-04-23 22:07 &nbsp;|&nbsp; Source: <code style="display:inline;padding:2px 6px">_ai_log.md</code> &nbsp;|&nbsp; Sidecar: <code style="display:inline;padding:2px 6px">_handover.json</code></div>
+<div class="meta">Generated: 2026-04-24 08:37 &nbsp;|&nbsp; Source: <code style="display:inline;padding:2px 6px">_ai_log.md</code> &nbsp;|&nbsp; Sidecar: <code style="display:inline;padding:2px 6px">_handover.json</code></div>
 
 <!-- ============================================================ -->
 <!-- AGENT INSTRUCTIONS                                            -->
@@ -62,15 +62,15 @@
 <div class="latest-session">
   <div class="session-status ok">Complete</div>
   <h2>Latest Session Snapshot</h2>
-  <p><strong>Session:</strong> 2026-04-23</p>
+  <p><strong>Session:</strong> 2026-04-24</p>
   <p><strong>Agent:</strong> Claude Sonnet 4.6</p>
-  <p><strong>Goal:</strong> Design discussion — AI log as a certificate of conduct; immutability and the self-reporting circularity problem.</p>
-  <p><strong>Outcome:</strong> Identified five properties that would make the log certificate-grade (scope declaration, file-touch manifest, deny-event pipeline from the proxy-sandbox, commit-anchored attestation, human countersign); concluded that git already provides tamper-evidence, but true certification requires a human countersign as the trust anchor — no purely technical fix resolves the self-reporting circularity.</p>
-  <p><strong>Next steps:</strong> Consider piping sandbox deny-events (from `.claude/settings.json` block rules) into the log as a separate &quot;Access denied&quot; section — this is the one piece the agent cannot fabricate Consider adding a &quot;Reviewed: JR ✓&quot; countersign prompt to `/close` as a lightweight two-party record</p>
-  <p><strong>Git ref:</strong> f5a7d50 ---</p>
+  <p><strong>Goal:</strong> Design the paper project naming convention and onboarding guide for group rollout.</p>
+  <p><strong>Outcome:</strong> Convention settled as `Pub_Topic_YourInitials` (driver = the person keeping the paper moving, not the PI by default); two local-folder strategies documented: automatic provisioning for new papers, key-table linking for legacy papers.</p>
+  <p><strong>Next steps:</strong> Build automatic local folder provisioning triggered by a new tagged Overleaf project Draft the group email pointing people to the onboarding guide</p>
+  <p><strong>Git ref:</strong> be3aef6</p>
   <h3>Files touched</h3>
   <ul>
-  <li>none</li>
+  <li>`onboarding_paper_projects.md` — new; onboarding guide covering the `Pub_Topic_Driver` naming convention, Overleaf tagging, one-project-per-paper rule, and both the provision-on-creation and key-table paths for local folder linking.</li>
 </ul>
 </div>
 
@@ -100,23 +100,8 @@
   <li><strong>2026-04-22 Close</strong> (Codex): Close the AI_auto working session after linking Overleaf and prepar... → `AI_auto` is linked to Overleaf, the Overleaf clone is clean and synced, and `slides_ma...</li>
   <li><strong>2026-04-22</strong> (Codex): Revise `slides_main_v2.tex` so the DTU quotes appear on the front p... → `slides_main_v2.tex` now starts with the title page plus DTU rule quote, followed direc...</li>
   <li><strong>2026-04-22</strong> (Codex): Create a condensed 10-slide version of the DTU AI infrastructure me... -&gt; New file `slides_main_v2_10slides.tex` exists locally with exactly 10 frames. It has no...</li>
+  <li><strong>2026-04-22 Close</strong> (Codex): Close the AI_auto slide-editing session after preparing the condens... -&gt; The full V2 deck and the condensed 10-slide deck are in place. The Overleaf source repo...</li>
 </ul>
-<br>
-<hr>
-<br>
-<h2>Session 2026-04-22 Close</h2>
-<p><strong>Agent:</strong> GPT-5 Codex</p>
-<p><strong>Goal:</strong> Close the AI_auto slide-editing session after preparing the condensed DTU meeting deck.</p>
-<p><strong>Files touched:</strong></p>
-<ul>
-  <li>`AI_auto/Overleaf_source/slides_main_v2.tex` — revised earlier so the DTU quotes sit on the front page and the duplicate second DTU-rule slide is removed.</li>
-  <li>`AI_auto/Overleaf_source/slides_main_v2_10slides.tex` — new 10-slide condensed version for the meeting.</li>
-  <li>`AI_auto/_handover.html`, `AI_auto/_handover.json`, `AI_auto/AGENTS.md` — updated by the user&#39;s `helpi 7` run before closing.</li>
-  <li>`AI_auto/_ai_log.md` — recorded the slide edits and this close block.</li>
-</ul>
-<p><strong>Outcome:</strong> The full V2 deck and the condensed 10-slide deck are in place. The Overleaf source repo is clean at `0757ad8`; the AI_auto infrastructure repo has the handover updates from `helpi 7` pending locally.</p>
-<p><strong>Next steps:</strong> Compile `slides<em>main</em>v2_10slides.tex` in Overleaf, inspect slides 2, 3, and 9 for density, then push the deck if it is the meeting version to use.</p>
-<p><strong>Git ref:</strong> AI<em>auto `b822a06`; Overleaf</em>source `0757ad8`</p>
 <br>
 <hr>
 <br>
@@ -174,7 +159,24 @@
   <li>Test `helpi 23` end-to-end on a real project with a `code/` repo</li>
   <li>Mac compatibility remains a known gap (documented)</li>
 </ul>
-<p><strong>Git ref:</strong> 9ad8a55</p>
+<p><strong>Git ref:</strong> 9ad8a55</p>
+<br>
+<hr>
+<br>
+<h2>Session 2026-04-24</h2>
+<p><strong>Agent:</strong> Claude Sonnet 4.6</p>
+<p><strong>Goal:</strong> Design the paper project naming convention and onboarding guide for group rollout.</p>
+<p><strong>Files touched:</strong></p>
+<ul>
+  <li>`onboarding_paper_projects.md` — new; onboarding guide covering the `Pub_Topic_Driver` naming convention, Overleaf tagging, one-project-per-paper rule, and both the provision-on-creation and key-table paths for local folder linking.</li>
+</ul>
+<p><strong>Outcome:</strong> Convention settled as `Pub<em>Topic</em>YourInitials` (driver = the person keeping the paper moving, not the PI by default); two local-folder strategies documented: automatic provisioning for new papers, key-table linking for legacy papers.</p>
+<p><strong>Next steps:</strong></p>
+<ul>
+  <li>Build automatic local folder provisioning triggered by a new tagged Overleaf project</li>
+  <li>Draft the group email pointing people to the onboarding guide</li>
+</ul>
+<p><strong>Git ref:</strong> be3aef6</p>
 <br>
 
 </div>
@@ -206,20 +208,7 @@
 - **2026-04-22 Close** (Codex): Close the AI_auto working session after linking Overleaf and prepar... → `AI_auto` is linked to Overleaf, the Overleaf clone is clean and synced, and `slides_ma...
 - **2026-04-22** (Codex): Revise `slides_main_v2.tex` so the DTU quotes appear on the front p... → `slides_main_v2.tex` now starts with the title page plus DTU rule quote, followed direc...
 - **2026-04-22** (Codex): Create a condensed 10-slide version of the DTU AI infrastructure me... -&gt; New file `slides_main_v2_10slides.tex` exists locally with exactly 10 frames. It has no...
-
----
-
-## Session 2026-04-22 Close
-**Agent:** GPT-5 Codex
-**Goal:** Close the AI_auto slide-editing session after preparing the condensed DTU meeting deck.
-**Files touched:**
-- `AI_auto/Overleaf_source/slides_main_v2.tex` — revised earlier so the DTU quotes sit on the front page and the duplicate second DTU-rule slide is removed.
-- `AI_auto/Overleaf_source/slides_main_v2_10slides.tex` — new 10-slide condensed version for the meeting.
-- `AI_auto/_handover.html`, `AI_auto/_handover.json`, `AI_auto/AGENTS.md` — updated by the user's `helpi 7` run before closing.
-- `AI_auto/_ai_log.md` — recorded the slide edits and this close block.
-**Outcome:** The full V2 deck and the condensed 10-slide deck are in place. The Overleaf source repo is clean at `0757ad8`; the AI_auto infrastructure repo has the handover updates from `helpi 7` pending locally.
-**Next steps:** Compile `slides_main_v2_10slides.tex` in Overleaf, inspect slides 2, 3, and 9 for density, then push the deck if it is the meeting version to use.
-**Git ref:** AI_auto `b822a06`; Overleaf_source `0757ad8`
+- **2026-04-22 Close** (Codex): Close the AI_auto slide-editing session after preparing the condens... -&gt; The full V2 deck and the condensed 10-slide deck are in place. The Overleaf source repo...
 
 ---
 
@@ -270,6 +259,19 @@
 - Test `helpi 23` end-to-end on a real project with a `code/` repo
 - Mac compatibility remains a known gap (documented)
 **Git ref:** 9ad8a55
+
+---
+
+## Session 2026-04-24
+**Agent:** Claude Sonnet 4.6
+**Goal:** Design the paper project naming convention and onboarding guide for group rollout.
+**Files touched:**
+- `onboarding_paper_projects.md` — new; onboarding guide covering the `Pub_Topic_Driver` naming convention, Overleaf tagging, one-project-per-paper rule, and both the provision-on-creation and key-table paths for local folder linking.
+**Outcome:** Convention settled as `Pub_Topic_YourInitials` (driver = the person keeping the paper moving, not the PI by default); two local-folder strategies documented: automatic provisioning for new papers, key-table linking for legacy papers.
+**Next steps:**
+- Build automatic local folder provisioning triggered by a new tagged Overleaf project
+- Draft the group email pointing people to the onboarding guide
+**Git ref:** be3aef6
 </textarea>
 </div>
 

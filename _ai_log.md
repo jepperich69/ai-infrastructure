@@ -19,20 +19,7 @@
 - **2026-04-22 Close** (Codex): Close the AI_auto working session after linking Overleaf and prepar... → `AI_auto` is linked to Overleaf, the Overleaf clone is clean and synced, and `slides_ma...
 - **2026-04-22** (Codex): Revise `slides_main_v2.tex` so the DTU quotes appear on the front p... → `slides_main_v2.tex` now starts with the title page plus DTU rule quote, followed direc...
 - **2026-04-22** (Codex): Create a condensed 10-slide version of the DTU AI infrastructure me... -> New file `slides_main_v2_10slides.tex` exists locally with exactly 10 frames. It has no...
-
----
-
-## Session 2026-04-22 Close
-**Agent:** GPT-5 Codex
-**Goal:** Close the AI_auto slide-editing session after preparing the condensed DTU meeting deck.
-**Files touched:**
-- `AI_auto/Overleaf_source/slides_main_v2.tex` — revised earlier so the DTU quotes sit on the front page and the duplicate second DTU-rule slide is removed.
-- `AI_auto/Overleaf_source/slides_main_v2_10slides.tex` — new 10-slide condensed version for the meeting.
-- `AI_auto/_handover.html`, `AI_auto/_handover.json`, `AI_auto/AGENTS.md` — updated by the user's `helpi 7` run before closing.
-- `AI_auto/_ai_log.md` — recorded the slide edits and this close block.
-**Outcome:** The full V2 deck and the condensed 10-slide deck are in place. The Overleaf source repo is clean at `0757ad8`; the AI_auto infrastructure repo has the handover updates from `helpi 7` pending locally.
-**Next steps:** Compile `slides_main_v2_10slides.tex` in Overleaf, inspect slides 2, 3, and 9 for density, then push the deck if it is the meeting version to use.
-**Git ref:** AI_auto `b822a06`; Overleaf_source `0757ad8`
+- **2026-04-22 Close** (Codex): Close the AI_auto slide-editing session after preparing the condens... -> The full V2 deck and the condensed 10-slide deck are in place. The Overleaf source repo...
 
 ---
 
@@ -83,3 +70,16 @@
 - Test `helpi 23` end-to-end on a real project with a `code/` repo
 - Mac compatibility remains a known gap (documented)
 **Git ref:** 9ad8a55
+
+---
+
+## Session 2026-04-24
+**Agent:** Claude Sonnet 4.6
+**Goal:** Design the paper project naming convention and onboarding guide for group rollout.
+**Files touched:**
+- `onboarding_paper_projects.md` — new; onboarding guide covering the `Pub_Topic_Driver` naming convention, Overleaf tagging, one-project-per-paper rule, and both the provision-on-creation and key-table paths for local folder linking.
+**Outcome:** Convention settled as `Pub_Topic_YourInitials` (driver = the person keeping the paper moving, not the PI by default); two local-folder strategies documented: automatic provisioning for new papers, key-table linking for legacy papers.
+**Next steps:**
+- Build automatic local folder provisioning triggered by a new tagged Overleaf project
+- Draft the group email pointing people to the onboarding guide
+**Git ref:** be3aef6
