@@ -5,6 +5,32 @@ A "change" is anything that affects how you or Claude interacts with the system.
 
 ---
 
+## [v0.8] — 2026-04-24 — Session draft logging, collaborator handovers, environment map
+
+**Incremental session draft logging**
+- `log_tool_use.ps1` (new): PostToolUse hook that appends a timestamped line to `_session_draft.md` after every Edit, Write, or Bash call. Crash-safe — survives abrupt session ends and is picked up by the next `/close`.
+- `~/.claude/settings.json`: PostToolUse hook wired to `log_tool_use.ps1 -Agent Claude`.
+- `/close` updated: reads `_session_draft.md` as authoritative file-touch list; deletes it after writing the session block.
+
+**Collaborator handovers via Overleaf**
+- `generate_handover.ps1`: now also writes `_handover_JR.md` to `Overleaf_source/` (compact markdown: goal, outcome, files, next steps). Syncs to Overleaf with the next `helpi 2` push.
+- `/work` updated: scans `Overleaf_source/` for peer handover files (`_handover_*.md` not from JR) and surfaces them at session start.
+
+**Environment map**
+- `known_issues.md` (new): full environment inventory — software versions and paths, drives, key folders, known platform issues with fix recipes.
+- `~/.claude/CLAUDE.md` and `~/.codex/config.toml`: compact "Platform facts" block added at the top of each — always loaded, zero file reads required.
+- `/close` updated: automatically checks for new platform discoveries each session and adds the 1–2 most reusable to both the inline block and `known_issues.md`.
+
+**Bug fixes**
+- `helpi.cmd`: changed `powershell` → `pwsh`. PS5 reads UTF-8 files as Windows-1252 — the third byte of an em-dash (0x94) is `"` in that encoding, silently closing string literals and causing parser errors.
+- `push_to_github.ps1`: removed em-dashes from string literals (same root cause, belt-and-suspenders fix).
+
+**Documentation**
+- `infrastructure.html` v0.8: added §J (environment map table + platform rules), session draft subsection in §7, collaborator handover subsections in §7 and §I, platform map auto-update subsection.
+- `onboarding_paper_projects.md` (new): group onboarding guide for the `Pub_Topic_Driver` Overleaf naming convention.
+
+---
+
 ## [v0.7] — 2026-04-19 — Portable installation: config.ps1 refactor + install scripts
 
 - **`config.ps1`** (new): Single source of truth for all machine-specific paths (`$pubRoot`, `$vscode`, `$miktexBin`, `$latexdiffScript`, `$strawberryPerl`, `$tagTargets`). All 22 scripts now dot-source this file instead of defining their own hardcoded paths.
