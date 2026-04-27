@@ -91,3 +91,16 @@
 - Roll out `Pub_Topic_Driver` naming convention to group — draft email using `onboarding_paper_projects.md`
 - Build automatic local folder provisioning triggered by a new tagged Overleaf project
 **Git ref:** 731ed64
+
+---
+
+## Session 2026-04-27
+**Agent:** Codex
+**Goal:** Add a GitHub-facing README and introduction for the AI_auto repository.
+**Files touched:**
+- `README.md` -- new; explains the purpose of AI_auto, the local-first research workflow, quick-start commands, repository layout, standard project folder structure, operating principles, and requirements.
+- `_ai_log.md` -- appended this session entry.
+**Outcome:** The GitHub repo now has a proper root README that introduces the infrastructure and explains what the main files and folders do.
+**Next steps:**
+- Push the README and log update to GitHub when ready.
+**Git ref:** 6f6a1d5
