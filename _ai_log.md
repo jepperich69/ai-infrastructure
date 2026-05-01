@@ -4,8 +4,6 @@
 
 ## Compressed sessions
 
-- **2026-04-05 (evening)** (Claude): Consistency-cleanup pass on v0.2 based on GPT code review recommend... → v0.2 is now consistent across all docs and scripts; snapshot safety posture improved.
-- **2026-04-07** (Claude): Auto-generate separate PDF and HTML exports for the 1-2 pager and t... → Running `helpi 16` (or `.\generate_docs.ps1`) now produces four files: a summary HTML/P...
 - **2026-04-08** (Claude): Design and implement a proxy-sandbox for per-project Claude file is... → Claude Code is now structurally confined to project folders via a per-project deny list...
 - **2026-04-11** (Claude): Explore Claude Code features being underused; implement per-project... → Per-project CLAUDE.md system fully deployed across 89 projects; both Claude Code and Co...
 - **2026-04-14** (Codex): Upgrade `helpi 5` so handover compilation is driven by a structured... → `helpi 5` is now conceptually cleaner: `_ai_log.md` remains the source of truth, while ...
@@ -20,39 +18,8 @@
 - **2026-04-22** (Codex): Create a condensed 10-slide version of the DTU AI infrastructure me... -> New file `slides_main_v2_10slides.tex` exists locally with exactly 10 frames. It has no...
 - **2026-04-22 Close** (Codex): Close the AI_auto slide-editing session after preparing the condens... -> The full V2 deck and the condensed 10-slide deck are in place. The Overleaf source repo...
 - **2026-04-22** (Codex): Make Codex automatically use the project implied by the directory i... -> Future Codex sessions should infer the active project from the current working director...
-
----
-
-## Session 2026-04-23
-**Agent:** Claude Sonnet 4.6
-**Goal:** Design discussion — AI log as a certificate of conduct; immutability and the self-reporting circularity problem.
-**Files touched:** none
-**Outcome:** Identified five properties that would make the log certificate-grade (scope declaration, file-touch manifest, deny-event pipeline from the proxy-sandbox, commit-anchored attestation, human countersign); concluded that git already provides tamper-evidence, but true certification requires a human countersign as the trust anchor — no purely technical fix resolves the self-reporting circularity.
-**Next steps:**
-- Consider piping sandbox deny-events (from `.claude/settings.json` block rules) into the log as a separate "Access denied" section — this is the one piece the agent cannot fabricate
-- Consider adding a "Reviewed: JR ✓" countersign prompt to `/close` as a lightweight two-party record
-**Git ref:** f5a7d50
-
----
-
-## Session 2026-04-23
-**Agent:** Claude Sonnet 4.6
-**Goal:** Professionalise the infrastructure — log compression, /helpi command, push-to-GitHub, shell UX improvements, documentation updates.
-**Files touched:**
-- `compress_log.ps1` — new; tiered log compression: keeps last 4 sessions verbatim, older → one-liners, 16+ → archived to `_ai_log_archive.md`; runs automatically at `/close`
-- `push_to_github.ps1` — new; pushes `code/` to GitHub, creates repo via `gh` CLI if no remote exists (no browser needed)
-- `helpi.ps1` — added commands 22 (compress log) and 23 (push to GitHub); added `-Force` flag; added `[Console]::IsInputRedirected` auto-detect to skip confirmation in non-interactive contexts; updated cheatsheet (`! helpi 17` → `/helpi 17`, added `/helpi` entry)
-- `~/.claude/commands/helpi.md` — new; `/helpi [N] [proj]` slash command, passes `-Force` automatically
-- `~/.claude/commands/shell.md` — new; `/shell` passthrough mode — messages executed as shell commands until `exit`/`done`
-- `~/.claude/commands/close.md` — fixed step 5 (was `helpi 5` → now calls `generate_handover.ps1` directly); added step 3.5 (compress log via `helpi 22`)
-- `~/.claude/settings.json` — fixed allowlist (`Bash(helpi.cmd*)` → `Bash(helpi*)`); added `Bash(git *)` and `Bash(git)`
-- `infrastructure.html` — added helpi 22/23 rows everywhere; updated section headings to 13–23; added log compression paragraph in §7; added `/helpi` and `/shell` to commands table and desk reference; added non-interactive auto-detect note; regenerated full/summary HTML+PDF
-- `_ai_log.md` — compressed 14 old sessions to one-liners (first run of compress_log.ps1)
-**Outcome:** Infrastructure professionalised: log compression keeps `_ai_log.md` lean automatically; `/helpi` and `! helpi N` both work from inside Claude without confirmation prompts; `/shell` mode available for command sequences; GitHub push added as helpi 23; all documentation updated.
-**Next steps:**
-- Test `helpi 23` end-to-end on a real project with a `code/` repo
-- Mac compatibility remains a known gap (documented)
-**Git ref:** 9ad8a55
+- **2026-04-23** (Claude): Design discussion — AI log as a certificate of conduct; immutabilit... -> Identified five properties that would make the log certificate-grade (scope declaration...
+- **2026-04-23** (Claude): Professionalise the infrastructure — log compression, /helpi comman... -> Infrastructure professionalised: log compression keeps `_ai_log.md` lean automatically;...
 
 ---
 
@@ -104,3 +71,18 @@
 **Next steps:**
 - Push the README and log update to GitHub when ready.
 **Git ref:** 6f6a1d5
+
+---
+
+## Session 2026-05-01
+**Agent:** Claude Sonnet 4.6
+**Goal:** Improve helpi 24 (one-pager) with a GUI file picker; fix project detection in /helpi; fix helpi 24 non-interactive (Claude Code) usage.
+**Files touched:**
+- `generate_onepager.ps1` — added Windows Forms pop-up picker (always shown in interactive terminals); added `-TexFile` param to bypass dialog when called non-interactively (e.g. from Claude Code); non-interactive context auto-picks `main.tex` or most-recently-modified file
+- `helpi.ps1` — command 24 preview and execution now pass `-TexFile $texFile` when provided
+- `~/.claude/commands/helpi.md` — rewrote: added 5-source project detection (explicit arg > conversation context > files touched this session > CWD > state file); added Step 2 pre-flight for command 24 (Claude lists Overleaf_source/, picks the .tex file, passes it explicitly)
+**Outcome:** helpi 24 shows a GUI picker in a terminal and works headlessly in Claude Code; /helpi now infers the active project from conversation context rather than falling back to last-used.
+**Next steps:**
+- Test helpi 24 end-to-end in a real project session via /helpi
+- Consider extending the GUI picker pattern to compile_latex.ps1 (helpi 6) which has the same multi-file ambiguity
+**Git ref:** 52f3850

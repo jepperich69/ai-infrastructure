@@ -1,15 +1,19 @@
 {
   "project": "AI_auto",
-  "generated": "2026-04-24 10:41",
+  "generated": "2026-05-01 21:38",
   "source": "_ai_log.md",
   "latest_session": {
-    "title": "2026-04-24",
+    "title": "2026-05-01",
     "agent": "Claude Sonnet 4.6",
-    "goal": "Design the paper project naming convention and onboarding guide for group rollout.",
-    "outcome": "Convention settled as `Pub_Topic_YourInitials` (driver = the person keeping the paper moving, not the PI by default); two local-folder strategies documented: automatic provisioning for new papers, key-table linking for legacy papers.",
-    "next_steps": "Build automatic local folder provisioning triggered by a new tagged Overleaf project Draft the group email pointing people to the onboarding guide",
-    "git_ref": "be3aef6 ---",
-    "files_touched": "`onboarding_paper_projects.md` — new; onboarding guide covering the `Pub_Topic_Driver` naming convention, Overleaf tagging, one-project-per-paper rule, and both the provision-on-creation and key-table paths for local folder linking."
+    "goal": "Improve helpi 24 (one-pager) with a GUI file picker; fix project detection in /helpi; fix helpi 24 non-interactive (Claude Code) usage.",
+    "outcome": "helpi 24 shows a GUI picker in a terminal and works headlessly in Claude Code; /helpi now infers the active project from conversation context rather than falling back to last-used.",
+    "next_steps": "Test helpi 24 end-to-end in a real project session via /helpi Consider extending the GUI picker pattern to compile_latex.ps1 (helpi 6) which has the same multi-file ambiguity",
+    "git_ref": "52f3850",
+    "files_touched": [
+      "`generate_onepager.ps1` — added Windows Forms pop-up picker (always shown in interactive terminals); added `-TexFile` param to bypass dialog when called non-interactively (e.g. from Claude Code); non-interactive context auto-picks `main.tex` or most-recently-modified file",
+      "`helpi.ps1` — command 24 preview and execution now pass `-TexFile $texFile` when provided",
+      "`~/.claude/commands/helpi.md` — rewrote: added 5-source project detection (explicit arg > conversation context > files touched this session > CWD > state file); added Step 2 pre-flight for command 24 (Claude lists Overleaf_source/, picks the .tex file, passes it explicitly)"
+    ]
   },
   "latest_session_complete": true,
   "latest_session_missing": null,
