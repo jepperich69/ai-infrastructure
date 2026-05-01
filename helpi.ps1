@@ -18,12 +18,38 @@ param(
 
 # ── Auto-detect project from current working directory ─────────────
 function Get-ProjectFromCwd {
-    $cwd      = (Get-Location).Path
-    $segments = $cwd -split '[\\\/]'
+    $cwd = (Get-Location).Path
+
+    $pubPrefix = "$pubRoot\"
+    if ($cwd.StartsWith($pubPrefix, [System.StringComparison]::OrdinalIgnoreCase)) {
+        $relative = $cwd.Substring($pubPrefix.Length)
+        $project  = ($relative -split '[\\/]')[0]
+        if ($project -match '^(Pub_|Pro_|PhD_)') { return $project }
+    }
+
+    $segments = $cwd -split '[\\/]'
     $match = $segments | Where-Object {
         $_ -match '^(Pub_|Pro_|PhD_|AI_auto|CV|CHARGO|42180|DFF|Reagent|BeamerPres|hEART|IATBR|Cycling|Discrete|EV|Paulsen|Presentation|Aalborg|Bicycle|Slides)'
     } | Select-Object -First 1
     if ($match) { return $match } else { return "" }
+}
+
+
+# ── Active project fallback ───────────────────────────────────────
+$helpiStateDir  = Join-Path $aiRoot '_state'
+$helpiStateFile = Join-Path $helpiStateDir 'last_project.txt'
+
+function Get-LastProject {
+    if (Test-Path $helpiStateFile) {
+        return (Get-Content $helpiStateFile -Encoding UTF8 | Select-Object -First 1).Trim()
+    }
+    return ""
+}
+
+function Set-LastProject([string]$proj) {
+    if (!$proj) { return }
+    if (!(Test-Path $helpiStateDir)) { New-Item -ItemType Directory -Path $helpiStateDir -Force | Out-Null }
+    Set-Content -Path $helpiStateFile -Value $proj -Encoding UTF8
 }
 
 # ── Command definitions ────────────────────────────────────────────
@@ -50,7 +76,8 @@ $commands = @(
     [PSCustomObject]@{ N=20; NeedsProject=$false; Tag="ONCE";    Name="Restore infrastructure on replacement machine"; Example="restore.ps1" },
     [PSCustomObject]@{ N=21; NeedsProject=$false; Tag="ONCE";    Name="First-time setup for a new user/colleague";    Example="setup.ps1" },
     [PSCustomObject]@{ N=22; NeedsProject=$true;  Tag="MANUAL";  Name="Compress AI log (trim old sessions)";           Example="compress_log.ps1 -Project XXX" },
-    [PSCustomObject]@{ N=23; NeedsProject=$true;  Tag="MANUAL";  Name="Push code/ to GitHub";                          Example="push_to_github.ps1 -Project XXX" }
+    [PSCustomObject]@{ N=23; NeedsProject=$true;  Tag="MANUAL";  Name="Push code/ to GitHub";                          Example="push_to_github.ps1 -Project XXX" },
+    [PSCustomObject]@{ N=24; NeedsProject=$true;  Tag="MANUAL";  Name="Boil paper to technical one-pager";              Example="generate_onepager.ps1 -Project XXX" }
 )
 
 # ── Contextual help for a single command ──────────────────────────
@@ -158,8 +185,8 @@ function Show-CommandHelp {
             "Assembles a complete journal submission folder under _submissions/YYYY-MM-DD_Journal/.",
             "Steps: (1) compile manuscript, (2) extract front page, (3) inline bibliography,",
             "(4) submission zip, (5) blind manuscript + zip, (6) latexdiff vs previous version,",
-            "(7) copy AI-generated cover letter / highlights / author statement.",
-            "If no staged AI content exists, calls Claude first to generate it.",
+            "(7) copy generated cover letter / highlights / author statement.",
+            "If no staged content exists, generates deterministic staging files locally.",
             "",
             "When to use: ready to submit or resubmit a paper.",
             "",
@@ -323,6 +350,23 @@ function Show-CommandHelp {
             "  helpi 23 $p my-repo-name              # custom repo name",
             "  helpi 23 $p my-repo-name public       # public repo"
         )}
+        24 { @(
+            "Boil paper to technical one-pager",
+            "Reads the main .tex manuscript and generates a dense, self-contained LaTeX note",
+            "distilling the primary technical contribution: core idea, key formula,",
+            "solver / application connection, small illustrative check, and a boxed",
+            "contribution structure.",
+            "",
+            "Output: Overleaf_source/technical_onepager.tex",
+            "Style:  10pt article, 1.7cm margins, italic run-in headers, no citations,",
+            "        no figures, no bibliography. Compiles to one A4 page.",
+            "",
+            "When to use: to share the idea quickly with a co-author, before writing the",
+            "full paper, or as a communication note for a meeting.",
+            "",
+            "Example:",
+            "  helpi 24 $p"
+        )}
         default { @("No help available for command $n.") }
     }
 
@@ -393,6 +437,7 @@ function Get-CommandPreview {
         22 { "compress_log.ps1 -Project $proj" }
         23 { if ($texFile) { "push_to_github.ps1 -Project $proj -RepoName $texFile" }
              else          { "push_to_github.ps1 -Project $proj" } }
+        24 { "generate_onepager.ps1 -Project $proj" }
     }
 }
 
@@ -404,8 +449,13 @@ function Invoke-Command-N {
     if (!$c) { Write-Host "ERR | Unknown command: $n" -ForegroundColor Red; return }
 
     if ($c.NeedsProject -and !$proj) {
-        $proj = Read-Host "  Project name"
+        $proj = Get-LastProject
+        if (!$proj) {
+            $proj = Read-Host "  Project name"
+        }
     }
+
+    if ($proj) { Set-LastProject $proj }
 
     $preview = Get-CommandPreview -n $n -proj $proj -texFile $texFile
     Write-Host ""
@@ -463,11 +513,8 @@ function Invoke-Command-N {
                $hasCover   = Test-Path (Join-Path $stagingDir "cover_letter.pdf")
                if (!$hasCover) {
                    Write-Host ""
-                   Write-Host "  No staged AI content found -- generating via Claude..." -ForegroundColor Cyan
-                   $promptText = Get-Content (Join-Path $aiRoot "prompts\submit_stage_ai.md") -Raw -Encoding UTF8
-                   Push-Location $projRoot
-                   & claude -p $promptText
-                   Pop-Location
+                   Write-Host "  No staged submission content found -- generating locally..." -ForegroundColor Cyan
+                   & "$aiRoot\stage_submission_ai.ps1" -Project $proj
                } else {
                    Write-Host "  Staged AI content found -- skipping Claude generation." -ForegroundColor DarkGray
                }
@@ -504,6 +551,7 @@ function Invoke-Command-N {
         22 { & "$aiRoot\compress_log.ps1" -Project $proj }
         23 { if ($texFile) { & "$aiRoot\push_to_github.ps1" -Project $proj -RepoName $texFile }
              else          { & "$aiRoot\push_to_github.ps1" -Project $proj } }
+        24 { & "$aiRoot\generate_onepager.ps1" -Project $proj }
     }
 }
 
@@ -583,6 +631,8 @@ function Toggle-ModelCheck {
 
 # ── Entry point ────────────────────────────────────────────────────
 if (!$Project) { $Project = Get-ProjectFromCwd }
+if (!$Project) { $Project = Get-LastProject }
+if ($Project) { Set-LastProject $Project }
 
 # Help mode: helpi 5 ?
 if ($Project -in @('?','help')) {

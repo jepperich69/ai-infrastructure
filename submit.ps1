@@ -160,6 +160,90 @@ function Get-LatexExternalRefs {
     return @($refs | Sort-Object)
 }
 
+function Strip-LatexText([string]$s) {
+    if (!$s) { return "" }
+    $s = $s -replace '\\&', '&'
+    $s = $s -replace '\\emph\{([^}]*)\}', '$1'
+    $s = $s -replace '\\texorpdfstring\{([^}]*)\}\{([^}]*)\}', '$2'
+    $s = $s -replace '\\[a-zA-Z]+\*?(?:\[[^\]]*\])?(?:\{([^}]*)\})?', '$1'
+    $s = $s -replace '[{}$]', ''
+    $s = $s -replace '\s+', ' '
+    return $s.Trim()
+}
+
+function Get-TitleNeedle([string]$tex) {
+    $m = [regex]::Match($tex, '\\title\s*\{([^}]*)\}', [System.Text.RegularExpressions.RegexOptions]::Singleline)
+    if (!$m.Success) { return "" }
+    $title = Strip-LatexText $m.Groups[1].Value
+    if ($title.Length -gt 35) { return $title.Substring(0, 35) }
+    return $title
+}
+
+function Find-TitleAbstractPage {
+    param(
+        [string]$pdfPath,
+        [string]$tex,
+        [string]$buildDir
+    )
+
+    $pdftotext = Get-Command pdftotext -ErrorAction SilentlyContinue
+    if (!$pdftotext) {
+        $candidate = Join-Path $miktexBin "pdftotext.exe"
+        if (Test-Path $candidate) { $pdftotext = Get-Item $candidate }
+    }
+    if (!$pdftotext) { return 1 }
+
+    $needle = Get-TitleNeedle $tex
+    for ($page = 1; $page -le 8; $page++) {
+        $txtPath = Join-Path $buildDir "_frontpage_probe_$page.txt"
+        Remove-Item $txtPath -Force -ErrorAction SilentlyContinue
+        & $pdftotext.Source -f $page -l $page "$pdfPath" "$txtPath" *> $null
+        if (!(Test-Path $txtPath)) { continue }
+        $plain = Get-Content -LiteralPath $txtPath -Raw -Encoding UTF8
+        Remove-Item $txtPath -Force -ErrorAction SilentlyContinue
+        $hasAbstract = $plain -match '(?m)^\s*Abstract\s*$'
+        $hasTitle = $needle -and ($plain -like "*$needle*")
+        $isHighlights = $plain -match '(?m)^\s*Highlights\s*$'
+        if (($hasAbstract -or $hasTitle) -and !$isHighlights) { return $page }
+    }
+    return 1
+}
+
+function Resolve-SubmissionExtras {
+    param(
+        [string]$tex,
+        [string]$sourceDir
+    )
+
+    $resolved = [System.Collections.Generic.List[System.IO.FileInfo]]::new()
+    $seen = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::OrdinalIgnoreCase)
+
+    foreach ($ref in Get-LatexExternalRefs $tex) {
+        $candidates = @()
+        if ([System.IO.Path]::GetExtension($ref)) {
+            $candidates += $ref
+        } else {
+            foreach ($ext in @(".png",".pdf",".eps",".jpg",".jpeg",".sty",".cls",".bib")) {
+                $candidates += "$ref$ext"
+            }
+        }
+        foreach ($candidate in $candidates) {
+            $path = Join-Path $sourceDir $candidate
+            if (Test-Path $path -PathType Leaf) {
+                $item = Get-Item $path
+                if ($seen.Add($item.FullName)) { $resolved.Add($item) }
+                break
+            }
+        }
+    }
+
+    foreach ($f in Get-ChildItem $sourceDir -File | Where-Object { $_.Extension -match '\.(sty|cls)$' }) {
+        if ($seen.Add($f.FullName)) { $resolved.Add($f) }
+    }
+
+    return @($resolved | Sort-Object Name)
+}
+
 # -- Helper: strip author-identifying content from a flat .tex ---------------
 function Make-BlindTex {
     param([string]$tex)
@@ -234,7 +318,9 @@ if (Test-Path $manuscriptPdf) {
 }
 
 # -- [2] Front page -----------------------------------------------------------
-Step 2 "Extracting front page (page 1)"
+$texForFront = Get-Content -LiteralPath $texPath -Raw -Encoding UTF8
+$frontPage = Find-TitleAbstractPage -pdfPath $manuscriptOut -tex $texForFront -buildDir $buildDir
+Step 2 "Extracting front page (page $frontPage)"
 $srcPdf    = $manuscriptOut
 $frontOut  = Join-Path $outDir "Frontpage_${prefix}.pdf"
 $extracted = $false
@@ -242,13 +328,13 @@ if (Test-Path $srcPdf) {
     $pdftk = Get-Command pdftk -ErrorAction SilentlyContinue
     if ($pdftk) {
         try {
-            & pdftk $srcPdf cat 1 output $frontOut 2>$null
+            & pdftk $srcPdf cat $frontPage output $frontOut 2>$null
             if (Test-Path $frontOut) { OK "Frontpage_${prefix}.pdf (pdftk)"; $extracted = $true }
         } catch {}
     }
     if (!$extracted -and $gsExe -and (Test-Path $gsExe)) {
         try {
-            & $gsExe -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -dFirstPage=1 -dLastPage=1 `
+            & $gsExe -dNOPAUSE -dBATCH -sDEVICE=pdfwrite "-dFirstPage=$frontPage" "-dLastPage=$frontPage" `
                 -sOutputFile="$frontOut" "$srcPdf" 2>$null
             if (Test-Path $frontOut) { OK "Frontpage_${prefix}.pdf (ghostscript)"; $extracted = $true }
         } catch {}
@@ -287,8 +373,7 @@ Add-Type -AssemblyName System.IO.Compression.FileSystem
 $zip = [System.IO.Compression.ZipFile]::Open($zipPath, 'Create')
 # Include flat tex as main.tex inside the zip
 [System.IO.Compression.ZipFileExtensions]::CreateEntryFromFile($zip, $flatTex, "main.tex") | Out-Null
-$extras = Get-ChildItem $sourceDir -File |
-          Where-Object { $_.Extension -match '\.(png|pdf|eps|jpg|jpeg|sty|cls)$' }
+$extras = Resolve-SubmissionExtras -tex $flatTexContent -sourceDir $sourceDir
 foreach ($f in $extras) {
     [System.IO.Compression.ZipFileExtensions]::CreateEntryFromFile($zip, $f.FullName, $f.Name) | Out-Null
 }

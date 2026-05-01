@@ -1,4 +1,4 @@
-﻿# push_to_overleaf.ps1
+# push_to_overleaf.ps1
 # Push local edits in an Overleaf_source repo back to Overleaf.
 #
 # Usage:
@@ -28,14 +28,37 @@ if ($Project) {
     $repoPath = $match.path
     $branch   = $match.branch
 } else {
-    $repoPath = (Get-Location).Path
-    $branch   = git -C $repoPath rev-parse --abbrev-ref HEAD 2>$null
+    $cwd = (Get-Location).Path
+
+    $projectName = ""
+    $pubPrefix = "$pubRoot\"
+    if ($cwd.StartsWith($pubPrefix, [System.StringComparison]::OrdinalIgnoreCase)) {
+        $relative    = $cwd.Substring($pubPrefix.Length)
+        $projectName = ($relative -split '[\\/]')[0]
+        if ($projectName -notmatch '^(Pub_|Pro_|PhD_)') { $projectName = '' }
+    }
+
+    if ($projectName) {
+        $projectRoot = Resolve-ProjectRoot $projectName
+        $overleafDir = Join-Path $projectRoot 'Overleaf_source'
+        if (Test-Path (Join-Path $overleafDir '.git')) {
+            $repoPath = $overleafDir
+            $branch   = git -C $repoPath rev-parse --abbrev-ref HEAD 2>$null
+        } else {
+            Write-Host "ERR  | Overleaf_source git repo not found for project: $projectName"
+            Write-Host "       Expected: $overleafDir"
+            exit 1
+        }
+    } else {
+        $repoPath = $cwd
+        $branch   = git -C $repoPath rev-parse --abbrev-ref HEAD 2>$null
+    }
+
     if (-not $branch -or $LASTEXITCODE -ne 0) {
-        Write-Host "ERR  | Not inside a git repository: $repoPath"
+        Write-Host "ERR  | Not inside a git repository or project root: $cwd"
         exit 1
     }
 }
-
 if (!(Test-Path $repoPath)) {
     Write-Host "ERR  | Path not found: $repoPath"
     exit 1
@@ -43,6 +66,18 @@ if (!(Test-Path $repoPath)) {
 
 Write-Host "Repo : $repoPath"
 Write-Host "Branch: $branch"
+
+# ---------------------------------------------------------------
+# Sync AI meta-files from project root into Overleaf_source
+# ---------------------------------------------------------------
+$projectRoot = Split-Path $repoPath -Parent
+$aiMetaFiles = @('_ai_log.md', '_handover.html', '_handover.json')
+foreach ($f in $aiMetaFiles) {
+    $src = Join-Path $projectRoot $f
+    if (Test-Path $src) {
+        Copy-Item $src (Join-Path $repoPath $f) -Force
+    }
+}
 
 # ---------------------------------------------------------------
 # Stage and check for changes / existing unpushed commits
