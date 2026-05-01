@@ -437,7 +437,8 @@ function Get-CommandPreview {
         22 { "compress_log.ps1 -Project $proj" }
         23 { if ($texFile) { "push_to_github.ps1 -Project $proj -RepoName $texFile" }
              else          { "push_to_github.ps1 -Project $proj" } }
-        24 { "generate_onepager.ps1 -Project $proj" }
+        24 { if ($texFile) { "generate_onepager.ps1 -Project $proj -TexFile $texFile" }
+             else          { "generate_onepager.ps1 -Project $proj" } }
     }
 }
 
@@ -551,7 +552,8 @@ function Invoke-Command-N {
         22 { & "$aiRoot\compress_log.ps1" -Project $proj }
         23 { if ($texFile) { & "$aiRoot\push_to_github.ps1" -Project $proj -RepoName $texFile }
              else          { & "$aiRoot\push_to_github.ps1" -Project $proj } }
-        24 { & "$aiRoot\generate_onepager.ps1" -Project $proj }
+        24 { if ($texFile) { & "$aiRoot\generate_onepager.ps1" -Project $proj -TexFile $texFile }
+             else          { & "$aiRoot\generate_onepager.ps1" -Project $proj } }
     }
 }
 

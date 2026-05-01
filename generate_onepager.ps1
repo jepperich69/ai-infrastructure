@@ -2,13 +2,16 @@
 #
 # Usage:
 #   generate_onepager.ps1 -Project Pub_MyPaper_TBA
+#   generate_onepager.ps1 -Project Pub_MyPaper_TBA -TexFile main.tex   # skip dialog
 #   helpi 24 Pub_MyPaper_TBA
+#   helpi 24 Pub_MyPaper_TBA main.tex                                   # skip dialog
 #
 # Output:
 #   Overleaf_source/technical_onepager.tex  (one A4 page, no citations, no figures)
 #
 param(
-    [string]$Project = ""
+    [string]$Project = "",
+    [string]$TexFile = ""
 )
 
 . "$PSScriptRoot\config.ps1"
@@ -30,7 +33,7 @@ $pullResult = git pull 2>&1
 Write-Host "  $pullResult" -ForegroundColor DarkGray
 Pop-Location
 
-# -- Find main .tex file (pop-up picker) --------------------------------------
+# -- Find main .tex file ------------------------------------------------------
 Write-Host "  [2/3] Locating main manuscript..." -ForegroundColor Cyan
 
 $texFiles = Get-ChildItem $overleafDir -Filter "*.tex" |
@@ -42,61 +45,76 @@ if ($texFiles.Count -eq 0) {
     return
 }
 
-# -- Windows Forms picker (always shown) --------------------------------------
-Add-Type -AssemblyName System.Windows.Forms
-Add-Type -AssemblyName System.Drawing
+$mainTex = ""
 
-$form           = New-Object System.Windows.Forms.Form
-$form.Text      = "Select source manuscript"
-$form.Size      = New-Object System.Drawing.Size(420, 280)
-$form.StartPosition = "CenterScreen"
-$form.FormBorderStyle = "FixedDialog"
-$form.MaximizeBox = $false
-$form.MinimizeBox = $false
+if ($TexFile) {
+    # Caller specified the file directly (e.g. from Claude Code / helpi 24 proj main.tex)
+    $mainTex = $TexFile
+} elseif ([System.Environment]::UserInteractive -and -not [Console]::IsInputRedirected) {
+    # Interactive terminal -- show pop-up picker
+    Add-Type -AssemblyName System.Windows.Forms
+    Add-Type -AssemblyName System.Drawing
 
-$label          = New-Object System.Windows.Forms.Label
-$label.Text     = "Which .tex file is the main manuscript?"
-$label.Location = New-Object System.Drawing.Point(14, 14)
-$label.Size     = New-Object System.Drawing.Size(380, 20)
-$form.Controls.Add($label)
+    $form           = New-Object System.Windows.Forms.Form
+    $form.Text      = "Select source manuscript"
+    $form.Size      = New-Object System.Drawing.Size(420, 280)
+    $form.StartPosition = "CenterScreen"
+    $form.FormBorderStyle = "FixedDialog"
+    $form.MaximizeBox = $false
+    $form.MinimizeBox = $false
 
-$listBox        = New-Object System.Windows.Forms.ListBox
-$listBox.Location = New-Object System.Drawing.Point(14, 42)
-$listBox.Size   = New-Object System.Drawing.Size(378, 160)
-$listBox.Font   = New-Object System.Drawing.Font("Consolas", 9)
-foreach ($f in $texFiles) { $listBox.Items.Add($f.Name) | Out-Null }
+    $label          = New-Object System.Windows.Forms.Label
+    $label.Text     = "Which .tex file is the main manuscript?"
+    $label.Location = New-Object System.Drawing.Point(14, 14)
+    $label.Size     = New-Object System.Drawing.Size(380, 20)
+    $form.Controls.Add($label)
 
-# Pre-select main.tex if present, otherwise the most-recently-modified file
-$defaultIdx = 0
-$mainIdx    = $listBox.Items.IndexOf("main.tex")
-if ($mainIdx -ge 0) { $defaultIdx = $mainIdx }
-$listBox.SelectedIndex = $defaultIdx
-$form.Controls.Add($listBox)
+    $listBox        = New-Object System.Windows.Forms.ListBox
+    $listBox.Location = New-Object System.Drawing.Point(14, 42)
+    $listBox.Size   = New-Object System.Drawing.Size(378, 160)
+    $listBox.Font   = New-Object System.Drawing.Font("Consolas", 9)
+    foreach ($f in $texFiles) { $listBox.Items.Add($f.Name) | Out-Null }
 
-$btnOK          = New-Object System.Windows.Forms.Button
-$btnOK.Text     = "OK"
-$btnOK.Location = New-Object System.Drawing.Point(230, 210)
-$btnOK.Size     = New-Object System.Drawing.Size(75, 26)
-$btnOK.DialogResult = [System.Windows.Forms.DialogResult]::OK
-$form.AcceptButton = $btnOK
-$form.Controls.Add($btnOK)
+    $defaultIdx = 0
+    $mainIdx    = $listBox.Items.IndexOf("main.tex")
+    if ($mainIdx -ge 0) { $defaultIdx = $mainIdx }
+    $listBox.SelectedIndex = $defaultIdx
+    $form.Controls.Add($listBox)
 
-$btnCancel      = New-Object System.Windows.Forms.Button
-$btnCancel.Text = "Cancel"
-$btnCancel.Location = New-Object System.Drawing.Point(317, 210)
-$btnCancel.Size = New-Object System.Drawing.Size(75, 26)
-$btnCancel.DialogResult = [System.Windows.Forms.DialogResult]::Cancel
-$form.CancelButton = $btnCancel
-$form.Controls.Add($btnCancel)
+    $btnOK          = New-Object System.Windows.Forms.Button
+    $btnOK.Text     = "OK"
+    $btnOK.Location = New-Object System.Drawing.Point(230, 210)
+    $btnOK.Size     = New-Object System.Drawing.Size(75, 26)
+    $btnOK.DialogResult = [System.Windows.Forms.DialogResult]::OK
+    $form.AcceptButton = $btnOK
+    $form.Controls.Add($btnOK)
 
-$result = $form.ShowDialog()
-$form.Dispose()
+    $btnCancel      = New-Object System.Windows.Forms.Button
+    $btnCancel.Text = "Cancel"
+    $btnCancel.Location = New-Object System.Drawing.Point(317, 210)
+    $btnCancel.Size = New-Object System.Drawing.Size(75, 26)
+    $btnCancel.DialogResult = [System.Windows.Forms.DialogResult]::Cancel
+    $form.CancelButton = $btnCancel
+    $form.Controls.Add($btnCancel)
 
-if ($result -ne [System.Windows.Forms.DialogResult]::OK -or $listBox.SelectedIndex -lt 0) {
-    Write-Host "  Cancelled." -ForegroundColor Yellow
-    return
+    $result = $form.ShowDialog()
+    $form.Dispose()
+
+    if ($result -ne [System.Windows.Forms.DialogResult]::OK -or $listBox.SelectedIndex -lt 0) {
+        Write-Host "  Cancelled." -ForegroundColor Yellow
+        return
+    }
+    $mainTex = $listBox.SelectedItem
+} else {
+    # Non-interactive (Claude Code, piped input) -- auto-pick
+    $named = $texFiles | Where-Object { $_.Name -eq "main.tex" }
+    if ($named) {
+        $mainTex = "main.tex"
+    } else {
+        $mainTex = $texFiles[0].Name
+    }
+    Write-Host "  Auto-selected: $mainTex (pass -TexFile to override)" -ForegroundColor DarkGray
 }
-$mainTex = $listBox.SelectedItem
 
 Write-Host "  Using: $mainTex" -ForegroundColor DarkGray
 
