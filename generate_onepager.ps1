@@ -1,20 +1,53 @@
-# generate_onepager.ps1  --  Boil a paper down to a technical one-pager
+# generate_onepager.ps1  --  Boil a paper down to a technical one-pager + supplement
 #
 # Usage:
 #   generate_onepager.ps1 -Project Pub_MyPaper_TBA
-#   generate_onepager.ps1 -Project Pub_MyPaper_TBA -TexFile main.tex   # skip dialog
+#   generate_onepager.ps1 -Project Pub_MyPaper_TBA -TexFile main.tex   # skip picker
+#   generate_onepager.ps1 -Project Pub_MyPaper_TBA -Agent codex        # shell override
 #   helpi 24 Pub_MyPaper_TBA
-#   helpi 24 Pub_MyPaper_TBA main.tex                                   # skip dialog
+#   helpi 24 Pub_MyPaper_TBA main.tex                                   # skip picker
 #
 # Output:
-#   Overleaf_source/technical_onepager.tex  (one A4 page, no citations, no figures)
+#   Overleaf_source/technical_onepager.tex   (one A4 page, fn{N} markers)
+#   Overleaf_source/supplement_onepager.tex  (one A4 page, compiled notes 1-N)
 #
 param(
     [string]$Project = "",
-    [string]$TexFile = ""
+    [string]$TexFile = "",
+    [ValidateSet("auto", "claude", "codex")]
+    [string]$Agent = "auto"
 )
 
 . "$PSScriptRoot\config.ps1"
+
+function Get-ParentProcessText {
+    $parts = New-Object System.Collections.Generic.List[string]
+    try {
+        $pidNow = $PID
+        for ($i = 0; $i -lt 8 -and $pidNow; $i++) {
+            $p = Get-CimInstance Win32_Process -Filter "ProcessId=$pidNow" -ErrorAction Stop
+            if (!$p) { break }
+            $parts.Add("$($p.Name) $($p.CommandLine)")
+            $pidNow = $p.ParentProcessId
+        }
+    } catch {
+        # Process-tree detection is best effort only.
+    }
+    return ($parts -join "`n")
+}
+
+function Resolve-OnePagerAgent([string]$requested) {
+    if ($requested -and $requested -ne "auto") { return $requested }
+
+    if ($env:CODEX_THREAD_ID -or $env:CODEX_MANAGED_BY_NPM) { return "codex" }
+    if ($env:CLAUDECODE -or $env:CLAUDE_CODE -or $env:ANTHROPIC_CLAUDE_CODE) { return "claude" }
+
+    $processText = Get-ParentProcessText
+    if ($processText -match '(?i)\bcodex(\.cmd|\.exe)?\b') { return "codex" }
+    if ($processText -match '(?i)\bclaude(\.cmd|\.exe)?\b') { return "claude" }
+
+    return "claude"
+}
 
 if (!$Project) { $Project = Read-Host "  Project name" }
 $projRoot    = Resolve-ProjectRoot $Project
@@ -36,9 +69,18 @@ Pop-Location
 # -- Find main .tex file ------------------------------------------------------
 Write-Host "  [2/3] Locating main manuscript..." -ForegroundColor Cyan
 
-$texFiles = Get-ChildItem $overleafDir -Filter "*.tex" |
-    Where-Object { $_.Name -notmatch "(?i)^(slides|response|technical_onepager)" } |
+$allTexFiles = Get-ChildItem $overleafDir -Filter "*.tex" |
+    Where-Object { $_.Name -notmatch "(?i)^(slides|response|technical_onepager|supplement_onepager|tab_)" }
+
+# Prefer manuscript-style main files; generated tables and response files should not be
+# offered as source manuscripts when main*.tex files are present.
+$texFiles = $allTexFiles |
+    Where-Object { $_.Name -match "(?i)^main.*\.tex$" } |
     Sort-Object LastWriteTime -Descending
+
+if ($texFiles.Count -eq 0) {
+    $texFiles = $allTexFiles | Sort-Object LastWriteTime -Descending
+}
 
 if ($texFiles.Count -eq 0) {
     Write-Host "ERR | No .tex files found in $overleafDir" -ForegroundColor Red
@@ -48,10 +90,13 @@ if ($texFiles.Count -eq 0) {
 $mainTex = ""
 
 if ($TexFile) {
-    # Caller specified the file directly (e.g. from Claude Code / helpi 24 proj main.tex)
+    # Caller specified the file directly (e.g. helpi 24 proj main.tex).
     $mainTex = $TexFile
+} elseif ($texFiles.Count -eq 1) {
+    $mainTex = $texFiles[0].Name
+    Write-Host "  Single candidate found: $mainTex" -ForegroundColor DarkGray
 } elseif ([System.Environment]::UserInteractive -and -not [Console]::IsInputRedirected) {
-    # Interactive terminal -- show pop-up picker
+    # Interactive terminal -- show picker.
     Add-Type -AssemblyName System.Windows.Forms
     Add-Type -AssemblyName System.Drawing
 
@@ -106,47 +151,68 @@ if ($TexFile) {
     }
     $mainTex = $listBox.SelectedItem
 } else {
-    # Non-interactive (Claude Code, piped input) -- auto-pick
-    $named = $texFiles | Where-Object { $_.Name -eq "main.tex" }
-    if ($named) {
-        $mainTex = "main.tex"
-    } else {
-        $mainTex = $texFiles[0].Name
+    # Non-interactive agent or piped input. Do not guess when several manuscripts exist.
+    Write-Host "ERR | Multiple candidate .tex files found. Specify the source manuscript explicitly:" -ForegroundColor Red
+    foreach ($f in $texFiles) {
+        Write-Host ("      - {0}" -f $f.Name) -ForegroundColor DarkGray
     }
-    Write-Host "  Auto-selected: $mainTex (pass -TexFile to override)" -ForegroundColor DarkGray
+    Write-Host "      Example: helpi 24 $Project main_R1.tex" -ForegroundColor Yellow
+    return
 }
 
 Write-Host "  Using: $mainTex" -ForegroundColor DarkGray
 
 # -- Generate -----------------------------------------------------------------
+$resolvedAgent = Resolve-OnePagerAgent $Agent
 Write-Host ""
-Write-Host "  [3/3] Generating one-pager via Claude..." -ForegroundColor Cyan
+Write-Host "  [3/3] Generating one-pager via $resolvedAgent..." -ForegroundColor Cyan
 Write-Host ""
 
 $promptTemplate = Get-Content (Join-Path $aiRoot "prompts\generate_onepager.md") -Raw -Encoding UTF8
 $prompt = $promptTemplate -replace '\$MAINFILE', $mainTex
 
 Push-Location $projRoot
-& claude -p $prompt
+if ($resolvedAgent -eq "codex") {
+    $promptFile = Join-Path ([System.IO.Path]::GetTempPath()) ("onepager_prompt_{0}.md" -f ([guid]::NewGuid().ToString("N")))
+    Set-Content -Path $promptFile -Value $prompt -Encoding UTF8
+    try {
+        Get-Content -LiteralPath $promptFile -Raw -Encoding UTF8 |
+            & codex.cmd exec -C $projRoot --add-dir $projRoot --sandbox workspace-write --skip-git-repo-check --ephemeral -
+    } finally {
+        if (Test-Path $promptFile) { Remove-Item -LiteralPath $promptFile -Force }
+    }
+} else {
+    & claude -p $prompt
+}
 Pop-Location
 
 # -- Confirm output -----------------------------------------------------------
-$outFile = Join-Path $overleafDir "technical_onepager.tex"
-if (!(Test-Path $outFile)) {
+$outMain = Join-Path $overleafDir "technical_onepager.tex"
+$outSupp = Join-Path $overleafDir "supplement_onepager.tex"
+$missing = @()
+if (!(Test-Path $outMain)) { $missing += "technical_onepager.tex" }
+if (!(Test-Path $outSupp)) { $missing += "supplement_onepager.tex" }
+
+if ($missing.Count -gt 0) {
     Write-Host ""
-    Write-Host "WARN | technical_onepager.tex was not created. Check Claude output above." -ForegroundColor Yellow
-    return
+    foreach ($m in $missing) {
+        Write-Host "WARN | $m was not created. Check $resolvedAgent output above." -ForegroundColor Yellow
+    }
+    if ($missing.Count -eq 2) { return }
 }
 
 Write-Host ""
-Write-Host "  OK | technical_onepager.tex written." -ForegroundColor Green
+if (Test-Path $outMain) { Write-Host "  OK | technical_onepager.tex written."  -ForegroundColor Green }
+if (Test-Path $outSupp) { Write-Host "  OK | supplement_onepager.tex written." -ForegroundColor Green }
 Write-Host ""
 Write-Host "  Push to Overleaf now? [Y] yes  [any other key] skip" -ForegroundColor White
 $key = $host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
 Write-Host ""
 if ($key.Character -in @('y', 'Y')) {
     Push-Location $overleafDir
-    git add technical_onepager.tex
+    $filesToAdd = @("technical_onepager.tex", "supplement_onepager.tex") |
+        Where-Object { Test-Path (Join-Path $overleafDir $_) }
+    foreach ($f in $filesToAdd) { git add $f }
     git commit -m "onepager: generate from $mainTex"
     git push
     Pop-Location

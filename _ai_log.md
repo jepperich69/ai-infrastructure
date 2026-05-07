@@ -86,3 +86,42 @@
 - Test helpi 24 end-to-end in a real project session via /helpi
 - Consider extending the GUI picker pattern to compile_latex.ps1 (helpi 6) which has the same multi-file ambiguity
 **Git ref:** 52f3850
+
+---
+
+## Session 2026-05-04
+**Agent:** Codex
+**Goal:** Fix helpi 24 so non-interactive one-pager generation does not silently choose a manuscript when several candidates exist.
+**Files touched:**
+- `generate_onepager.ps1` -- changed manuscript discovery to prefer `main*.tex`, ignore generated table/response files, use a single candidate automatically only when unambiguous, and abort with explicit choices in non-interactive shells when several manuscript candidates exist.
+- `helpi.ps1` -- updated command 24 help text to document the picker/explicit-file behavior.
+- `_ai_log.md` -- logged this infrastructure fix.
+**Outcome:** `helpi 24 Pub_StopGeometry_TBA` no longer auto-selects `main_R1.tex` in a non-interactive shell; it now lists `main_R1.tex` and `main_original.tex` and asks the caller to pass one explicitly. Interactive terminals still use the picker.
+**Next steps:** Push AI_auto changes to GitHub when ready; use `helpi 24 Pub_StopGeometry_TBA main_R1.tex` for explicit regenerated one-pagers.
+**Git ref:** 94bee02
+
+---
+
+## Session 2026-05-04
+**Agent:** Codex
+**Goal:** Make explanatory LaTeX source comments a standard part of helpi 24 one-pagers.
+**Files touched:**
+- `prompts/generate_onepager.md` -- added required non-compiling source comments: equation intuition, notation clarification, and policy reflection.
+- `helpi.ps1` -- updated command 24 help text to document the source-comment standard.
+- `_ai_log.md` -- logged this infrastructure update.
+**Outcome:** Future one-pagers generated through `helpi 24` should include concise `% Intuition:`, `% Notation:`, and `% Policy reflection:` comments in the `.tex` source without changing the compiled one-page PDF.
+**Next steps:** Push AI_auto changes to GitHub when ready.
+**Git ref:** 94bee02
+
+---
+
+## Session 2026-05-04
+**Agent:** Codex
+**Goal:** Tighten helpi 24 one-pager style: plainer wording, numbered equations, and hidden explanations for unclear terms.
+**Files touched:**
+- `prompts/generate_onepager.md` -- added down-to-earth language requirements, numbered display-equation rule, and hidden-comment guidance for unclear terms and Bernoulli notation.
+- `helpi.ps1` -- updated command 24 help text to mention plain language and numbered equations.
+- `_ai_log.md` -- logged this infrastructure update.
+**Outcome:** Future generated one-pagers should avoid dense unexplained terms, use numbered `equation` environments for major formulas, and explain necessary compact notation in non-compiling source comments.
+**Next steps:** Push AI_auto changes to GitHub when ready.
+**Git ref:** 94bee02

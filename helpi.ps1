@@ -11,6 +11,8 @@ param(
     [string]$Cmd     = "",
     [string]$Project = "",
     [string]$TexFile = "",
+    [ValidateSet("", "auto", "claude", "codex")]
+    [string]$Agent   = "",
     [switch]$Force
 )
 
@@ -360,12 +362,26 @@ function Show-CommandHelp {
             "Output: Overleaf_source/technical_onepager.tex",
             "Style:  10pt article, 1.7cm margins, italic run-in headers, no citations,",
             "        no figures, no bibliography. Compiles to one A4 page.",
+            "Text:   down-to-earth technical language and numbered display equations.",
+            "Source: includes non-compiling LaTeX comments after major equations with",
+            "        intuition, notation clarifications, and a short policy reflection.",
             "",
             "When to use: to share the idea quickly with a co-author, before writing the",
             "full paper, or as a communication note for a meeting.",
             "",
-            "Example:",
-            "  helpi 24 $p"
+            "Source manuscript:",
+            "  If several candidate .tex files exist, helpi asks which one to use.",
+            "  In non-interactive shells, it refuses to guess; pass the file explicitly.",
+            "  Passing a filename skips the picker.",
+            "",
+            "Agent selection:",
+            "  -Agent auto detects Claude/Codex when run from an AI shell.",
+            "  From a normal terminal, auto defaults to Claude.",
+            "",
+            "Examples:",
+            "  helpi 24 $p",
+            "  helpi 24 $p -Agent codex",
+            "  helpi 24 $p main.tex -Agent codex"
         )}
         default { @("No help available for command $n.") }
     }
@@ -409,7 +425,7 @@ function Show-Menu {
 
 # ── Preview string for a command (shown before execution) ──────────
 function Get-CommandPreview {
-    param([int]$n, [string]$proj, [string]$texFile = "")
+    param([int]$n, [string]$proj, [string]$texFile = "", [string]$agent = "")
     switch ($n) {
         1  { "new_project.ps1 -Project $proj" }
         2  { "sync_all.ps1" }
@@ -437,17 +453,25 @@ function Get-CommandPreview {
         22 { "compress_log.ps1 -Project $proj" }
         23 { if ($texFile) { "push_to_github.ps1 -Project $proj -RepoName $texFile" }
              else          { "push_to_github.ps1 -Project $proj" } }
-        24 { if ($texFile) { "generate_onepager.ps1 -Project $proj -TexFile $texFile" }
-             else          { "generate_onepager.ps1 -Project $proj" } }
+        24 {
+             $agentText = if ($agent) { " -Agent $agent" } else { "" }
+             if ($texFile) { "generate_onepager.ps1 -Project $proj -TexFile $texFile$agentText" }
+             else          { "generate_onepager.ps1 -Project $proj$agentText" }
+           }
     }
 }
 
 # ── Execute a command ──────────────────────────────────────────────
 function Invoke-Command-N {
-    param([int]$n, [string]$proj, [string]$texFile = "")
+    param([int]$n, [string]$proj, [string]$texFile = "", [string]$agent = "")
 
     $c = $commands | Where-Object { $_.N -eq $n }
     if (!$c) { Write-Host "ERR | Unknown command: $n" -ForegroundColor Red; return }
+
+    if ($n -eq 24 -and $texFile -match '^(?i)(auto|claude|codex)$' -and !$agent) {
+        $agent = $texFile.ToLowerInvariant()
+        $texFile = ""
+    }
 
     if ($c.NeedsProject -and !$proj) {
         $proj = Get-LastProject
@@ -458,7 +482,7 @@ function Invoke-Command-N {
 
     if ($proj) { Set-LastProject $proj }
 
-    $preview = Get-CommandPreview -n $n -proj $proj -texFile $texFile
+    $preview = Get-CommandPreview -n $n -proj $proj -texFile $texFile -agent $agent
     Write-Host ""
     Write-Host "  [$n] $($c.Name)$(if ($proj) { "  ->  $proj" })" -ForegroundColor Cyan
     Write-Host "  $preview" -ForegroundColor DarkYellow
@@ -491,7 +515,7 @@ function Invoke-Command-N {
                }
                $closePrompt = Get-Content $closePromptPath -Raw -Encoding UTF8
                Push-Location $projRoot
-               & claude -p $closePrompt
+               & claude -p $closePrompt --model claude-haiku-4-5-20251001
                Pop-Location
                & "$aiRoot\generate_handover.ps1" -Project $proj
                $html = Join-Path $projRoot "_handover.html"
@@ -552,8 +576,8 @@ function Invoke-Command-N {
         22 { & "$aiRoot\compress_log.ps1" -Project $proj }
         23 { if ($texFile) { & "$aiRoot\push_to_github.ps1" -Project $proj -RepoName $texFile }
              else          { & "$aiRoot\push_to_github.ps1" -Project $proj } }
-        24 { if ($texFile) { & "$aiRoot\generate_onepager.ps1" -Project $proj -TexFile $texFile }
-             else          { & "$aiRoot\generate_onepager.ps1" -Project $proj } }
+        24 { if ($texFile) { & "$aiRoot\generate_onepager.ps1" -Project $proj -TexFile $texFile -Agent $(if ($agent) { $agent } else { "auto" }) }
+             else          { & "$aiRoot\generate_onepager.ps1" -Project $proj -Agent $(if ($agent) { $agent } else { "auto" }) } }
     }
 }
 
@@ -646,6 +670,15 @@ if ($Project -in @('?','help')) {
     return
 }
 
+if ($TexFile -in @('?','help')) {
+    if ($Cmd -match "^\d+$") {
+        Show-CommandHelp -n ([int]$Cmd) -proj $Project
+    } else {
+        Write-Host "  Usage: helpi <N> <Project> ?" -ForegroundColor Yellow
+    }
+    return
+}
+
 if (-not $Cmd) {
     Show-Menu -forProject $Project
 } elseif ($Cmd -match "^\d+$") {
@@ -654,7 +687,7 @@ if (-not $Cmd) {
         Write-Host "ERR | Valid commands are 1-$($commands.Count)" -ForegroundColor Red
         Show-Menu -forProject $Project
     } else {
-        Invoke-Command-N -n $n -proj $Project -texFile $TexFile
+        Invoke-Command-N -n $n -proj $Project -texFile $TexFile -agent $Agent
     }
 } else {
     $fragment = $Cmd.ToLower()
@@ -665,7 +698,7 @@ if (-not $Cmd) {
     } elseif ($found.Count -eq 1) {
         $m = $found[0]
         Write-Host "  Matched: [$($m.N)] $($m.Name)" -ForegroundColor Yellow
-        Invoke-Command-N -n $m.N -proj $Project -texFile $TexFile
+        Invoke-Command-N -n $m.N -proj $Project -texFile $TexFile -agent $Agent
     } else {
         Write-Host ""
         Write-Host "  '$Cmd' matches multiple commands:" -ForegroundColor Yellow
