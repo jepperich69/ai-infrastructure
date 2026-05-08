@@ -125,3 +125,33 @@
 **Outcome:** Future generated one-pagers should avoid dense unexplained terms, use numbered `equation` environments for major formulas, and explain necessary compact notation in non-compiling source comments.
 **Next steps:** Push AI_auto changes to GitHub when ready.
 **Git ref:** 94bee02
+
+---
+
+## Session 2026-05-08
+**Agent:** Claude Sonnet 4.6
+**Goal:** Create an anonymous Google Forms survey for an AI-assisted research seminar.
+**Files touched:**
+- `google_forms_guide.html` — step-by-step HTML guide for manual Google Forms creation (fallback reference)
+- `formular_script.js` — Apps Script source (local copy)
+- `ai_seminar_qr.png` — QR code for the Danish form respondent link
+**Outcome:**
+- Danish form created via Google Apps Script: "AI-assisteret forskning: praksis, infrastruktur og fremtidige behov"
+- English form also created: "AI-assisted research: practice, infrastructure and future needs"
+- Both forms: 5 questions (spm 1+5 Checkboxes/multiple answers; spm 2+3+4 Multiple choice/single answer), all required, no email collected, no login required
+- Danish respondent link: https://docs.google.com/forms/d/e/1FAIpQLSduhzPQnQv-P5s86Kx-EWAKQ1CjM-3asKno4cmTp_sQKKdE8g/viewform
+- QR code saved as `ai_seminar_qr.png` in AI_auto
+- Export: Responses tab > Google Sheets icon > Download as .xlsx
+**How to recreate a form (Apps Script method):**
+1. Go to script.google.com > New project
+2. Paste the Apps Script code (keep strings short/concatenated to avoid line-wrap syntax errors)
+3. Remove setRequireLogin() and setShowSummary() — not supported on consumer Gmail accounts
+4. Click Run > authorize once > get link from View > Logs
+**Known pitfalls:**
+- Copying code from chat introduces real newlines inside strings -> SyntaxError
+- setRequireLogin(false) throws on Gmail (non-Workspace accounts)
+- setShowSummary() does not exist in current Apps Script API
+- Drive MCP cannot create Forms or Apps Script projects directly
+**Next steps:**
+- Distribute Danish link + QR code to seminar participants
+- Export responses after seminar: Responses tab > Google Sheets > Download .xlsx
