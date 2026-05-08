@@ -1,0 +1,30 @@
+function opretFormular() {
+  var form = FormApp.create("AI-assisteret forskning: praksis, infrastruktur og fremtidige behov");
+  form.setDescription("Denne korte undersogelse bruges som afsaet for et seminar om AI-assisteret forskning. Svarene indsamles anonymt og rapporteres kun samlet. Vi beder ikke om navn, e-mail, forskningsgruppe eller andre identificerende oplysninger.");
+  form.setCollectEmail(false);
+  form.setShowSummary(false);
+  form.setShuffleQuestions(false);
+  form.setConfirmationMessage("Tak for dit svar. Resultaterne bruges kun samlet som afsaet for seminaret om AI-assisteret forskning.");
+  var q1 = form.addCheckboxItem();
+  q1.setTitle("Hvor bruger du allerede AI i dit forskningsarbejde?");
+  q1.setChoiceValues(["Jeg bruger ikke AI endnu", "Formulering og sproglig forbedring", "Ideudvikling og strukturering", "Litteratursogning eller opsummering", "Kodning, statistik eller debugging", "Projektstyring, noter eller modeberedelse", "Kvalitetssikring, kritik eller sparring"]);
+  q1.setRequired(true);
+  var q2 = form.addMultipleChoiceItem();
+  q2.setTitle("Hvor taet er AI paa dine faktiske forskningsfiler?");
+  q2.setChoiceValues(["AI ser kun tekst, jeg manuelt kopierer ind", "AI faar enkelte dokumenter eller uddrag", "AI bruges sammen med artikler, noter eller projektmapper", "AI bruges sammen med kode, data eller GitHub", "AI er integreret i mit daglige forskningsworkflow", "Ved ikke"]);
+  q2.setRequired(true);
+  var q3 = form.addMultipleChoiceItem();
+  q3.setTitle("Har du en samlet og opdateret kopi af dine vigtigste forskningsfiler uden for Overleaf, Word, Google Docs eller andre cloudsystemer?");
+  q3.setChoiceValues(["Ja, systematisk og versionsstyret", "Ja, men lidt ad hoc", "Delvist", "Nej", "Jeg er ikke sikker"]);
+  q3.setRequired(true);
+  var q4 = form.addMultipleChoiceItem();
+  q4.setTitle("Bruger du GitHub eller anden versionskontrol i dine forskningsprojekter?");
+  q4.setChoiceValues(["Ja, aktivt til kode", "Ja, ogsaa til tekst, noter eller papers", "Kun naar samarbejdspartnere kraever det", "Nej, men jeg burde nok", "Nej, og jeg ved ikke helt, hvorfor det er relevant"]);
+  q4.setRequired(true);
+  var q5 = form.addCheckboxItem();
+  q5.setTitle("Hvad ville vaere mest vaerdifuldt, hvis en AI-assistent kunne hjaelpe dig paa tvaers af hele dit forskningsprojekt?");
+  q5.setChoiceValues(["Skrive bedre og hurtigere", "Kode, analysere og debugge", "Holde styr paa beslutninger, noter og moder", "Samle viden paa tvaers af artikler og projekter", "Kvalitetssikre metode, argumenter og referencer", "Hjaelpe med projektstyring og deadlines", "Gore projektet mere reproducerbart og dokumenteret"]);
+  q5.setRequired(true);
+  Logger.log("Respondentlink: " + form.getPublishedUrl());
+  Logger.log("Redigeringslink: " + form.getEditUrl());
+}
