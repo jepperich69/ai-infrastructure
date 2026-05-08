@@ -1,18 +1,18 @@
 {
   "project": "AI_auto",
-  "generated": "2026-05-01 21:38",
+  "generated": "2026-05-08 14:28",
   "source": "_ai_log.md",
   "latest_session": {
-    "title": "2026-05-01",
+    "title": "2026-05-08",
     "agent": "Claude Sonnet 4.6",
-    "goal": "Improve helpi 24 (one-pager) with a GUI file picker; fix project detection in /helpi; fix helpi 24 non-interactive (Claude Code) usage.",
-    "outcome": "helpi 24 shows a GUI picker in a terminal and works headlessly in Claude Code; /helpi now infers the active project from conversation context rather than falling back to last-used.",
-    "next_steps": "Test helpi 24 end-to-end in a real project session via /helpi Consider extending the GUI picker pattern to compile_latex.ps1 (helpi 6) which has the same multi-file ambiguity",
-    "git_ref": "52f3850",
+    "goal": "Create an anonymous Google Forms survey for an AI-assisted research seminar.",
+    "outcome": "Danish form created via Google Apps Script: \"AI-assisteret forskning: praksis, infrastruktur og fremtidige behov\" English form also created: \"AI-assisted research: practice, infrastructure and future needs\" Both forms: 5 questions (spm 1+5 Checkboxes/multiple answers; spm 2+3+4 Multiple choice/single answer), all required, no email collected, no login required Danish respondent link: https://docs.google.com/forms/d/e/1FAIpQLSduhzPQnQv-P5s86Kx-EWAKQ1CjM-3asKno4cmTp_sQKKdE8g/viewform QR code saved as `ai_seminar_qr.png` in AI_auto Export: Responses tab > Google Sheets icon > Download as .xlsx",
+    "next_steps": "Distribute Danish link + QR code to seminar participants Export responses after seminar: Responses tab > Google Sheets > Download .xlsx",
+    "git_ref": "8269078",
     "files_touched": [
-      "`generate_onepager.ps1` — added Windows Forms pop-up picker (always shown in interactive terminals); added `-TexFile` param to bypass dialog when called non-interactively (e.g. from Claude Code); non-interactive context auto-picks `main.tex` or most-recently-modified file",
-      "`helpi.ps1` — command 24 preview and execution now pass `-TexFile $texFile` when provided",
-      "`~/.claude/commands/helpi.md` — rewrote: added 5-source project detection (explicit arg > conversation context > files touched this session > CWD > state file); added Step 2 pre-flight for command 24 (Claude lists Overleaf_source/, picks the .tex file, passes it explicitly)"
+      "`google_forms_guide.html` — step-by-step HTML guide for manual Google Forms creation (fallback reference)",
+      "`formular_script.js` — Apps Script source (local copy)",
+      "`ai_seminar_qr.png` — QR code for the Danish form respondent link"
     ]
   },
   "latest_session_complete": true,
