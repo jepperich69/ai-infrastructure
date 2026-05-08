@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Google Forms guide: AI-seminar undersogelse</title>
+<style>
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; max-width: 860px; margin: 40px auto; padding: 0 24px; color: #1a1a1a; background: #fafafa; }
+  h1 { font-size: 1.5rem; border-bottom: 3px solid #4285f4; padding-bottom: 10px; }
+  h2 { font-size: 1.1rem; color: #4285f4; margin-top: 2.2rem; }
+  .step { background: white; border: 1px solid #e0e0e0; border-radius: 8px; padding: 18px 22px; margin: 12px 0; }
+  .step-num { display: inline-block; background: #4285f4; color: white; border-radius: 50%; width: 26px; height: 26px; text-align: center; line-height: 26px; font-size: 0.85rem; font-weight: 700; margin-right: 10px; }
+  .copy-box { background: #f1f8ff; border: 1px solid #bdd6f7; border-radius: 6px; padding: 12px 16px; font-family: monospace; font-size: 0.92rem; white-space: pre-wrap; margin: 10px 0; cursor: pointer; position: relative; }
+  .copy-box:hover { background: #e3f0ff; }
+  .copy-label { font-size: 0.75rem; color: #4285f4; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 4px; }
+  .warn { background: #fff8e1; border-left: 4px solid #f9a825; padding: 10px 14px; border-radius: 4px; margin: 10px 0; font-size: 0.9rem; }
+  .ok { background: #e8f5e9; border-left: 4px solid #43a047; padding: 10px 14px; border-radius: 4px; margin: 10px 0; font-size: 0.9rem; }
+  .ui { background: #f3e5f5; border: 1px solid #ce93d8; border-radius: 4px; padding: 3px 8px; font-size: 0.85rem; font-family: monospace; }
+  ul.answers { margin: 6px 0; padding-left: 18px; }
+  ul.answers li { margin: 4px 0; font-family: monospace; font-size: 0.92rem; }
+  .qblock { border-left: 4px solid #4285f4; padding-left: 14px; margin: 18px 0; }
+  .tag { display: inline-block; background: #e8f0fe; color: #1a73e8; border-radius: 4px; padding: 2px 8px; font-size: 0.78rem; font-weight: 600; margin-left: 8px; vertical-align: middle; }
+  .tag.multi { background: #e6f4ea; color: #137333; }
+  .tag.single { background: #fce8e6; color: #c5221f; }
+  table { width: 100%; border-collapse: collapse; margin: 10px 0; font-size: 0.9rem; }
+  th { background: #4285f4; color: white; padding: 8px 12px; text-align: left; }
+  td { padding: 7px 12px; border-bottom: 1px solid #e0e0e0; }
+  tr:nth-child(even) td { background: #f8f9fa; }
+  .toc { background: white; border: 1px solid #e0e0e0; border-radius: 8px; padding: 16px 20px; margin-bottom: 28px; }
+  .toc a { color: #1a73e8; text-decoration: none; display: block; padding: 3px 0; }
+  .toc a:hover { text-decoration: underline; }
+  .progress { display: flex; gap: 6px; margin: 18px 0; flex-wrap: wrap; }
+  .pstep { background: #e8f0fe; border-radius: 20px; padding: 4px 12px; font-size: 0.8rem; color: #1a73e8; }
+  @media print { body { background: white; } }
+</style>
+</head>
+<body>
+
+<h1>Google Forms: AI-seminar undersogelse</h1>
+<p>Folg denne guide trin for trin. Alle tekster er klar til copy-paste. Estimeret tid: <strong>8-12 minutter</strong>.</p>
+
+<div class="toc">
+  <strong>Indhold</strong>
+  <a href="#opret">1. Opret ny formular</a>
+  <a href="#titel">2. Titel og beskrivelse</a>
+  <a href="#indstil">3. Indstillinger (anonymitet m.m.)</a>
+  <a href="#sp1">4. Spm 1 — Brug af AI</a>
+  <a href="#sp2">5. Spm 2 — Nærhed til filer</a>
+  <a href="#sp3">6. Spm 3 — Kopi af filer</a>
+  <a href="#sp4">7. Spm 4 — GitHub/versionskontrol</a>
+  <a href="#sp5">8. Spm 5 — Vaerdifulde features</a>
+  <a href="#tak">9. Taksidemeddelelse</a>
+  <a href="#tjek">10. Tjekliste og link</a>
+</div>
+
+<!-- ─── TRIN 1 ─────────────────────────────────────────── -->
+<h2 id="opret">1. Opret ny formular</h2>
+<div class="step">
+  <span class="step-num">1</span> Ga til <strong>forms.google.com</strong> og log ind med <code>jeppe.rich@gmail.com</code>.
+</div>
+<div class="step">
+  <span class="step-num">2</span> Klik pa det store <span class="ui">+</span> (Tom formular / Blank form).
+</div>
+<div class="ok">Du er nu i Form-editoren. Fortsaet herunder.</div>
+
+<!-- ─── TRIN 2 ─────────────────────────────────────────── -->
+<h2 id="titel">2. Titel og beskrivelse</h2>
+<div class="step">
+  <span class="step-num">3</span> Klik pa feltet <span class="ui">Untitled form</span> og skriv:
+  <div class="copy-label">Titel — kopier dette:</div>
+  <div class="copy-box">AI-assisteret forskning: praksis, infrastruktur og fremtidige behov</div>
+</div>
+<div class="step">
+  <span class="step-num">4</span> Klik pa feltet <span class="ui">Form description</span> (direkte under titlen) og skriv:
+  <div class="copy-label">Beskrivelse — kopier dette:</div>
+  <div class="copy-box">Denne korte undersogelse bruges som afsaet for et seminar om AI-assisteret forskning. Svarene indsamles anonymt og rapporteres kun samlet. Vi beder ikke om navn, e-mail, forskningsgruppe eller andre identificerende oplysninger.</div>
+  <div class="warn">OBS: Kopierer du fra dette dokument, sa tjek at anforselstegn og bindestreger ikke er blevet til specialtegn. Skriv evt. manuelt.</div>
+</div>
+
+<!-- ─── TRIN 3 ─────────────────────────────────────────── -->
+<h2 id="indstil">3. Indstillinger (anonymitet, ingen login)</h2>
+<div class="step">
+  <span class="step-num">5</span> Klik pa <span class="ui">Settings</span>-fanen oppe i midten af siden.
+</div>
+<div class="step">
+  <span class="step-num">6</span> Under <strong>Responses</strong>:
+  <ul>
+    <li>Slaet <strong>Collect email addresses</strong> <em>fra</em> (skal vaere OFF).</li>
+    <li>Tjek at <strong>Response receipts</strong> er OFF.</li>
+    <li>Slaet <strong>Limit to 1 response</strong> <em>fra</em> (kraever login — OFF for anonymitet).</li>
+  </ul>
+</div>
+<div class="step">
+  <span class="step-num">7</span> Under <strong>Presentation</strong>:
+  <ul>
+    <li>Slaet <strong>Show progress bar</strong> til efter smag.</li>
+    <li>Slaet <strong>Shuffle question order</strong> <em>fra</em> (OFF).</li>
+    <li><strong>Confirmation message</strong> — skriv:
+      <div class="copy-label">Taksidemeddelelse:</div>
+      <div class="copy-box">Tak for dit svar. Resultaterne bruges kun samlet som afsaet for seminaret om AI-assisteret forskning.</div>
+    </li>
+  </ul>
+</div>
+<div class="ok">Anonymitet er nu sat korrekt: ingen e-mail indsamles, intet login kraeves.</div>
+
+<!-- ─── SPORGSMAAL 1 ─────────────────────────────────── -->
+<h2 id="sp1">4. Sporgsmaal 1 <span class="tag multi">Flere svar tilladt</span></h2>
+<div class="step">
+  <span class="step-num">8</span> Ga tilbage til <span class="ui">Questions</span>-fanen. Klik pa det forste tomme sporgsmalsfelt.
+</div>
+<div class="step">
+  <span class="step-num">9</span> Vaelg type: abn dropdown og vaelg <span class="ui">Checkboxes</span>.
+</div>
+<div class="step">
+  <span class="step-num">10</span> Skriv sporgsmalstekst:
+  <div class="copy-box">Hvor bruger du allerede AI i dit forskningsarbejde?</div>
+</div>
+<div class="step">
+  <span class="step-num">11</span> Tilfoej svarmuligheder en ad gangen (klik <span class="ui">Add option</span> for hver):
+  <ul class="answers">
+    <li>Jeg bruger ikke AI endnu</li>
+    <li>Formulering og sproglig forbedring</li>
+    <li>Idéudvikling og strukturering</li>
+    <li>Litteratursogning eller opsummering</li>
+    <li>Kodning, statistik eller debugging</li>
+    <li>Projektstyring, noter eller modeberedelse</li>
+    <li>Kvalitetssikring, kritik eller sparring</li>
+  </ul>
+  <div class="warn">Skriv "Idéudvikling" med accent — brug evt. copy-paste fra listen ovenfor.</div>
+</div>
+<div class="step">
+  <span class="step-num">12</span> Klik pa den lille knap <span class="ui">Required</span> (toggle i bunden til hojre) sa den er BLA/ON.
+</div>
+<div class="ok">Spm 1 er klar: Checkboxes, 7 muligheder, obligatorisk.</div>
+
+<!-- ─── SPORGSMAAL 2 ─────────────────────────────────── -->
+<h2 id="sp2">5. Sporgsmaal 2 <span class="tag single">Kun ét svar</span></h2>
+<div class="step">
+  <span class="step-num">13</span> Klik pa <span class="ui">+</span> (Tilfoej sporgsmaal) i hojre-panelet.
+</div>
+<div class="step">
+  <span class="step-num">14</span> Vaelg type: <span class="ui">Multiple choice</span>.
+</div>
+<div class="step">
+  <span class="step-num">15</span> Sporgsmalstekst:
+  <div class="copy-box">Hvor taet er AI pa dine faktiske forskningsfiler?</div>
+</div>
+<div class="step">
+  <span class="step-num">16</span> Svarmuligheder:
+  <ul class="answers">
+    <li>AI ser kun tekst, jeg manuelt kopierer ind</li>
+    <li>AI far enkelte dokumenter eller uddrag</li>
+    <li>AI bruges sammen med artikler, noter eller projektmapper</li>
+    <li>AI bruges sammen med kode, data eller GitHub</li>
+    <li>AI er integreret i mit daglige forskningsworkflow</li>
+    <li>Ved ikke</li>
+  </ul>
+</div>
+<div class="step">
+  <span class="step-num">17</span> Slaet <span class="ui">Required</span> til (BLA/ON).
+</div>
+<div class="ok">Spm 2 er klar: Multiple choice, 6 muligheder, obligatorisk.</div>
+
+<!-- ─── SPORGSMAAL 3 ─────────────────────────────────── -->
+<h2 id="sp3">6. Sporgsmaal 3 <span class="tag single">Kun ét svar</span></h2>
+<div class="step">
+  <span class="step-num">18</span> Klik pa <span class="ui">+</span>. Vaelg type: <span class="ui">Multiple choice</span>.
+</div>
+<div class="step">
+  <span class="step-num">19</span> Sporgsmalstekst:
+  <div class="copy-box">Har du en samlet og opdateret kopi af dine vigtigste forskningsfiler uden for Overleaf, Word, Google Docs eller andre cloudsystemer?</div>
+</div>
+<div class="step">
+  <span class="step-num">20</span> Svarmuligheder:
+  <ul class="answers">
+    <li>Ja, systematisk og versionsstyret</li>
+    <li>Ja, men lidt ad hoc</li>
+    <li>Delvist</li>
+    <li>Nej</li>
+    <li>Jeg er ikke sikker</li>
+  </ul>
+</div>
+<div class="step">
+  <span class="step-num">21</span> Slaet <span class="ui">Required</span> til.
+</div>
+<div class="ok">Spm 3 er klar: Multiple choice, 5 muligheder, obligatorisk.</div>
+
+<!-- ─── SPORGSMAAL 4 ─────────────────────────────────── -->
+<h2 id="sp4">7. Sporgsmaal 4 <span class="tag single">Kun ét svar</span></h2>
+<div class="step">
+  <span class="step-num">22</span> Klik pa <span class="ui">+</span>. Vaelg type: <span class="ui">Multiple choice</span>.
+</div>
+<div class="step">
+  <span class="step-num">23</span> Sporgsmalstekst:
+  <div class="copy-box">Bruger du GitHub eller anden versionskontrol i dine forskningsprojekter?</div>
+</div>
+<div class="step">
+  <span class="step-num">24</span> Svarmuligheder:
+  <ul class="answers">
+    <li>Ja, aktivt til kode</li>
+    <li>Ja, ogsa til tekst, noter eller papers</li>
+    <li>Kun nar samarbejdspartnere kraever det</li>
+    <li>Nej, men jeg burde nok</li>
+    <li>Nej, og jeg ved ikke helt, hvorfor det er relevant</li>
+  </ul>
+</div>
+<div class="step">
+  <span class="step-num">25</span> Slaet <span class="ui">Required</span> til.
+</div>
+<div class="ok">Spm 4 er klar: Multiple choice, 5 muligheder, obligatorisk.</div>
+
+<!-- ─── SPORGSMAAL 5 ─────────────────────────────────── -->
+<h2 id="sp5">8. Sporgsmaal 5 <span class="tag multi">Flere svar tilladt</span></h2>
+<div class="step">
+  <span class="step-num">26</span> Klik pa <span class="ui">+</span>. Vaelg type: <span class="ui">Checkboxes</span>.
+</div>
+<div class="step">
+  <span class="step-num">27</span> Sporgsmalstekst:
+  <div class="copy-box">Hvad ville vaere mest vaerdifuldt, hvis en AI-assistent kunne hjaelpe dig pa tvaers af hele dit forskningsprojekt?</div>
+</div>
+<div class="step">
+  <span class="step-num">28</span> Svarmuligheder:
+  <ul class="answers">
+    <li>Skrive bedre og hurtigere</li>
+    <li>Kode, analysere og debugge</li>
+    <li>Holde styr pa beslutninger, noter og moder</li>
+    <li>Samle viden pa tvaers af artikler og projekter</li>
+    <li>Kvalitetssikre metode, argumenter og referencer</li>
+    <li>Hjaelpe med projektstyring og deadlines</li>
+    <li>Gore projektet mere reproducerbart og dokumenteret</li>
+  </ul>
+</div>
+<div class="step">
+  <span class="step-num">29</span> Slaet <span class="ui">Required</span> til.
+</div>
+<div class="ok">Spm 5 er klar: Checkboxes, 7 muligheder, obligatorisk.</div>
+
+<!-- ─── TAKSIDEMEDDELELSE ─────────────────────────────── -->
+<h2 id="tak">9. Taksidemeddelelse (allerede indstillet i trin 7)</h2>
+<div class="ok">Taksidemeddelelsen er sat under Settings &gt; Presentation. Intet yderligere nodvendigt.</div>
+
+<!-- ─── TJEKLISTE ─────────────────────────────────────── -->
+<h2 id="tjek">10. Slutkontrol og delbart link</h2>
+
+<table>
+  <tr><th>Kontrol</th><th>Hvad du tjekker</th><th>Forventet</th></tr>
+  <tr><td>Ingen e-mail</td><td>Settings &gt; Responses &gt; Collect email</td><td>OFF</td></tr>
+  <tr><td>Intet login</td><td>Settings &gt; Responses &gt; Limit to 1 response</td><td>OFF</td></tr>
+  <tr><td>Ingen fritekst</td><td>Se alle 5 sporgsmal</td><td>Ingen Short answer/Paragraph</td></tr>
+  <tr><td>Obligatorisk</td><td>Hvert sporgsmaal — "Required" toggle</td><td>BLA pa alle 5</td></tr>
+  <tr><td>Spm 1 og 5</td><td>Type pa spm 1 og 5</td><td>Checkboxes</td></tr>
+  <tr><td>Spm 2, 3, 4</td><td>Type pa spm 2, 3 og 4</td><td>Multiple choice</td></tr>
+  <tr><td>Ingen blanding</td><td>Settings &gt; Presentation &gt; Shuffle</td><td>OFF</td></tr>
+</table>
+
+<h2>Generér delbart link og QR-kode</h2>
+<div class="step">
+  <span class="step-num">30</span> Klik pa den lilla/blaa knap <span class="ui">Send</span> oppe til hojre.
+</div>
+<div class="step">
+  <span class="step-num">31</span> Klik pa kaedesymbolet (link-ikonet).
+</div>
+<div class="step">
+  <span class="step-num">32</span> Slaet til <span class="ui">Shorten URL</span> for at fa et kort link (f.eks. <code>https://forms.gle/XXXXX</code>).
+</div>
+<div class="step">
+  <span class="step-num">33</span> Klik <span class="ui">Copy</span> og gem linket.
+</div>
+<div class="step">
+  <span class="step-num">34</span> <strong>QR-kode:</strong> Google Forms har ikke en indbygget QR-generator, men du kan bruge det korte link pa et af disse gratis steder:
+  <ul>
+    <li>qr.io</li>
+    <li>qrcode-monkey.com</li>
+    <li>qrcode.google.com (Googles eget)</li>
+  </ul>
+  Indsaet dit <code>forms.gle/XXXXX</code>-link og download som PNG/SVG til din slide.
+</div>
+
+<h2>Eksport til Excel/CSV</h2>
+<div class="step">
+  <span class="step-num">35</span> Nar du har modtaget svar: Ga til formularen og klik pa <span class="ui">Responses</span>-fanen.
+</div>
+<div class="step">
+  <span class="step-num">36</span> Klik pa det gronne Google Sheets-ikon for at apne svarene i Sheets — eller klik pa de tre prikker (<span class="ui">...</span>) og vaelg <span class="ui">Download responses (.csv)</span>.
+</div>
+
+<hr style="margin: 40px 0;">
+
+<h2>Opsummering — returnér dette til bruger</h2>
+<div class="copy-box">Formular oprettet:
+Titel: AI-assisteret forskning: praksis, infrastruktur og fremtidige behov
+Platform: Google Forms (Google-konto: jeppe.rich@gmail.com)
+Link: [Kopier fra Send-dialogboksen]
+QR-kode: Generer fra det korte link pa qrcode-monkey.com eller qr.io
+Anonymitet: E-mail indsamles ikke — intet login kraeves
+Eksport: Responses-fanen > Google Sheets-ikon eller Download .csv
+Antal sporgsmal: 5 (spm 1 og 5: Checkboxes; spm 2, 3, 4: Multiple choice)
+Alle sporgsmal: Obligatoriske
+Ingen fritekstfelter</div>
+
+</body>
+</html>
