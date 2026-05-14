@@ -85,6 +85,29 @@ Fragile — Base64 encoding from Bash corrupts silently. Write a `.ps1` file ins
 `ls`, `cat`, `grep`, `find` don't work. Use PowerShell: `Get-ChildItem`, `Get-Content`,
 `Select-String`, `Get-ChildItem -Recurse`.
 
+### 9. New project with Overleaf + GitHub: always use `setup_project.ps1`
+
+**Wrong pattern (do not repeat):** Create one git repo at the project root with
+`origin` = GitHub and `overleaf` = Overleaf as a secondary remote, with
+`Overleaf_source/` as a plain subdirectory inside that repo.
+
+Problems this causes:
+- `helpi 4` (push_to_overleaf.ps1) runs `git push origin`, so it pushes to GitHub — Overleaf never updates.
+- When the full repo IS pushed to Overleaf, it arrives with `main.tex` buried in `Overleaf_source/`, not at the root. Overleaf can't compile it by default.
+- Recovery requires a plumbing-level `commit-tree` push because Overleaf blocks force pushes.
+
+**Correct pattern:**
+1. `Overleaf_source/` must be its own standalone git repo with `origin` = Overleaf.
+   Use the existing tool: `.\setup_project.ps1 -FolderName Pub_X -OverleafUrl https://git.overleaf.com/<id>`
+   This clones Overleaf into `Overleaf_source/` correctly and adds it to `projects.json`.
+2. If the project also needs a GitHub repo (for code), create a **separate** repo either:
+   - In the `code/` subfolder (use `init_project_git.ps1`), or
+   - At the project root, with `Overleaf_source/` listed in `.gitignore`.
+3. Never add Overleaf as a secondary remote to a repo that already has GitHub as `origin`.
+
+**Rule for Claude:** When setting up a new research project, always run `setup_project.ps1`
+for the Overleaf link. Never improvise a dual-remote git setup.
+
 ---
 
 ## Adding new entries
