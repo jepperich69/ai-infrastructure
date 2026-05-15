@@ -59,13 +59,13 @@ if ($dirty.Count -gt 0) {
     Write-Host "  Uncommitted files:" -ForegroundColor Yellow
     foreach ($line in $dirty) { Write-Host "    $line" -ForegroundColor DarkYellow }
     Write-Host ""
-    Write-Host "  Option 1 â€” commit them (recommended):" -ForegroundColor DarkGray
+    Write-Host “  Option 1 - commit them (recommended):” -ForegroundColor DarkGray
     Write-Host "    git -C `"$src`" add <file>" -ForegroundColor DarkGray
     Write-Host "    git -C `"$src`" commit -m `"your message`"" -ForegroundColor DarkGray
-    Write-Host "  Option 2 â€” stash them (reversible):" -ForegroundColor DarkGray
+    Write-Host “  Option 2 - stash them (reversible):” -ForegroundColor DarkGray
     Write-Host "    git -C `"$src`" stash" -ForegroundColor DarkGray
     Write-Host "    # then snapshot, then: git -C `"$src`" stash pop" -ForegroundColor DarkGray
-    Write-Host "  Option 3 â€” discard them (PERMANENT, cannot be undone):" -ForegroundColor DarkGray
+    Write-Host “  Option 3 - discard them (PERMANENT, cannot be undone):” -ForegroundColor DarkGray
     Write-Host "    git -C `"$src`" checkout -- ." -ForegroundColor DarkGray
     Write-Host ""
     exit 1
@@ -84,7 +84,7 @@ Write-Host "  Snapshot created" -ForegroundColor Green
 Write-Host "  Project  : $Project"
 Write-Host "  Tag      : $tagName"
 Write-Host "  Commit   : $sha"
-Write-Host "  Captured : $count files (full Overleaf_source/ â€” .tex, .bib, figures, styles)"
+Write-Host “  Captured : $count files (full Overleaf_source/ - .tex, .bib, figures, styles)”
 Write-Host ""
 Write-Host "  List all snapshots : git -C `"$src`" tag -l `"snapshot-*`"" -ForegroundColor DarkGray
 Write-Host "  Diff vs now        : git -C `"$src`" diff $tagName HEAD" -ForegroundColor DarkGray
