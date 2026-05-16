@@ -1,18 +1,29 @@
 {
   "project": "AI_auto",
-  "generated": "2026-05-08 14:28",
+  "generated": "2026-05-16 09:42",
   "source": "_ai_log.md",
   "latest_session": {
-    "title": "2026-05-08",
+    "title": "2026-05-15",
     "agent": "Claude Sonnet 4.6",
-    "goal": "Create an anonymous Google Forms survey for an AI-assisted research seminar.",
-    "outcome": "Danish form created via Google Apps Script: \"AI-assisteret forskning: praksis, infrastruktur og fremtidige behov\" English form also created: \"AI-assisted research: practice, infrastructure and future needs\" Both forms: 5 questions (spm 1+5 Checkboxes/multiple answers; spm 2+3+4 Multiple choice/single answer), all required, no email collected, no login required Danish respondent link: https://docs.google.com/forms/d/e/1FAIpQLSduhzPQnQv-P5s86Kx-EWAKQ1CjM-3asKno4cmTp_sQKKdE8g/viewform QR code saved as `ai_seminar_qr.png` in AI_auto Export: Responses tab > Google Sheets icon > Download as .xlsx",
-    "next_steps": "Distribute Danish link + QR code to seminar participants Export responses after seminar: Responses tab > Google Sheets > Download .xlsx",
-    "git_ref": "8269078",
+    "goal": "AI infrastructure maintenance — fix helpi crash in Gemini, design and implement grill-paper/grill-edit skills, migrate session skills to shared ~/.agents/skills/, audit and harden platform error-correction log propagation to all agents.",
+    "outcome": "All three agents (Claude, Codex, Gemini) now share session-management skills via ~/.agents/skills/, see platform facts and known_issues.md proactively in every context, have the complete helpi 1-24 table, and have access to grill-paper/grill-edit for pre-submission paper quality checks.",
+    "next_steps": "Run helpi 7 AI_auto to regenerate handover after this close Consider installing remaining Matt Pocock skills in Codex/Gemini if useful Mistral Vibe CLI integration deferred until shared skills are stable",
+    "git_ref": "880512c",
     "files_touched": [
-      "`google_forms_guide.html` — step-by-step HTML guide for manual Google Forms creation (fallback reference)",
-      "`formular_script.js` — Apps Script source (local copy)",
-      "`ai_seminar_qr.png` — QR code for the Danish form respondent link"
+      "`helpi.ps1` -- wrapped PSConsoleReadLine::AddToHistory in try/catch to fix crash in non-interactive shells (issue #10)",
+      "`known_issues.md` -- added issue #10 (PSConsoleReadLine crash)",
+      "`infrastructure.html` -- added grill-paper/grill-edit to command table; rewrote Section H to cover shared agent skills and three-agent capability matrix",
+      "`generate_handover.ps1` -- added complete helpi 1-24 table and platform facts block (R/Python paths, known_issues.md proactive read) to every generated per-project AGENTS.md",
+      "`~/.agents/skills/research-work/SKILL.md` (+ alias `work/`) -- new shared session-open skill for Codex/Gemini/Claude",
+      "`~/.agents/skills/research-close/SKILL.md` (+ alias `close/`) -- new shared session-close skill; step 3.2 updated to use known_issues.md as single source of truth",
+      "`~/.agents/skills/research-snapshot/SKILL.md` (+ alias `snapshot/`) -- new shared snapshot skill",
+      "`~/.agents/skills/research-family/SKILL.md` (+ alias `family/`) -- new shared feeder-registration skill",
+      "`~/.agents/skills/grill-paper/SKILL.md` + `~/.claude/commands/grill-paper.md` -- new pre-submission stress-test skill with dual 0-10 grading (paper quality + author understanding), three-phase interview, persistent grill_log.md",
+      "`~/.agents/skills/grill-edit/SKILL.md` + `~/.claude/commands/grill-edit.md` -- new edit-phase skill that works through grill_log.md issue by issue and records author decisions",
+      "`~/.gemini/AGENTS.md` -- added shared skills table, complete helpi 1-24 table, proactive known_issues.md read instruction",
+      "`~/.codex/config.toml` -- added complete helpi 1-24 table, changed known_issues.md reference to proactive read instruction",
+      "`~/.claude/CLAUDE.md` -- added complete helpi 1-24 table",
+      "`~/.claude/commands/close.md` -- synced step 3.2 to match shared skill (known_issues.md as single source of truth)"
     ]
   },
   "latest_session_complete": true,

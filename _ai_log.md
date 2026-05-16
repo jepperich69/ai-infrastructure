@@ -4,7 +4,6 @@
 
 ## Compressed sessions
 
-- **2026-04-16** (Claude): Improve agent-switching context (AGENTS.md auto-generation), add fe... → Agent switching (Claude ↔ Codex) is now fully automatic in both directions — AGENTS.md ...
 - **2026-04-18** (Claude): Add a collaboration section to the infrastructure guide; then restr... → The infrastructure guide now tells a coherent lifecycle story from project creation (1)...
 - **2026-04-19** (Claude): Improve token efficiency and communication speed; add model-switchi... → Three new helpi commands (17-19: cheatsheet, model-check toggle, Beamer slides with pre...
 - **2026-04-19** (Codex): Draft a down-to-earth book concept on research life with AI, ground... → First book draft created and verified. It uses `infrastructure_full.html` as the runnin...
@@ -20,19 +19,7 @@
 - **2026-04-24** (Claude): Multiple infrastructure improvements: incremental session draft log... -> Session draft logging is live; collaborator handovers will appear in Overleaf after nex...
 - **2026-04-27** (Codex): Add a GitHub-facing README and introduction for the AI_auto reposit... -> The GitHub repo now has a proper root README that introduces the infrastructure and exp...
 - **2026-05-01** (Claude): Improve helpi 24 (one-pager) with a GUI file picker; fix project de... -> helpi 24 shows a GUI picker in a terminal and works headlessly in Claude Code; /helpi n...
-
----
-
-## Session 2026-05-04
-**Agent:** Codex
-**Goal:** Fix helpi 24 so non-interactive one-pager generation does not silently choose a manuscript when several candidates exist.
-**Files touched:**
-- `generate_onepager.ps1` -- changed manuscript discovery to prefer `main*.tex`, ignore generated table/response files, use a single candidate automatically only when unambiguous, and abort with explicit choices in non-interactive shells when several manuscript candidates exist.
-- `helpi.ps1` -- updated command 24 help text to document the picker/explicit-file behavior.
-- `_ai_log.md` -- logged this infrastructure fix.
-**Outcome:** `helpi 24 Pub_StopGeometry_TBA` no longer auto-selects `main_R1.tex` in a non-interactive shell; it now lists `main_R1.tex` and `main_original.tex` and asks the caller to pass one explicitly. Interactive terminals still use the picker.
-**Next steps:** Push AI_auto changes to GitHub when ready; use `helpi 24 Pub_StopGeometry_TBA main_R1.tex` for explicit regenerated one-pagers.
-**Git ref:** 94bee02
+- **2026-05-04** (Codex): Fix helpi 24 so non-interactive one-pager generation does not silen... -> `helpi 24 Pub_StopGeometry_TBA` no longer auto-selects `main_R1.tex` in a non-interacti...
 
 ---
 
@@ -90,3 +77,30 @@
 - Distribute Danish link + QR code to seminar participants
 - Export responses after seminar: Responses tab > Google Sheets > Download .xlsx
 **Git ref:** 8269078
+
+---
+
+## Session 2026-05-15
+**Agent:** Claude Sonnet 4.6
+**Goal:** AI infrastructure maintenance — fix helpi crash in Gemini, design and implement grill-paper/grill-edit skills, migrate session skills to shared ~/.agents/skills/, audit and harden platform error-correction log propagation to all agents.
+**Files touched:**
+- `helpi.ps1` -- wrapped PSConsoleReadLine::AddToHistory in try/catch to fix crash in non-interactive shells (issue #10)
+- `known_issues.md` -- added issue #10 (PSConsoleReadLine crash)
+- `infrastructure.html` -- added grill-paper/grill-edit to command table; rewrote Section H to cover shared agent skills and three-agent capability matrix
+- `generate_handover.ps1` -- added complete helpi 1-24 table and platform facts block (R/Python paths, known_issues.md proactive read) to every generated per-project AGENTS.md
+- `~/.agents/skills/research-work/SKILL.md` (+ alias `work/`) -- new shared session-open skill for Codex/Gemini/Claude
+- `~/.agents/skills/research-close/SKILL.md` (+ alias `close/`) -- new shared session-close skill; step 3.2 updated to use known_issues.md as single source of truth
+- `~/.agents/skills/research-snapshot/SKILL.md` (+ alias `snapshot/`) -- new shared snapshot skill
+- `~/.agents/skills/research-family/SKILL.md` (+ alias `family/`) -- new shared feeder-registration skill
+- `~/.agents/skills/grill-paper/SKILL.md` + `~/.claude/commands/grill-paper.md` -- new pre-submission stress-test skill with dual 0-10 grading (paper quality + author understanding), three-phase interview, persistent grill_log.md
+- `~/.agents/skills/grill-edit/SKILL.md` + `~/.claude/commands/grill-edit.md` -- new edit-phase skill that works through grill_log.md issue by issue and records author decisions
+- `~/.gemini/AGENTS.md` -- added shared skills table, complete helpi 1-24 table, proactive known_issues.md read instruction
+- `~/.codex/config.toml` -- added complete helpi 1-24 table, changed known_issues.md reference to proactive read instruction
+- `~/.claude/CLAUDE.md` -- added complete helpi 1-24 table
+- `~/.claude/commands/close.md` -- synced step 3.2 to match shared skill (known_issues.md as single source of truth)
+**Outcome:** All three agents (Claude, Codex, Gemini) now share session-management skills via ~/.agents/skills/, see platform facts and known_issues.md proactively in every context, have the complete helpi 1-24 table, and have access to grill-paper/grill-edit for pre-submission paper quality checks.
+**Next steps:**
+- Run helpi 7 AI_auto to regenerate handover after this close
+- Consider installing remaining Matt Pocock skills in Codex/Gemini if useful
+- Mistral Vibe CLI integration deferred until shared skills are stable
+**Git ref:** 880512c
