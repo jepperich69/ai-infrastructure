@@ -109,3 +109,15 @@
 **Outcome:** The infrastructure now has a full fix loop: /close logs new open issues with exact fix instructions, /catch-up sweeps them and applies fixes, known_issues.md is the single source of truth for all agents.
 **Next steps:** none
 **Git ref:** caca18d
+
+---
+
+## Session 2026-05-16
+**Agent:** Codex
+**Goal:** Diagnose and self-fix any obvious AI_auto infrastructure issue.
+**Files touched:**
+- `status.ps1` -- replaced a mojibake box-drawing dashboard separator with an ASCII separator so `helpi 13` renders cleanly in agent terminals.
+- `_ai_log.md` -- logged this maintenance fix.
+**Outcome:** `helpi 13` now prints a clean dashboard header instead of `â•...` corrupted characters.
+**Next steps:** none
+**Git ref:** f3b513e

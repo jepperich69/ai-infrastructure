@@ -77,7 +77,7 @@ if ($rows.Count -eq 0) {
 
 Write-Host ""
 Write-Host "  Active Projects" -ForegroundColor Cyan
-Write-Host "  â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•" -ForegroundColor Cyan
+Write-Host "  ===========================================================" -ForegroundColor Cyan
 Write-Host ""
 
 foreach ($r in $rows) {
