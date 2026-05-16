@@ -1114,7 +1114,17 @@ git checkout snapshot-v2                     # restore everything</pre>
     <tr>
       <td><code>/submit</code></td>
       <td>empty (first submission) or <code>R1</code>, <code>R2</code></td>
-      <td>Generate complete submission package — see Section B below</td>
+      <td>Generate complete submission package &mdash; see Section B below</td>
+    </tr>
+    <tr>
+      <td><code>/grill-paper</code></td>
+      <td>&mdash;</td>
+      <td>Pre-submission stress-test &mdash; AI reads manuscript, grills author across contribution, rigor, and weaknesses. Dual grade (paper + author, 0&ndash;10) per question. Logs all issues to <code>Overleaf_source/grill_log.md</code>. No edits during session &mdash; see Section E below.</td>
+    </tr>
+    <tr>
+      <td><code>/grill-edit</code></td>
+      <td>&mdash;</td>
+      <td>Edit phase after <code>/grill-paper</code> &mdash; works through <code>grill_log.md</code> issue by issue, proposes concrete edits, records author decisions (approve / adjust / dismiss with reason), updates submission verdict to READY when all blocking issues resolved.</td>
     </tr>
   </table>
 </div>
@@ -1816,87 +1826,118 @@ claude --full-auto        # launch Claude Code without approval pauses
 </div>
 
 <div class="section indigo" id="secH">
-  <h2>H &mdash; GPT Codex CLI Skills</h2>
+  <h2>H &mdash; Shared Agent Skills &mdash; Codex, Gemini CLI, and beyond</h2>
   <p>
-    GPT Codex CLI (<code>codex</code>, v0.118+, model gpt-5.4) runs as a terminal agent with full
-    filesystem access &mdash; a direct peer to Claude Code. It uses a <strong>skills</strong> system
-    (stored in <code>~\.codex\skills\</code>) that mirrors Claude Code's slash commands.
-    The file infrastructure (helpi, PowerShell scripts, <code>_ai_log.md</code>,
-    <code>_handover.html</code>) is shared identically between both agents.
+    Claude Code, GPT Codex CLI, and Gemini CLI all run as terminal agents with full filesystem access.
+    Research skills are stored in <code>~\.agents\skills\</code> &mdash; a shared directory that all three agents
+    discover automatically. Writing a skill once makes it available everywhere.
+    The file infrastructure (helpi, PowerShell scripts, <code>_ai_log.md</code>, <code>_handover.html</code>)
+    is shared identically across all agents.
   </p>
 
-  <h3>Installed skills</h3>
-  <p>Skills live in <code>~\.codex\skills\</code>. Verify they are loaded by typing <code>/skills</code> inside a Codex session.</p>
+  <h3>Shared skill directory</h3>
+  <pre>~\.agents\skills\
+  work\            SKILL.md + agents\openai.yaml   # alias for research-work
+  close\           SKILL.md + agents\openai.yaml   # alias for research-close
+  snapshot\        SKILL.md + agents\openai.yaml   # alias for research-snapshot
+  family\          SKILL.md + agents\openai.yaml   # alias for research-family
+  research-work\   SKILL.md + agents\openai.yaml   # full name (Codex fallback)
+  research-close\  SKILL.md + agents\openai.yaml
+  research-snapshot\
+  research-family\
+  grill-paper\     SKILL.md + agents\openai.yaml   # pre-submission stress-test
+  grill-edit\      SKILL.md + agents\openai.yaml   # edit phase after grill-paper
+  grill-me\        (Matt Pocock) general idea stress-test
+  prototype\       (Matt Pocock) throwaway prototype
+  tdd\             (Matt Pocock) test-driven loop
+  diagnose\        (Matt Pocock) bug/regression diagnosis
+  zoom-out\        (Matt Pocock) big-picture review
+  caveman\         (Matt Pocock) ultra-compressed communication
+  ... (14 Matt Pocock skills total)</pre>
+  <p>
+    Claude Code also symlinks skills to <code>~\.claude\commands\</code> so they appear as slash commands.
+    Codex uses <code>agents\openai.yaml</code> metadata. Gemini CLI reads <code>SKILL.md</code> directly.
+    Install new skills from GitHub with: <code>npx skills add &lt;repo&gt; --skill=&lt;name&gt; -y -g</code>
+  </p>
 
+  <h3>Research skills reference</h3>
   <table class="cmd-table">
-    <tr><th>Skill</th><th>Triggers on</th><th>What it does</th><th>Claude equivalent</th></tr>
+    <tr><th>Skill</th><th>Invocation</th><th>What it does</th><th>Claude equivalent</th></tr>
     <tr>
-      <td><code>research-work</code></td>
-      <td><code>/work Pub_XXX</code>, pasted project path, "open project"</td>
-      <td>Reads <code>.claude/CLAUDE.md</code> (project brief), then <code>_ai_log.md</code>, feeder digests, git status &mdash; asks for goal &mdash; writes session-start block</td>
+      <td><code>work</code> / <code>research-work</code></td>
+      <td><code>/work Pub_XXX</code>, pasted project path</td>
+      <td>Reads <code>.claude/CLAUDE.md</code>, <code>_ai_log.md</code>, feeder digests, git status &mdash; asks for goal &mdash; writes session-start block</td>
       <td><code>/work</code></td>
     </tr>
     <tr>
-      <td><code>research-close</code></td>
-      <td><code>/close</code>, "close session", "end session"</td>
-      <td>Writes close block to <code>_ai_log.md</code> (files, outcome, next steps, git ref) &mdash; reminds to push + handover</td>
+      <td><code>close</code> / <code>research-close</code></td>
+      <td><code>/close</code></td>
+      <td>Writes close block to <code>_ai_log.md</code>, compresses log, regenerates handover, reminds to push to Overleaf</td>
       <td><code>/close</code></td>
     </tr>
     <tr>
-      <td><code>research-snapshot</code></td>
-      <td><code>/snapshot V2</code>, "snapshot the manuscript", "save a version"</td>
-      <td>Runs <code>helpi 8</code> to create an annotated git tag on <code>Overleaf_source/</code></td>
+      <td><code>snapshot</code> / <code>research-snapshot</code></td>
+      <td><code>/snapshot V2</code></td>
+      <td>Creates annotated git tag on <code>Overleaf_source/</code></td>
       <td><code>/snapshot</code></td>
     </tr>
     <tr>
-      <td><code>research-family</code></td>
-      <td><code>/family Pub_YYY</code>, "link feeder", "add feeder project"</td>
-      <td>Reads feeder's log, handover, and abstract &mdash; writes digest to <code>_feeders/</code> &mdash; updates <code>_feeders.json</code></td>
+      <td><code>family</code> / <code>research-family</code></td>
+      <td><code>/family Pub_YYY</code></td>
+      <td>Reads feeder log + handover + abstract &mdash; writes digest to <code>_feeders/</code> &mdash; updates <code>_feeders.json</code></td>
       <td><code>/family</code></td>
+    </tr>
+    <tr>
+      <td><code>grill-paper</code></td>
+      <td><code>/grill-paper</code></td>
+      <td>Pre-submission stress-test. AI reads manuscript, runs three blocks (positioning, rigor, freestyle), grades each answer 0&ndash;10 on paper quality and author understanding, logs all issues to <code>Overleaf_source/grill_log.md</code>. No edits to manuscript during session. Log persists across sessions; issues raised in multiple sessions are flagged as strong signals.</td>
+      <td><code>/grill-paper</code></td>
+    </tr>
+    <tr>
+      <td><code>grill-edit</code></td>
+      <td><code>/grill-edit</code></td>
+      <td>Edit phase after <code>/grill-paper</code>. Works through master issue list (blocking &rarr; significant &rarr; minor), proposes concrete edits, records author decisions (approve / adjust / dismiss with reason), updates verdict to READY when all blocking issues resolved.</td>
+      <td><code>/grill-edit</code></td>
     </tr>
   </table>
 
-  <h3>Shared session log format</h3>
+  <h3>Gemini CLI</h3>
   <p>
-    Both Claude Code and Codex write identical <code>## Session YYYY-MM-DD</code> blocks to
-    <code>_ai_log.md</code>. Sessions from both agents interleave cleanly in the same file &mdash;
-    the agent name appears in the <strong>Agent:</strong> field (e.g. <em>Claude Sonnet 4.6</em>
-    vs <em>GPT-5.4</em>). Neither agent edits or deletes the other's entries.
+    Gemini CLI (<code>gemini</code>, v0.42+, Google AI Pro) is a third peer agent alongside Claude Code and Codex.
+    Global instructions live in <code>~\.gemini\AGENTS.md</code>. Per-project context is loaded via
+    <code>AGENTS.md</code> in the project root (auto-generated by <code>helpi 7</code>) &mdash; Gemini reads
+    this automatically at session start via <code>context.fileName: "AGENTS.md"</code> in
+    <code>~\.gemini\settings.json</code>. No per-project setup needed.
   </p>
 
-  <h3>Skill folder structure</h3>
-  <pre>~\.codex\skills\
-  research-work\
-    SKILL.md                        # trigger description + session-open steps
-    agents\openai.yaml              # UI metadata
-    references\session-log-format.md
-  research-close\
-    SKILL.md
-    agents\openai.yaml
-    references\session-log-format.md
-  research-snapshot\
-    SKILL.md
-    agents\openai.yaml</pre>
+  <h3>Shared session log</h3>
+  <p>
+    All agents write identical <code>## Session YYYY-MM-DD</code> blocks to <code>_ai_log.md</code>.
+    Sessions from all agents interleave cleanly &mdash; the <strong>Agent:</strong> field records who ran
+    each session (e.g. <em>Claude Sonnet 4.6</em>, <em>GPT-5.4</em>, <em>Gemini CLI</em>).
+    Switching agents mid-project is seamless in any direction.
+  </p>
 
-  <h3>What Codex can and cannot do (vs Claude Code)</h3>
+  <h3>Agent capability matrix</h3>
   <table class="cmd-table">
-    <tr><th>Capability</th><th>Claude Code</th><th>GPT Codex CLI</th></tr>
-    <tr><td>Open/close session (<code>/work</code>, <code>/close</code>)</td><td>&#10003;</td><td>&#10003; via skills</td></tr>
-    <tr><td>Snapshot manuscript (<code>/snapshot</code>)</td><td>&#10003;</td><td>&#10003; via skill</td></tr>
-    <tr><td>Read <code>_ai_log.md</code> and feeders directly</td><td>&#10003;</td><td>&#10003; (filesystem access)</td></tr>
-    <tr><td>Run <code>helpi</code> commands</td><td>&#10003;</td><td>&#10003;</td></tr>
-    <tr><td>Feeder digest creation (<code>/family</code>)</td><td>&#10003;</td><td>&#10003; via <code>research-family</code> skill</td></tr>
-    <tr><td>Auto-commit after every response</td><td>&#10003; (Stop hook)</td><td>&#10007; no hook equivalent confirmed</td></tr>
-    <tr><td>Global instructions (CLAUDE.md equivalent)</td><td>&#10003; <code>~\.claude\CLAUDE.md</code></td><td>&#10003; <code>developer_instructions</code> in <code>~\.codex\config.toml</code></td></tr>
-    <tr><td>Per-project brief (<code>.claude/CLAUDE.md</code>)</td><td>&#10003; read automatically</td><td>&#10003; read in step 2 of <code>research-work</code> skill</td></tr>
+    <tr><th>Capability</th><th>Claude Code</th><th>Codex CLI</th><th>Gemini CLI</th></tr>
+    <tr><td>Open/close session</td><td>&#10003;</td><td>&#10003; via <code>/work</code> skill</td><td>&#10003; via <code>/work</code> skill</td></tr>
+    <tr><td>Snapshot, family, grill-paper, grill-edit</td><td>&#10003;</td><td>&#10003; via skills</td><td>&#10003; via skills</td></tr>
+    <tr><td>Run helpi commands</td><td>&#10003;</td><td>&#10003;</td><td>&#10003; (use <code>! helpi N proj -Force</code>)</td></tr>
+    <tr><td>Read _ai_log.md and feeders</td><td>&#10003;</td><td>&#10003;</td><td>&#10003;</td></tr>
+    <tr><td>Reviewer response loop (<code>/respond</code>)</td><td>&#10003;</td><td>&#10007;</td><td>&#10007;</td></tr>
+    <tr><td>Submission package (<code>/submit</code>)</td><td>&#10003;</td><td>&#10007;</td><td>&#10007;</td></tr>
+    <tr><td>Auto-commit after every response</td><td>&#10003; (Stop hook)</td><td>&#10007;</td><td>&#10007;</td></tr>
+    <tr><td>Global instructions</td><td><code>~\.claude\CLAUDE.md</code></td><td><code>~\.codex\config.toml</code></td><td><code>~\.gemini\AGENTS.md</code></td></tr>
+    <tr><td>Per-project context</td><td><code>.claude/CLAUDE.md</code> (auto)</td><td><code>AGENTS.md</code> (via skill)</td><td><code>AGENTS.md</code> (auto)</td></tr>
   </table>
 
   <div class="note">
     <strong>Shared context &mdash; zero manual handover:</strong>
-    <code>.claude/CLAUDE.md</code> is read automatically by Claude Code and as step 2 of the <code>research-work</code> skill by Codex.
-    <code>AGENTS.md</code> (auto-generated by <code>helpi 7</code> / <code>/close</code>) is loaded automatically by Codex CLI at session start
-    and contains the latest session snapshot plus the full log &mdash; so Codex is immediately oriented with no paste step.
-    Both agents write to the same <code>_ai_log.md</code>; switching mid-project is seamless in either direction.
+    <code>AGENTS.md</code> (auto-generated by <code>helpi 7</code> or <code>/close</code>) is loaded automatically
+    by all three agents at session start. It contains the latest session snapshot and full log summary.
+    All agents write to the same <code>_ai_log.md</code> and the same <code>grill_log.md</code>
+    &mdash; switching mid-project or mid-grill is seamless.
   </div>
 </div>
 

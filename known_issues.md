@@ -110,6 +110,19 @@ for the Overleaf link. Never improvise a dual-remote git setup.
 
 ---
 
+### 10. helpi.ps1 crashes in non-interactive shells (PSConsoleReadLine)
+
+`helpi.ps1` line 494 called `[Microsoft.PowerShell.PSConsoleReadLine]::AddToHistory()` unconditionally.
+That class only loads in interactive PowerShell hosts with the PSReadLine module. Non-interactive callers
+(Gemini CLI via `! helpi ...`, `powershell.exe -NoProfile`, CI scripts) crash with a hard error at that line.
+
+**Fix applied 2026-05-16:** wrapped in `try { ... } catch {}` -- history is saved when possible, silently
+skipped otherwise. The fix is already in `helpi.ps1`; do not revert it.
+
+**Symptom if reverted:** agent reports "cannot run helpi" or PS crashes immediately after the preview line.
+
+---
+
 ## Adding new entries
 When an issue recurs (2+ times), add it here and update the compact block in
 `~/.claude/CLAUDE.md` and `~/.codex/config.toml`.
