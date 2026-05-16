@@ -120,4 +120,4 @@
 - `_ai_log.md` -- logged this maintenance fix.
 **Outcome:** `helpi 13` now prints a clean dashboard header instead of `â•...` corrupted characters.
 **Next steps:** none
-**Git ref:** f3b513e
+**Git ref:** a8f132a
