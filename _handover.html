@@ -30,7 +30,7 @@
 <body>
 
 <h1>Handover Document &mdash; AI_auto</h1>
-<div class="meta">Generated: 2026-05-16 09:42 &nbsp;|&nbsp; Source: <code style="display:inline;padding:2px 6px">_ai_log.md</code> &nbsp;|&nbsp; Sidecar: <code style="display:inline;padding:2px 6px">_handover.json</code></div>
+<div class="meta">Generated: 2026-05-16 09:58 &nbsp;|&nbsp; Source: <code style="display:inline;padding:2px 6px">_ai_log.md</code> &nbsp;|&nbsp; Sidecar: <code style="display:inline;padding:2px 6px">_handover.json</code></div>
 
 <!-- ============================================================ -->
 <!-- AGENT INSTRUCTIONS                                            -->
@@ -62,28 +62,22 @@
 <div class="latest-session">
   <div class="session-status ok">Complete</div>
   <h2>Latest Session Snapshot</h2>
-  <p><strong>Session:</strong> 2026-05-15</p>
+  <p><strong>Session:</strong> 2026-05-16</p>
   <p><strong>Agent:</strong> Claude Sonnet 4.6</p>
-  <p><strong>Goal:</strong> AI infrastructure maintenance — fix helpi crash in Gemini, design and implement grill-paper/grill-edit skills, migrate session skills to shared ~/.agents/skills/, audit and harden platform error-correction log propagation to all agents.</p>
-  <p><strong>Outcome:</strong> All three agents (Claude, Codex, Gemini) now share session-management skills via ~/.agents/skills/, see platform facts and known_issues.md proactively in every context, have the complete helpi 1-24 table, and have access to grill-paper/grill-edit for pre-submission paper quality checks.</p>
-  <p><strong>Next steps:</strong> Run helpi 7 AI_auto to regenerate handover after this close Consider installing remaining Matt Pocock skills in Codex/Gemini if useful Mistral Vibe CLI integration deferred until shared skills are stable</p>
-  <p><strong>Git ref:</strong> 880512c</p>
+  <p><strong>Goal:</strong> Complete the infrastructure session: commit remaining changes, design and implement /catch-up skill for proactive known-issue remediation, add status fields to known_issues.md.</p>
+  <p><strong>Outcome:</strong> The infrastructure now has a full fix loop: /close logs new open issues with exact fix instructions, /catch-up sweeps them and applies fixes, known_issues.md is the single source of truth for all agents.</p>
+  <p><strong>Next steps:</strong> none</p>
+  <p><strong>Git ref:</strong> caca18d</p>
   <h3>Files touched</h3>
   <ul>
-  <li>`helpi.ps1` -- wrapped PSConsoleReadLine::AddToHistory in try/catch to fix crash in non-interactive shells (issue #10)</li>
-  <li>`known_issues.md` -- added issue #10 (PSConsoleReadLine crash)</li>
-  <li>`infrastructure.html` -- added grill-paper/grill-edit to command table; rewrote Section H to cover shared agent skills and three-agent capability matrix</li>
-  <li>`generate_handover.ps1` -- added complete helpi 1-24 table and platform facts block (R/Python paths, known_issues.md proactive read) to every generated per-project AGENTS.md</li>
-  <li>`~/.agents/skills/research-work/SKILL.md` (+ alias `work/`) -- new shared session-open skill for Codex/Gemini/Claude</li>
-  <li>`~/.agents/skills/research-close/SKILL.md` (+ alias `close/`) -- new shared session-close skill; step 3.2 updated to use known_issues.md as single source of truth</li>
-  <li>`~/.agents/skills/research-snapshot/SKILL.md` (+ alias `snapshot/`) -- new shared snapshot skill</li>
-  <li>`~/.agents/skills/research-family/SKILL.md` (+ alias `family/`) -- new shared feeder-registration skill</li>
-  <li>`~/.agents/skills/grill-paper/SKILL.md` + `~/.claude/commands/grill-paper.md` -- new pre-submission stress-test skill with dual 0-10 grading (paper quality + author understanding), three-phase interview, persistent grill_log.md</li>
-  <li>`~/.agents/skills/grill-edit/SKILL.md` + `~/.claude/commands/grill-edit.md` -- new edit-phase skill that works through grill_log.md issue by issue and records author decisions</li>
-  <li>`~/.gemini/AGENTS.md` -- added shared skills table, complete helpi 1-24 table, proactive known_issues.md read instruction</li>
-  <li>`~/.codex/config.toml` -- added complete helpi 1-24 table, changed known_issues.md reference to proactive read instruction</li>
-  <li>`~/.claude/CLAUDE.md` -- added complete helpi 1-24 table</li>
-  <li>`~/.claude/commands/close.md` -- synced step 3.2 to match shared skill (known_issues.md as single source of truth)</li>
+  <li>`generate_handover.ps1` -- committed platform facts block (platform paths + known_issues.md proactive read in every generated AGENTS.md)</li>
+  <li>`known_issues.md` -- added Status: fields (platform-fact / fixed / open) to all 10 issues; updated &quot;Adding new entries&quot; section with format for open entries (Affects/Fix fields)</li>
+  <li>`~/.agents/skills/research-catch-up/SKILL.md` (+ alias `catch-up/`) -- new skill: sweeps open issues, applies fixes, marks them fixed, commits</li>
+  <li>`~/.claude/commands/catch-up.md` -- Claude command copy of the catch-up skill</li>
+  <li>`~/.agents/skills/research-close/SKILL.md` + `~/.agents/skills/close/SKILL.md` + `~/.claude/commands/close.md` -- step 3.2 updated: new issues logged as open/platform-fact with Affects/Fix fields; prompt user to run /catch-up when open issue is logged</li>
+  <li>`~/.gemini/AGENTS.md` -- added catch-up row to shared skills table</li>
+  <li>`~/.codex/config.toml` -- added AI_auto session instruction to run /catch-up on open</li>
+  <li>`~/.claude/CLAUDE.md` -- added catch-up instruction to AI infrastructure project detection section</li>
 </ul>
 </div>
 
@@ -98,7 +92,6 @@
 <h2>Compressed sessions</h2>
 <br>
 <ul>
-  <li><strong>2026-04-18</strong> (Claude): Add a collaboration section to the infrastructure guide; then restr... → The infrastructure guide now tells a coherent lifecycle story from project creation (1)...</li>
   <li><strong>2026-04-19</strong> (Claude): Improve token efficiency and communication speed; add model-switchi... → Three new helpi commands (17-19: cheatsheet, model-check toggle, Beamer slides with pre...</li>
   <li><strong>2026-04-19</strong> (Codex): Draft a down-to-earth book concept on research life with AI, ground... → First book draft created and verified. It uses `infrastructure_full.html` as the runnin...</li>
   <li><strong>2026-04-22</strong> (Codex): Link the AI_auto infrastructure project to its Overleaf project and... → `AI_auto` is now linked to the Overleaf project through a real `Overleaf_source/` clone...</li>
@@ -114,22 +107,8 @@
   <li><strong>2026-04-27</strong> (Codex): Add a GitHub-facing README and introduction for the AI_auto reposit... -&gt; The GitHub repo now has a proper root README that introduces the infrastructure and exp...</li>
   <li><strong>2026-05-01</strong> (Claude): Improve helpi 24 (one-pager) with a GUI file picker; fix project de... -&gt; helpi 24 shows a GUI picker in a terminal and works headlessly in Claude Code; /helpi n...</li>
   <li><strong>2026-05-04</strong> (Codex): Fix helpi 24 so non-interactive one-pager generation does not silen... -&gt; `helpi 24 Pub_StopGeometry_TBA` no longer auto-selects `main_R1.tex` in a non-interacti...</li>
+  <li><strong>2026-05-04</strong> (Codex): Make explanatory LaTeX source comments a standard part of helpi 24 ... -&gt; Future one-pagers generated through `helpi 24` should include concise `% Intuition:`, `...</li>
 </ul>
-<br>
-<hr>
-<br>
-<h2>Session 2026-05-04</h2>
-<p><strong>Agent:</strong> Codex</p>
-<p><strong>Goal:</strong> Make explanatory LaTeX source comments a standard part of helpi 24 one-pagers.</p>
-<p><strong>Files touched:</strong></p>
-<ul>
-  <li>`prompts/generate_onepager.md` -- added required non-compiling source comments: equation intuition, notation clarification, and policy reflection.</li>
-  <li>`helpi.ps1` -- updated command 24 help text to document the source-comment standard.</li>
-  <li>`_ai_log.md` -- logged this infrastructure update.</li>
-</ul>
-<p><strong>Outcome:</strong> Future one-pagers generated through `helpi 24` should include concise `% Intuition:`, `% Notation:`, and `% Policy reflection:` comments in the `.tex` source without changing the compiled one-page PDF.</p>
-<p><strong>Next steps:</strong> Push AI_auto changes to GitHub when ready.</p>
-<p><strong>Git ref:</strong> 94bee02</p>
 <br>
 <hr>
 <br>
@@ -214,7 +193,27 @@
   <li>Consider installing remaining Matt Pocock skills in Codex/Gemini if useful</li>
   <li>Mistral Vibe CLI integration deferred until shared skills are stable</li>
 </ul>
-<p><strong>Git ref:</strong> 880512c</p>
+<p><strong>Git ref:</strong> 880512c</p>
+<br>
+<hr>
+<br>
+<h2>Session 2026-05-16</h2>
+<p><strong>Agent:</strong> Claude Sonnet 4.6</p>
+<p><strong>Goal:</strong> Complete the infrastructure session: commit remaining changes, design and implement /catch-up skill for proactive known-issue remediation, add status fields to known_issues.md.</p>
+<p><strong>Files touched:</strong></p>
+<ul>
+  <li>`generate_handover.ps1` -- committed platform facts block (platform paths + known_issues.md proactive read in every generated AGENTS.md)</li>
+  <li>`known_issues.md` -- added Status: fields (platform-fact / fixed / open) to all 10 issues; updated &quot;Adding new entries&quot; section with format for open entries (Affects/Fix fields)</li>
+  <li>`~/.agents/skills/research-catch-up/SKILL.md` (+ alias `catch-up/`) -- new skill: sweeps open issues, applies fixes, marks them fixed, commits</li>
+  <li>`~/.claude/commands/catch-up.md` -- Claude command copy of the catch-up skill</li>
+  <li>`~/.agents/skills/research-close/SKILL.md` + `~/.agents/skills/close/SKILL.md` + `~/.claude/commands/close.md` -- step 3.2 updated: new issues logged as open/platform-fact with Affects/Fix fields; prompt user to run /catch-up when open issue is logged</li>
+  <li>`~/.gemini/AGENTS.md` -- added catch-up row to shared skills table</li>
+  <li>`~/.codex/config.toml` -- added AI_auto session instruction to run /catch-up on open</li>
+  <li>`~/.claude/CLAUDE.md` -- added catch-up instruction to AI infrastructure project detection section</li>
+</ul>
+<p><strong>Outcome:</strong> The infrastructure now has a full fix loop: /close logs new open issues with exact fix instructions, /catch-up sweeps them and applies fixes, known_issues.md is the single source of truth for all agents.</p>
+<p><strong>Next steps:</strong> none</p>
+<p><strong>Git ref:</strong> caca18d</p>
 <br>
 
 </div>
@@ -231,7 +230,6 @@
 
 ## Compressed sessions
 
-- **2026-04-18** (Claude): Add a collaboration section to the infrastructure guide; then restr... → The infrastructure guide now tells a coherent lifecycle story from project creation (1)...
 - **2026-04-19** (Claude): Improve token efficiency and communication speed; add model-switchi... → Three new helpi commands (17-19: cheatsheet, model-check toggle, Beamer slides with pre...
 - **2026-04-19** (Codex): Draft a down-to-earth book concept on research life with AI, ground... → First book draft created and verified. It uses `infrastructure_full.html` as the runnin...
 - **2026-04-22** (Codex): Link the AI_auto infrastructure project to its Overleaf project and... → `AI_auto` is now linked to the Overleaf project through a real `Overleaf_source/` clone...
@@ -247,19 +245,7 @@
 - **2026-04-27** (Codex): Add a GitHub-facing README and introduction for the AI_auto reposit... -&gt; The GitHub repo now has a proper root README that introduces the infrastructure and exp...
 - **2026-05-01** (Claude): Improve helpi 24 (one-pager) with a GUI file picker; fix project de... -&gt; helpi 24 shows a GUI picker in a terminal and works headlessly in Claude Code; /helpi n...
 - **2026-05-04** (Codex): Fix helpi 24 so non-interactive one-pager generation does not silen... -&gt; `helpi 24 Pub_StopGeometry_TBA` no longer auto-selects `main_R1.tex` in a non-interacti...
-
----
-
-## Session 2026-05-04
-**Agent:** Codex
-**Goal:** Make explanatory LaTeX source comments a standard part of helpi 24 one-pagers.
-**Files touched:**
-- `prompts/generate_onepager.md` -- added required non-compiling source comments: equation intuition, notation clarification, and policy reflection.
-- `helpi.ps1` -- updated command 24 help text to document the source-comment standard.
-- `_ai_log.md` -- logged this infrastructure update.
-**Outcome:** Future one-pagers generated through `helpi 24` should include concise `% Intuition:`, `% Notation:`, and `% Policy reflection:` comments in the `.tex` source without changing the compiled one-page PDF.
-**Next steps:** Push AI_auto changes to GitHub when ready.
-**Git ref:** 94bee02
+- **2026-05-04** (Codex): Make explanatory LaTeX source comments a standard part of helpi 24 ... -&gt; Future one-pagers generated through `helpi 24` should include concise `% Intuition:`, `...
 
 ---
 
@@ -331,6 +317,24 @@
 - Consider installing remaining Matt Pocock skills in Codex/Gemini if useful
 - Mistral Vibe CLI integration deferred until shared skills are stable
 **Git ref:** 880512c
+
+---
+
+## Session 2026-05-16
+**Agent:** Claude Sonnet 4.6
+**Goal:** Complete the infrastructure session: commit remaining changes, design and implement /catch-up skill for proactive known-issue remediation, add status fields to known_issues.md.
+**Files touched:**
+- `generate_handover.ps1` -- committed platform facts block (platform paths + known_issues.md proactive read in every generated AGENTS.md)
+- `known_issues.md` -- added Status: fields (platform-fact / fixed / open) to all 10 issues; updated "Adding new entries" section with format for open entries (Affects/Fix fields)
+- `~/.agents/skills/research-catch-up/SKILL.md` (+ alias `catch-up/`) -- new skill: sweeps open issues, applies fixes, marks them fixed, commits
+- `~/.claude/commands/catch-up.md` -- Claude command copy of the catch-up skill
+- `~/.agents/skills/research-close/SKILL.md` + `~/.agents/skills/close/SKILL.md` + `~/.claude/commands/close.md` -- step 3.2 updated: new issues logged as open/platform-fact with Affects/Fix fields; prompt user to run /catch-up when open issue is logged
+- `~/.gemini/AGENTS.md` -- added catch-up row to shared skills table
+- `~/.codex/config.toml` -- added AI_auto session instruction to run /catch-up on open
+- `~/.claude/CLAUDE.md` -- added catch-up instruction to AI infrastructure project detection section
+**Outcome:** The infrastructure now has a full fix loop: /close logs new open issues with exact fix instructions, /catch-up sweeps them and applies fixes, known_issues.md is the single source of truth for all agents.
+**Next steps:** none
+**Git ref:** caca18d
 </textarea>
 </div>
 

@@ -30,3 +30,10 @@
 ## Archived 2026-05-16 (1 entry)
 
 - **2026-04-16** (Claude): Improve agent-switching context (AGENTS.md auto-generation), add fe... → Agent switching (Claude ↔ Codex) is now fully automatic in both directions — AGENTS.md ...
+
+
+---
+
+## Archived 2026-05-16 (1 entry)
+
+- **2026-04-18** (Claude): Add a collaboration section to the infrastructure guide; then restr... → The infrastructure guide now tells a coherent lifecycle story from project creation (1)...
