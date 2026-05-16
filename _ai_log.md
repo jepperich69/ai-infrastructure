@@ -124,4 +124,4 @@
 - `_ai_log.md` -- logged this maintenance fix.
 **Outcome:** `helpi 13` now prints a clean dashboard header, `helpi 15` warns cleanly when browser opening is blocked, and generated handovers identify the newest same-day session correctly.
 **Next steps:** none
-**Git ref:** pending
+**Git ref:** bd7595d

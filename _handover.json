@@ -8,7 +8,7 @@
     "goal": "Diagnose and self-fix any obvious AI_auto infrastructure issue.",
     "outcome": "`helpi 13` now prints a clean dashboard header, `helpi 15` warns cleanly when browser opening is blocked, and generated handovers identify the newest same-day session correctly.",
     "next_steps": "none",
-    "git_ref": "pending",
+    "git_ref": "bd7595d",
     "files_touched": [
       "`status.ps1` -- replaced a mojibake box-drawing dashboard separator with an ASCII separator so `helpi 13` renders cleanly in agent terminals.",
       "`helpi.ps1` -- made browser-opening commands best-effort so non-interactive shells warn instead of throwing on `Start-Process`.",
