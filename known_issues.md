@@ -49,22 +49,34 @@ Conda environments: `base` (default), `pyopt`
 
 ## Known platform issues
 
+Each entry has a **Status** field:
+- `platform-fact` — not fixable in code; agents must route around it permanently
+- `fixed (YYYY-MM-DD)` — was broken, now patched; do not revert
+- `open` — confirmed bug with a known fix not yet applied; `/catch-up` will handle it
+
+---
+
 ### 1. `python3` not available
+**Status:** platform-fact
 `python3` is a Windows Store alias → exit 49. Use full path:
 `C:\Users\rich\AppData\Local\miniconda3\python.exe`
 
 ### 2. R not in PATH
+**Status:** platform-fact
 `R` as a bare command fails. Use full path:
 `C:\Users\rich\AppData\Local\Programs\R\R-4.5.2\bin\R.exe`
 
 ### 3. Complex PowerShell via Bash tool
+**Status:** platform-fact
 Use the **PowerShell tool** directly. Quoting breaks when running pwsh inside Bash.
 
 ### 4. `pwsh -Command` with inline single quotes
+**Status:** platform-fact
 Single quotes inside `-Command "..."` cause parser errors.
 Fix: use the PowerShell tool, or write a `.ps1` file and call with `-File`.
 
 ### 5. Curly quotes in PS1 files
+**Status:** platform-fact
 Write/Edit tools sometimes emit `'` `'` `"` `"`. Check and fix after every `.ps1` edit:
 ```powershell
 $f = '<path>'
@@ -75,17 +87,21 @@ if ($x -ne $t) { [System.IO.File]::WriteAllText($f,$x,[System.Text.Encoding]::UT
 ```
 
 ### 6. Paths with spaces
+**Status:** platform-fact
 `OneDrive - Danmarks Tekniske Universitet` contains spaces. Always double-quote paths;
 prefer the PowerShell tool for file operations.
 
 ### 7. `pwsh -EncodedCommand` inline
+**Status:** platform-fact
 Fragile — Base64 encoding from Bash corrupts silently. Write a `.ps1` file instead.
 
 ### 8. Codex: Unix commands on Windows
+**Status:** platform-fact
 `ls`, `cat`, `grep`, `find` don't work. Use PowerShell: `Get-ChildItem`, `Get-Content`,
 `Select-String`, `Get-ChildItem -Recurse`.
 
 ### 9. New project with Overleaf + GitHub: always use `setup_project.ps1`
+**Status:** platform-fact
 
 **Wrong pattern (do not repeat):** Create one git repo at the project root with
 `origin` = GitHub and `overleaf` = Overleaf as a secondary remote, with
@@ -111,18 +127,32 @@ for the Overleaf link. Never improvise a dual-remote git setup.
 ---
 
 ### 10. helpi.ps1 crashes in non-interactive shells (PSConsoleReadLine)
+**Status:** fixed (2026-05-16)
 
-`helpi.ps1` line 494 called `[Microsoft.PowerShell.PSConsoleReadLine]::AddToHistory()` unconditionally.
+`helpi.ps1` called `[Microsoft.PowerShell.PSConsoleReadLine]::AddToHistory()` unconditionally.
 That class only loads in interactive PowerShell hosts with the PSReadLine module. Non-interactive callers
 (Gemini CLI via `! helpi ...`, `powershell.exe -NoProfile`, CI scripts) crash with a hard error at that line.
 
-**Fix applied 2026-05-16:** wrapped in `try { ... } catch {}` -- history is saved when possible, silently
-skipped otherwise. The fix is already in `helpi.ps1`; do not revert it.
+**Fix:** wrapped in `try { ... } catch {}` -- history is saved when possible, silently skipped otherwise.
+The fix is already in `helpi.ps1`; do not revert it.
 
 **Symptom if reverted:** agent reports "cannot run helpi" or PS crashes immediately after the preview line.
 
 ---
 
 ## Adding new entries
-When an issue recurs (2+ times), add it here and update the compact block in
-`~/.claude/CLAUDE.md` and `~/.codex/config.toml`.
+
+When an issue recurs (2+ times), append a new numbered entry here with:
+
+```
+### N. <short title>
+**Status:** open
+**Affects:** `<file path(s)>`
+**Fix:** <exact one-paragraph description of what to change>
+<symptom and context>
+```
+
+Change status to `fixed (YYYY-MM-DD)` once the fix is applied (by `/catch-up` or manually).
+For issues that cannot be fixed in code, use `platform-fact` and omit the **Affects** / **Fix** fields.
+
+Also update the compact block in `~/.claude/CLAUDE.md` and `~/.codex/config.toml` for platform-facts.
