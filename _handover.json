@@ -1,24 +1,31 @@
 {
   "project": "AI_auto",
-  "generated": "2026-05-16 22:15",
+  "generated": "2026-05-16 22:20",
   "source": "_ai_log.md",
   "latest_session": {
     "title": "2026-05-16",
-    "agent": "Codex",
-    "goal": "Diagnose and self-fix any obvious AI_auto infrastructure issue.",
-    "outcome": "`helpi 13` now prints a clean dashboard header, `helpi 15` warns cleanly when browser opening is blocked, and generated handovers identify the newest same-day session correctly.",
+    "agent": "Claude Sonnet 4.6",
+    "goal": "Fix Codex startup warnings — 16 SKILL.md files failing to load due to invalid YAML frontmatter.",
+    "outcome": "All 16 Codex SKILL.md warnings resolved; root cause was UTF-8 BOM prepended by the Edit tool, not missing frontmatter content per se.",
     "next_steps": "none",
-    "git_ref": "bd7595d",
+    "git_ref": "7b65077",
     "files_touched": [
-      "`status.ps1` -- replaced a mojibake box-drawing dashboard separator with an ASCII separator so `helpi 13` renders cleanly in agent terminals.",
-      "`helpi.ps1` -- made browser-opening commands best-effort so non-interactive shells warn instead of throwing on `Start-Process`.",
-      "`ai_log_tools.ps1` -- fixed latest-session parsing so separators do not attach to `Git ref` and same-day sessions resolve by file order.",
-      "`AGENTS.md`, `_handover.html`, `_handover.json`, `Overleaf_source/_handover_JR.md` -- regenerated handover context after the log/parser fixes.",
-      "`_session_draft.md`, `_state/last_project.txt` -- refreshed by the handover command run.",
-      "`_ai_log.md` -- logged this maintenance fix."
+      "`~/.agents/skills/catch-up/SKILL.md` — added YAML frontmatter (`name`, `description`)",
+      "`~/.agents/skills/close/SKILL.md` — added YAML frontmatter",
+      "`~/.agents/skills/family/SKILL.md` — added YAML frontmatter",
+      "`~/.agents/skills/snapshot/SKILL.md` — added YAML frontmatter",
+      "`~/.agents/skills/work/SKILL.md` — added YAML frontmatter",
+      "`~/.agents/skills/research-catch-up/SKILL.md` — added YAML frontmatter",
+      "`~/.agents/skills/research-close/SKILL.md` — added YAML frontmatter",
+      "`~/.agents/skills/research-family/SKILL.md` — added YAML frontmatter",
+      "`~/.agents/skills/research-snapshot/SKILL.md` — added YAML frontmatter",
+      "`~/.agents/skills/research-work/SKILL.md` — added YAML frontmatter",
+      "All 12 affected `SKILL.md` files — stripped UTF-8 BOM (root cause of Codex rejection)",
+      "`~/.claude/projects/.../memory/feedback_ps1_encoding.md` — expanded to document BOM issue alongside curly-quote issue",
+      "`AI_auto/known_issues.md` — added issue #11 (Edit/Write tool writes UTF-8 BOM)"
     ]
   },
   "latest_session_complete": true,
   "latest_session_missing": null,
-  "session_count": 5
+  "session_count": 4
 }

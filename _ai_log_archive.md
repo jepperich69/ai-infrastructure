@@ -37,3 +37,11 @@
 ## Archived 2026-05-16 (1 entry)
 
 - **2026-04-18** (Claude): Add a collaboration section to the infrastructure guide; then restr... → The infrastructure guide now tells a coherent lifecycle story from project creation (1)...
+
+
+---
+
+## Archived 2026-05-16 (2 entries)
+
+- **2026-04-19** (Claude): Improve token efficiency and communication speed; add model-switchi... → Three new helpi commands (17-19: cheatsheet, model-check toggle, Beamer slides with pre...
+- **2026-04-19** (Codex): Draft a down-to-earth book concept on research life with AI, ground... → First book draft created and verified. It uses `infrastructure_full.html` as the runnin...

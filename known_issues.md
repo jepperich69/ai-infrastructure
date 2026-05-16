@@ -140,6 +140,37 @@ The fix is already in `helpi.ps1`; do not revert it.
 
 ---
 
+### 11. Edit/Write tools write UTF-8 BOM — breaks YAML frontmatter and shebangs
+**Status:** platform-fact
+
+The Claude Code Edit and Write tools write files with a UTF-8 BOM (`EF BB BF`) on Windows. Any format that requires the file to start at byte 0 with specific content will silently break:
+- Codex rejects `SKILL.md` files where `---` is not the literal first bytes — shows "missing YAML frontmatter delimited by ---" even when frontmatter is present.
+- Shell scripts with `#!` shebangs will also break.
+
+**Fix (apply after any Edit/Write to a format-sensitive file):**
+```powershell
+$utf8NoBom = [System.Text.UTF8Encoding]::new($false)
+$bytes = [System.IO.File]::ReadAllBytes($path)
+if ($bytes[0] -eq 0xEF -and $bytes[1] -eq 0xBB -and $bytes[2] -eq 0xBF) {
+    $text = [System.Text.UTF8Encoding]::new($true).GetString($bytes)
+    [System.IO.File]::WriteAllText($path, $text, $utf8NoBom)
+}
+```
+
+For batch BOM removal across a directory:
+```powershell
+$utf8NoBom = [System.Text.UTF8Encoding]::new($false)
+Get-ChildItem $dir -Recurse -Filter "SKILL.md" | ForEach-Object {
+    $bytes = [System.IO.File]::ReadAllBytes($_.FullName)
+    if ($bytes[0] -eq 0xEF -and $bytes[1] -eq 0xBB -and $bytes[2] -eq 0xBF) {
+        $text = [System.Text.UTF8Encoding]::new($true).GetString($bytes)
+        [System.IO.File]::WriteAllText($_.FullName, $text, $utf8NoBom)
+    }
+}
+```
+
+---
+
 ## Adding new entries
 
 When an issue recurs (2+ times), append a new numbered entry here with:

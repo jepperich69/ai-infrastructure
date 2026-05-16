@@ -30,7 +30,7 @@
 <body>
 
 <h1>Handover Document &mdash; AI_auto</h1>
-<div class="meta">Generated: 2026-05-16 22:15 &nbsp;|&nbsp; Source: <code style="display:inline;padding:2px 6px">_ai_log.md</code> &nbsp;|&nbsp; Sidecar: <code style="display:inline;padding:2px 6px">_handover.json</code></div>
+<div class="meta">Generated: 2026-05-16 22:20 &nbsp;|&nbsp; Source: <code style="display:inline;padding:2px 6px">_ai_log.md</code> &nbsp;|&nbsp; Sidecar: <code style="display:inline;padding:2px 6px">_handover.json</code></div>
 
 <!-- ============================================================ -->
 <!-- AGENT INSTRUCTIONS                                            -->
@@ -63,19 +63,26 @@
   <div class="session-status ok">Complete</div>
   <h2>Latest Session Snapshot</h2>
   <p><strong>Session:</strong> 2026-05-16</p>
-  <p><strong>Agent:</strong> Codex</p>
-  <p><strong>Goal:</strong> Diagnose and self-fix any obvious AI_auto infrastructure issue.</p>
-  <p><strong>Outcome:</strong> `helpi 13` now prints a clean dashboard header, `helpi 15` warns cleanly when browser opening is blocked, and generated handovers identify the newest same-day session correctly.</p>
+  <p><strong>Agent:</strong> Claude Sonnet 4.6</p>
+  <p><strong>Goal:</strong> Fix Codex startup warnings — 16 SKILL.md files failing to load due to invalid YAML frontmatter.</p>
+  <p><strong>Outcome:</strong> All 16 Codex SKILL.md warnings resolved; root cause was UTF-8 BOM prepended by the Edit tool, not missing frontmatter content per se.</p>
   <p><strong>Next steps:</strong> none</p>
-  <p><strong>Git ref:</strong> bd7595d</p>
+  <p><strong>Git ref:</strong> 7b65077</p>
   <h3>Files touched</h3>
   <ul>
-  <li>`status.ps1` -- replaced a mojibake box-drawing dashboard separator with an ASCII separator so `helpi 13` renders cleanly in agent terminals.</li>
-  <li>`helpi.ps1` -- made browser-opening commands best-effort so non-interactive shells warn instead of throwing on `Start-Process`.</li>
-  <li>`ai_log_tools.ps1` -- fixed latest-session parsing so separators do not attach to `Git ref` and same-day sessions resolve by file order.</li>
-  <li>`AGENTS.md`, `_handover.html`, `_handover.json`, `Overleaf_source/_handover_JR.md` -- regenerated handover context after the log/parser fixes.</li>
-  <li>`_session_draft.md`, `_state/last_project.txt` -- refreshed by the handover command run.</li>
-  <li>`_ai_log.md` -- logged this maintenance fix.</li>
+  <li>`~/.agents/skills/catch-up/SKILL.md` — added YAML frontmatter (`name`, `description`)</li>
+  <li>`~/.agents/skills/close/SKILL.md` — added YAML frontmatter</li>
+  <li>`~/.agents/skills/family/SKILL.md` — added YAML frontmatter</li>
+  <li>`~/.agents/skills/snapshot/SKILL.md` — added YAML frontmatter</li>
+  <li>`~/.agents/skills/work/SKILL.md` — added YAML frontmatter</li>
+  <li>`~/.agents/skills/research-catch-up/SKILL.md` — added YAML frontmatter</li>
+  <li>`~/.agents/skills/research-close/SKILL.md` — added YAML frontmatter</li>
+  <li>`~/.agents/skills/research-family/SKILL.md` — added YAML frontmatter</li>
+  <li>`~/.agents/skills/research-snapshot/SKILL.md` — added YAML frontmatter</li>
+  <li>`~/.agents/skills/research-work/SKILL.md` — added YAML frontmatter</li>
+  <li>All 12 affected `SKILL.md` files — stripped UTF-8 BOM (root cause of Codex rejection)</li>
+  <li>`~/.claude/projects/.../memory/feedback_ps1_encoding.md` — expanded to document BOM issue alongside curly-quote issue</li>
+  <li>`AI_auto/known_issues.md` — added issue #11 (Edit/Write tool writes UTF-8 BOM)</li>
 </ul>
 </div>
 
@@ -90,8 +97,6 @@
 <h2>Compressed sessions</h2>
 <br>
 <ul>
-  <li><strong>2026-04-19</strong> (Claude): Improve token efficiency and communication speed; add model-switchi... → Three new helpi commands (17-19: cheatsheet, model-check toggle, Beamer slides with pre...</li>
-  <li><strong>2026-04-19</strong> (Codex): Draft a down-to-earth book concept on research life with AI, ground... → First book draft created and verified. It uses `infrastructure_full.html` as the runnin...</li>
   <li><strong>2026-04-22</strong> (Codex): Link the AI_auto infrastructure project to its Overleaf project and... → `AI_auto` is now linked to the Overleaf project through a real `Overleaf_source/` clone...</li>
   <li><strong>2026-04-22 Close</strong> (Codex): Close the AI_auto working session after linking Overleaf and prepar... → `AI_auto` is linked to Overleaf, the Overleaf clone is clean and synced, and `slides_ma...</li>
   <li><strong>2026-04-22</strong> (Codex): Revise `slides_main_v2.tex` so the DTU quotes appear on the front p... → `slides_main_v2.tex` now starts with the title page plus DTU rule quote, followed direc...</li>
@@ -106,61 +111,9 @@
   <li><strong>2026-05-01</strong> (Claude): Improve helpi 24 (one-pager) with a GUI file picker; fix project de... -&gt; helpi 24 shows a GUI picker in a terminal and works headlessly in Claude Code; /helpi n...</li>
   <li><strong>2026-05-04</strong> (Codex): Fix helpi 24 so non-interactive one-pager generation does not silen... -&gt; `helpi 24 Pub_StopGeometry_TBA` no longer auto-selects `main_R1.tex` in a non-interacti...</li>
   <li><strong>2026-05-04</strong> (Codex): Make explanatory LaTeX source comments a standard part of helpi 24 ... -&gt; Future one-pagers generated through `helpi 24` should include concise `% Intuition:`, `...</li>
+  <li><strong>2026-05-04</strong> (Codex): Tighten helpi 24 one-pager style: plainer wording, numbered equatio... -&gt; Future generated one-pagers should avoid dense unexplained terms, use numbered `equatio...</li>
+  <li><strong>2026-05-08</strong> (Claude): Create an anonymous Google Forms survey for an AI-assisted research... -&gt; - Danish form created via Google Apps Script: &quot;AI-assisteret forskning: praksis, infras...</li>
 </ul>
-<br>
-<hr>
-<br>
-<h2>Session 2026-05-04</h2>
-<p><strong>Agent:</strong> Codex</p>
-<p><strong>Goal:</strong> Tighten helpi 24 one-pager style: plainer wording, numbered equations, and hidden explanations for unclear terms.</p>
-<p><strong>Files touched:</strong></p>
-<ul>
-  <li>`prompts/generate_onepager.md` -- added down-to-earth language requirements, numbered display-equation rule, and hidden-comment guidance for unclear terms and Bernoulli notation.</li>
-  <li>`helpi.ps1` -- updated command 24 help text to mention plain language and numbered equations.</li>
-  <li>`_ai_log.md` -- logged this infrastructure update.</li>
-</ul>
-<p><strong>Outcome:</strong> Future generated one-pagers should avoid dense unexplained terms, use numbered `equation` environments for major formulas, and explain necessary compact notation in non-compiling source comments.</p>
-<p><strong>Next steps:</strong> Push AI_auto changes to GitHub when ready.</p>
-<p><strong>Git ref:</strong> 94bee02</p>
-<br>
-<hr>
-<br>
-<h2>Session 2026-05-08</h2>
-<p><strong>Agent:</strong> Claude Sonnet 4.6</p>
-<p><strong>Goal:</strong> Create an anonymous Google Forms survey for an AI-assisted research seminar.</p>
-<p><strong>Files touched:</strong></p>
-<ul>
-  <li>`google_forms_guide.html` — step-by-step HTML guide for manual Google Forms creation (fallback reference)</li>
-  <li>`formular_script.js` — Apps Script source (local copy)</li>
-  <li>`ai_seminar_qr.png` — QR code for the Danish form respondent link</li>
-</ul>
-<p><strong>Outcome:</strong></p>
-<ul>
-  <li>Danish form created via Google Apps Script: &quot;AI-assisteret forskning: praksis, infrastruktur og fremtidige behov&quot;</li>
-  <li>English form also created: &quot;AI-assisted research: practice, infrastructure and future needs&quot;</li>
-  <li>Both forms: 5 questions (spm 1+5 Checkboxes/multiple answers; spm 2+3+4 Multiple choice/single answer), all required, no email collected, no login required</li>
-  <li>Danish respondent link: https://docs.google.com/forms/d/e/1FAIpQLSduhzPQnQv-P5s86Kx-EWAKQ1CjM-3asKno4cmTp_sQKKdE8g/viewform</li>
-  <li>QR code saved as `ai_seminar_qr.png` in AI_auto</li>
-  <li>Export: Responses tab &gt; Google Sheets icon &gt; Download as .xlsx</li>
-</ul>
-<p><strong>How to recreate a form (Apps Script method):</strong></p>
-<p>1. Go to script.google.com &gt; New project</p>
-<p>2. Paste the Apps Script code (keep strings short/concatenated to avoid line-wrap syntax errors)</p>
-<p>3. Remove setRequireLogin() and setShowSummary() — not supported on consumer Gmail accounts</p>
-<p>4. Click Run &gt; authorize once &gt; get link from View &gt; Logs</p>
-<p><strong>Known pitfalls:</strong></p>
-<ul>
-  <li>Copying code from chat introduces real newlines inside strings -&gt; SyntaxError</li>
-  <li>setRequireLogin(false) throws on Gmail (non-Workspace accounts)</li>
-  <li>setShowSummary() does not exist in current Apps Script API</li>
-  <li>Drive MCP cannot create Forms or Apps Script projects directly</li>
-</ul>
-<p><strong>Next steps:</strong></p>
-<ul>
-  <li>Distribute Danish link + QR code to seminar participants</li>
-  <li>Export responses after seminar: Responses tab &gt; Google Sheets &gt; Download .xlsx</li>
-</ul>
-<p><strong>Git ref:</strong> 8269078</p>
 <br>
 <hr>
 <br>
@@ -231,6 +184,31 @@
 <p><strong>Next steps:</strong> none</p>
 <p><strong>Git ref:</strong> bd7595d</p>
 <br>
+<hr>
+<br>
+<h2>Session 2026-05-16</h2>
+<p><strong>Agent:</strong> Claude Sonnet 4.6</p>
+<p><strong>Goal:</strong> Fix Codex startup warnings — 16 SKILL.md files failing to load due to invalid YAML frontmatter.</p>
+<p><strong>Files touched:</strong></p>
+<ul>
+  <li>`~/.agents/skills/catch-up/SKILL.md` — added YAML frontmatter (`name`, `description`)</li>
+  <li>`~/.agents/skills/close/SKILL.md` — added YAML frontmatter</li>
+  <li>`~/.agents/skills/family/SKILL.md` — added YAML frontmatter</li>
+  <li>`~/.agents/skills/snapshot/SKILL.md` — added YAML frontmatter</li>
+  <li>`~/.agents/skills/work/SKILL.md` — added YAML frontmatter</li>
+  <li>`~/.agents/skills/research-catch-up/SKILL.md` — added YAML frontmatter</li>
+  <li>`~/.agents/skills/research-close/SKILL.md` — added YAML frontmatter</li>
+  <li>`~/.agents/skills/research-family/SKILL.md` — added YAML frontmatter</li>
+  <li>`~/.agents/skills/research-snapshot/SKILL.md` — added YAML frontmatter</li>
+  <li>`~/.agents/skills/research-work/SKILL.md` — added YAML frontmatter</li>
+  <li>All 12 affected `SKILL.md` files — stripped UTF-8 BOM (root cause of Codex rejection)</li>
+  <li>`~/.claude/projects/.../memory/feedback_ps1_encoding.md` — expanded to document BOM issue alongside curly-quote issue</li>
+  <li>`AI_auto/known_issues.md` — added issue #11 (Edit/Write tool writes UTF-8 BOM)</li>
+</ul>
+<p><strong>Outcome:</strong> All 16 Codex SKILL.md warnings resolved; root cause was UTF-8 BOM prepended by the Edit tool, not missing frontmatter content per se.</p>
+<p><strong>Next steps:</strong> none</p>
+<p><strong>Git ref:</strong> 7b65077</p>
+<br>
 
 </div>
 
@@ -246,8 +224,6 @@
 
 ## Compressed sessions
 
-- **2026-04-19** (Claude): Improve token efficiency and communication speed; add model-switchi... → Three new helpi commands (17-19: cheatsheet, model-check toggle, Beamer slides with pre...
-- **2026-04-19** (Codex): Draft a down-to-earth book concept on research life with AI, ground... → First book draft created and verified. It uses `infrastructure_full.html` as the runnin...
 - **2026-04-22** (Codex): Link the AI_auto infrastructure project to its Overleaf project and... → `AI_auto` is now linked to the Overleaf project through a real `Overleaf_source/` clone...
 - **2026-04-22 Close** (Codex): Close the AI_auto working session after linking Overleaf and prepar... → `AI_auto` is linked to Overleaf, the Overleaf clone is clean and synced, and `slides_ma...
 - **2026-04-22** (Codex): Revise `slides_main_v2.tex` so the DTU quotes appear on the front p... → `slides_main_v2.tex` now starts with the title page plus DTU rule quote, followed direc...
@@ -262,50 +238,8 @@
 - **2026-05-01** (Claude): Improve helpi 24 (one-pager) with a GUI file picker; fix project de... -&gt; helpi 24 shows a GUI picker in a terminal and works headlessly in Claude Code; /helpi n...
 - **2026-05-04** (Codex): Fix helpi 24 so non-interactive one-pager generation does not silen... -&gt; `helpi 24 Pub_StopGeometry_TBA` no longer auto-selects `main_R1.tex` in a non-interacti...
 - **2026-05-04** (Codex): Make explanatory LaTeX source comments a standard part of helpi 24 ... -&gt; Future one-pagers generated through `helpi 24` should include concise `% Intuition:`, `...
-
----
-
-## Session 2026-05-04
-**Agent:** Codex
-**Goal:** Tighten helpi 24 one-pager style: plainer wording, numbered equations, and hidden explanations for unclear terms.
-**Files touched:**
-- `prompts/generate_onepager.md` -- added down-to-earth language requirements, numbered display-equation rule, and hidden-comment guidance for unclear terms and Bernoulli notation.
-- `helpi.ps1` -- updated command 24 help text to mention plain language and numbered equations.
-- `_ai_log.md` -- logged this infrastructure update.
-**Outcome:** Future generated one-pagers should avoid dense unexplained terms, use numbered `equation` environments for major formulas, and explain necessary compact notation in non-compiling source comments.
-**Next steps:** Push AI_auto changes to GitHub when ready.
-**Git ref:** 94bee02
-
----
-
-## Session 2026-05-08
-**Agent:** Claude Sonnet 4.6
-**Goal:** Create an anonymous Google Forms survey for an AI-assisted research seminar.
-**Files touched:**
-- `google_forms_guide.html` — step-by-step HTML guide for manual Google Forms creation (fallback reference)
-- `formular_script.js` — Apps Script source (local copy)
-- `ai_seminar_qr.png` — QR code for the Danish form respondent link
-**Outcome:**
-- Danish form created via Google Apps Script: "AI-assisteret forskning: praksis, infrastruktur og fremtidige behov"
-- English form also created: "AI-assisted research: practice, infrastructure and future needs"
-- Both forms: 5 questions (spm 1+5 Checkboxes/multiple answers; spm 2+3+4 Multiple choice/single answer), all required, no email collected, no login required
-- Danish respondent link: https://docs.google.com/forms/d/e/1FAIpQLSduhzPQnQv-P5s86Kx-EWAKQ1CjM-3asKno4cmTp_sQKKdE8g/viewform
-- QR code saved as `ai_seminar_qr.png` in AI_auto
-- Export: Responses tab &gt; Google Sheets icon &gt; Download as .xlsx
-**How to recreate a form (Apps Script method):**
-1. Go to script.google.com &gt; New project
-2. Paste the Apps Script code (keep strings short/concatenated to avoid line-wrap syntax errors)
-3. Remove setRequireLogin() and setShowSummary() — not supported on consumer Gmail accounts
-4. Click Run &gt; authorize once &gt; get link from View &gt; Logs
-**Known pitfalls:**
-- Copying code from chat introduces real newlines inside strings -&gt; SyntaxError
-- setRequireLogin(false) throws on Gmail (non-Workspace accounts)
-- setShowSummary() does not exist in current Apps Script API
-- Drive MCP cannot create Forms or Apps Script projects directly
-**Next steps:**
-- Distribute Danish link + QR code to seminar participants
-- Export responses after seminar: Responses tab &gt; Google Sheets &gt; Download .xlsx
-**Git ref:** 8269078
+- **2026-05-04** (Codex): Tighten helpi 24 one-pager style: plainer wording, numbered equatio... -&gt; Future generated one-pagers should avoid dense unexplained terms, use numbered `equatio...
+- **2026-05-08** (Claude): Create an anonymous Google Forms survey for an AI-assisted research... -&gt; - Danish form created via Google Apps Script: "AI-assisteret forskning: praksis, infras...
 
 ---
 
@@ -367,6 +301,29 @@
 **Outcome:** `helpi 13` now prints a clean dashboard header, `helpi 15` warns cleanly when browser opening is blocked, and generated handovers identify the newest same-day session correctly.
 **Next steps:** none
 **Git ref:** bd7595d
+
+---
+
+## Session 2026-05-16
+**Agent:** Claude Sonnet 4.6
+**Goal:** Fix Codex startup warnings — 16 SKILL.md files failing to load due to invalid YAML frontmatter.
+**Files touched:**
+- `~/.agents/skills/catch-up/SKILL.md` — added YAML frontmatter (`name`, `description`)
+- `~/.agents/skills/close/SKILL.md` — added YAML frontmatter
+- `~/.agents/skills/family/SKILL.md` — added YAML frontmatter
+- `~/.agents/skills/snapshot/SKILL.md` — added YAML frontmatter
+- `~/.agents/skills/work/SKILL.md` — added YAML frontmatter
+- `~/.agents/skills/research-catch-up/SKILL.md` — added YAML frontmatter
+- `~/.agents/skills/research-close/SKILL.md` — added YAML frontmatter
+- `~/.agents/skills/research-family/SKILL.md` — added YAML frontmatter
+- `~/.agents/skills/research-snapshot/SKILL.md` — added YAML frontmatter
+- `~/.agents/skills/research-work/SKILL.md` — added YAML frontmatter
+- All 12 affected `SKILL.md` files — stripped UTF-8 BOM (root cause of Codex rejection)
+- `~/.claude/projects/.../memory/feedback_ps1_encoding.md` — expanded to document BOM issue alongside curly-quote issue
+- `AI_auto/known_issues.md` — added issue #11 (Edit/Write tool writes UTF-8 BOM)
+**Outcome:** All 16 Codex SKILL.md warnings resolved; root cause was UTF-8 BOM prepended by the Edit tool, not missing frontmatter content per se.
+**Next steps:** none
+**Git ref:** 7b65077
 </textarea>
 </div>
 
@@ -384,7 +341,26 @@
 <!-- ============================================================ -->
 <div class="section">
   <h2>Overleaf Git History (last 20 commits)</h2>
-  <pre></pre>
+  <pre>853905b Auto-backup 2026-05-16 11:07
+8744edb Auto-backup 2026-05-08 15:09
+506579d Auto-backup 2026-05-04 08:45
+8ef020b Auto-backup 2026-04-24 11:08
+6b78218 Local edits 2026-04-22 16:34
+0757ad8 Local edits 2026-04-22 16:09
+4748504 Local edits 2026-04-22 16:04
+d9affeb Revise V2 title slide
+acc9685 Local edits 2026-04-22 15:56
+06c5265 Local edits 2026-04-22 15:55
+e4bb1a2 Local edits 2026-04-22 15:42
+dd5249f Local edits 2026-04-22 15:41
+abe0241 Local edits 2026-04-22 15:18
+aa00230 Update on Overleaf.
+3920196 Update on Overleaf.
+e2d56cf Local edits 2026-04-22 14:02
+65cfb3f Local edits 2026-04-22 14:01
+fb4534f Local edits 2026-04-22 13:42
+4216e7c Local edits 2026-04-19 16:23
+697f643 Local edits 2026-04-19 15:55</pre>
 </div>
 
 </body>
