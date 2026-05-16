@@ -1,26 +1,24 @@
 {
   "project": "AI_auto",
-  "generated": "2026-05-16 09:58",
+  "generated": "2026-05-16 22:13",
   "source": "_ai_log.md",
   "latest_session": {
     "title": "2026-05-16",
-    "agent": "Claude Sonnet 4.6",
-    "goal": "Complete the infrastructure session: commit remaining changes, design and implement /catch-up skill for proactive known-issue remediation, add status fields to known_issues.md.",
-    "outcome": "The infrastructure now has a full fix loop: /close logs new open issues with exact fix instructions, /catch-up sweeps them and applies fixes, known_issues.md is the single source of truth for all agents.",
+    "agent": "Codex",
+    "goal": "Diagnose and self-fix any obvious AI_auto infrastructure issue.",
+    "outcome": "`helpi 13` now prints a clean dashboard header, `helpi 15` warns cleanly when browser opening is blocked, and generated handovers identify the newest same-day session correctly.",
     "next_steps": "none",
-    "git_ref": "caca18d",
+    "git_ref": "pending",
     "files_touched": [
-      "`generate_handover.ps1` -- committed platform facts block (platform paths + known_issues.md proactive read in every generated AGENTS.md)",
-      "`known_issues.md` -- added Status: fields (platform-fact / fixed / open) to all 10 issues; updated \"Adding new entries\" section with format for open entries (Affects/Fix fields)",
-      "`~/.agents/skills/research-catch-up/SKILL.md` (+ alias `catch-up/`) -- new skill: sweeps open issues, applies fixes, marks them fixed, commits",
-      "`~/.claude/commands/catch-up.md` -- Claude command copy of the catch-up skill",
-      "`~/.agents/skills/research-close/SKILL.md` + `~/.agents/skills/close/SKILL.md` + `~/.claude/commands/close.md` -- step 3.2 updated: new issues logged as open/platform-fact with Affects/Fix fields; prompt user to run /catch-up when open issue is logged",
-      "`~/.gemini/AGENTS.md` -- added catch-up row to shared skills table",
-      "`~/.codex/config.toml` -- added AI_auto session instruction to run /catch-up on open",
-      "`~/.claude/CLAUDE.md` -- added catch-up instruction to AI infrastructure project detection section"
+      "`status.ps1` -- replaced a mojibake box-drawing dashboard separator with an ASCII separator so `helpi 13` renders cleanly in agent terminals.",
+      "`helpi.ps1` -- made browser-opening commands best-effort so non-interactive shells warn instead of throwing on `Start-Process`.",
+      "`ai_log_tools.ps1` -- fixed latest-session parsing so separators do not attach to `Git ref` and same-day sessions resolve by file order.",
+      "`AGENTS.md`, `_handover.html`, `_handover.json`, `Overleaf_source/_handover_JR.md` -- regenerated handover context after the log/parser fixes.",
+      "`_session_draft.md`, `_state/last_project.txt` -- refreshed by the handover command run.",
+      "`_ai_log.md` -- logged this maintenance fix."
     ]
   },
   "latest_session_complete": true,
   "latest_session_missing": null,
-  "session_count": 4
+  "session_count": 5
 }

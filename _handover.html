@@ -30,7 +30,7 @@
 <body>
 
 <h1>Handover Document &mdash; AI_auto</h1>
-<div class="meta">Generated: 2026-05-16 09:58 &nbsp;|&nbsp; Source: <code style="display:inline;padding:2px 6px">_ai_log.md</code> &nbsp;|&nbsp; Sidecar: <code style="display:inline;padding:2px 6px">_handover.json</code></div>
+<div class="meta">Generated: 2026-05-16 22:13 &nbsp;|&nbsp; Source: <code style="display:inline;padding:2px 6px">_ai_log.md</code> &nbsp;|&nbsp; Sidecar: <code style="display:inline;padding:2px 6px">_handover.json</code></div>
 
 <!-- ============================================================ -->
 <!-- AGENT INSTRUCTIONS                                            -->
@@ -63,21 +63,19 @@
   <div class="session-status ok">Complete</div>
   <h2>Latest Session Snapshot</h2>
   <p><strong>Session:</strong> 2026-05-16</p>
-  <p><strong>Agent:</strong> Claude Sonnet 4.6</p>
-  <p><strong>Goal:</strong> Complete the infrastructure session: commit remaining changes, design and implement /catch-up skill for proactive known-issue remediation, add status fields to known_issues.md.</p>
-  <p><strong>Outcome:</strong> The infrastructure now has a full fix loop: /close logs new open issues with exact fix instructions, /catch-up sweeps them and applies fixes, known_issues.md is the single source of truth for all agents.</p>
+  <p><strong>Agent:</strong> Codex</p>
+  <p><strong>Goal:</strong> Diagnose and self-fix any obvious AI_auto infrastructure issue.</p>
+  <p><strong>Outcome:</strong> `helpi 13` now prints a clean dashboard header, `helpi 15` warns cleanly when browser opening is blocked, and generated handovers identify the newest same-day session correctly.</p>
   <p><strong>Next steps:</strong> none</p>
-  <p><strong>Git ref:</strong> caca18d</p>
+  <p><strong>Git ref:</strong> pending</p>
   <h3>Files touched</h3>
   <ul>
-  <li>`generate_handover.ps1` -- committed platform facts block (platform paths + known_issues.md proactive read in every generated AGENTS.md)</li>
-  <li>`known_issues.md` -- added Status: fields (platform-fact / fixed / open) to all 10 issues; updated &quot;Adding new entries&quot; section with format for open entries (Affects/Fix fields)</li>
-  <li>`~/.agents/skills/research-catch-up/SKILL.md` (+ alias `catch-up/`) -- new skill: sweeps open issues, applies fixes, marks them fixed, commits</li>
-  <li>`~/.claude/commands/catch-up.md` -- Claude command copy of the catch-up skill</li>
-  <li>`~/.agents/skills/research-close/SKILL.md` + `~/.agents/skills/close/SKILL.md` + `~/.claude/commands/close.md` -- step 3.2 updated: new issues logged as open/platform-fact with Affects/Fix fields; prompt user to run /catch-up when open issue is logged</li>
-  <li>`~/.gemini/AGENTS.md` -- added catch-up row to shared skills table</li>
-  <li>`~/.codex/config.toml` -- added AI_auto session instruction to run /catch-up on open</li>
-  <li>`~/.claude/CLAUDE.md` -- added catch-up instruction to AI infrastructure project detection section</li>
+  <li>`status.ps1` -- replaced a mojibake box-drawing dashboard separator with an ASCII separator so `helpi 13` renders cleanly in agent terminals.</li>
+  <li>`helpi.ps1` -- made browser-opening commands best-effort so non-interactive shells warn instead of throwing on `Start-Process`.</li>
+  <li>`ai_log_tools.ps1` -- fixed latest-session parsing so separators do not attach to `Git ref` and same-day sessions resolve by file order.</li>
+  <li>`AGENTS.md`, `_handover.html`, `_handover.json`, `Overleaf_source/_handover_JR.md` -- regenerated handover context after the log/parser fixes.</li>
+  <li>`_session_draft.md`, `_state/last_project.txt` -- refreshed by the handover command run.</li>
+  <li>`_ai_log.md` -- logged this maintenance fix.</li>
 </ul>
 </div>
 
@@ -213,7 +211,25 @@
 </ul>
 <p><strong>Outcome:</strong> The infrastructure now has a full fix loop: /close logs new open issues with exact fix instructions, /catch-up sweeps them and applies fixes, known_issues.md is the single source of truth for all agents.</p>
 <p><strong>Next steps:</strong> none</p>
-<p><strong>Git ref:</strong> caca18d</p>
+<p><strong>Git ref:</strong> caca18d</p>
+<br>
+<hr>
+<br>
+<h2>Session 2026-05-16</h2>
+<p><strong>Agent:</strong> Codex</p>
+<p><strong>Goal:</strong> Diagnose and self-fix any obvious AI_auto infrastructure issue.</p>
+<p><strong>Files touched:</strong></p>
+<ul>
+  <li>`status.ps1` -- replaced a mojibake box-drawing dashboard separator with an ASCII separator so `helpi 13` renders cleanly in agent terminals.</li>
+  <li>`helpi.ps1` -- made browser-opening commands best-effort so non-interactive shells warn instead of throwing on `Start-Process`.</li>
+  <li>`ai_log_tools.ps1` -- fixed latest-session parsing so separators do not attach to `Git ref` and same-day sessions resolve by file order.</li>
+  <li>`AGENTS.md`, `_handover.html`, `_handover.json`, `Overleaf_source/_handover_JR.md` -- regenerated handover context after the log/parser fixes.</li>
+  <li>`_session_draft.md`, `_state/last_project.txt` -- refreshed by the handover command run.</li>
+  <li>`_ai_log.md` -- logged this maintenance fix.</li>
+</ul>
+<p><strong>Outcome:</strong> `helpi 13` now prints a clean dashboard header, `helpi 15` warns cleanly when browser opening is blocked, and generated handovers identify the newest same-day session correctly.</p>
+<p><strong>Next steps:</strong> none</p>
+<p><strong>Git ref:</strong> pending</p>
 <br>
 
 </div>
@@ -335,6 +351,22 @@
 **Outcome:** The infrastructure now has a full fix loop: /close logs new open issues with exact fix instructions, /catch-up sweeps them and applies fixes, known_issues.md is the single source of truth for all agents.
 **Next steps:** none
 **Git ref:** caca18d
+
+---
+
+## Session 2026-05-16
+**Agent:** Codex
+**Goal:** Diagnose and self-fix any obvious AI_auto infrastructure issue.
+**Files touched:**
+- `status.ps1` -- replaced a mojibake box-drawing dashboard separator with an ASCII separator so `helpi 13` renders cleanly in agent terminals.
+- `helpi.ps1` -- made browser-opening commands best-effort so non-interactive shells warn instead of throwing on `Start-Process`.
+- `ai_log_tools.ps1` -- fixed latest-session parsing so separators do not attach to `Git ref` and same-day sessions resolve by file order.
+- `AGENTS.md`, `_handover.html`, `_handover.json`, `Overleaf_source/_handover_JR.md` -- regenerated handover context after the log/parser fixes.
+- `_session_draft.md`, `_state/last_project.txt` -- refreshed by the handover command run.
+- `_ai_log.md` -- logged this maintenance fix.
+**Outcome:** `helpi 13` now prints a clean dashboard header, `helpi 15` warns cleanly when browser opening is blocked, and generated handovers identify the newest same-day session correctly.
+**Next steps:** none
+**Git ref:** pending
 </textarea>
 </div>
 
@@ -352,26 +384,7 @@
 <!-- ============================================================ -->
 <div class="section">
   <h2>Overleaf Git History (last 20 commits)</h2>
-  <pre>8744edb Auto-backup 2026-05-08 15:09
-506579d Auto-backup 2026-05-04 08:45
-8ef020b Auto-backup 2026-04-24 11:08
-6b78218 Local edits 2026-04-22 16:34
-0757ad8 Local edits 2026-04-22 16:09
-4748504 Local edits 2026-04-22 16:04
-d9affeb Revise V2 title slide
-acc9685 Local edits 2026-04-22 15:56
-06c5265 Local edits 2026-04-22 15:55
-e4bb1a2 Local edits 2026-04-22 15:42
-dd5249f Local edits 2026-04-22 15:41
-abe0241 Local edits 2026-04-22 15:18
-aa00230 Update on Overleaf.
-3920196 Update on Overleaf.
-e2d56cf Local edits 2026-04-22 14:02
-65cfb3f Local edits 2026-04-22 14:01
-fb4534f Local edits 2026-04-22 13:42
-4216e7c Local edits 2026-04-19 16:23
-697f643 Local edits 2026-04-19 15:55
-735e5be Local edits 2026-04-19 15:48</pre>
+  <pre></pre>
 </div>
 
 </body>

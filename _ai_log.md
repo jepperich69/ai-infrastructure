@@ -117,7 +117,11 @@
 **Goal:** Diagnose and self-fix any obvious AI_auto infrastructure issue.
 **Files touched:**
 - `status.ps1` -- replaced a mojibake box-drawing dashboard separator with an ASCII separator so `helpi 13` renders cleanly in agent terminals.
+- `helpi.ps1` -- made browser-opening commands best-effort so non-interactive shells warn instead of throwing on `Start-Process`.
+- `ai_log_tools.ps1` -- fixed latest-session parsing so separators do not attach to `Git ref` and same-day sessions resolve by file order.
+- `AGENTS.md`, `_handover.html`, `_handover.json`, `Overleaf_source/_handover_JR.md` -- regenerated handover context after the log/parser fixes.
+- `_session_draft.md`, `_state/last_project.txt` -- refreshed by the handover command run.
 - `_ai_log.md` -- logged this maintenance fix.
-**Outcome:** `helpi 13` now prints a clean dashboard header instead of `â•...` corrupted characters.
+**Outcome:** `helpi 13` now prints a clean dashboard header, `helpi 15` warns cleanly when browser opening is blocked, and generated handovers identify the newest same-day session correctly.
 **Next steps:** none
-**Git ref:** a8f132a
+**Git ref:** pending

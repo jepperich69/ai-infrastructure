@@ -22,6 +22,7 @@ function Get-AiLogSessions {
 
             $current = @{
                 title = $Matches[1].Trim()
+                order = $sessions.Count
                 fields = [ordered]@{}
                 raw_lines = @($line)
             }
@@ -32,6 +33,11 @@ function Get-AiLogSessions {
         if ($null -eq $current) { continue }
 
         $current.raw_lines += $line
+
+        if ([string]::IsNullOrWhiteSpace($line) -or $line.Trim() -eq '---') {
+            $currentField = $null
+            continue
+        }
 
         if ($line -match '^\*\*(.+?):\*\*\s*(.*)$') {
             $fieldName = $Matches[1].Trim()
@@ -76,7 +82,8 @@ function Get-AiLogLatestSession {
                 }; Descending = $true }, `
             @{ Expression = {
                     if ($_.title -match '^\d{4}-\d{2}-\d{2}(.*)$') { $Matches[1] } else { '' }
-                }; Descending = $true } |
+                }; Descending = $true }, `
+            @{ Expression = { $_.order }; Descending = $true } |
         Select-Object -First 1
 }
 

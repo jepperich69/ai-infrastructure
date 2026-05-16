@@ -519,7 +519,9 @@ function Invoke-Command-N {
                Pop-Location
                & "$aiRoot\generate_handover.ps1" -Project $proj
                $html = Join-Path $projRoot "_handover.html"
-               if (Test-Path $html) { Start-Process $html }
+               if (Test-Path $html) {
+                   try { Start-Process $html } catch { Write-Host "WARN | Could not open handover in browser: $($_.Exception.Message)" -ForegroundColor Yellow }
+               }
            }
         8  {
                $tag = Read-Host "  Version label? (e.g. V2, V2-before-submission; leave blank to auto)"
@@ -565,7 +567,9 @@ function Invoke-Command-N {
            }
         13 { & "$aiRoot\status.ps1" }
         14 { & "$aiRoot\network.ps1" }
-        15 { Start-Process "$aiRoot\infrastructure.html" }
+        15 {
+               try { Start-Process "$aiRoot\infrastructure.html" } catch { Write-Host "WARN | Could not open infrastructure guide: $($_.Exception.Message)" -ForegroundColor Yellow }
+           }
         16 { & "$aiRoot\generate_docs.ps1" }
         17 { Show-ClaudeCheatsheet }
         18 { Toggle-ModelCheck }
