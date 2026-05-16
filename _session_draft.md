@@ -10,3 +10,7 @@
 [2026-05-16 09:24] Edit:  C:\Users\rich\.gemini\AGENTS.md
 [2026-05-16 09:24] Edit:  infrastructure.html
 [2026-05-16 09:25] Edit:  infrastructure.html
+[2026-05-16 09:30] Edit:  generate_handover.ps1
+[2026-05-16 09:30] Edit:  C:\Users\rich\.gemini\AGENTS.md
+[2026-05-16 09:31] Edit:  C:\Users\rich\.claude\CLAUDE.md
+[2026-05-16 09:31] Edit:  C:\Users\rich\.codex\config.toml
