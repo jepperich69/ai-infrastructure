@@ -491,7 +491,7 @@ function Invoke-Command-N {
         Write-Host "  Running..." -ForegroundColor DarkGray
     } else {
         Write-Host "  [Enter] run  |  [any other key] cancel  (press Up to edit at prompt)" -ForegroundColor DarkGray
-        [Microsoft.PowerShell.PSConsoleReadLine]::AddToHistory($preview)
+        try { [Microsoft.PowerShell.PSConsoleReadLine]::AddToHistory($preview) } catch {}
         $key = $host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
         Write-Host ""
         if ($key.VirtualKeyCode -ne 13) { return }
