@@ -6,3 +6,7 @@
 [2026-05-15 22:48] Edit:  C:\Users\rich\.claude\projects\C--Users-rich-OneDrive---Danmarks-Tekniske-Universitet-JR-AI-auto\memory\MEMORY.md
 [2026-05-16 08:12] Edit:  helpi.ps1
 [2026-05-16 09:20] Edit:  C:\Users\rich\.agents\skills\grill-paper\SKILL.md
+[2026-05-16 09:23] Edit:  known_issues.md
+[2026-05-16 09:24] Edit:  C:\Users\rich\.gemini\AGENTS.md
+[2026-05-16 09:24] Edit:  infrastructure.html
+[2026-05-16 09:25] Edit:  infrastructure.html
