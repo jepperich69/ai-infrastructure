@@ -171,6 +171,15 @@ Get-ChildItem $dir -Recurse -Filter "SKILL.md" | ForEach-Object {
 
 ---
 
+### 12. MiKTeX first-run setup prompt blocks non-interactive latexmk
+**Status:** open
+**Affects:** Local LaTeX compilation from Codex/non-interactive PowerShell sessions.
+**Fix:** Complete MiKTeX's first-run setup for the account used by the non-interactive agent, or run a one-time interactive MiKTeX console/setup before relying on `latexmk` in Codex sessions.
+
+Symptom: `latexmk -pdf ...` exits immediately with "It seems that this is a fresh TeX installation. Please finish the setup before proceeding." Overleaf compilation is unaffected; local compile verification cannot be trusted until the setup prompt is cleared.
+
+---
+
 ## Adding new entries
 
 When an issue recurs (2+ times), append a new numbered entry here with:
