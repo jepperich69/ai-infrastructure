@@ -30,7 +30,7 @@
 <body>
 
 <h1>Handover Document &mdash; AI_auto</h1>
-<div class="meta">Generated: 2026-05-16 22:20 &nbsp;|&nbsp; Source: <code style="display:inline;padding:2px 6px">_ai_log.md</code> &nbsp;|&nbsp; Sidecar: <code style="display:inline;padding:2px 6px">_handover.json</code></div>
+<div class="meta">Generated: 2026-05-18 20:50 &nbsp;|&nbsp; Source: <code style="display:inline;padding:2px 6px">_ai_log.md</code> &nbsp;|&nbsp; Sidecar: <code style="display:inline;padding:2px 6px">_handover.json</code></div>
 
 <!-- ============================================================ -->
 <!-- AGENT INSTRUCTIONS                                            -->
@@ -62,27 +62,17 @@
 <div class="latest-session">
   <div class="session-status ok">Complete</div>
   <h2>Latest Session Snapshot</h2>
-  <p><strong>Session:</strong> 2026-05-16</p>
+  <p><strong>Session:</strong> 2026-05-18</p>
   <p><strong>Agent:</strong> Claude Sonnet 4.6</p>
-  <p><strong>Goal:</strong> Fix Codex startup warnings — 16 SKILL.md files failing to load due to invalid YAML frontmatter.</p>
-  <p><strong>Outcome:</strong> All 16 Codex SKILL.md warnings resolved; root cause was UTF-8 BOM prepended by the Edit tool, not missing frontmatter content per se.</p>
+  <p><strong>Goal:</strong> Explore graphify skill feasibility; redesign session startup flow for speed.</p>
+  <p><strong>Outcome:</strong> Session startup redesigned around a ≤20-line state card; full history remains accessible via `--full` flag. Global manuscript writing conventions added.</p>
   <p><strong>Next steps:</strong> none</p>
-  <p><strong>Git ref:</strong> 7b65077</p>
+  <p><strong>Git ref:</strong> 74fbcff</p>
   <h3>Files touched</h3>
   <ul>
-  <li>`~/.agents/skills/catch-up/SKILL.md` — added YAML frontmatter (`name`, `description`)</li>
-  <li>`~/.agents/skills/close/SKILL.md` — added YAML frontmatter</li>
-  <li>`~/.agents/skills/family/SKILL.md` — added YAML frontmatter</li>
-  <li>`~/.agents/skills/snapshot/SKILL.md` — added YAML frontmatter</li>
-  <li>`~/.agents/skills/work/SKILL.md` — added YAML frontmatter</li>
-  <li>`~/.agents/skills/research-catch-up/SKILL.md` — added YAML frontmatter</li>
-  <li>`~/.agents/skills/research-close/SKILL.md` — added YAML frontmatter</li>
-  <li>`~/.agents/skills/research-family/SKILL.md` — added YAML frontmatter</li>
-  <li>`~/.agents/skills/research-snapshot/SKILL.md` — added YAML frontmatter</li>
-  <li>`~/.agents/skills/research-work/SKILL.md` — added YAML frontmatter</li>
-  <li>All 12 affected `SKILL.md` files — stripped UTF-8 BOM (root cause of Codex rejection)</li>
-  <li>`~/.claude/projects/.../memory/feedback_ps1_encoding.md` — expanded to document BOM issue alongside curly-quote issue</li>
-  <li>`AI_auto/known_issues.md` — added issue #11 (Edit/Write tool writes UTF-8 BOM)</li>
+  <li>`~/.claude/commands/work.md` — added fast-load flow: reads `_state/current.md` by default; `--full` flag restores legacy full read of AI log + handover</li>
+  <li>`~/.claude/commands/close.md` — added step 3.7: write `_state/current.md` state card (≤20 lines) after each session close</li>
+  <li>`~/.claude/CLAUDE.md` — added `## Manuscript writing conventions` section (Eq. refs, Harvard cite, italic paragraph headers, intuition paragraphs after all proofs)</li>
 </ul>
 </div>
 
@@ -97,7 +87,6 @@
 <h2>Compressed sessions</h2>
 <br>
 <ul>
-  <li><strong>2026-04-22</strong> (Codex): Link the AI_auto infrastructure project to its Overleaf project and... → `AI_auto` is now linked to the Overleaf project through a real `Overleaf_source/` clone...</li>
   <li><strong>2026-04-22 Close</strong> (Codex): Close the AI_auto working session after linking Overleaf and prepar... → `AI_auto` is linked to Overleaf, the Overleaf clone is clean and synced, and `slides_ma...</li>
   <li><strong>2026-04-22</strong> (Codex): Revise `slides_main_v2.tex` so the DTU quotes appear on the front p... → `slides_main_v2.tex` now starts with the title page plus DTU rule quote, followed direc...</li>
   <li><strong>2026-04-22</strong> (Codex): Create a condensed 10-slide version of the DTU AI infrastructure me... -&gt; New file `slides_main_v2_10slides.tex` exists locally with exactly 10 frames. It has no...</li>
@@ -113,38 +102,8 @@
   <li><strong>2026-05-04</strong> (Codex): Make explanatory LaTeX source comments a standard part of helpi 24 ... -&gt; Future one-pagers generated through `helpi 24` should include concise `% Intuition:`, `...</li>
   <li><strong>2026-05-04</strong> (Codex): Tighten helpi 24 one-pager style: plainer wording, numbered equatio... -&gt; Future generated one-pagers should avoid dense unexplained terms, use numbered `equatio...</li>
   <li><strong>2026-05-08</strong> (Claude): Create an anonymous Google Forms survey for an AI-assisted research... -&gt; - Danish form created via Google Apps Script: &quot;AI-assisteret forskning: praksis, infras...</li>
+  <li><strong>2026-05-15</strong> (Claude): AI infrastructure maintenance — fix helpi crash in Gemini, design a... -&gt; All three agents (Claude, Codex, Gemini) now share session-management skills via ~/.age...</li>
 </ul>
-<br>
-<hr>
-<br>
-<h2>Session 2026-05-15</h2>
-<p><strong>Agent:</strong> Claude Sonnet 4.6</p>
-<p><strong>Goal:</strong> AI infrastructure maintenance — fix helpi crash in Gemini, design and implement grill-paper/grill-edit skills, migrate session skills to shared ~/.agents/skills/, audit and harden platform error-correction log propagation to all agents.</p>
-<p><strong>Files touched:</strong></p>
-<ul>
-  <li>`helpi.ps1` -- wrapped PSConsoleReadLine::AddToHistory in try/catch to fix crash in non-interactive shells (issue #10)</li>
-  <li>`known_issues.md` -- added issue #10 (PSConsoleReadLine crash)</li>
-  <li>`infrastructure.html` -- added grill-paper/grill-edit to command table; rewrote Section H to cover shared agent skills and three-agent capability matrix</li>
-  <li>`generate_handover.ps1` -- added complete helpi 1-24 table and platform facts block (R/Python paths, known_issues.md proactive read) to every generated per-project AGENTS.md</li>
-  <li>`~/.agents/skills/research-work/SKILL.md` (+ alias `work/`) -- new shared session-open skill for Codex/Gemini/Claude</li>
-  <li>`~/.agents/skills/research-close/SKILL.md` (+ alias `close/`) -- new shared session-close skill; step 3.2 updated to use known_issues.md as single source of truth</li>
-  <li>`~/.agents/skills/research-snapshot/SKILL.md` (+ alias `snapshot/`) -- new shared snapshot skill</li>
-  <li>`~/.agents/skills/research-family/SKILL.md` (+ alias `family/`) -- new shared feeder-registration skill</li>
-  <li>`~/.agents/skills/grill-paper/SKILL.md` + `~/.claude/commands/grill-paper.md` -- new pre-submission stress-test skill with dual 0-10 grading (paper quality + author understanding), three-phase interview, persistent grill_log.md</li>
-  <li>`~/.agents/skills/grill-edit/SKILL.md` + `~/.claude/commands/grill-edit.md` -- new edit-phase skill that works through grill_log.md issue by issue and records author decisions</li>
-  <li>`~/.gemini/AGENTS.md` -- added shared skills table, complete helpi 1-24 table, proactive known_issues.md read instruction</li>
-  <li>`~/.codex/config.toml` -- added complete helpi 1-24 table, changed known_issues.md reference to proactive read instruction</li>
-  <li>`~/.claude/CLAUDE.md` -- added complete helpi 1-24 table</li>
-  <li>`~/.claude/commands/close.md` -- synced step 3.2 to match shared skill (known_issues.md as single source of truth)</li>
-</ul>
-<p><strong>Outcome:</strong> All three agents (Claude, Codex, Gemini) now share session-management skills via ~/.agents/skills/, see platform facts and known_issues.md proactively in every context, have the complete helpi 1-24 table, and have access to grill-paper/grill-edit for pre-submission paper quality checks.</p>
-<p><strong>Next steps:</strong></p>
-<ul>
-  <li>Run helpi 7 AI_auto to regenerate handover after this close</li>
-  <li>Consider installing remaining Matt Pocock skills in Codex/Gemini if useful</li>
-  <li>Mistral Vibe CLI integration deferred until shared skills are stable</li>
-</ul>
-<p><strong>Git ref:</strong> 880512c</p>
 <br>
 <hr>
 <br>
@@ -207,7 +166,22 @@
 </ul>
 <p><strong>Outcome:</strong> All 16 Codex SKILL.md warnings resolved; root cause was UTF-8 BOM prepended by the Edit tool, not missing frontmatter content per se.</p>
 <p><strong>Next steps:</strong> none</p>
-<p><strong>Git ref:</strong> 7b65077</p>
+<p><strong>Git ref:</strong> 7b65077</p>
+<br>
+<hr>
+<br>
+<h2>Session 2026-05-18</h2>
+<p><strong>Agent:</strong> Claude Sonnet 4.6</p>
+<p><strong>Goal:</strong> Explore graphify skill feasibility; redesign session startup flow for speed.</p>
+<p><strong>Files touched:</strong></p>
+<ul>
+  <li>`~/.claude/commands/work.md` — added fast-load flow: reads `_state/current.md` by default; `--full` flag restores legacy full read of AI log + handover</li>
+  <li>`~/.claude/commands/close.md` — added step 3.7: write `_state/current.md` state card (≤20 lines) after each session close</li>
+  <li>`~/.claude/CLAUDE.md` — added `## Manuscript writing conventions` section (Eq. refs, Harvard cite, italic paragraph headers, intuition paragraphs after all proofs)</li>
+</ul>
+<p><strong>Outcome:</strong> Session startup redesigned around a ≤20-line state card; full history remains accessible via `--full` flag. Global manuscript writing conventions added.</p>
+<p><strong>Next steps:</strong> none</p>
+<p><strong>Git ref:</strong> 74fbcff</p>
 <br>
 
 </div>
@@ -224,7 +198,6 @@
 
 ## Compressed sessions
 
-- **2026-04-22** (Codex): Link the AI_auto infrastructure project to its Overleaf project and... → `AI_auto` is now linked to the Overleaf project through a real `Overleaf_source/` clone...
 - **2026-04-22 Close** (Codex): Close the AI_auto working session after linking Overleaf and prepar... → `AI_auto` is linked to Overleaf, the Overleaf clone is clean and synced, and `slides_ma...
 - **2026-04-22** (Codex): Revise `slides_main_v2.tex` so the DTU quotes appear on the front p... → `slides_main_v2.tex` now starts with the title page plus DTU rule quote, followed direc...
 - **2026-04-22** (Codex): Create a condensed 10-slide version of the DTU AI infrastructure me... -&gt; New file `slides_main_v2_10slides.tex` exists locally with exactly 10 frames. It has no...
@@ -240,33 +213,7 @@
 - **2026-05-04** (Codex): Make explanatory LaTeX source comments a standard part of helpi 24 ... -&gt; Future one-pagers generated through `helpi 24` should include concise `% Intuition:`, `...
 - **2026-05-04** (Codex): Tighten helpi 24 one-pager style: plainer wording, numbered equatio... -&gt; Future generated one-pagers should avoid dense unexplained terms, use numbered `equatio...
 - **2026-05-08** (Claude): Create an anonymous Google Forms survey for an AI-assisted research... -&gt; - Danish form created via Google Apps Script: "AI-assisteret forskning: praksis, infras...
-
----
-
-## Session 2026-05-15
-**Agent:** Claude Sonnet 4.6
-**Goal:** AI infrastructure maintenance — fix helpi crash in Gemini, design and implement grill-paper/grill-edit skills, migrate session skills to shared ~/.agents/skills/, audit and harden platform error-correction log propagation to all agents.
-**Files touched:**
-- `helpi.ps1` -- wrapped PSConsoleReadLine::AddToHistory in try/catch to fix crash in non-interactive shells (issue #10)
-- `known_issues.md` -- added issue #10 (PSConsoleReadLine crash)
-- `infrastructure.html` -- added grill-paper/grill-edit to command table; rewrote Section H to cover shared agent skills and three-agent capability matrix
-- `generate_handover.ps1` -- added complete helpi 1-24 table and platform facts block (R/Python paths, known_issues.md proactive read) to every generated per-project AGENTS.md
-- `~/.agents/skills/research-work/SKILL.md` (+ alias `work/`) -- new shared session-open skill for Codex/Gemini/Claude
-- `~/.agents/skills/research-close/SKILL.md` (+ alias `close/`) -- new shared session-close skill; step 3.2 updated to use known_issues.md as single source of truth
-- `~/.agents/skills/research-snapshot/SKILL.md` (+ alias `snapshot/`) -- new shared snapshot skill
-- `~/.agents/skills/research-family/SKILL.md` (+ alias `family/`) -- new shared feeder-registration skill
-- `~/.agents/skills/grill-paper/SKILL.md` + `~/.claude/commands/grill-paper.md` -- new pre-submission stress-test skill with dual 0-10 grading (paper quality + author understanding), three-phase interview, persistent grill_log.md
-- `~/.agents/skills/grill-edit/SKILL.md` + `~/.claude/commands/grill-edit.md` -- new edit-phase skill that works through grill_log.md issue by issue and records author decisions
-- `~/.gemini/AGENTS.md` -- added shared skills table, complete helpi 1-24 table, proactive known_issues.md read instruction
-- `~/.codex/config.toml` -- added complete helpi 1-24 table, changed known_issues.md reference to proactive read instruction
-- `~/.claude/CLAUDE.md` -- added complete helpi 1-24 table
-- `~/.claude/commands/close.md` -- synced step 3.2 to match shared skill (known_issues.md as single source of truth)
-**Outcome:** All three agents (Claude, Codex, Gemini) now share session-management skills via ~/.agents/skills/, see platform facts and known_issues.md proactively in every context, have the complete helpi 1-24 table, and have access to grill-paper/grill-edit for pre-submission paper quality checks.
-**Next steps:**
-- Run helpi 7 AI_auto to regenerate handover after this close
-- Consider installing remaining Matt Pocock skills in Codex/Gemini if useful
-- Mistral Vibe CLI integration deferred until shared skills are stable
-**Git ref:** 880512c
+- **2026-05-15** (Claude): AI infrastructure maintenance — fix helpi crash in Gemini, design a... -&gt; All three agents (Claude, Codex, Gemini) now share session-management skills via ~/.age...
 
 ---
 
@@ -324,6 +271,19 @@
 **Outcome:** All 16 Codex SKILL.md warnings resolved; root cause was UTF-8 BOM prepended by the Edit tool, not missing frontmatter content per se.
 **Next steps:** none
 **Git ref:** 7b65077
+
+---
+
+## Session 2026-05-18
+**Agent:** Claude Sonnet 4.6
+**Goal:** Explore graphify skill feasibility; redesign session startup flow for speed.
+**Files touched:**
+- `~/.claude/commands/work.md` — added fast-load flow: reads `_state/current.md` by default; `--full` flag restores legacy full read of AI log + handover
+- `~/.claude/commands/close.md` — added step 3.7: write `_state/current.md` state card (≤20 lines) after each session close
+- `~/.claude/CLAUDE.md` — added `## Manuscript writing conventions` section (Eq. refs, Harvard cite, italic paragraph headers, intuition paragraphs after all proofs)
+**Outcome:** Session startup redesigned around a ≤20-line state card; full history remains accessible via `--full` flag. Global manuscript writing conventions added.
+**Next steps:** none
+**Git ref:** 74fbcff
 </textarea>
 </div>
 
@@ -341,7 +301,8 @@
 <!-- ============================================================ -->
 <div class="section">
   <h2>Overleaf Git History (last 20 commits)</h2>
-  <pre>853905b Auto-backup 2026-05-16 11:07
+  <pre>a77110c Local edits 2026-05-16 22:33
+853905b Auto-backup 2026-05-16 11:07
 8744edb Auto-backup 2026-05-08 15:09
 506579d Auto-backup 2026-05-04 08:45
 8ef020b Auto-backup 2026-04-24 11:08
@@ -359,8 +320,7 @@ aa00230 Update on Overleaf.
 e2d56cf Local edits 2026-04-22 14:02
 65cfb3f Local edits 2026-04-22 14:01
 fb4534f Local edits 2026-04-22 13:42
-4216e7c Local edits 2026-04-19 16:23
-697f643 Local edits 2026-04-19 15:55</pre>
+4216e7c Local edits 2026-04-19 16:23</pre>
 </div>
 
 </body>

@@ -1,28 +1,18 @@
 {
   "project": "AI_auto",
-  "generated": "2026-05-16 22:20",
+  "generated": "2026-05-18 20:50",
   "source": "_ai_log.md",
   "latest_session": {
-    "title": "2026-05-16",
+    "title": "2026-05-18",
     "agent": "Claude Sonnet 4.6",
-    "goal": "Fix Codex startup warnings — 16 SKILL.md files failing to load due to invalid YAML frontmatter.",
-    "outcome": "All 16 Codex SKILL.md warnings resolved; root cause was UTF-8 BOM prepended by the Edit tool, not missing frontmatter content per se.",
+    "goal": "Explore graphify skill feasibility; redesign session startup flow for speed.",
+    "outcome": "Session startup redesigned around a ≤20-line state card; full history remains accessible via `--full` flag. Global manuscript writing conventions added.",
     "next_steps": "none",
-    "git_ref": "7b65077",
+    "git_ref": "74fbcff",
     "files_touched": [
-      "`~/.agents/skills/catch-up/SKILL.md` — added YAML frontmatter (`name`, `description`)",
-      "`~/.agents/skills/close/SKILL.md` — added YAML frontmatter",
-      "`~/.agents/skills/family/SKILL.md` — added YAML frontmatter",
-      "`~/.agents/skills/snapshot/SKILL.md` — added YAML frontmatter",
-      "`~/.agents/skills/work/SKILL.md` — added YAML frontmatter",
-      "`~/.agents/skills/research-catch-up/SKILL.md` — added YAML frontmatter",
-      "`~/.agents/skills/research-close/SKILL.md` — added YAML frontmatter",
-      "`~/.agents/skills/research-family/SKILL.md` — added YAML frontmatter",
-      "`~/.agents/skills/research-snapshot/SKILL.md` — added YAML frontmatter",
-      "`~/.agents/skills/research-work/SKILL.md` — added YAML frontmatter",
-      "All 12 affected `SKILL.md` files — stripped UTF-8 BOM (root cause of Codex rejection)",
-      "`~/.claude/projects/.../memory/feedback_ps1_encoding.md` — expanded to document BOM issue alongside curly-quote issue",
-      "`AI_auto/known_issues.md` — added issue #11 (Edit/Write tool writes UTF-8 BOM)"
+      "`~/.claude/commands/work.md` — added fast-load flow: reads `_state/current.md` by default; `--full` flag restores legacy full read of AI log + handover",
+      "`~/.claude/commands/close.md` — added step 3.7: write `_state/current.md` state card (≤20 lines) after each session close",
+      "`~/.claude/CLAUDE.md` — added `## Manuscript writing conventions` section (Eq. refs, Harvard cite, italic paragraph headers, intuition paragraphs after all proofs)"
     ]
   },
   "latest_session_complete": true,
