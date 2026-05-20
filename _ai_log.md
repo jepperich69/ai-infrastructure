@@ -4,7 +4,6 @@
 
 ## Compressed sessions
 
-- **2026-04-22 Close** (Codex): Close the AI_auto working session after linking Overleaf and prepar... → `AI_auto` is linked to Overleaf, the Overleaf clone is clean and synced, and `slides_ma...
 - **2026-04-22** (Codex): Revise `slides_main_v2.tex` so the DTU quotes appear on the front p... → `slides_main_v2.tex` now starts with the title page plus DTU rule quote, followed direc...
 - **2026-04-22** (Codex): Create a condensed 10-slide version of the DTU AI infrastructure me... -> New file `slides_main_v2_10slides.tex` exists locally with exactly 10 frames. It has no...
 - **2026-04-22 Close** (Codex): Close the AI_auto slide-editing session after preparing the condens... -> The full V2 deck and the condensed 10-slide deck are in place. The Overleaf source repo...
@@ -20,24 +19,7 @@
 - **2026-05-04** (Codex): Tighten helpi 24 one-pager style: plainer wording, numbered equatio... -> Future generated one-pagers should avoid dense unexplained terms, use numbered `equatio...
 - **2026-05-08** (Claude): Create an anonymous Google Forms survey for an AI-assisted research... -> - Danish form created via Google Apps Script: "AI-assisteret forskning: praksis, infras...
 - **2026-05-15** (Claude): AI infrastructure maintenance — fix helpi crash in Gemini, design a... -> All three agents (Claude, Codex, Gemini) now share session-management skills via ~/.age...
-
----
-
-## Session 2026-05-16
-**Agent:** Claude Sonnet 4.6
-**Goal:** Complete the infrastructure session: commit remaining changes, design and implement /catch-up skill for proactive known-issue remediation, add status fields to known_issues.md.
-**Files touched:**
-- `generate_handover.ps1` -- committed platform facts block (platform paths + known_issues.md proactive read in every generated AGENTS.md)
-- `known_issues.md` -- added Status: fields (platform-fact / fixed / open) to all 10 issues; updated "Adding new entries" section with format for open entries (Affects/Fix fields)
-- `~/.agents/skills/research-catch-up/SKILL.md` (+ alias `catch-up/`) -- new skill: sweeps open issues, applies fixes, marks them fixed, commits
-- `~/.claude/commands/catch-up.md` -- Claude command copy of the catch-up skill
-- `~/.agents/skills/research-close/SKILL.md` + `~/.agents/skills/close/SKILL.md` + `~/.claude/commands/close.md` -- step 3.2 updated: new issues logged as open/platform-fact with Affects/Fix fields; prompt user to run /catch-up when open issue is logged
-- `~/.gemini/AGENTS.md` -- added catch-up row to shared skills table
-- `~/.codex/config.toml` -- added AI_auto session instruction to run /catch-up on open
-- `~/.claude/CLAUDE.md` -- added catch-up instruction to AI infrastructure project detection section
-**Outcome:** The infrastructure now has a full fix loop: /close logs new open issues with exact fix instructions, /catch-up sweeps them and applies fixes, known_issues.md is the single source of truth for all agents.
-**Next steps:** none
-**Git ref:** caca18d
+- **2026-05-16** (Claude): Complete the infrastructure session: commit remaining changes, desi... -> The infrastructure now has a full fix loop: /close logs new open issues with exact fix ...
 
 ---
 
@@ -90,3 +72,16 @@
 **Outcome:** Session startup redesigned around a ≤20-line state card; full history remains accessible via `--full` flag. Global manuscript writing conventions added.
 **Next steps:** none
 **Git ref:** 74fbcff
+
+---
+
+## Session 2026-05-20
+**Agent:** Claude Sonnet 4.6
+**Goal:** Explore mobile access options for research projects — discussing papers on the go.
+**Files touched:**
+- `~/.claude/settings.json` — added then reverted `remoteControlAtStartup: true` (kept manual)
+**Outcome:** Claude Remote Control is the best mobile option; Termux+Gemini CLI blocked by Google Advanced Protection on user's phone.
+**Next steps:**
+- Use `claude remote-control` manually when needed; scan QR code from Claude Android app
+- Gemini CLI voice extensions exist if Termux becomes available later (gemini-cli-voice-extension, gemini-tts-mcp)
+**Git ref:** 3c60ad6

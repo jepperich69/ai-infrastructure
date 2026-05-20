@@ -1,6 +1,6 @@
-# State — 2026-05-18
+# State — 2026-05-20
 **Phase:** Active maintenance
-**Last session:** Redesigned session startup flow to use a ≤20-line state card; added global manuscript writing conventions.
-**Next:** none
-**Git ref:** 74fbcff
+**Last session:** Explored mobile access options; Claude Remote Control is the best option, Termux blocked by Advanced Protection.
+**Next:** Use `claude remote-control` manually when mobile access needed
+**Git ref:** 3c60ad6
 **Agent:** Claude Sonnet 4.6

@@ -52,3 +52,10 @@
 ## Archived 2026-05-18 (1 entry)
 
 - **2026-04-22** (Codex): Link the AI_auto infrastructure project to its Overleaf project and... → `AI_auto` is now linked to the Overleaf project through a real `Overleaf_source/` clone...
+
+
+---
+
+## Archived 2026-05-20 (1 entry)
+
+- **2026-04-22 Close** (Codex): Close the AI_auto working session after linking Overleaf and prepar... → `AI_auto` is linked to Overleaf, the Overleaf clone is clean and synced, and `slides_ma...
