@@ -4,8 +4,6 @@
 
 ## Compressed sessions
 
-- **2026-04-22** (Codex): Revise `slides_main_v2.tex` so the DTU quotes appear on the front p... → `slides_main_v2.tex` now starts with the title page plus DTU rule quote, followed direc...
-- **2026-04-22** (Codex): Create a condensed 10-slide version of the DTU AI infrastructure me... -> New file `slides_main_v2_10slides.tex` exists locally with exactly 10 frames. It has no...
 - **2026-04-22 Close** (Codex): Close the AI_auto slide-editing session after preparing the condens... -> The full V2 deck and the condensed 10-slide deck are in place. The Overleaf source repo...
 - **2026-04-22** (Codex): Make Codex automatically use the project implied by the directory i... -> Future Codex sessions should infer the active project from the current working director...
 - **2026-04-23** (Claude): Design discussion — AI log as a certificate of conduct; immutabilit... -> Identified five properties that would make the log certificate-grade (scope declaration...
@@ -20,45 +18,8 @@
 - **2026-05-08** (Claude): Create an anonymous Google Forms survey for an AI-assisted research... -> - Danish form created via Google Apps Script: "AI-assisteret forskning: praksis, infras...
 - **2026-05-15** (Claude): AI infrastructure maintenance — fix helpi crash in Gemini, design a... -> All three agents (Claude, Codex, Gemini) now share session-management skills via ~/.age...
 - **2026-05-16** (Claude): Complete the infrastructure session: commit remaining changes, desi... -> The infrastructure now has a full fix loop: /close logs new open issues with exact fix ...
-
----
-
-## Session 2026-05-16
-**Agent:** Codex
-**Goal:** Diagnose and self-fix any obvious AI_auto infrastructure issue.
-**Files touched:**
-- `status.ps1` -- replaced a mojibake box-drawing dashboard separator with an ASCII separator so `helpi 13` renders cleanly in agent terminals.
-- `helpi.ps1` -- made browser-opening commands best-effort so non-interactive shells warn instead of throwing on `Start-Process`.
-- `ai_log_tools.ps1` -- fixed latest-session parsing so separators do not attach to `Git ref` and same-day sessions resolve by file order.
-- `AGENTS.md`, `_handover.html`, `_handover.json`, `Overleaf_source/_handover_JR.md` -- regenerated handover context after the log/parser fixes.
-- `_session_draft.md`, `_state/last_project.txt` -- refreshed by the handover command run.
-- `_ai_log.md` -- logged this maintenance fix.
-**Outcome:** `helpi 13` now prints a clean dashboard header, `helpi 15` warns cleanly when browser opening is blocked, and generated handovers identify the newest same-day session correctly.
-**Next steps:** none
-**Git ref:** bd7595d
-
----
-
-## Session 2026-05-16
-**Agent:** Claude Sonnet 4.6
-**Goal:** Fix Codex startup warnings — 16 SKILL.md files failing to load due to invalid YAML frontmatter.
-**Files touched:**
-- `~/.agents/skills/catch-up/SKILL.md` — added YAML frontmatter (`name`, `description`)
-- `~/.agents/skills/close/SKILL.md` — added YAML frontmatter
-- `~/.agents/skills/family/SKILL.md` — added YAML frontmatter
-- `~/.agents/skills/snapshot/SKILL.md` — added YAML frontmatter
-- `~/.agents/skills/work/SKILL.md` — added YAML frontmatter
-- `~/.agents/skills/research-catch-up/SKILL.md` — added YAML frontmatter
-- `~/.agents/skills/research-close/SKILL.md` — added YAML frontmatter
-- `~/.agents/skills/research-family/SKILL.md` — added YAML frontmatter
-- `~/.agents/skills/research-snapshot/SKILL.md` — added YAML frontmatter
-- `~/.agents/skills/research-work/SKILL.md` — added YAML frontmatter
-- All 12 affected `SKILL.md` files — stripped UTF-8 BOM (root cause of Codex rejection)
-- `~/.claude/projects/.../memory/feedback_ps1_encoding.md` — expanded to document BOM issue alongside curly-quote issue
-- `AI_auto/known_issues.md` — added issue #11 (Edit/Write tool writes UTF-8 BOM)
-**Outcome:** All 16 Codex SKILL.md warnings resolved; root cause was UTF-8 BOM prepended by the Edit tool, not missing frontmatter content per se.
-**Next steps:** none
-**Git ref:** 7b65077
+- **2026-05-16** (Codex): Diagnose and self-fix any obvious AI_auto infrastructure issue. -> `helpi 13` now prints a clean dashboard header, `helpi 15` warns cleanly when browser o...
+- **2026-05-16** (Claude): Fix Codex startup warnings — 16 SKILL.md files failing to load due ... -> All 16 Codex SKILL.md warnings resolved; root cause was UTF-8 BOM prepended by the Edit...
 
 ---
 
@@ -86,7 +47,9 @@
 - Gemini CLI voice extensions exist if Termux becomes available later (gemini-cli-voice-extension, gemini-tts-mcp)
 **Git ref:** 3c60ad6
 
-## Session 2026-05-21
+---
+
+## Session 2026-05-21 (Gemini CLI)
 **Agent:** Gemini CLI
 **Goal:** Create a 20-slide presentation deck for the division meeting on AI infrastructure and working habits.
 **Files touched:**
@@ -94,3 +57,20 @@
 **Outcome:** A comprehensive, technically rich, and strategically framed 20-slide presentation is complete, compiled, and synced to Overleaf. It covers architecture, human adaptation, and institutional call-to-action.
 **Next steps:** none
 **Git ref:** f4175b2
+
+---
+
+## Session 2026-05-21
+**Agent:** Claude Sonnet 4.6
+**Goal:** Design and build a `/pipeline` skill — background multi-agent job (Claude -> Gemini -> Codex -> Claude) that runs any task asynchronously, treats the full run as a session, and auto-closes with log + handover update on completion.
+**Files touched:**
+- `~/.claude/skills/pipeline/SKILL.md` — created new skill: configurable agent pipeline, detached PS1 background job, session close via headless Claude subprocess calling helpi 7
+- `~/.claude/projects/.../memory/project_pipeline_skill.md` — new memory entry for /pipeline
+- `~/.claude/projects/.../memory/MEMORY.md` — added /pipeline entry to index
+- `Overleaf_source/slides_division_meeting.tex` — redesigned slide 10 (circular multi-agent diagram), added new slide 11 (/pipeline pipeline diagram); old slide 11+ renumbered
+- `infrastructure.html` — added /pipeline to skills reference table and agent capability matrix
+**Outcome:** `/pipeline` skill is live; slide deck updated with circular workflow diagram and new pipeline slide; infrastructure doc updated.
+**Next steps:**
+- First real pipeline run to validate PS1 generation and agent CLI invocations
+- Run `helpi 16` to regenerate infrastructure_full.html from updated infrastructure.html
+**Git ref:** 22a9fcd

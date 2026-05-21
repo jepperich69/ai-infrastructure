@@ -1,6 +1,8 @@
-# State — 2026-05-20
-**Phase:** Active maintenance
-**Last session:** Explored mobile access options; Claude Remote Control is the best option, Termux blocked by Advanced Protection.
-**Next:** Use `claude remote-control` manually when mobile access needed
-**Git ref:** 3c60ad6
+# State -- 2026-05-21
+**Phase:** Active development
+**Last session:** Built /pipeline skill (background multi-agent job: Claude->Gemini->Codex->Claude, async, auto-closes with log + handover); updated slides and infrastructure doc.
+**Next:**
+- First real pipeline run to validate PS1 generation and CLI invocations
+- Run `helpi 16` to regenerate infrastructure_full.html
+**Git ref:** 22a9fcd
 **Agent:** Claude Sonnet 4.6

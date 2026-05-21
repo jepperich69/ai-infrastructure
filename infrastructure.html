@@ -1899,6 +1899,12 @@ claude --full-auto        # launch Claude Code without approval pauses
       <td>Edit phase after <code>/grill-paper</code>. Works through master issue list (blocking &rarr; significant &rarr; minor), proposes concrete edits, records author decisions (approve / adjust / dismiss with reason), updates verdict to READY when all blocking issues resolved.</td>
       <td><code>/grill-edit</code></td>
     </tr>
+    <tr>
+      <td><code>pipeline</code></td>
+      <td><code>/pipeline "task" --project Pub_XXX</code><br><code>/pipeline "task" --agents gemini,claude,codex,claude</code></td>
+      <td>Background multi-agent job. Chains Claude &rarr; Gemini &rarr; Codex &rarr; Claude (configurable via <code>--agents</code>). Each agent receives the task plus all prior output. Runs as a detached PowerShell process &mdash; you leave, it runs. On completion: <code>final.md</code> opens, a headless Claude subprocess writes a session block to <code>_ai_log.md</code>, and calls <code>helpi 7</code> to regenerate the handover. Output lands in <code>AI_auto\_pipelines\YYYY-MM-DD_HH-MM-SS\</code>. Treats the full run as one session with auto-close. Requires <code>--project</code> for log and handover update; without it, produces files only.</td>
+      <td><code>/pipeline</code> (Claude-only skill; also usable via <code>claude -p</code> for Codex/Gemini calls within the pipeline)</td>
+    </tr>
   </table>
 
   <h3>Gemini CLI</h3>
@@ -1925,6 +1931,7 @@ claude --full-auto        # launch Claude Code without approval pauses
     <tr><td>Snapshot, family, grill-paper, grill-edit</td><td>&#10003;</td><td>&#10003; via skills</td><td>&#10003; via skills</td></tr>
     <tr><td>Run helpi commands</td><td>&#10003;</td><td>&#10003;</td><td>&#10003; (use <code>! helpi N proj -Force</code>)</td></tr>
     <tr><td>Read _ai_log.md and feeders</td><td>&#10003;</td><td>&#10003;</td><td>&#10003;</td></tr>
+    <tr><td>Background pipeline (<code>/pipeline</code>)</td><td>&#10003; (orchestrates all agents)</td><td>&mdash; (runs as a round inside pipeline)</td><td>&mdash; (runs as a round inside pipeline)</td></tr>
     <tr><td>Reviewer response loop (<code>/respond</code>)</td><td>&#10003;</td><td>&#10007;</td><td>&#10007;</td></tr>
     <tr><td>Submission package (<code>/submit</code>)</td><td>&#10003;</td><td>&#10007;</td><td>&#10007;</td></tr>
     <tr><td>Auto-commit after every response</td><td>&#10003; (Stop hook)</td><td>&#10007;</td><td>&#10007;</td></tr>
