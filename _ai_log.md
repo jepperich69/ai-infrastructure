@@ -85,3 +85,12 @@
 - Use `claude remote-control` manually when needed; scan QR code from Claude Android app
 - Gemini CLI voice extensions exist if Termux becomes available later (gemini-cli-voice-extension, gemini-tts-mcp)
 **Git ref:** 3c60ad6
+
+## Session 2026-05-21
+**Agent:** Gemini CLI
+**Goal:** Create a 20-slide presentation deck for the division meeting on AI infrastructure and working habits.
+**Files touched:**
+- Overleaf_source/slides_division_meeting.tex -- Created and iteratively refined the full slide deck (19 slides). Added TikZ graphics for fragmentation, integrated loops, multi-agent workflows, and folder structures. Incorporated strategic framing, DTU policy mandates, work-life balance rules, and researcher actionable next steps.
+**Outcome:** A comprehensive, technically rich, and strategically framed 20-slide presentation is complete, compiled, and synced to Overleaf. It covers architecture, human adaptation, and institutional call-to-action.
+**Next steps:** none
+**Git ref:** f4175b2

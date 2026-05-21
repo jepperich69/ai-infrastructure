@@ -30,7 +30,7 @@
 <body>
 
 <h1>Handover Document &mdash; AI_auto</h1>
-<div class="meta">Generated: 2026-05-18 20:50 &nbsp;|&nbsp; Source: <code style="display:inline;padding:2px 6px">_ai_log.md</code> &nbsp;|&nbsp; Sidecar: <code style="display:inline;padding:2px 6px">_handover.json</code></div>
+<div class="meta">Generated: 2026-05-21 13:04 &nbsp;|&nbsp; Source: <code style="display:inline;padding:2px 6px">_ai_log.md</code> &nbsp;|&nbsp; Sidecar: <code style="display:inline;padding:2px 6px">_handover.json</code></div>
 
 <!-- ============================================================ -->
 <!-- AGENT INSTRUCTIONS                                            -->
@@ -62,17 +62,15 @@
 <div class="latest-session">
   <div class="session-status ok">Complete</div>
   <h2>Latest Session Snapshot</h2>
-  <p><strong>Session:</strong> 2026-05-18</p>
+  <p><strong>Session:</strong> 2026-05-20</p>
   <p><strong>Agent:</strong> Claude Sonnet 4.6</p>
-  <p><strong>Goal:</strong> Explore graphify skill feasibility; redesign session startup flow for speed.</p>
-  <p><strong>Outcome:</strong> Session startup redesigned around a ≤20-line state card; full history remains accessible via `--full` flag. Global manuscript writing conventions added.</p>
-  <p><strong>Next steps:</strong> none</p>
-  <p><strong>Git ref:</strong> 74fbcff</p>
+  <p><strong>Goal:</strong> Explore mobile access options for research projects &#226;€” discussing papers on the go.</p>
+  <p><strong>Outcome:</strong> Claude Remote Control is the best mobile option; Termux+Gemini CLI blocked by Google Advanced Protection on user&#39;s phone.</p>
+  <p><strong>Next steps:</strong> Use `claude remote-control` manually when needed; scan QR code from Claude Android app Gemini CLI voice extensions exist if Termux becomes available later (gemini-cli-voice-extension, gemini-tts-mcp)</p>
+  <p><strong>Git ref:</strong> 3c60ad6</p>
   <h3>Files touched</h3>
   <ul>
-  <li>`~/.claude/commands/work.md` — added fast-load flow: reads `_state/current.md` by default; `--full` flag restores legacy full read of AI log + handover</li>
-  <li>`~/.claude/commands/close.md` — added step 3.7: write `_state/current.md` state card (≤20 lines) after each session close</li>
-  <li>`~/.claude/CLAUDE.md` — added `## Manuscript writing conventions` section (Eq. refs, Harvard cite, italic paragraph headers, intuition paragraphs after all proofs)</li>
+  <li>`~/.claude/settings.json` &#226;€” added then reverted `remoteControlAtStartup: true` (kept manual)</li>
 </ul>
 </div>
 
@@ -87,13 +85,12 @@
 <h2>Compressed sessions</h2>
 <br>
 <ul>
-  <li><strong>2026-04-22 Close</strong> (Codex): Close the AI_auto working session after linking Overleaf and prepar... → `AI_auto` is linked to Overleaf, the Overleaf clone is clean and synced, and `slides_ma...</li>
-  <li><strong>2026-04-22</strong> (Codex): Revise `slides_main_v2.tex` so the DTU quotes appear on the front p... → `slides_main_v2.tex` now starts with the title page plus DTU rule quote, followed direc...</li>
+  <li><strong>2026-04-22</strong> (Codex): Revise `slides_main_v2.tex` so the DTU quotes appear on the front p... &#226;†’ `slides_main_v2.tex` now starts with the title page plus DTU rule quote, followed direc...</li>
   <li><strong>2026-04-22</strong> (Codex): Create a condensed 10-slide version of the DTU AI infrastructure me... -&gt; New file `slides_main_v2_10slides.tex` exists locally with exactly 10 frames. It has no...</li>
   <li><strong>2026-04-22 Close</strong> (Codex): Close the AI_auto slide-editing session after preparing the condens... -&gt; The full V2 deck and the condensed 10-slide deck are in place. The Overleaf source repo...</li>
   <li><strong>2026-04-22</strong> (Codex): Make Codex automatically use the project implied by the directory i... -&gt; Future Codex sessions should infer the active project from the current working director...</li>
-  <li><strong>2026-04-23</strong> (Claude): Design discussion — AI log as a certificate of conduct; immutabilit... -&gt; Identified five properties that would make the log certificate-grade (scope declaration...</li>
-  <li><strong>2026-04-23</strong> (Claude): Professionalise the infrastructure — log compression, /helpi comman... -&gt; Infrastructure professionalised: log compression keeps `_ai_log.md` lean automatically;...</li>
+  <li><strong>2026-04-23</strong> (Claude): Design discussion &#226;€” AI log as a certificate of conduct; immutabilit... -&gt; Identified five properties that would make the log certificate-grade (scope declaration...</li>
+  <li><strong>2026-04-23</strong> (Claude): Professionalise the infrastructure &#226;€” log compression, /helpi comman... -&gt; Infrastructure professionalised: log compression keeps `_ai_log.md` lean automatically;...</li>
   <li><strong>2026-04-24</strong> (Claude): Design the paper project naming convention and onboarding guide for... -&gt; Convention settled as `Pub_Topic_YourInitials` (driver = the person keeping the paper m...</li>
   <li><strong>2026-04-24</strong> (Claude): Multiple infrastructure improvements: incremental session draft log... -&gt; Session draft logging is live; collaborator handovers will appear in Overleaf after nex...</li>
   <li><strong>2026-04-27</strong> (Codex): Add a GitHub-facing README and introduction for the AI_auto reposit... -&gt; The GitHub repo now has a proper root README that introduces the infrastructure and exp...</li>
@@ -102,28 +99,9 @@
   <li><strong>2026-05-04</strong> (Codex): Make explanatory LaTeX source comments a standard part of helpi 24 ... -&gt; Future one-pagers generated through `helpi 24` should include concise `% Intuition:`, `...</li>
   <li><strong>2026-05-04</strong> (Codex): Tighten helpi 24 one-pager style: plainer wording, numbered equatio... -&gt; Future generated one-pagers should avoid dense unexplained terms, use numbered `equatio...</li>
   <li><strong>2026-05-08</strong> (Claude): Create an anonymous Google Forms survey for an AI-assisted research... -&gt; - Danish form created via Google Apps Script: &quot;AI-assisteret forskning: praksis, infras...</li>
-  <li><strong>2026-05-15</strong> (Claude): AI infrastructure maintenance — fix helpi crash in Gemini, design a... -&gt; All three agents (Claude, Codex, Gemini) now share session-management skills via ~/.age...</li>
+  <li><strong>2026-05-15</strong> (Claude): AI infrastructure maintenance &#226;€” fix helpi crash in Gemini, design a... -&gt; All three agents (Claude, Codex, Gemini) now share session-management skills via ~/.age...</li>
+  <li><strong>2026-05-16</strong> (Claude): Complete the infrastructure session: commit remaining changes, desi... -&gt; The infrastructure now has a full fix loop: /close logs new open issues with exact fix ...</li>
 </ul>
-<br>
-<hr>
-<br>
-<h2>Session 2026-05-16</h2>
-<p><strong>Agent:</strong> Claude Sonnet 4.6</p>
-<p><strong>Goal:</strong> Complete the infrastructure session: commit remaining changes, design and implement /catch-up skill for proactive known-issue remediation, add status fields to known_issues.md.</p>
-<p><strong>Files touched:</strong></p>
-<ul>
-  <li>`generate_handover.ps1` -- committed platform facts block (platform paths + known_issues.md proactive read in every generated AGENTS.md)</li>
-  <li>`known_issues.md` -- added Status: fields (platform-fact / fixed / open) to all 10 issues; updated &quot;Adding new entries&quot; section with format for open entries (Affects/Fix fields)</li>
-  <li>`~/.agents/skills/research-catch-up/SKILL.md` (+ alias `catch-up/`) -- new skill: sweeps open issues, applies fixes, marks them fixed, commits</li>
-  <li>`~/.claude/commands/catch-up.md` -- Claude command copy of the catch-up skill</li>
-  <li>`~/.agents/skills/research-close/SKILL.md` + `~/.agents/skills/close/SKILL.md` + `~/.claude/commands/close.md` -- step 3.2 updated: new issues logged as open/platform-fact with Affects/Fix fields; prompt user to run /catch-up when open issue is logged</li>
-  <li>`~/.gemini/AGENTS.md` -- added catch-up row to shared skills table</li>
-  <li>`~/.codex/config.toml` -- added AI_auto session instruction to run /catch-up on open</li>
-  <li>`~/.claude/CLAUDE.md` -- added catch-up instruction to AI infrastructure project detection section</li>
-</ul>
-<p><strong>Outcome:</strong> The infrastructure now has a full fix loop: /close logs new open issues with exact fix instructions, /catch-up sweeps them and applies fixes, known_issues.md is the single source of truth for all agents.</p>
-<p><strong>Next steps:</strong> none</p>
-<p><strong>Git ref:</strong> caca18d</p>
 <br>
 <hr>
 <br>
@@ -147,22 +125,22 @@
 <br>
 <h2>Session 2026-05-16</h2>
 <p><strong>Agent:</strong> Claude Sonnet 4.6</p>
-<p><strong>Goal:</strong> Fix Codex startup warnings — 16 SKILL.md files failing to load due to invalid YAML frontmatter.</p>
+<p><strong>Goal:</strong> Fix Codex startup warnings &#226;€” 16 SKILL.md files failing to load due to invalid YAML frontmatter.</p>
 <p><strong>Files touched:</strong></p>
 <ul>
-  <li>`~/.agents/skills/catch-up/SKILL.md` — added YAML frontmatter (`name`, `description`)</li>
-  <li>`~/.agents/skills/close/SKILL.md` — added YAML frontmatter</li>
-  <li>`~/.agents/skills/family/SKILL.md` — added YAML frontmatter</li>
-  <li>`~/.agents/skills/snapshot/SKILL.md` — added YAML frontmatter</li>
-  <li>`~/.agents/skills/work/SKILL.md` — added YAML frontmatter</li>
-  <li>`~/.agents/skills/research-catch-up/SKILL.md` — added YAML frontmatter</li>
-  <li>`~/.agents/skills/research-close/SKILL.md` — added YAML frontmatter</li>
-  <li>`~/.agents/skills/research-family/SKILL.md` — added YAML frontmatter</li>
-  <li>`~/.agents/skills/research-snapshot/SKILL.md` — added YAML frontmatter</li>
-  <li>`~/.agents/skills/research-work/SKILL.md` — added YAML frontmatter</li>
-  <li>All 12 affected `SKILL.md` files — stripped UTF-8 BOM (root cause of Codex rejection)</li>
-  <li>`~/.claude/projects/.../memory/feedback_ps1_encoding.md` — expanded to document BOM issue alongside curly-quote issue</li>
-  <li>`AI_auto/known_issues.md` — added issue #11 (Edit/Write tool writes UTF-8 BOM)</li>
+  <li>`~/.agents/skills/catch-up/SKILL.md` &#226;€” added YAML frontmatter (`name`, `description`)</li>
+  <li>`~/.agents/skills/close/SKILL.md` &#226;€” added YAML frontmatter</li>
+  <li>`~/.agents/skills/family/SKILL.md` &#226;€” added YAML frontmatter</li>
+  <li>`~/.agents/skills/snapshot/SKILL.md` &#226;€” added YAML frontmatter</li>
+  <li>`~/.agents/skills/work/SKILL.md` &#226;€” added YAML frontmatter</li>
+  <li>`~/.agents/skills/research-catch-up/SKILL.md` &#226;€” added YAML frontmatter</li>
+  <li>`~/.agents/skills/research-close/SKILL.md` &#226;€” added YAML frontmatter</li>
+  <li>`~/.agents/skills/research-family/SKILL.md` &#226;€” added YAML frontmatter</li>
+  <li>`~/.agents/skills/research-snapshot/SKILL.md` &#226;€” added YAML frontmatter</li>
+  <li>`~/.agents/skills/research-work/SKILL.md` &#226;€” added YAML frontmatter</li>
+  <li>All 12 affected `SKILL.md` files &#226;€” stripped UTF-8 BOM (root cause of Codex rejection)</li>
+  <li>`~/.claude/projects/.../memory/feedback_ps1_encoding.md` &#226;€” expanded to document BOM issue alongside curly-quote issue</li>
+  <li>`AI_auto/known_issues.md` &#226;€” added issue #11 (Edit/Write tool writes UTF-8 BOM)</li>
 </ul>
 <p><strong>Outcome:</strong> All 16 Codex SKILL.md warnings resolved; root cause was UTF-8 BOM prepended by the Edit tool, not missing frontmatter content per se.</p>
 <p><strong>Next steps:</strong> none</p>
@@ -175,13 +153,30 @@
 <p><strong>Goal:</strong> Explore graphify skill feasibility; redesign session startup flow for speed.</p>
 <p><strong>Files touched:</strong></p>
 <ul>
-  <li>`~/.claude/commands/work.md` — added fast-load flow: reads `_state/current.md` by default; `--full` flag restores legacy full read of AI log + handover</li>
-  <li>`~/.claude/commands/close.md` — added step 3.7: write `_state/current.md` state card (≤20 lines) after each session close</li>
-  <li>`~/.claude/CLAUDE.md` — added `## Manuscript writing conventions` section (Eq. refs, Harvard cite, italic paragraph headers, intuition paragraphs after all proofs)</li>
+  <li>`~/.claude/commands/work.md` &#226;€” added fast-load flow: reads `_state/current.md` by default; `--full` flag restores legacy full read of AI log + handover</li>
+  <li>`~/.claude/commands/close.md` &#226;€” added step 3.7: write `_state/current.md` state card (&#226;‰&#164;20 lines) after each session close</li>
+  <li>`~/.claude/CLAUDE.md` &#226;€” added `## Manuscript writing conventions` section (Eq. refs, Harvard cite, italic paragraph headers, intuition paragraphs after all proofs)</li>
 </ul>
-<p><strong>Outcome:</strong> Session startup redesigned around a ≤20-line state card; full history remains accessible via `--full` flag. Global manuscript writing conventions added.</p>
+<p><strong>Outcome:</strong> Session startup redesigned around a &#226;‰&#164;20-line state card; full history remains accessible via `--full` flag. Global manuscript writing conventions added.</p>
 <p><strong>Next steps:</strong> none</p>
-<p><strong>Git ref:</strong> 74fbcff</p>
+<p><strong>Git ref:</strong> 74fbcff</p>
+<br>
+<hr>
+<br>
+<h2>Session 2026-05-20</h2>
+<p><strong>Agent:</strong> Claude Sonnet 4.6</p>
+<p><strong>Goal:</strong> Explore mobile access options for research projects &#226;€” discussing papers on the go.</p>
+<p><strong>Files touched:</strong></p>
+<ul>
+  <li>`~/.claude/settings.json` &#226;€” added then reverted `remoteControlAtStartup: true` (kept manual)</li>
+</ul>
+<p><strong>Outcome:</strong> Claude Remote Control is the best mobile option; Termux+Gemini CLI blocked by Google Advanced Protection on user&#39;s phone.</p>
+<p><strong>Next steps:</strong></p>
+<ul>
+  <li>Use `claude remote-control` manually when needed; scan QR code from Claude Android app</li>
+  <li>Gemini CLI voice extensions exist if Termux becomes available later (gemini-cli-voice-extension, gemini-tts-mcp)</li>
+</ul>
+<p><strong>Git ref:</strong> 3c60ad6</p>
 <br>
 
 </div>
@@ -192,19 +187,18 @@
 <div class="section">
   <h2>Editable Source (_ai_log.md)</h2>
   <div class="label">Copy this, update it with your session entry, and paste back into _ai_log.md</div>
-  <textarea id="mdSource" spellcheck="false"># AI Session Log — AI Infrastructure Project
+  <textarea id="mdSource" spellcheck="false"># AI Session Log â€” AI Infrastructure Project
 
 ---
 
 ## Compressed sessions
 
-- **2026-04-22 Close** (Codex): Close the AI_auto working session after linking Overleaf and prepar... → `AI_auto` is linked to Overleaf, the Overleaf clone is clean and synced, and `slides_ma...
-- **2026-04-22** (Codex): Revise `slides_main_v2.tex` so the DTU quotes appear on the front p... → `slides_main_v2.tex` now starts with the title page plus DTU rule quote, followed direc...
+- **2026-04-22** (Codex): Revise `slides_main_v2.tex` so the DTU quotes appear on the front p... â†’ `slides_main_v2.tex` now starts with the title page plus DTU rule quote, followed direc...
 - **2026-04-22** (Codex): Create a condensed 10-slide version of the DTU AI infrastructure me... -&gt; New file `slides_main_v2_10slides.tex` exists locally with exactly 10 frames. It has no...
 - **2026-04-22 Close** (Codex): Close the AI_auto slide-editing session after preparing the condens... -&gt; The full V2 deck and the condensed 10-slide deck are in place. The Overleaf source repo...
 - **2026-04-22** (Codex): Make Codex automatically use the project implied by the directory i... -&gt; Future Codex sessions should infer the active project from the current working director...
-- **2026-04-23** (Claude): Design discussion — AI log as a certificate of conduct; immutabilit... -&gt; Identified five properties that would make the log certificate-grade (scope declaration...
-- **2026-04-23** (Claude): Professionalise the infrastructure — log compression, /helpi comman... -&gt; Infrastructure professionalised: log compression keeps `_ai_log.md` lean automatically;...
+- **2026-04-23** (Claude): Design discussion â€” AI log as a certificate of conduct; immutabilit... -&gt; Identified five properties that would make the log certificate-grade (scope declaration...
+- **2026-04-23** (Claude): Professionalise the infrastructure â€” log compression, /helpi comman... -&gt; Infrastructure professionalised: log compression keeps `_ai_log.md` lean automatically;...
 - **2026-04-24** (Claude): Design the paper project naming convention and onboarding guide for... -&gt; Convention settled as `Pub_Topic_YourInitials` (driver = the person keeping the paper m...
 - **2026-04-24** (Claude): Multiple infrastructure improvements: incremental session draft log... -&gt; Session draft logging is live; collaborator handovers will appear in Overleaf after nex...
 - **2026-04-27** (Codex): Add a GitHub-facing README and introduction for the AI_auto reposit... -&gt; The GitHub repo now has a proper root README that introduces the infrastructure and exp...
@@ -213,25 +207,8 @@
 - **2026-05-04** (Codex): Make explanatory LaTeX source comments a standard part of helpi 24 ... -&gt; Future one-pagers generated through `helpi 24` should include concise `% Intuition:`, `...
 - **2026-05-04** (Codex): Tighten helpi 24 one-pager style: plainer wording, numbered equatio... -&gt; Future generated one-pagers should avoid dense unexplained terms, use numbered `equatio...
 - **2026-05-08** (Claude): Create an anonymous Google Forms survey for an AI-assisted research... -&gt; - Danish form created via Google Apps Script: "AI-assisteret forskning: praksis, infras...
-- **2026-05-15** (Claude): AI infrastructure maintenance — fix helpi crash in Gemini, design a... -&gt; All three agents (Claude, Codex, Gemini) now share session-management skills via ~/.age...
-
----
-
-## Session 2026-05-16
-**Agent:** Claude Sonnet 4.6
-**Goal:** Complete the infrastructure session: commit remaining changes, design and implement /catch-up skill for proactive known-issue remediation, add status fields to known_issues.md.
-**Files touched:**
-- `generate_handover.ps1` -- committed platform facts block (platform paths + known_issues.md proactive read in every generated AGENTS.md)
-- `known_issues.md` -- added Status: fields (platform-fact / fixed / open) to all 10 issues; updated "Adding new entries" section with format for open entries (Affects/Fix fields)
-- `~/.agents/skills/research-catch-up/SKILL.md` (+ alias `catch-up/`) -- new skill: sweeps open issues, applies fixes, marks them fixed, commits
-- `~/.claude/commands/catch-up.md` -- Claude command copy of the catch-up skill
-- `~/.agents/skills/research-close/SKILL.md` + `~/.agents/skills/close/SKILL.md` + `~/.claude/commands/close.md` -- step 3.2 updated: new issues logged as open/platform-fact with Affects/Fix fields; prompt user to run /catch-up when open issue is logged
-- `~/.gemini/AGENTS.md` -- added catch-up row to shared skills table
-- `~/.codex/config.toml` -- added AI_auto session instruction to run /catch-up on open
-- `~/.claude/CLAUDE.md` -- added catch-up instruction to AI infrastructure project detection section
-**Outcome:** The infrastructure now has a full fix loop: /close logs new open issues with exact fix instructions, /catch-up sweeps them and applies fixes, known_issues.md is the single source of truth for all agents.
-**Next steps:** none
-**Git ref:** caca18d
+- **2026-05-15** (Claude): AI infrastructure maintenance â€” fix helpi crash in Gemini, design a... -&gt; All three agents (Claude, Codex, Gemini) now share session-management skills via ~/.age...
+- **2026-05-16** (Claude): Complete the infrastructure session: commit remaining changes, desi... -&gt; The infrastructure now has a full fix loop: /close logs new open issues with exact fix ...
 
 ---
 
@@ -253,21 +230,21 @@
 
 ## Session 2026-05-16
 **Agent:** Claude Sonnet 4.6
-**Goal:** Fix Codex startup warnings — 16 SKILL.md files failing to load due to invalid YAML frontmatter.
+**Goal:** Fix Codex startup warnings â€” 16 SKILL.md files failing to load due to invalid YAML frontmatter.
 **Files touched:**
-- `~/.agents/skills/catch-up/SKILL.md` — added YAML frontmatter (`name`, `description`)
-- `~/.agents/skills/close/SKILL.md` — added YAML frontmatter
-- `~/.agents/skills/family/SKILL.md` — added YAML frontmatter
-- `~/.agents/skills/snapshot/SKILL.md` — added YAML frontmatter
-- `~/.agents/skills/work/SKILL.md` — added YAML frontmatter
-- `~/.agents/skills/research-catch-up/SKILL.md` — added YAML frontmatter
-- `~/.agents/skills/research-close/SKILL.md` — added YAML frontmatter
-- `~/.agents/skills/research-family/SKILL.md` — added YAML frontmatter
-- `~/.agents/skills/research-snapshot/SKILL.md` — added YAML frontmatter
-- `~/.agents/skills/research-work/SKILL.md` — added YAML frontmatter
-- All 12 affected `SKILL.md` files — stripped UTF-8 BOM (root cause of Codex rejection)
-- `~/.claude/projects/.../memory/feedback_ps1_encoding.md` — expanded to document BOM issue alongside curly-quote issue
-- `AI_auto/known_issues.md` — added issue #11 (Edit/Write tool writes UTF-8 BOM)
+- `~/.agents/skills/catch-up/SKILL.md` â€” added YAML frontmatter (`name`, `description`)
+- `~/.agents/skills/close/SKILL.md` â€” added YAML frontmatter
+- `~/.agents/skills/family/SKILL.md` â€” added YAML frontmatter
+- `~/.agents/skills/snapshot/SKILL.md` â€” added YAML frontmatter
+- `~/.agents/skills/work/SKILL.md` â€” added YAML frontmatter
+- `~/.agents/skills/research-catch-up/SKILL.md` â€” added YAML frontmatter
+- `~/.agents/skills/research-close/SKILL.md` â€” added YAML frontmatter
+- `~/.agents/skills/research-family/SKILL.md` â€” added YAML frontmatter
+- `~/.agents/skills/research-snapshot/SKILL.md` â€” added YAML frontmatter
+- `~/.agents/skills/research-work/SKILL.md` â€” added YAML frontmatter
+- All 12 affected `SKILL.md` files â€” stripped UTF-8 BOM (root cause of Codex rejection)
+- `~/.claude/projects/.../memory/feedback_ps1_encoding.md` â€” expanded to document BOM issue alongside curly-quote issue
+- `AI_auto/known_issues.md` â€” added issue #11 (Edit/Write tool writes UTF-8 BOM)
 **Outcome:** All 16 Codex SKILL.md warnings resolved; root cause was UTF-8 BOM prepended by the Edit tool, not missing frontmatter content per se.
 **Next steps:** none
 **Git ref:** 7b65077
@@ -278,12 +255,25 @@
 **Agent:** Claude Sonnet 4.6
 **Goal:** Explore graphify skill feasibility; redesign session startup flow for speed.
 **Files touched:**
-- `~/.claude/commands/work.md` — added fast-load flow: reads `_state/current.md` by default; `--full` flag restores legacy full read of AI log + handover
-- `~/.claude/commands/close.md` — added step 3.7: write `_state/current.md` state card (≤20 lines) after each session close
-- `~/.claude/CLAUDE.md` — added `## Manuscript writing conventions` section (Eq. refs, Harvard cite, italic paragraph headers, intuition paragraphs after all proofs)
-**Outcome:** Session startup redesigned around a ≤20-line state card; full history remains accessible via `--full` flag. Global manuscript writing conventions added.
+- `~/.claude/commands/work.md` â€” added fast-load flow: reads `_state/current.md` by default; `--full` flag restores legacy full read of AI log + handover
+- `~/.claude/commands/close.md` â€” added step 3.7: write `_state/current.md` state card (â‰¤20 lines) after each session close
+- `~/.claude/CLAUDE.md` â€” added `## Manuscript writing conventions` section (Eq. refs, Harvard cite, italic paragraph headers, intuition paragraphs after all proofs)
+**Outcome:** Session startup redesigned around a â‰¤20-line state card; full history remains accessible via `--full` flag. Global manuscript writing conventions added.
 **Next steps:** none
 **Git ref:** 74fbcff
+
+---
+
+## Session 2026-05-20
+**Agent:** Claude Sonnet 4.6
+**Goal:** Explore mobile access options for research projects â€” discussing papers on the go.
+**Files touched:**
+- `~/.claude/settings.json` â€” added then reverted `remoteControlAtStartup: true` (kept manual)
+**Outcome:** Claude Remote Control is the best mobile option; Termux+Gemini CLI blocked by Google Advanced Protection on user's phone.
+**Next steps:**
+- Use `claude remote-control` manually when needed; scan QR code from Claude Android app
+- Gemini CLI voice extensions exist if Termux becomes available later (gemini-cli-voice-extension, gemini-tts-mcp)
+**Git ref:** 3c60ad6
 </textarea>
 </div>
 
@@ -301,26 +291,26 @@
 <!-- ============================================================ -->
 <div class="section">
   <h2>Overleaf Git History (last 20 commits)</h2>
-  <pre>a77110c Local edits 2026-05-16 22:33
-853905b Auto-backup 2026-05-16 11:07
-8744edb Auto-backup 2026-05-08 15:09
-506579d Auto-backup 2026-05-04 08:45
-8ef020b Auto-backup 2026-04-24 11:08
-6b78218 Local edits 2026-04-22 16:34
-0757ad8 Local edits 2026-04-22 16:09
-4748504 Local edits 2026-04-22 16:04
-d9affeb Revise V2 title slide
-acc9685 Local edits 2026-04-22 15:56
-06c5265 Local edits 2026-04-22 15:55
-e4bb1a2 Local edits 2026-04-22 15:42
-dd5249f Local edits 2026-04-22 15:41
-abe0241 Local edits 2026-04-22 15:18
-aa00230 Update on Overleaf.
-3920196 Update on Overleaf.
-e2d56cf Local edits 2026-04-22 14:02
-65cfb3f Local edits 2026-04-22 14:01
-fb4534f Local edits 2026-04-22 13:42
-4216e7c Local edits 2026-04-19 16:23</pre>
+  <pre>68503ad Local edits 2026-05-21 11:53
+b18a38e Local edits 2026-05-21 11:49
+d54b68f Local edits 2026-05-21 11:45
+cc617b7 Local edits 2026-05-21 11:39
+83d4bf4 Local edits 2026-05-21 11:37
+916662a Local edits 2026-05-21 11:31
+8161387 Local edits 2026-05-21 11:22
+ad90e91 Local edits 2026-05-21 11:19
+c171a04 Local edits 2026-05-21 11:16
+5b45347 Local edits 2026-05-21 11:13
+d405e31 Local edits 2026-05-21 11:04
+8f555c9 Local edits 2026-05-21 11:01
+ab0713f Local edits 2026-05-21 10:56
+64d9ac1 Local edits 2026-05-21 10:50
+52334e8 Local edits 2026-05-21 10:46
+82f0db9 Local edits 2026-05-21 10:42
+0c94aba Local edits 2026-05-21 10:35
+e35fe55 Local edits 2026-05-21 10:30
+6195ec8 Local edits 2026-05-21 10:27
+0a8503a Local edits 2026-05-21 10:22</pre>
 </div>
 
 </body>

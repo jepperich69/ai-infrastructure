@@ -1,21 +1,19 @@
-{
-  "project": "AI_auto",
-  "generated": "2026-05-18 20:50",
-  "source": "_ai_log.md",
-  "latest_session": {
-    "title": "2026-05-18",
-    "agent": "Claude Sonnet 4.6",
-    "goal": "Explore graphify skill feasibility; redesign session startup flow for speed.",
-    "outcome": "Session startup redesigned around a ≤20-line state card; full history remains accessible via `--full` flag. Global manuscript writing conventions added.",
-    "next_steps": "none",
-    "git_ref": "74fbcff",
-    "files_touched": [
-      "`~/.claude/commands/work.md` — added fast-load flow: reads `_state/current.md` by default; `--full` flag restores legacy full read of AI log + handover",
-      "`~/.claude/commands/close.md` — added step 3.7: write `_state/current.md` state card (≤20 lines) after each session close",
-      "`~/.claude/CLAUDE.md` — added `## Manuscript writing conventions` section (Eq. refs, Harvard cite, italic paragraph headers, intuition paragraphs after all proofs)"
-    ]
-  },
-  "latest_session_complete": true,
-  "latest_session_missing": null,
-  "session_count": 4
+﻿{
+    "project":  "AI_auto",
+    "generated":  "2026-05-21 13:04",
+    "source":  "_ai_log.md",
+    "latest_session":  {
+                           "title":  "2026-05-20",
+                           "agent":  "Claude Sonnet 4.6",
+                           "goal":  "Explore mobile access options for research projects â€” discussing papers on the go.",
+                           "outcome":  "Claude Remote Control is the best mobile option; Termux+Gemini CLI blocked by Google Advanced Protection on user\u0027s phone.",
+                           "next_steps":  "Use `claude remote-control` manually when needed; scan QR code from Claude Android app Gemini CLI voice extensions exist if Termux becomes available later (gemini-cli-voice-extension, gemini-tts-mcp)",
+                           "git_ref":  "3c60ad6",
+                           "files_touched":  "`~/.claude/settings.json` â€” added then reverted `remoteControlAtStartup: true` (kept manual)"
+                       },
+    "latest_session_complete":  true,
+    "latest_session_missing":  {
+
+                               },
+    "session_count":  4
 }
