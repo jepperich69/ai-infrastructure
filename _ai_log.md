@@ -4,7 +4,6 @@
 
 ## Compressed sessions
 
-- **2026-04-22 Close** (Codex): Close the AI_auto slide-editing session after preparing the condens... -> The full V2 deck and the condensed 10-slide deck are in place. The Overleaf source repo...
 - **2026-04-22** (Codex): Make Codex automatically use the project implied by the directory i... -> Future Codex sessions should infer the active project from the current working director...
 - **2026-04-23** (Claude): Design discussion — AI log as a certificate of conduct; immutabilit... -> Identified five properties that would make the log certificate-grade (scope declaration...
 - **2026-04-23** (Claude): Professionalise the infrastructure — log compression, /helpi comman... -> Infrastructure professionalised: log compression keeps `_ai_log.md` lean automatically;...
@@ -20,19 +19,7 @@
 - **2026-05-16** (Claude): Complete the infrastructure session: commit remaining changes, desi... -> The infrastructure now has a full fix loop: /close logs new open issues with exact fix ...
 - **2026-05-16** (Codex): Diagnose and self-fix any obvious AI_auto infrastructure issue. -> `helpi 13` now prints a clean dashboard header, `helpi 15` warns cleanly when browser o...
 - **2026-05-16** (Claude): Fix Codex startup warnings — 16 SKILL.md files failing to load due ... -> All 16 Codex SKILL.md warnings resolved; root cause was UTF-8 BOM prepended by the Edit...
-
----
-
-## Session 2026-05-18
-**Agent:** Claude Sonnet 4.6
-**Goal:** Explore graphify skill feasibility; redesign session startup flow for speed.
-**Files touched:**
-- `~/.claude/commands/work.md` — added fast-load flow: reads `_state/current.md` by default; `--full` flag restores legacy full read of AI log + handover
-- `~/.claude/commands/close.md` — added step 3.7: write `_state/current.md` state card (≤20 lines) after each session close
-- `~/.claude/CLAUDE.md` — added `## Manuscript writing conventions` section (Eq. refs, Harvard cite, italic paragraph headers, intuition paragraphs after all proofs)
-**Outcome:** Session startup redesigned around a ≤20-line state card; full history remains accessible via `--full` flag. Global manuscript writing conventions added.
-**Next steps:** none
-**Git ref:** 74fbcff
+- **2026-05-18** (Claude): Explore graphify skill feasibility; redesign session startup flow f... -> Session startup redesigned around a ≤20-line state card; full history remains accessibl...
 
 ---
 
@@ -74,3 +61,16 @@
 - First real pipeline run to validate PS1 generation and agent CLI invocations
 - Run `helpi 16` to regenerate infrastructure_full.html from updated infrastructure.html
 **Git ref:** 22a9fcd
+
+---
+
+## Session 2026-05-22
+**Agent:** Claude Sonnet 4.6
+**Goal:** Make `/close` skill run fully autonomously — no permission prompts for log/state writes.
+**Files touched:**
+- `~/.claude/settings.json` — added 12 allowlist entries covering Edit/Write for `_ai_log.md`, `_state/current.md`, `.claude/CLAUDE.md`, `known_issues.md`, and Bash/PowerShell for `pwsh` and `Remove-Item`
+- `~/.claude/projects/.../memory/feedback_close_autonomous.md` — new memory: /close pre-approved, never pause for confirmation
+- `~/.claude/projects/.../memory/MEMORY.md` — added /close autonomous entry to index
+**Outcome:** `/close` now executes all steps without user confirmation; all session-management file writes are pre-approved globally.
+**Next steps:** none
+**Git ref:** 4284991
