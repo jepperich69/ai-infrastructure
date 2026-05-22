@@ -74,3 +74,10 @@
 ## Archived 2026-05-22 (1 entry)
 
 - **2026-04-22 Close** (Codex): Close the AI_auto slide-editing session after preparing the condens... -> The full V2 deck and the condensed 10-slide deck are in place. The Overleaf source repo...
+
+
+---
+
+## Archived 2026-05-22 (1 entry)
+
+- **2026-04-22** (Codex): Make Codex automatically use the project implied by the directory i... -> Future Codex sessions should infer the active project from the current working director...

@@ -4,7 +4,6 @@
 
 ## Compressed sessions
 
-- **2026-04-22** (Codex): Make Codex automatically use the project implied by the directory i... -> Future Codex sessions should infer the active project from the current working director...
 - **2026-04-23** (Claude): Design discussion — AI log as a certificate of conduct; immutabilit... -> Identified five properties that would make the log certificate-grade (scope declaration...
 - **2026-04-23** (Claude): Professionalise the infrastructure — log compression, /helpi comman... -> Infrastructure professionalised: log compression keeps `_ai_log.md` lean automatically;...
 - **2026-04-24** (Claude): Design the paper project naming convention and onboarding guide for... -> Convention settled as `Pub_Topic_YourInitials` (driver = the person keeping the paper m...
@@ -20,19 +19,7 @@
 - **2026-05-16** (Codex): Diagnose and self-fix any obvious AI_auto infrastructure issue. -> `helpi 13` now prints a clean dashboard header, `helpi 15` warns cleanly when browser o...
 - **2026-05-16** (Claude): Fix Codex startup warnings — 16 SKILL.md files failing to load due ... -> All 16 Codex SKILL.md warnings resolved; root cause was UTF-8 BOM prepended by the Edit...
 - **2026-05-18** (Claude): Explore graphify skill feasibility; redesign session startup flow f... -> Session startup redesigned around a ≤20-line state card; full history remains accessibl...
-
----
-
-## Session 2026-05-20
-**Agent:** Claude Sonnet 4.6
-**Goal:** Explore mobile access options for research projects — discussing papers on the go.
-**Files touched:**
-- `~/.claude/settings.json` — added then reverted `remoteControlAtStartup: true` (kept manual)
-**Outcome:** Claude Remote Control is the best mobile option; Termux+Gemini CLI blocked by Google Advanced Protection on user's phone.
-**Next steps:**
-- Use `claude remote-control` manually when needed; scan QR code from Claude Android app
-- Gemini CLI voice extensions exist if Termux becomes available later (gemini-cli-voice-extension, gemini-tts-mcp)
-**Git ref:** 3c60ad6
+- **2026-05-20** (Claude): Explore mobile access options for research projects — discussing pa... -> Claude Remote Control is the best mobile option; Termux+Gemini CLI blocked by Google Ad...
 
 ---
 
@@ -74,3 +61,14 @@
 **Outcome:** `/close` now executes all steps without user confirmation; all session-management file writes are pre-approved globally.
 **Next steps:** none
 **Git ref:** 4284991
+
+---
+
+## Session 2026-05-22b
+**Agent:** Claude Sonnet 4.6
+**Goal:** Patch `/close` skill — fix two bugs causing redundant stops during execution.
+**Files touched:**
+- `~/.claude/commands/close.md` — fix git ref step: use PowerShell tool with `2>$null` (or Bash with `2>/dev/null`); add read-before-write instruction for state card step
+**Outcome:** `/close` skill no longer errors on bash `$null` redirect or write-without-read on `_state/current.md`.
+**Next steps:** none
+**Git ref:** c6f950d
