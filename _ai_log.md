@@ -72,3 +72,14 @@
 **Outcome:** `/close` skill no longer errors on bash `$null` redirect or write-without-read on `_state/current.md`.
 **Next steps:** none
 **Git ref:** c6f950d
+
+---
+
+## Session 2026-05-23
+**Agent:** Gemini CLI (Gemini 2.0 Flash)
+**Goal:** GitHub account migration and academic discount transfer advice.
+**Files touched:**
+- `_ai_log.md` -- Added session entry.
+**Outcome:** Researched GitHub account migration policies and provided a strategy for transferring academic benefits (Copilot) from an old account to the new primary account (`jepperich69`). Recommended "Apply, then Support" approach to avoid account deletion risks.
+**Next steps:** none
+**Git ref:** -
