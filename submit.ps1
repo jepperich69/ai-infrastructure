@@ -453,6 +453,7 @@ if ($OriginalTexFile -ne "SKIP") {
     $diffNoteOut = Join-Path $outDir    "Diff_${prefix}_NOTES.txt"
     $latexdiffErr = Join-Path $buildDir "_diff_tmp_latexdiff.err"
     $latexdiffArgs = @(
+        '--encoding=utf8',
         '--flatten',
         '--graphics-markup=none',
         '--disable-citation-markup',
@@ -461,9 +462,13 @@ if ($OriginalTexFile -ne "SKIP") {
         $revisedNorm
     )
     try {
-        # Normalise both files to LF before diffing
+        # Normalise both files to LF before diffing; replace Unicode dashes with
+        # LaTeX equivalents to prevent latexdiff encoding artifacts (e.g. Cz artifacts
+        # from em-dash U+2014 and en-dash U+2013 being misread as multi-byte sequences).
         $origText    = [System.IO.File]::ReadAllText($origPath, [System.Text.Encoding]::UTF8) -replace "`r`n","`n"
         $revisedText = [System.IO.File]::ReadAllText($texPath,  [System.Text.Encoding]::UTF8) -replace "`r`n","`n"
+        $origText    = $origText    -replace [char]0x2014,'---' -replace [char]0x2013,'--'
+        $revisedText = $revisedText -replace [char]0x2014,'---' -replace [char]0x2013,'--'
         [System.IO.File]::WriteAllText($origNorm,    $origText,    [System.Text.Encoding]::UTF8)
         [System.IO.File]::WriteAllText($revisedNorm, $revisedText, [System.Text.Encoding]::UTF8)
 
@@ -546,6 +551,102 @@ if ($OriginalTexFile -ne "SKIP") {
     }
 } else {
     SKIP "diff skipped"
+}
+
+# -- [6b] Supplementary diff --------------------------------------------------
+# Auto-triggered when a *_supp.tex pair exists alongside the main diff files.
+# Convention: NatComm_original_supp.tex / NatComm_R1_supp.tex  (same base names,
+# _supp inserted before .tex).  No per-project configuration required.
+$suppDiffPdf = $null
+$mainDiffPdf = Join-Path $outDir "Diff_${prefix}.pdf"
+
+if ($OriginalTexFile -ne "SKIP") {
+    $origSuppFile    = $OriginalTexFile -replace '\.tex$','_supp.tex'
+    $revisedSuppFile = $TexFile         -replace '\.tex$','_supp.tex'
+    $origSuppPath    = Join-Path $sourceDir $origSuppFile
+    $revisedSuppPath = Join-Path $sourceDir $revisedSuppFile
+
+    if ((Test-Path $origSuppPath) -and (Test-Path $revisedSuppPath)) {
+        Write-Host "  [6b/7] Generating supplementary diff..." -ForegroundColor White
+        $origSuppNorm    = Join-Path $sourceDir "_orig_supp_norm_tmp.tex"
+        $revisedSuppNorm = Join-Path $sourceDir "_revised_supp_norm_tmp.tex"
+        $diffSuppTexSrc  = Join-Path $sourceDir "_diff_supp_tmp.tex"
+        $diffSuppTexOut  = Join-Path $outDir    "Diff_Supp_${prefix}.tex"
+        $suppDiffErr     = Join-Path $buildDir  "_diff_supp_latexdiff.err"
+        $suppArgs = @(
+            '--encoding=utf8',
+            '--graphics-markup=none',
+            '--disable-citation-markup',
+            '--floattype=FLOATSAFE',
+            $origSuppNorm,
+            $revisedSuppNorm
+        )
+        try {
+            $origSuppText    = [System.IO.File]::ReadAllText($origSuppPath,    [System.Text.Encoding]::UTF8) -replace "`r`n","`n"
+            $revisedSuppText = [System.IO.File]::ReadAllText($revisedSuppPath, [System.Text.Encoding]::UTF8) -replace "`r`n","`n"
+            $origSuppText    = $origSuppText    -replace [char]0x2014,'---' -replace [char]0x2013,'--'
+            $revisedSuppText = $revisedSuppText -replace [char]0x2014,'---' -replace [char]0x2013,'--'
+            [System.IO.File]::WriteAllText($origSuppNorm,    $origSuppText,    [System.Text.Encoding]::UTF8)
+            [System.IO.File]::WriteAllText($revisedSuppNorm, $revisedSuppText, [System.Text.Encoding]::UTF8)
+
+            if (Test-Path $suppDiffErr) { Remove-Item $suppDiffErr -Force }
+            $suppResult = (& $strawberryPerl $latexdiffScript @suppArgs 2> $suppDiffErr) | Out-String
+            Set-Content -Path $diffSuppTexSrc -Value $suppResult -Encoding UTF8
+            Copy-Item $diffSuppTexSrc $diffSuppTexOut -Force
+
+            if (Test-Path $latexmk) {
+                $fwd = $pdflatex -replace '\\','/'
+                & $latexmk -pdf -g -f -cd "-pdflatex=$fwd" -interaction=nonstopmode -outdir="$buildDir" "$diffSuppTexSrc" *>$null
+            } else {
+                & $pdflatex -interaction=nonstopmode -output-directory="$buildDir" "$diffSuppTexSrc" *>$null
+                & $pdflatex -interaction=nonstopmode -output-directory="$buildDir" "$diffSuppTexSrc" *>$null
+            }
+            $suppPdfBuilt = Join-Path $buildDir "_diff_supp_tmp.pdf"
+            if (Test-Path $suppPdfBuilt) {
+                $suppDiffPdf = Join-Path $outDir "Diff_Supp_${prefix}.pdf"
+                Copy-Item $suppPdfBuilt $suppDiffPdf -Force
+                OK "Diff_Supp_${prefix}.pdf"
+            } else {
+                WARN "Supplementary diff PDF compile failed -- Diff_Supp_${prefix}.tex saved to output folder"
+            }
+        } catch {
+            WARN "Supplementary latexdiff failed: $_"
+        } finally {
+            foreach ($tmp in @($diffSuppTexSrc, $origSuppNorm, $revisedSuppNorm, $suppDiffErr)) {
+                if (Test-Path $tmp) { Remove-Item $tmp -Force }
+            }
+            @(".aux",".log",".out",".fls",".fdb_latexmk",".bbl",".blg") | ForEach-Object {
+                $f = Join-Path $buildDir "_diff_supp_tmp$_"
+                if (Test-Path $f) { Remove-Item $f -Force }
+            }
+        }
+    }
+}
+
+# -- [6c] Combined diff PDF (main + supp) via pdfpages ------------------------
+if ((Test-Path $mainDiffPdf) -and $suppDiffPdf -and (Test-Path $suppDiffPdf)) {
+    Write-Host "  [6c/7] Generating combined diff PDF..." -ForegroundColor White
+    $combinedTex = Join-Path $outDir "Diff_Combined_${prefix}.tex"
+    $lines = @(
+        '\documentclass{article}',
+        '\usepackage[margin=0pt]{geometry}',
+        '\usepackage{pdfpages}',
+        '\begin{document}',
+        "\includepdf[pages=-]{Diff_${prefix}.pdf}",
+        "\includepdf[pages=-]{Diff_Supp_${prefix}.pdf}",
+        '\end{document}'
+    )
+    Set-Content -Path $combinedTex -Value ($lines -join "`n") -Encoding UTF8
+    $savedLoc = Get-Location
+    Set-Location $outDir
+    & $pdflatex -interaction=nonstopmode "Diff_Combined_${prefix}.tex" *>$null
+    Set-Location $savedLoc
+    $combinedPdf = Join-Path $outDir "Diff_Combined_${prefix}.pdf"
+    if (Test-Path $combinedPdf) {
+        OK "Diff_Combined_${prefix}.pdf  (main + supplementary diffs)"
+    } else {
+        WARN "Combined diff PDF failed -- run pdflatex on Diff_Combined_${prefix}.tex manually"
+    }
 }
 
 # -- [7] AI-generated content -------------------------------------------------

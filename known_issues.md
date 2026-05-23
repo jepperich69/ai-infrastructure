@@ -180,6 +180,43 @@ Symptom: `latexmk -pdf ...` exits immediately with "It seems that this is a fres
 
 ---
 
+### 13. Unicode en/em-dashes cause encoding artifacts in latexdiff output
+**Status:** fixed (2026-05-22)
+
+Literal Unicode dashes (U+2013 en-dash, U+2014 em-dash) in `.tex` source files
+produce garbled output ("Çö", "Çô") in latexdiff PDFs. Latexdiff's internal
+normalisation step re-encodes the file and corrupts multi-byte UTF-8 sequences.
+
+**Fix (applied 2026-05-22 to `AI_auto/submit.ps1`):**
+1. Added `'--encoding=utf8'` to `$latexdiffArgs`.
+2. Added Unicode dash pre-processing immediately before the latexdiff call:
+   ```powershell
+   $origText    = $origText    -replace [char]0x2014,'---' -replace [char]0x2013,'--'
+   $revisedText = $revisedText -replace [char]0x2014,'---' -replace [char]0x2013,'--'
+   ```
+Also replaced Unicode dashes in affected project `.tex` files with LaTeX equivalents
+(`---` / `--`) as a permanent fix. Any new manuscripts should use `---`/`--` throughout.
+
+---
+
+### 14. `codex exec` fails outside a git repo without `--skip-git-repo-check`
+**Status:** platform-fact
+When `codex exec` is called from a directory that is not inside a trusted git repo, it exits immediately with "Not inside a trusted directory and --skip-git-repo-check was not specified." Always add `--skip-git-repo-check` to `codex exec` calls in pipeline scripts that run from non-project directories (e.g., `AI_auto\_pipelines\...`).
+
+---
+
+### 15. Large string passed as `-p` argument to `claude.exe` causes `StandardOutputEncoding` error
+**Status:** platform-fact
+When `Get-Content $file -Raw` produces a very large string (tested: ~294KB) and is passed inline as the `-p` argument to `& claude -p (...)`, PowerShell fails with "StandardOutputEncoding is only supported when standard output is redirected." This is a Windows process-creation limit. Fix: cap per-agent output before accumulating into the prompt (done in pipeline skill template -- 20k chars for agent 1, 10k for others), or pipe large prompts via stdin (`Get-Content $file | & claude`).
+
+---
+
+### 16. `< $null` stdin redirect is not valid inside a PowerShell switch block
+**Status:** platform-fact
+`& command arg < $null` works at statement level but inside a `switch` block PowerShell raises "The '<' operator is reserved for future use." Do not add stdin null-redirect inside switch cases. At statement level outside switch, `< $null` is valid and skips the 3-second stdin wait that `claude -p` otherwise incurs.
+
+---
+
 ## Adding new entries
 
 When an issue recurs (2+ times), append a new numbered entry here with:

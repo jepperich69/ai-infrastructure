@@ -1,0 +1,2 @@
+﻿The input object cannot be bound to any parameters for the command either because the command does not take pipeline input or the input and its properties do not match any of the parameters that take pipeline input.
+No prompt provided. Either specify one as an argument or pipe the prompt into stdin.
