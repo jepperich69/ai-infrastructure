@@ -4,7 +4,6 @@
 
 ## Compressed sessions
 
-- **2026-05-18** (Claude): Explore graphify skill feasibility; redesign session startup flow f... -> Session startup redesigned around a ≤20-line state card; full history remains accessibl...
 - **2026-05-20** (Claude): Explore mobile access options for research projects — discussing pa... -> Claude Remote Control is the best mobile option; Termux+Gemini CLI blocked by Google Ad...
 - **2026-05-21 (Gemini CLI)** (Gemini CLI): Create a 20-slide presentation deck for the division meeting on AI ... -> A comprehensive, technically rich, and strategically framed 20-slide presentation is co...
 - **2026-05-21** (Claude): Design and build a `/pipeline` skill — background multi-agent job (... -> `/pipeline` skill is live; slide deck updated with circular workflow diagram and new pi...
@@ -20,17 +19,7 @@
 - **2026-05-24h** (Codex): Refine Convergence Forum slides and remove the MiKTeX compile blocker. -> Slide revisions were committed and pushed to Overleaf. MiKTeX was initialized for the n...
 - **2026-05-24i** (Gemini CLI): Implement SAD (Single-Agent Debate) mode for the FORUM skill and up... -> SAD mode is now fully operational and documented. Slides are ready and verified. Global...
 - **2026-05-24j** (Codex): Apply requested wording edits to the division meeting slide deck. -> Deck edits applied and verified. `helpi 6 AI_auto -Force` produced a fresh 26-page PDF;...
-
----
-
-## Session 2026-05-24k
-**Agent:** Codex
-**Goal:** Audit the new `helpi 25` Forum/code-audit command path.
-**Files touched:**
-- `_ai_log.md` -- Added this session entry.
-**Outcome:** Audited `helpi.ps1`, `run_forum.ps1`, the new `prompts/code-audit.md` template, and Forum role prompts. PowerShell AST parsing passed for both scripts, but the audit found command-invocation and forum lifecycle issues that should be patched before treating `helpi 25 code-audit` as ready.
-**Next steps:** Patch `helpi 25` positional parsing for template shortcuts, mark max-round forum exhaustion as adjourned, and replace brittle auto-close/browser behavior with deterministic logging or explicit opt-in.
-**Git ref:**
+- **2026-05-24k** (Codex): Audit the new `helpi 25` Forum/code-audit command path. -> Audited `helpi.ps1`, `run_forum.ps1`, the new `prompts/code-audit.md` template, and For...
 
 ---
 
@@ -67,3 +56,18 @@
 **Outcome:** Session closed with the `helpi 25` code-audit patch and Claude final-validation prompt prepared.
 **Next steps:** Run Claude on `prompts/claude-validate-helpi25.md` for final validation; live Forum smoke test only if Richard approves LLM/tool spend.
 **Git ref:**
+
+---
+
+## Session 2026-05-24o
+**Agent:** Claude Sonnet 4.6
+**Goal:** Claude final validation of patched `helpi 25` command; live smoke test.
+**Files touched:**
+- `prompts/forum_roles/critic_sys.md` — removed trailing `=== DIGEST ===` / `=== STATE UPDATE ===` placeholder lines that caused `Get-Section` to extract template text instead of agent output
+- `prompts/forum_roles/advocate_sys.md` — same fix
+- `prompts/forum_roles/realist_sys.md` — same fix
+- `known_issues.md` — added issue #21 documenting the role-file placeholder bug (status: fixed 2026-05-24)
+**Outcome:** Validation verdict READY; smoke test revealed the role-file `=== DIGEST ===` placeholder bug that prevented blackboard from ever updating — fixed in all three role files and logged as issue #21.
+**Next steps:**
+- Run a fresh smoke test to confirm blackboard updates correctly with the role-file fix applied
+**Git ref:** 9df201c

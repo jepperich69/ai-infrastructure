@@ -30,7 +30,7 @@
 <body>
 
 <h1>Handover Document &mdash; AI_auto</h1>
-<div class="meta">Generated: 2026-05-24 15:37 &nbsp;|&nbsp; Source: <code style="display:inline;padding:2px 6px">_ai_log.md</code> &nbsp;|&nbsp; Sidecar: <code style="display:inline;padding:2px 6px">_handover.json</code></div>
+<div class="meta">Generated: 2026-05-24 16:04 &nbsp;|&nbsp; Source: <code style="display:inline;padding:2px 6px">_ai_log.md</code> &nbsp;|&nbsp; Sidecar: <code style="display:inline;padding:2px 6px">_handover.json</code></div>
 
 <!-- ============================================================ -->
 <!-- AGENT INSTRUCTIONS                                            -->
@@ -62,15 +62,18 @@
 <div class="latest-session">
   <div class="session-status ok">Complete</div>
   <h2>Latest Session Snapshot</h2>
-  <p><strong>Session:</strong> 2026-05-24n</p>
-  <p><strong>Agent:</strong> Codex</p>
-  <p><strong>Goal:</strong> Close the AI_auto session after patching and handoff preparation.</p>
-  <p><strong>Outcome:</strong> Session closed with the `helpi 25` code-audit patch and Claude final-validation prompt prepared.</p>
-  <p><strong>Next steps:</strong> Run Claude on `prompts/claude-validate-helpi25.md` for final validation; live Forum smoke test only if Richard approves LLM/tool spend.</p>
-  
+  <p><strong>Session:</strong> 2026-05-24o</p>
+  <p><strong>Agent:</strong> Claude Sonnet 4.6</p>
+  <p><strong>Goal:</strong> Claude final validation of patched `helpi 25` command; live smoke test.</p>
+  <p><strong>Outcome:</strong> Validation verdict READY; smoke test revealed the role-file `=== DIGEST ===` placeholder bug that prevented blackboard from ever updating — fixed in all three role files and logged as issue #21.</p>
+  <p><strong>Next steps:</strong> Run a fresh smoke test to confirm blackboard updates correctly with the role-file fix applied</p>
+  <p><strong>Git ref:</strong> 9df201c</p>
   <h3>Files touched</h3>
   <ul>
-  <li>`_ai_log.md` -- Added this close-session entry.</li>
+  <li>`prompts/forum_roles/critic_sys.md` — removed trailing `=== DIGEST ===` / `=== STATE UPDATE ===` placeholder lines that caused `Get-Section` to extract template text instead of agent output</li>
+  <li>`prompts/forum_roles/advocate_sys.md` — same fix</li>
+  <li>`prompts/forum_roles/realist_sys.md` — same fix</li>
+  <li>`known_issues.md` — added issue #21 documenting the role-file placeholder bug (status: fixed 2026-05-24)</li>
 </ul>
 </div>
 
@@ -85,7 +88,6 @@
 <h2>Compressed sessions</h2>
 <br>
 <ul>
-  <li><strong>2026-05-18</strong> (Claude): Explore graphify skill feasibility; redesign session startup flow f... -&gt; Session startup redesigned around a ≤20-line state card; full history remains accessibl...</li>
   <li><strong>2026-05-20</strong> (Claude): Explore mobile access options for research projects — discussing pa... -&gt; Claude Remote Control is the best mobile option; Termux+Gemini CLI blocked by Google Ad...</li>
   <li><strong>2026-05-21 (Gemini CLI)</strong> (Gemini CLI): Create a 20-slide presentation deck for the division meeting on AI ... -&gt; A comprehensive, technically rich, and strategically framed 20-slide presentation is co...</li>
   <li><strong>2026-05-21</strong> (Claude): Design and build a `/pipeline` skill — background multi-agent job (... -&gt; `/pipeline` skill is live; slide deck updated with circular workflow diagram and new pi...</li>
@@ -101,20 +103,8 @@
   <li><strong>2026-05-24h</strong> (Codex): Refine Convergence Forum slides and remove the MiKTeX compile blocker. -&gt; Slide revisions were committed and pushed to Overleaf. MiKTeX was initialized for the n...</li>
   <li><strong>2026-05-24i</strong> (Gemini CLI): Implement SAD (Single-Agent Debate) mode for the FORUM skill and up... -&gt; SAD mode is now fully operational and documented. Slides are ready and verified. Global...</li>
   <li><strong>2026-05-24j</strong> (Codex): Apply requested wording edits to the division meeting slide deck. -&gt; Deck edits applied and verified. `helpi 6 AI_auto -Force` produced a fresh 26-page PDF;...</li>
+  <li><strong>2026-05-24k</strong> (Codex): Audit the new `helpi 25` Forum/code-audit command path. -&gt; Audited `helpi.ps1`, `run_forum.ps1`, the new `prompts/code-audit.md` template, and For...</li>
 </ul>
-<br>
-<hr>
-<br>
-<h2>Session 2026-05-24k</h2>
-<p><strong>Agent:</strong> Codex</p>
-<p><strong>Goal:</strong> Audit the new `helpi 25` Forum/code-audit command path.</p>
-<p><strong>Files touched:</strong></p>
-<ul>
-  <li>`_ai_log.md` -- Added this session entry.</li>
-</ul>
-<p><strong>Outcome:</strong> Audited `helpi.ps1`, `run_forum.ps1`, the new `prompts/code-audit.md` template, and Forum role prompts. PowerShell AST parsing passed for both scripts, but the audit found command-invocation and forum lifecycle issues that should be patched before treating `helpi 25 code-audit` as ready.</p>
-<p><strong>Next steps:</strong> Patch `helpi 25` positional parsing for template shortcuts, mark max-round forum exhaustion as adjourned, and replace brittle auto-close/browser behavior with deterministic logging or explicit opt-in.</p>
-<p><strong>Git ref:</strong></p>
 <br>
 <hr>
 <br>
@@ -156,7 +146,26 @@
 </ul>
 <p><strong>Outcome:</strong> Session closed with the `helpi 25` code-audit patch and Claude final-validation prompt prepared.</p>
 <p><strong>Next steps:</strong> Run Claude on `prompts/claude-validate-helpi25.md` for final validation; live Forum smoke test only if Richard approves LLM/tool spend.</p>
-<p><strong>Git ref:</strong></p>
+<p><strong>Git ref:</strong></p>
+<br>
+<hr>
+<br>
+<h2>Session 2026-05-24o</h2>
+<p><strong>Agent:</strong> Claude Sonnet 4.6</p>
+<p><strong>Goal:</strong> Claude final validation of patched `helpi 25` command; live smoke test.</p>
+<p><strong>Files touched:</strong></p>
+<ul>
+  <li>`prompts/forum_roles/critic_sys.md` — removed trailing `=== DIGEST ===` / `=== STATE UPDATE ===` placeholder lines that caused `Get-Section` to extract template text instead of agent output</li>
+  <li>`prompts/forum_roles/advocate_sys.md` — same fix</li>
+  <li>`prompts/forum_roles/realist_sys.md` — same fix</li>
+  <li>`known_issues.md` — added issue #21 documenting the role-file placeholder bug (status: fixed 2026-05-24)</li>
+</ul>
+<p><strong>Outcome:</strong> Validation verdict READY; smoke test revealed the role-file `=== DIGEST ===` placeholder bug that prevented blackboard from ever updating — fixed in all three role files and logged as issue #21.</p>
+<p><strong>Next steps:</strong></p>
+<ul>
+  <li>Run a fresh smoke test to confirm blackboard updates correctly with the role-file fix applied</li>
+</ul>
+<p><strong>Git ref:</strong> 9df201c</p>
 <br>
 
 </div>
@@ -173,7 +182,6 @@
 
 ## Compressed sessions
 
-- **2026-05-18** (Claude): Explore graphify skill feasibility; redesign session startup flow f... -&gt; Session startup redesigned around a ≤20-line state card; full history remains accessibl...
 - **2026-05-20** (Claude): Explore mobile access options for research projects — discussing pa... -&gt; Claude Remote Control is the best mobile option; Termux+Gemini CLI blocked by Google Ad...
 - **2026-05-21 (Gemini CLI)** (Gemini CLI): Create a 20-slide presentation deck for the division meeting on AI ... -&gt; A comprehensive, technically rich, and strategically framed 20-slide presentation is co...
 - **2026-05-21** (Claude): Design and build a `/pipeline` skill — background multi-agent job (... -&gt; `/pipeline` skill is live; slide deck updated with circular workflow diagram and new pi...
@@ -189,17 +197,7 @@
 - **2026-05-24h** (Codex): Refine Convergence Forum slides and remove the MiKTeX compile blocker. -&gt; Slide revisions were committed and pushed to Overleaf. MiKTeX was initialized for the n...
 - **2026-05-24i** (Gemini CLI): Implement SAD (Single-Agent Debate) mode for the FORUM skill and up... -&gt; SAD mode is now fully operational and documented. Slides are ready and verified. Global...
 - **2026-05-24j** (Codex): Apply requested wording edits to the division meeting slide deck. -&gt; Deck edits applied and verified. `helpi 6 AI_auto -Force` produced a fresh 26-page PDF;...
-
----
-
-## Session 2026-05-24k
-**Agent:** Codex
-**Goal:** Audit the new `helpi 25` Forum/code-audit command path.
-**Files touched:**
-- `_ai_log.md` -- Added this session entry.
-**Outcome:** Audited `helpi.ps1`, `run_forum.ps1`, the new `prompts/code-audit.md` template, and Forum role prompts. PowerShell AST parsing passed for both scripts, but the audit found command-invocation and forum lifecycle issues that should be patched before treating `helpi 25 code-audit` as ready.
-**Next steps:** Patch `helpi 25` positional parsing for template shortcuts, mark max-round forum exhaustion as adjourned, and replace brittle auto-close/browser behavior with deterministic logging or explicit opt-in.
-**Git ref:**
+- **2026-05-24k** (Codex): Audit the new `helpi 25` Forum/code-audit command path. -&gt; Audited `helpi.ps1`, `run_forum.ps1`, the new `prompts/code-audit.md` template, and For...
 
 ---
 
@@ -236,6 +234,21 @@
 **Outcome:** Session closed with the `helpi 25` code-audit patch and Claude final-validation prompt prepared.
 **Next steps:** Run Claude on `prompts/claude-validate-helpi25.md` for final validation; live Forum smoke test only if Richard approves LLM/tool spend.
 **Git ref:**
+
+---
+
+## Session 2026-05-24o
+**Agent:** Claude Sonnet 4.6
+**Goal:** Claude final validation of patched `helpi 25` command; live smoke test.
+**Files touched:**
+- `prompts/forum_roles/critic_sys.md` — removed trailing `=== DIGEST ===` / `=== STATE UPDATE ===` placeholder lines that caused `Get-Section` to extract template text instead of agent output
+- `prompts/forum_roles/advocate_sys.md` — same fix
+- `prompts/forum_roles/realist_sys.md` — same fix
+- `known_issues.md` — added issue #21 documenting the role-file placeholder bug (status: fixed 2026-05-24)
+**Outcome:** Validation verdict READY; smoke test revealed the role-file `=== DIGEST ===` placeholder bug that prevented blackboard from ever updating — fixed in all three role files and logged as issue #21.
+**Next steps:**
+- Run a fresh smoke test to confirm blackboard updates correctly with the role-file fix applied
+**Git ref:** 9df201c
 </textarea>
 </div>
 
@@ -253,7 +266,26 @@
 <!-- ============================================================ -->
 <div class="section">
   <h2>Overleaf Git History (last 20 commits)</h2>
-  <pre></pre>
+  <pre>7ca2e4b Auto-backup 2026-05-24 14:06
+96f0945 Local edits 2026-05-24 13:22
+3c76b23 Local edits 2026-05-24 13:18
+5b5833d Tighten forum slide wording
+3dbd005 Refine convergence forum slides
+7b13870 Fix convergence forum slide TikZ
+5b78735 Local edits 2026-05-24 12:29
+1881817 Local edits 2026-05-24 12:07
+364b0d4 Local edits 2026-05-24 12:01
+5d1a99e Update on Overleaf.
+cd5396e Local edits 2026-05-24 11:58
+f0489b9 Update on Overleaf.
+091d23c Local edits 2026-05-24 10:53
+82fe6f1 Local edits 2026-05-24 10:50
+f9ce9ff Local edits 2026-05-24 10:45
+3e7dad7 Local edits 2026-05-24 10:40
+a8ec6ef Local edits 2026-05-24 10:30
+7520319 Auto-backup 2026-05-24 09:41
+dd3cff0 Auto-backup 2026-05-22 15:07
+3f0e681 Merge branch &#39;master&#39; of https://git.overleaf.com/69e4cd88646aa324de75fc2c</pre>
 </div>
 
 </body>
