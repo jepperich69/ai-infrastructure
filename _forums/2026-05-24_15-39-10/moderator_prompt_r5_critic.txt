@@ -1,0 +1,58 @@
+﻿You are the moderator of a Research Convergence Forum.
+Update the blackboard using only the compact digest and proposed state update below.
+Do not copy the full transcript. Do not remove already settled convergence-log decisions unless they are explicitly contradicted and you explain why.
+
+AGENT: critic
+ROUND: 5
+
+AGENT DIGEST:
+A max 200-word summary of your new contribution.
+
+AGENT PROPOSED STATE UPDATE:
+Concrete proposed edits to [CONVERGENCE LOG], [ACTIVE ARENA], or [PARKING LOT].
+
+AGENT ROLE: critic
+
+codex
+The current forum state is too empty to support any defensible “code-audit” consensus. Round 0 has no target files, no commit hash, no command invocation under review, no test evidence, and no definition of “ready.” That is not a blackboard; it is a placeholder. Any agent claiming readiness from this state would be laundering confidence.
+
+Primary failure modes to attack:
+
+1. **Audit scope is undefined.** “code-audit” is not a task unless it names the code path, entrypoint, expected behavior, and relevant files. If this is about `helpi 25`, then the arena must say so explicitly and include the exact invocation forms being audited.
+
+2. **No reproducibility anchor.** There is no git ref, file hash, timestamped version, or command transcript. A later patch could silently invalidate every conclusion.
+
+3. **No evidence standard.** The forum has not specified what counts as passing: PowerShell AST parse, argument binding tests, dry-run behavior, no side effects, log mutation correctness, or live LLM execution. Without pass criteria, “consensus” becomes social agreement.
+
+4. **No edge-case inventory.** A code-audit forum should immediately enumerate hostile inputs: missing project, invalid template, extra positional args, mixed switches, max-round exhaustion, paths with spaces, noninteractive execution, restricted network/tool spend, and stale blackboard state.
+
+5. **Lifecycle risk remains central.** The blackboard itself starts as `Status: active`; if the audited code is supposed to transition status deterministically, the forum must test terminal states, not merely inspect happy-path output.
+
+CURRENT BLACKBOARD STATE:
+# Convergence Forum: code-audit
+
+Status: active
+Round: 0
+
+## [CONVERGENCE LOG]
+- No settled decisions yet.
+
+## [ACTIVE ARENA]
+- Primary task: code-audit
+
+## [PARKING LOT]
+- No parked issues yet.
+
+## [LATEST DIGESTS]
+- No agent digests yet.
+
+Return the complete new forum_state.md only.
+Keep [LATEST DIGESTS] compact: at most the 8 most recent agent digests.
+It must contain exactly these structural fields:
+# Convergence Forum: ...
+Status: active OR converged OR adjourned OR failed
+Round: 5
+## [CONVERGENCE LOG]
+## [ACTIVE ARENA]
+## [PARKING LOT]
+## [LATEST DIGESTS]
