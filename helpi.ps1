@@ -12,6 +12,7 @@ param(
     [string]$Project = "",
     [string]$TexFile = "",
     [string]$Agent   = "",
+    [string]$Mode    = "",
     [switch]$Force
 )
 
@@ -80,8 +81,8 @@ $commands = @(
     [PSCustomObject]@{ N=23; NeedsProject=$true;  Tag="MANUAL";  Name="Push code/ to GitHub";                   
        Example="push_to_github.ps1 -Project XXX" },
     [PSCustomObject]@{ N=24; NeedsProject=$true;  Tag="MANUAL";  Name="Boil paper to technical one-pager";              Example="generate_onepager.ps1 -Project XXX" },
-    [PSCustomObject]@{ N=25; NeedsProject=$true;  Tag="MANUAL";  Name="Convergence Forum (Multi-agent debate)";
-       Example="run_forum.ps1 -Project XXX -Task '...'" }
+    [PSCustomObject]@{ N=25; NeedsProject=$true;  Tag="MANUAL";  Name="Convergence Forum (Multi-agent/Single-agent debate)";
+       Example="run_forum.ps1 -Project XXX -Task '...' [-Mode SAD]" }
     )
 
 # ── Contextual help for a single command ──────────────────────────
@@ -387,9 +388,14 @@ function Show-CommandHelp {
             "  helpi 24 $p main.tex -Agent codex"
         )}
         25 { @(
-            "Convergence Forum (Multi-agent debate)",
-            "Orchestrates a discussion forum between multiple agents (Claude, Gemini, Codex)",
-            "to reach consensus on a complex research task.",
+            "Convergence Forum (Multi-agent / Single-agent debate)",
+            "Orchestrates a discussion forum between agents to reach consensus",
+            "on a complex research task.",
+            "",
+            "Modes:",
+            "  Forum (default): Multi-agent round-robin (Claude -> Gemini -> Codex).",
+            "  SAD (Single-Agent Debate): One agent takes three roles sequentially:",
+            "      Critic -> Advocate -> Realist (Judge).",
             "",
             "Uses a Blackboard model with compact agent digests for token efficiency.",
             "Full transcripts are saved to _forums/, while the next turn receives only",
@@ -397,15 +403,20 @@ function Show-CommandHelp {
             "",
             "Arguments:",
             "  Task: The agenda or question to debate (required).",
-            "  Agents: Comma-separated list (default: claude,gemini,codex).",
+            "  Agents: Comma-separated list (default: claude,gemini,codex). In SAD mode,",
+            "          uses only the first agent in the list.",
+            "  Mode: 'Forum' or 'SAD'.",
             "",
             "Output: Timestamped folder in _forums/ with full transcripts and forum_state.md.",
             "",
             "When to use: to stress-test methodology, brainstorm, or resolve contradictions.",
             "",
-            "Example:",
+            "Example (Multi-agent):",
             "  helpi 25 $p 'Which estimator fits our 20-year longitudinal data best?'",
-            "  helpi 25 $p 'Auditing the proof for Theorem 3.1' -Agent gemini,claude"
+            "  helpi 25 $p 'Auditing Theorem 3.1' -Agent gemini,claude",
+            "",
+            "Example (Single-agent debate):",
+            "  helpi 25 $p 'Verify Section 4 results' -Agent gemini -Mode SAD"
         )}
         default { @("No help available for command $n.") }
     }
@@ -482,7 +493,11 @@ function Get-CommandPreview {
              if ($texFile) { "generate_onepager.ps1 -Project $proj -TexFile $texFile$agentText" }
              else          { "generate_onepager.ps1 -Project $proj$agentText" }
            }
-        25 { "run_forum.ps1 -ProjectName $proj -Task '$texFile'$(if ($agent) { " -Agents $agent" })" }
+        25 { 
+             $modeText = if ($mode) { " -Mode $mode" } else { "" }
+             $agentText = if ($agent) { " -Agents $agent" } else { "" }
+             "run_forum.ps1 -ProjectName $proj -Task '$texFile'$agentText$modeText" 
+           }
     }
 }
 
@@ -643,8 +658,13 @@ function Invoke-Command-N {
                      return
                  }
              }
-             if ($agent) { & "$aiRoot\run_forum.ps1" -ProjectName $proj -Task $texFile -Agents $agent }
-             else        { & "$aiRoot\run_forum.ps1" -ProjectName $proj -Task $texFile }
+             $forumParams = @{
+                 ProjectName = $proj
+                 Task        = $texFile
+             }
+             if ($agent) { $forumParams.Agents = $agent }
+             if ($mode)  { $forumParams.Mode   = $mode }
+             & "$aiRoot\run_forum.ps1" @forumParams
            }
     }
 }

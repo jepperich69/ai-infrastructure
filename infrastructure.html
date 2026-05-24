@@ -379,12 +379,18 @@
     where it is relevant, not retrieved by similarity from a black-box index.
   </p>
 
-  <h3>v &mdash; Convergence Forum: Multi-agent debate</h3>
+  <h3>v &mdash; Convergence Forum: Multi-agent and Single-agent debate</h3>
   <p>
     Complex research decisions (methodology choice, proof verification, gap detection) often benefit
     from adversarial debate. The <b>Convergence Forum</b> (<code>helpi 25</code>) orchestrates a
-    discussion where multiple agents (Claude, Gemini, Codex) challenge each other's assumptions.
-    To prevent token bloat, it uses a <b>Blackboard Model</b>: the next agent sees
+    discussion where agents challenge each other's assumptions. It supports two modes:
+  </p>
+  <ul>
+    <li><b>Forum (default):</b> Multi-agent round-robin (Claude &rarr; Gemini &rarr; Codex).</li>
+    <li><b>SAD (Single-Agent Debate):</b> A single agent takes three distinct roles sequentially: <b>The Critic</b> (skeptical peer reviewer), <b>The Advocate</b> (visionary co-author), and <b>The Realist</b> (Senior PI / Auditor). This mode is highly effective at breaking AI sycophancy with lower token overhead.</li>
+  </ul>
+  <p>
+    To prevent token bloat, both modes use a <b>Blackboard Model</b>: the next agent turn sees
     <code>forum_state.md</code>, not the full transcript. Full prompts and outputs are saved
     under <code>_forums/YYYY-MM-DD_HH-MM-SS/</code>, while the moderator updates a compact
     state with four durable sections: Convergence Log, Active Arena, Parking Lot, and Latest
@@ -1030,7 +1036,7 @@ helpi 3 Pub_X main.tex             # run command 3 with a specific .tex file</pr
     <tr><td>22</td><td>Compress AI log (trim old sessions)</td><td><code>compress_log.ps1 -Project Pub_XXX</code> &mdash; keeps last 4 sessions verbatim; collapses older ones to one-liners; archives beyond 16. Runs automatically at <code>/close</code>.</td><td><span class="tag manual">manual</span></td></tr>
     <tr><td>23</td><td>Push code/ to GitHub</td><td><code>push_to_github.ps1 -Project Pub_XXX</code> &mdash; creates GitHub repo via <code>gh</code> CLI if no remote exists, then pushes. No browser needed. Default: private repo named <code>&lt;project&gt;-code</code>.</td><td><span class="tag manual">manual</span></td></tr>
     <tr><td>24</td><td>Boil paper to technical one-pager</td><td>Reads main .tex and generates a self-contained LaTeX note distilling core ideas, formulas, and checks. Compiles to one A4 page. Uses <code>generate_onepager.ps1</code>.</td><td><span class="tag manual">manual</span></td></tr>
-    <tr><td>25</td><td>Convergence Forum (Multi-agent debate)</td><td><code>run_forum.ps1 -Project XXX -Task '...'</code> &mdash; orchestrates adversarial multi-agent debate to reach stress-tested consensus. Decisions locked in <b>Convergence Log</b>.</td><td><span class="tag manual">manual</span></td></tr>
+    <tr><td>25</td><td>Convergence Forum (Multi-agent / SAD debate)</td><td><code>run_forum.ps1 -Project XXX -Task '...' [-Mode SAD]</code> &mdash; orchestrates adversarial debate to reach stress-tested consensus. <b>Forum</b> mode uses multiple agents; <b>SAD</b> mode uses one agent in three roles (Critic, Advocate, Realist).</td><td><span class="tag manual">manual</span></td></tr>
   </table>
 </div>
 

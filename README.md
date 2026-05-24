@@ -110,6 +110,10 @@ Versioning, rollback, and submission:
 - [`stage_submission_ai.ps1`](stage_submission_ai.ps1): deterministic AI-assisted submission staging.
 - [`push_to_github.ps1`](push_to_github.ps1): push a project's `code/` repository to GitHub.
 
+Adversarial Debate:
+
+- [`run_forum.ps1`](run_forum.ps1): orchestrate a **Convergence Forum** (MAD/SAD) to reach consensus via adversarial debate. Supports **Multi-agent** round-robin and **SAD (Single-Agent Debate)** where one agent takes three distinct roles (Critic, Advocate, Realist) sequentially to break cognitive bias.
+
 Monitoring and documentation:
 
 - [`status.ps1`](status.ps1): project status dashboard.
