@@ -384,10 +384,13 @@
     Complex research decisions (methodology choice, proof verification, gap detection) often benefit
     from adversarial debate. The <b>Convergence Forum</b> (<code>helpi 25</code>) orchestrates a
     discussion where multiple agents (Claude, Gemini, Codex) challenge each other's assumptions.
-    To prevent token bloat, it uses a <b>Blackboard Model</b>: decisions are moved to a 
-    <b>Convergence Log</b> once settled, and only the active debate and compact digests are 
-    passed between turns. The result is a progressive decision trail that "converges" on a 
-    stress-tested consensus.
+    To prevent token bloat, it uses a <b>Blackboard Model</b>: the next agent sees
+    <code>forum_state.md</code>, not the full transcript. Full prompts and outputs are saved
+    under <code>_forums/YYYY-MM-DD_HH-MM-SS/</code>, while the moderator updates a compact
+    state with four durable sections: Convergence Log, Active Arena, Parking Lot, and Latest
+    Digests. The script validates that structure before accepting moderator rewrites, mirrors
+    settled decisions into <code>convergence_log.md</code>, and stops explicitly on
+    <code>Status: converged</code>, <code>adjourned</code>, or <code>failed</code>.
   </p>
 
   <h3>vi &mdash; Speed, ease of use, and openness</h3>

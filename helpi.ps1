@@ -11,7 +11,6 @@ param(
     [string]$Cmd     = "",
     [string]$Project = "",
     [string]$TexFile = "",
-    [ValidateSet("", "auto", "claude", "codex")]
     [string]$Agent   = "",
     [switch]$Force
 )
@@ -391,8 +390,9 @@ function Show-CommandHelp {
             "Orchestrates a discussion forum between multiple agents (Claude, Gemini, Codex)",
             "to reach consensus on a complex research task.",
             "",
-            "Uses a Blackboard model with a Convergence Log for token efficiency. Decisions",
-            "are locked in once consensus is reached, preventing re-litigation.",
+            "Uses a Blackboard model with compact agent digests for token efficiency.",
+            "Full transcripts are saved to _forums/, while the next turn receives only",
+            "forum_state.md: convergence log, active arena, parking lot, and latest digests.",
             "",
             "Arguments:",
             "  Task: The agenda or question to debate (required).",
@@ -404,7 +404,7 @@ function Show-CommandHelp {
             "",
             "Example:",
             "  helpi 25 $p 'Which estimator fits our 20-year longitudinal data best?'",
-            "  helpi 25 $p 'Auditing the proof for Theorem 3.1' -TexFile gemini,claude"
+            "  helpi 25 $p 'Auditing the proof for Theorem 3.1' -Agent gemini,claude"
         )}
         default { @("No help available for command $n.") }
     }
@@ -481,7 +481,7 @@ function Get-CommandPreview {
              if ($texFile) { "generate_onepager.ps1 -Project $proj -TexFile $texFile$agentText" }
              else          { "generate_onepager.ps1 -Project $proj$agentText" }
            }
-        25 { "run_forum.ps1 -Project $proj -Task '$texFile'$(if ($agent) { " -Agents $agent" })" }
+        25 { "run_forum.ps1 -ProjectName $proj -Task '$texFile'$(if ($agent) { " -Agents $agent" })" }
     }
 }
 
@@ -495,6 +495,11 @@ function Invoke-Command-N {
     if ($n -eq 24 -and $texFile -match '^(?i)(auto|claude|codex)$' -and !$agent) {
         $agent = $texFile.ToLowerInvariant()
         $texFile = ""
+    }
+
+    if ($n -eq 24 -and $agent -and $agent -notmatch '^(?i)(auto|claude|codex)$') {
+        Write-Host "ERR | helpi 24 -Agent must be auto, claude, or codex." -ForegroundColor Red
+        return
     }
     
     # helpi 25 mapping: texFile is the task, agent is the agent list
@@ -613,8 +618,19 @@ function Invoke-Command-N {
         24 { if ($texFile) { & "$aiRoot\generate_onepager.ps1" -Project $proj -TexFile $texFile -Agent $(if ($agent) { $agent } else { "auto" }) }
              else          { & "$aiRoot\generate_onepager.ps1" -Project $proj -Agent $(if ($agent) { $agent } else { "auto" }) } }
         25 {
-             $agentsArg = if ($agent) { "-Agents $agent" } else { "" }
-             & "$aiRoot\run_forum.ps1" -ProjectName $proj -Task $texFile $agentsArg
+             if (!$texFile) {
+                 if ([Console]::IsInputRedirected) {
+                     Write-Host "ERR | helpi 25 requires a forum task in non-interactive shells." -ForegroundColor Red
+                     return
+                 }
+                 $texFile = Read-Host "  Forum task"
+                 if (!$texFile) {
+                     Write-Host "ERR | No forum task provided." -ForegroundColor Red
+                     return
+                 }
+             }
+             if ($agent) { & "$aiRoot\run_forum.ps1" -ProjectName $proj -Task $texFile -Agents $agent }
+             else        { & "$aiRoot\run_forum.ps1" -ProjectName $proj -Task $texFile }
            }
     }
 }
