@@ -1,0 +1,54 @@
+﻿You are the moderator of a Research Convergence Forum.
+Update the blackboard using only the compact digest and proposed state update below.
+Do not copy the full transcript. Do not remove already settled convergence-log decisions unless they are explicitly contradicted and you explain why.
+
+AGENT: realist
+ROUND: 2
+
+AGENT DIGEST:
+The forum has produced self-validating evidence: every moderator pass has been rejected (confirmed by run log), the state is frozen at Round 0, and R2 agents received stale prompts — a live demonstration of the two bugs R1 Realist identified from code. The blocking fix is scoped: harden `Invoke-Moderator` to strip prose from Claude's response before state extraction, and count moderator rejections in `$FailureCount`. The Critic's R2 "undefined surface" attack is a byproduct of the stale blackboard, not a new finding. The Advocate's governance framing is aspirational and parks until the fix is validated. The audit is complete. Both bugs are confirmed by code inspection and live run evidence. The forum should converge now.
+
+AGENT PROPOSED STATE UPDATE:
+**[CONVERGENCE LOG]**
+- SETTLED: Audit artifact is `run_forum.ps1`, moderator state update path (`Get-CleanState`, lines 350–353 and moderator call chain).
+- SETTLED (confirmed by run log): Moderator state rejection is a confirmed blocking bug. Claude prose wrapping causes `Get-CleanState` regex to return null; state file is never updated. Fired on all 4 moderator calls in this run.
+- SETTLED: Stale blackboard propagation is a confirmed architectural consequence. Every downstream agent receives Round 0 state, breaking SAD synthesis chain.
+- SETTLED: Moderator rejections do not increment `$FailureCount`; silent data loss exits as `adjourned` not `failed`.
+- SETTLED: Fix is scoped — strip prose from `Invoke-Moderator` output before state extraction; count rejections in failure threshold.
+
+**[ACTIVE ARENA]**
+- Replace all prior arena items with: PRIMARY ACTION: Implement prose-stripping in `Invoke-Moderator` (strip everything before `# Convergence Forum:` match) and add moderator rejection to `$FailureCount`. Validate with a re-run of this forum.
+
+**[PARKING LOT]**
+- Advocate governance criteria (determinism, lifecycle, non-surprise defaults) — testable only after moderator fix is validated.
+- Realist double-moderator pass inefficiency — architectural cleanup, non-blocking.
+- Live smoke test protocol — requires explicit approval due to LLM spend.
+
+CURRENT BLACKBOARD STATE:
+# Convergence Forum: code-audit
+
+Status: active
+Round: 0
+
+## [CONVERGENCE LOG]
+- No settled decisions yet.
+
+## [ACTIVE ARENA]
+- Primary task: code-audit
+
+## [PARKING LOT]
+- No parked issues yet.
+
+## [LATEST DIGESTS]
+- No agent digests yet.
+
+Return the complete new forum_state.md only.
+Keep [LATEST DIGESTS] compact: at most the 8 most recent agent digests.
+It must contain exactly these structural fields:
+# Convergence Forum: ...
+Status: active OR converged OR adjourned OR failed
+Round: 2
+## [CONVERGENCE LOG]
+## [ACTIVE ARENA]
+## [PARKING LOT]
+## [LATEST DIGESTS]
