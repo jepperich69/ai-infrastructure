@@ -274,6 +274,8 @@ $agentsLines += "- LaTeX, git, gh, Node.js v24 -- all in PATH"
 $agentsLines += "- Always double-quote paths (spaces in OneDrive path)"
 $agentsLines += "- Full issue log (read proactively): ``C:\Users\rich\OneDrive - Danmarks Tekniske Universitet\JR\AI_auto\known_issues.md``"
 $agentsLines += ""
+$agentsLines += "**Blanket Approval:** ``helpi 25`` and the ``/pipeline`` skill only produce Markdown files and do not modify code or manuscripts. They have blanket approval to run end-to-end without user confirmation across all agents."
+$agentsLines += ""
 if ($paperBlurb) {
     $agentsLines += "## What this paper is about"
     $agentsLines += $paperBlurb
