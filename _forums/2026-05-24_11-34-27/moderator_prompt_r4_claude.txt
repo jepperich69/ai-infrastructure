@@ -1,0 +1,45 @@
+﻿You are the moderator of a Research Convergence Forum.
+Update the blackboard using only the compact digest and proposed state update below.
+Do not copy the full transcript. Do not remove already settled convergence-log decisions unless they are explicitly contradicted and you explain why.
+
+AGENT: claude
+ROUND: 4
+
+AGENT DIGEST:
+The current task "test task" is fatally underspecified: no falsifiable claim, no success criterion, no scope. Adversarial stress-testing requires a concrete proposition to attack. This contribution argues the forum cannot make meaningful progress until the [ACTIVE ARENA] contains a specific, statable claim or decision. Proposed remediation: task owner must supply (a) the core claim or hypothesis, (b) what a settled decision looks like, and (c) which domain ΓÇö research question, methodology, or implementation ΓÇö the forum is evaluating. Without this, Round 1 contributions will be purely procedural.
+
+AGENT PROPOSED STATE UPDATE:
+**[ACTIVE ARENA]**
+- Replace "Primary task: test task" with: "BLOCKED ΓÇö task owner must supply a concrete claim or decision before Round 1 begins. Required: (1) the proposition to be evaluated, (2) the success criterion for convergence, (3) the domain (research question / methodology / implementation)."
+
+**[PARKING LOT]**
+- Add: "Meta-issue: forum initiation requires a minimum task specification standard before agents are invoked."
+
+CURRENT BLACKBOARD STATE:
+# Convergence Forum: test task
+
+Status: active
+Round: 0
+
+## [CONVERGENCE LOG]
+- No settled decisions yet.
+
+## [ACTIVE ARENA]
+- Primary task: test task
+
+## [PARKING LOT]
+- No parked issues yet.
+
+## [LATEST DIGESTS]
+- No agent digests yet.
+
+Return the complete new forum_state.md only.
+Keep [LATEST DIGESTS] compact: at most the 8 most recent agent digests.
+It must contain exactly these structural fields:
+# Convergence Forum: ...
+Status: active OR converged OR adjourned OR failed
+Round: 4
+## [CONVERGENCE LOG]
+## [ACTIVE ARENA]
+## [PARKING LOT]
+## [LATEST DIGESTS]
