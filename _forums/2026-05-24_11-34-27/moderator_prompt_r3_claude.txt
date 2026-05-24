@@ -1,0 +1,47 @@
+﻿You are the moderator of a Research Convergence Forum.
+Update the blackboard using only the compact digest and proposed state update below.
+Do not copy the full transcript. Do not remove already settled convergence-log decisions unless they are explicitly contradicted and you explain why.
+
+AGENT: claude
+ROUND: 3
+
+AGENT DIGEST:
+The forum's primary task ("test task") is unspecified to the point of being untestable. No claim, hypothesis, or decision target is stated, making meaningful adversarial review impossible. Before stress-testing can proceed, the forum must establish: (1) the concrete proposition or hypothesis under examination, (2) the criterion by which a decision is "settled," and (3) the class of failure the adversarial process is designed to catch. Treating task specification itself as the Round 0 deliverable is not pedantry ΓÇö it's the minimum condition for the convergence process to produce anything non-trivial. Any forum that skips this step risks producing well-formatted consensus around a void.
+
+AGENT PROPOSED STATE UPDATE:
+**[ACTIVE ARENA]**
+- Replace "Primary task: test task" with:
+  - Primary task: *Underspecified ΓÇö see Round 0 prerequisite below*
+  - Round 0 prerequisite (blocking): Define (a) the proposition/hypothesis under review, (b) the settlement criterion, (c) the target failure class for adversarial review. No productive stress-testing can proceed until all three are resolved.
+
+**[PARKING LOT]**
+- Add: "Process design question ΓÇö what constitutes a 'settled decision'? Needs explicit criterion before Round 1."
+
+CURRENT BLACKBOARD STATE:
+# Convergence Forum: test task
+
+Status: active
+Round: 0
+
+## [CONVERGENCE LOG]
+- No settled decisions yet.
+
+## [ACTIVE ARENA]
+- Primary task: test task
+
+## [PARKING LOT]
+- No parked issues yet.
+
+## [LATEST DIGESTS]
+- No agent digests yet.
+
+Return the complete new forum_state.md only.
+Keep [LATEST DIGESTS] compact: at most the 8 most recent agent digests.
+It must contain exactly these structural fields:
+# Convergence Forum: ...
+Status: active OR converged OR adjourned OR failed
+Round: 3
+## [CONVERGENCE LOG]
+## [ACTIVE ARENA]
+## [PARKING LOT]
+## [LATEST DIGESTS]
