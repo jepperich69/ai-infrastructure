@@ -1,0 +1,55 @@
+﻿You are the moderator of a Research Convergence Forum.
+Update the blackboard using only the compact digest and proposed state update below.
+Do not copy the full transcript. Do not remove already settled convergence-log decisions unless they are explicitly contradicted and you explain why.
+
+AGENT: realist
+ROUND: 3
+
+AGENT DIGEST:
+Eight consecutive moderator rejections across 3 rounds confirm — with controlled-experiment certainty — the two blocking bugs R1 Realist identified from code: (1) `Get-CleanState` regex fails when Claude wraps output in prose, silently dropping all agent contributions; (2) `$FailureCount` excludes moderator rejections, hiding data loss behind an `adjourned` exit. The R3 Critic and Advocate contributions are unchanged from prior rounds because they received the same stale Round 0 prompt — that is evidence, not failure. The fix remains as specified: strip prose in `Invoke-Moderator` before state extraction, count moderator rejections in `$FailureCount`. The Advocate's post-fix validation criteria (predictable invocation, explicit side effects, handoff-ready artifacts) are accepted as a test plan for after the fix. The audit is complete. Convergence should be declared externally since the forum's own mechanism is the subject of the audit.
+
+AGENT PROPOSED STATE UPDATE:
+**[CONVERGENCE LOG]**
+- SETTLED: Audit artifact is `run_forum.ps1`, specifically `Get-CleanState` regex (lines 350–353) and `$FailureCount` increment logic (lines 297–310).
+- SETTLED: Moderator state rejection is confirmed blocking bug — 8 consecutive rejections across 3 full rounds, live run evidence.
+- SETTLED: Stale blackboard propagation is confirmed architectural consequence — all agents in all rounds received Round 0 state.
+- SETTLED: Silent failure masking is confirmed — moderator rejections do not increment `$FailureCount`; forum exits as `adjourned` not `failed`.
+- SETTLED: Fix is fully specified — strip prose before `# Convergence Forum:` match in `Invoke-Moderator`; count moderator rejections toward failure threshold.
+- DECLARE: Forum converged by external judgment. Evidence is in round outputs, not in state file.
+
+**[ACTIVE ARENA]**
+- CLOSED: Audit complete. No open questions remain in scope.
+
+**[PARKING LOT]**
+- Post-fix validation: test against Advocate's three criteria (predictable invocation, explicit side effects, handoff-ready artifacts).
+- Realist double-moderator pass inefficiency — non-blocking architectural cleanup.
+- Generalization to future Forum templates — valid but deferred until core fix is validated.
+
+CURRENT BLACKBOARD STATE:
+# Convergence Forum: code-audit
+
+Status: active
+Round: 0
+
+## [CONVERGENCE LOG]
+- No settled decisions yet.
+
+## [ACTIVE ARENA]
+- Primary task: code-audit
+
+## [PARKING LOT]
+- No parked issues yet.
+
+## [LATEST DIGESTS]
+- No agent digests yet.
+
+Return the complete new forum_state.md only.
+Keep [LATEST DIGESTS] compact: at most the 8 most recent agent digests.
+It must contain exactly these structural fields:
+# Convergence Forum: ...
+Status: active OR converged OR adjourned OR failed
+Round: 3
+## [CONVERGENCE LOG]
+## [ACTIVE ARENA]
+## [PARKING LOT]
+## [LATEST DIGESTS]
