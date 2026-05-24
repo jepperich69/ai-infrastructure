@@ -379,7 +379,19 @@
     where it is relevant, not retrieved by similarity from a black-box index.
   </p>
 
-  <h3>v &mdash; Speed, ease of use, and openness</h3>
+  <h3>v &mdash; Convergence Forum: Multi-agent debate</h3>
+  <p>
+    Complex research decisions (methodology choice, proof verification, gap detection) often benefit
+    from adversarial debate. The <b>Convergence Forum</b> (<code>helpi 25</code>) orchestrates a
+    discussion where multiple agents (Claude, Gemini, Codex) challenge each other's assumptions.
+    To prevent token bloat, it uses a <b>Blackboard Model</b>: decisions are moved to a 
+    <b>Convergence Log</b> once settled, and only the active debate and compact digests are 
+    passed between turns. The result is a progressive decision trail that "converges" on a 
+    stress-tested consensus.
+  </p>
+
+  <h3>vi &mdash; Speed, ease of use, and openness</h3>
+
   <p>
     The infrastructure does not replace your existing tools &mdash; it wraps around them.
     You still write in Overleaf. You still use NotebookLM for literature synthesis. You still
@@ -1014,6 +1026,8 @@ helpi 3 Pub_X main.tex             # run command 3 with a specific .tex file</pr
     <tr><td>21</td><td>First-time setup wizard (new user / new machine)</td><td><code>setup.ps1</code> &mdash; interactive wizard: sets publication root, git identity, tool paths, writes <code>config.ps1</code>, wires <code>helpi</code> into PowerShell profile, registers auto-sync task</td><td><span class="tag once">once</span></td></tr>
     <tr><td>22</td><td>Compress AI log (trim old sessions)</td><td><code>compress_log.ps1 -Project Pub_XXX</code> &mdash; keeps last 4 sessions verbatim; collapses older ones to one-liners; archives beyond 16. Runs automatically at <code>/close</code>.</td><td><span class="tag manual">manual</span></td></tr>
     <tr><td>23</td><td>Push code/ to GitHub</td><td><code>push_to_github.ps1 -Project Pub_XXX</code> &mdash; creates GitHub repo via <code>gh</code> CLI if no remote exists, then pushes. No browser needed. Default: private repo named <code>&lt;project&gt;-code</code>.</td><td><span class="tag manual">manual</span></td></tr>
+    <tr><td>24</td><td>Boil paper to technical one-pager</td><td>Reads main .tex and generates a self-contained LaTeX note distilling core ideas, formulas, and checks. Compiles to one A4 page. Uses <code>generate_onepager.ps1</code>.</td><td><span class="tag manual">manual</span></td></tr>
+    <tr><td>25</td><td>Convergence Forum (Multi-agent debate)</td><td><code>run_forum.ps1 -Project XXX -Task '...'</code> &mdash; orchestrates adversarial multi-agent debate to reach stress-tested consensus. Decisions locked in <b>Convergence Log</b>.</td><td><span class="tag manual">manual</span></td></tr>
   </table>
 </div>
 
@@ -1932,6 +1946,7 @@ claude --full-auto        # launch Claude Code without approval pauses
     <tr><td>Run helpi commands</td><td>&#10003;</td><td>&#10003;</td><td>&#10003; (use <code>! helpi N proj -Force</code>)</td></tr>
     <tr><td>Read _ai_log.md and feeders</td><td>&#10003;</td><td>&#10003;</td><td>&#10003;</td></tr>
     <tr><td>Background pipeline (<code>/pipeline</code>)</td><td>&#10003; (orchestrates all agents)</td><td>&mdash; (runs as a round inside pipeline)</td><td>&mdash; (runs as a round inside pipeline)</td></tr>
+    <tr><td>Convergence Forum (<code>helpi 25</code>)</td><td>&#10003; (orchestrates/moderates)</td><td>&#10003; (participant)</td><td>&#10003; (participant)</td></tr>
     <tr><td>Reviewer response loop (<code>/respond</code>)</td><td>&#10003;</td><td>&#10007;</td><td>&#10007;</td></tr>
     <tr><td>Submission package (<code>/submit</code>)</td><td>&#10003;</td><td>&#10007;</td><td>&#10007;</td></tr>
     <tr><td>Auto-commit after every response</td><td>&#10003; (Stop hook)</td><td>&#10007;</td><td>&#10007;</td></tr>
@@ -2218,6 +2233,8 @@ Goal: Add robustness checks to results
         <tr><td>helpi 21</td><td>First-time setup wizard (new user / new machine)</td></tr>
         <tr><td>helpi 22 Pub_XXX</td><td>Compress AI log — keeps last 4 sessions, one-liners for older</td></tr>
         <tr><td>helpi 23 Pub_XXX</td><td>Push code/ to GitHub (creates repo via gh CLI if needed)</td></tr>
+        <tr><td>helpi 24 Pub_XXX</td><td>Boil paper to technical one-pager (core idea + checks)</td></tr>
+        <tr><td>helpi 25 XXX 'Task'</td><td>Convergence Forum &mdash; adversarial multi-agent debate</td></tr>
       </table>
     </div>
 

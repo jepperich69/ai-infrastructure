@@ -78,9 +78,12 @@ $commands = @(
     [PSCustomObject]@{ N=20; NeedsProject=$false; Tag="ONCE";    Name="Restore infrastructure on replacement machine"; Example="restore.ps1" },
     [PSCustomObject]@{ N=21; NeedsProject=$false; Tag="ONCE";    Name="First-time setup for a new user/colleague";    Example="setup.ps1" },
     [PSCustomObject]@{ N=22; NeedsProject=$true;  Tag="MANUAL";  Name="Compress AI log (trim old sessions)";           Example="compress_log.ps1 -Project XXX" },
-    [PSCustomObject]@{ N=23; NeedsProject=$true;  Tag="MANUAL";  Name="Push code/ to GitHub";                          Example="push_to_github.ps1 -Project XXX" },
-    [PSCustomObject]@{ N=24; NeedsProject=$true;  Tag="MANUAL";  Name="Boil paper to technical one-pager";              Example="generate_onepager.ps1 -Project XXX" }
-)
+    [PSCustomObject]@{ N=23; NeedsProject=$true;  Tag="MANUAL";  Name="Push code/ to GitHub";                   
+       Example="push_to_github.ps1 -Project XXX" },
+    [PSCustomObject]@{ N=24; NeedsProject=$true;  Tag="MANUAL";  Name="Boil paper to technical one-pager";              Example="generate_onepager.ps1 -Project XXX" },
+    [PSCustomObject]@{ N=25; NeedsProject=$true;  Tag="MANUAL";  Name="Convergence Forum (Multi-agent debate)";
+       Example="run_forum.ps1 -Project XXX -Task '...'" }
+    )
 
 # ── Contextual help for a single command ──────────────────────────
 function Show-CommandHelp {
@@ -383,6 +386,26 @@ function Show-CommandHelp {
             "  helpi 24 $p -Agent codex",
             "  helpi 24 $p main.tex -Agent codex"
         )}
+        25 { @(
+            "Convergence Forum (Multi-agent debate)",
+            "Orchestrates a discussion forum between multiple agents (Claude, Gemini, Codex)",
+            "to reach consensus on a complex research task.",
+            "",
+            "Uses a Blackboard model with a Convergence Log for token efficiency. Decisions",
+            "are locked in once consensus is reached, preventing re-litigation.",
+            "",
+            "Arguments:",
+            "  Task: The agenda or question to debate (required).",
+            "  Agents: Comma-separated list (default: claude,gemini,codex).",
+            "",
+            "Output: Timestamped folder in _forums/ with full transcripts and forum_state.md.",
+            "",
+            "When to use: to stress-test methodology, brainstorm, or resolve contradictions.",
+            "",
+            "Example:",
+            "  helpi 25 $p 'Which estimator fits our 20-year longitudinal data best?'",
+            "  helpi 25 $p 'Auditing the proof for Theorem 3.1' -TexFile gemini,claude"
+        )}
         default { @("No help available for command $n.") }
     }
 
@@ -458,6 +481,7 @@ function Get-CommandPreview {
              if ($texFile) { "generate_onepager.ps1 -Project $proj -TexFile $texFile$agentText" }
              else          { "generate_onepager.ps1 -Project $proj$agentText" }
            }
+        25 { "run_forum.ps1 -Project $proj -Task '$texFile'$(if ($agent) { " -Agents $agent" })" }
     }
 }
 
@@ -470,6 +494,12 @@ function Invoke-Command-N {
 
     if ($n -eq 24 -and $texFile -match '^(?i)(auto|claude|codex)$' -and !$agent) {
         $agent = $texFile.ToLowerInvariant()
+        $texFile = ""
+    }
+    
+    # helpi 25 mapping: texFile is the task, agent is the agent list
+    if ($n -eq 25 -and $texFile -match '^(?i)(claude|gemini|codex)(,.*)?$' -and !$agent) {
+        $agent = $texFile
         $texFile = ""
     }
 
@@ -582,6 +612,10 @@ function Invoke-Command-N {
              else          { & "$aiRoot\push_to_github.ps1" -Project $proj } }
         24 { if ($texFile) { & "$aiRoot\generate_onepager.ps1" -Project $proj -TexFile $texFile -Agent $(if ($agent) { $agent } else { "auto" }) }
              else          { & "$aiRoot\generate_onepager.ps1" -Project $proj -Agent $(if ($agent) { $agent } else { "auto" }) } }
+        25 {
+             $agentsArg = if ($agent) { "-Agents $agent" } else { "" }
+             & "$aiRoot\run_forum.ps1" -ProjectName $proj -Task $texFile $agentsArg
+           }
     }
 }
 
