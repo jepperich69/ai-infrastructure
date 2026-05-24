@@ -1,0 +1,55 @@
+﻿You are the moderator of a Research Convergence Forum.
+Update the blackboard using only the compact digest and proposed state update below.
+Do not copy the full transcript. Do not remove already settled convergence-log decisions unless they are explicitly contradicted and you explain why.
+
+AGENT: realist
+ROUND: 4
+
+AGENT DIGEST:
+R4 Realist adds two findings not raised in prior rounds: (1) Error detection regex `^(EXCEPTION...)` uses start-of-string matching, but codex prepends metadata headers, making mid-string exceptions invisible to `$FailureCount` — a latent agent failure masking bug distinct from the confirmed moderator rejection gap. (2) The `AutoClose` block passes `$Task` (validated only as non-empty) into a prompt run under `--dangerously-skip-permissions`, creating a command injection surface for any caller controlling the Task string. The Advocate's post-fix validation criteria are accepted as a checklist but remain parked until core fixes ship. The Critic's repeated scope complaint is dismissed — it is receiving the stale Round 0 blackboard, which is itself the bug under audit. Forum is converged by external judgment: four blocking fixes are fully specified and ready to implement.
+
+AGENT PROPOSED STATE UPDATE:
+**[CONVERGENCE LOG]**
+- SETTLED (R1-R3, confirmed): Moderator state rejection (`Get-CleanState` regex, lines 87–89) — Claude prose wrapping silently drops state updates; 12+ consecutive rejections across 4 rounds.
+- SETTLED (R1-R3, confirmed): Stale blackboard propagation — all downstream agents receive Round 0 state; SAD synthesis chain broken.
+- SETTLED (R1-R3, confirmed): `$FailureCount` excludes moderator rejections — forum exits `adjourned` not `failed`, hiding data loss.
+- SETTLED (R4, new): Error detection regex `^(EXCEPTION...)` misses exceptions in agent output that follows metadata headers — latent failure masking for codex/gemini agents.
+- SETTLED (R4, new): `--dangerously-skip-permissions` in AutoClose with unvalidated `$Task` input — injection surface, must be removed or mitigated before any generalization.
+- DECLARE: Forum converged. Audit complete by external judgment. State file is frozen by the primary bug under audit.
+
+**[ACTIVE ARENA]**
+- CLOSED: All audit questions resolved. Four fixes ready to implement.
+
+**[PARKING LOT]**
+- Post-fix validation: test against Advocate's three criteria (predictable invocation, explicit side effects, handoff-ready artifacts).
+- Realist double-moderator pass — non-blocking architectural cleanup.
+- Future Forum templates (reproducibility-audit, theory-audit, reviewer-response) — deferred until core fix validated and `--dangerously-skip-permissions` removed.
+
+CURRENT BLACKBOARD STATE:
+# Convergence Forum: code-audit
+
+Status: active
+Round: 0
+
+## [CONVERGENCE LOG]
+- No settled decisions yet.
+
+## [ACTIVE ARENA]
+- Primary task: code-audit
+
+## [PARKING LOT]
+- No parked issues yet.
+
+## [LATEST DIGESTS]
+- No agent digests yet.
+
+Return the complete new forum_state.md only.
+Keep [LATEST DIGESTS] compact: at most the 8 most recent agent digests.
+It must contain exactly these structural fields:
+# Convergence Forum: ...
+Status: active OR converged OR adjourned OR failed
+Round: 4
+## [CONVERGENCE LOG]
+## [ACTIVE ARENA]
+## [PARKING LOT]
+## [LATEST DIGESTS]
