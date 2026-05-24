@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -388,6 +388,16 @@
   <ul>
     <li><b>Forum (default):</b> Multi-agent round-robin (Claude &rarr; Gemini &rarr; Codex).</li>
     <li><b>SAD (Single-Agent Debate):</b> A single agent takes three distinct roles sequentially: <b>The Critic</b> (skeptical peer reviewer), <b>The Advocate</b> (visionary co-author), and <b>The Realist</b> (Senior PI / Auditor). This mode is highly effective at breaking AI sycophancy with lower token overhead.</li>
+  </ul>
+  <p>
+    The forum supports four built-in <b>Consensus Templates</b> (task shortcuts) for standardized research auditing:
+  </p>
+  <ul>
+    <li><code>lit-review</code>: Systematic search and gap detection matrix builder.</li>
+    <li><code>math-verify</code>: Formal proof auditor (Assumption check, Notational integrity).</li>
+    <li><code>repro-audit</code>: 5-check verifier for reproduction suites (Seeds, Artifact parity).</li>
+    <li><code>final-pass</code>: 7-pillar manuscript audit (Consistency, Seams, Compliance).</li>
+    <li><code>code-audit</code>: PowerShell syntax verification and architectural opinion.</li>
   </ul>
   <p>
     To prevent token bloat, both modes use a <b>Blackboard Model</b>: the next agent turn sees

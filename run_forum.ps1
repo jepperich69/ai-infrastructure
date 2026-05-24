@@ -14,6 +14,15 @@
 
 .PARAMETER MaxRounds
     Maximum number of discussion rounds (default: 5).
+
+.PARAMETER Mode
+    Execution mode: 'Forum' (default) or 'SAD' (Systematic Adversarial Design).
+
+.PARAMETER OpenFinal
+    Open the final forum markdown file when the run ends.
+
+.PARAMETER AutoClose
+    Ask Claude to append a session close entry after the forum run.
 #>
 
 param(
@@ -29,7 +38,11 @@ param(
     [int]$MaxRounds = 5,
 
     [ValidateSet("Forum", "SAD")]
-    [string]$Mode = "Forum"
+    [string]$Mode = "Forum",
+
+    [switch]$OpenFinal,
+
+    [switch]$AutoClose
 )
 
 $ErrorActionPreference = "Stop"
@@ -37,7 +50,61 @@ $ErrorActionPreference = "Stop"
 $AiRoot = $PSScriptRoot
 $PubRoot = "C:\Users\rich\OneDrive - Danmarks Tekniske Universitet\JR\Publikationer"
 
-# ... (Limit-Text, Get-Section, Get-CleanState, Test-ForumState functions unchanged)
+# Resolve templates
+if ($Task -and $Task -notmatch "[\r\n]" -and $Task.Length -lt 255 -and (Test-Path (Join-Path $AiRoot "prompts\$($Task).md"))) {
+    $TemplateFile = Join-Path $AiRoot "prompts\$($Task).md"
+    Write-Host "Resolved template: $Task" -ForegroundColor Gray
+    $TaskName = $Task
+    $Task = Get-Content $TemplateFile -Raw
+} else {
+    $TaskName = $Task
+}
+
+function Limit-Text {
+    param(
+        [AllowNull()]
+        [string]$Text,
+        [int]$MaxChars = 12000
+    )
+    if (!$Text) { return "" }
+    if ($Text.Length -le $MaxChars) { return $Text }
+    return $Text.Substring(0, $MaxChars) + "`n[truncated at $MaxChars chars; see transcript file for full output]"
+}
+
+function Get-Section {
+    param(
+        [string]$Text,
+        [string]$SectionName
+    )
+    $pattern = "(?ms)^===\s*$([regex]::Escape($SectionName))\s*===\s*(.*?)(?=^===\s*[^`r`n]+?\s*===|\z)"
+    $match = [regex]::Match($Text, $pattern)
+    if ($match.Success) { return $match.Groups[1].Value.Trim() }
+    return ""
+}
+
+function Get-CleanState {
+    param([string]$Text)
+    $match = [regex]::Match($Text, "(?ms)^# Convergence Forum:.*")
+    if ($match.Success) { return $match.Value.Trim() }
+    return $Text.Trim()
+}
+
+function Test-ForumState {
+    param([string]$Text)
+    if (!$Text) { return $false }
+    $required = @(
+        "# Convergence Forum:",
+        "Status:",
+        "## [CONVERGENCE LOG]",
+        "## [ACTIVE ARENA]",
+        "## [PARKING LOT]",
+        "## [LATEST DIGESTS]"
+    )
+    foreach ($needle in $required) {
+        if ($Text -notlike "*$needle*") { return $false }
+    }
+    return $true
+}
 
 function Invoke-Agent {
     param(
@@ -61,7 +128,6 @@ function Invoke-Agent {
             return & claude -p $promptText 2>&1
         }
         "gemini" {
-            # Use a slightly more capable model for SAD if available, otherwise default
             return & gemini -p $promptText --yolo --output-format text 2>&1
         }
         "codex" {
@@ -92,42 +158,87 @@ function Invoke-Moderator {
     return & claude -p $promptText 2>&1
 }
 
-# ... (ProjectPath resolution, Timestamp, ForumDir setup unchanged)
+$ProjectPath = ""
+if ($ProjectName) {
+    if ($ProjectName -eq "AI_auto") {
+        $ProjectPath = $AiRoot
+    } else {
+        $ProjectPath = Join-Path $PubRoot $ProjectName
+    }
+    if (-not (Test-Path -LiteralPath $ProjectPath)) {
+        Write-Error "Project path not found: $ProjectPath"
+        exit 1
+    }
+}
 
 $AgentsArray = @(
     $Agents -split "," |
         ForEach-Object { $_.Trim().ToLowerInvariant() } |
         Where-Object { $_ }
 )
+if ($AgentsArray.Count -eq 0) {
+    Write-Error "No agents specified."
+    exit 1
+}
 
-if ($Mode -eq "SAD") {
-    if ($AgentsArray.Count -gt 1) {
-        Write-Host "SAD Mode: Using only the first agent ($($AgentsArray[0])) for all roles." -ForegroundColor Yellow
-        $AgentsArray = @($AgentsArray[0])
+$AllowedAgents = @("claude", "gemini", "codex")
+foreach ($agent in $AgentsArray) {
+    if ($agent -notin $AllowedAgents) {
+        Write-Error "Unknown forum agent '$agent'. Allowed agents: $($AllowedAgents -join ', ')."
+        exit 1
     }
 }
 
-# ... (AllowedAgents check, InitialState, StateFile setup unchanged)
+$Timestamp = Get-Date -Format "yyyy-MM-dd_HH-mm-ss"
+$ForumRoot = if ($ProjectPath) { Join-Path $ProjectPath "_forums" } else { Join-Path $AiRoot "_forums" }
+$ForumDir = Join-Path $ForumRoot $Timestamp
+New-Item -ItemType Directory -Path $ForumDir -Force | Out-Null
+
+$StateFile = Join-Path $ForumDir "forum_state.md"
+$ConvergenceLogFile = Join-Path $ForumDir "convergence_log.md"
+$RunLogFile = Join-Path $ForumDir "forum_run_log.md"
+$FinalFile = Join-Path $ForumDir "final.md"
+
+$InitialState = @"
+# Convergence Forum: $TaskName
+
+Status: active
+Round: 0
+
+## [CONVERGENCE LOG]
+- No settled decisions yet.
+
+## [ACTIVE ARENA]
+- Primary task: $TaskName
+
+## [PARKING LOT]
+- No parked issues yet.
+
+## [LATEST DIGESTS]
+- No agent digests yet.
+"@
+
+[System.IO.File]::WriteAllText($StateFile, $InitialState, [System.Text.Encoding]::UTF8)
+[System.IO.File]::WriteAllText($ConvergenceLogFile, "# Convergence Log`n`nStarted: $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')`n`n- No settled decisions yet.`n", [System.Text.Encoding]::UTF8)
+[System.IO.File]::WriteAllText($RunLogFile, "# Forum Run Log`n`nTask: $TaskName`nAgents: $Agents`nMode: $Mode`nStarted: $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')`n`n", [System.Text.Encoding]::UTF8)
 
 $StopForum = $false
 $FailureCount = 0
 $StartTime = Get-Date
 
-Write-Host "Starting Convergence Forum ($Mode mode) in $ForumDir" -ForegroundColor Cyan
+Write-Host "Starting Convergence Forum in $ForumDir" -ForegroundColor Cyan
 
-$CurrentRound = 1
-while ($CurrentRound -le $MaxRounds -and -not $StopForum) {
-    
-    $Participants = if ($Mode -eq "SAD") { 
-        @("critic", "advocate", "realist") 
-    } else { 
-        $AgentsArray 
-    }
+$ParticipantList = @()
+if ($Mode -eq "SAD") {
+    $PrimaryAgent = $AgentsArray[0]
+    $ParticipantList = @("critic", "advocate", "realist")
+} else {
+    $ParticipantList = $AgentsArray
+}
 
-    foreach ($role in $Participants) {
-        $agent = if ($Mode -eq "SAD") { $AgentsArray[0] } else { $role }
-        
-        Write-Host "Round ${CurrentRound}: Role [$role] (Agent $agent) is thinking..." -ForegroundColor Yellow
+for ($CurrentRound = 1; $CurrentRound -le $MaxRounds -and -not $StopForum; $CurrentRound++) {
+    foreach ($participant in $ParticipantList) {
+        Write-Host "Round ${CurrentRound}: Role $participant is thinking..." -ForegroundColor Yellow
 
         $BlackboardState = Get-Content -LiteralPath $StateFile -Raw -Encoding UTF8
         $Prompt = @"
@@ -147,52 +258,65 @@ A max 200-word summary of your new contribution.
 === STATE UPDATE ===
 Concrete proposed edits to [CONVERGENCE LOG], [ACTIVE ARENA], or [PARKING LOT].
 
-AGENT ROLE: $role
+AGENT ROLE: $participant
 "@
 
-        $RoundPromptFile = Join-Path $ForumDir "prompt_r${CurrentRound}_${role}.txt"
-        $RoundOutputFile = Join-Path $ForumDir "output_r${CurrentRound}_${role}.md"
-        $RolePromptFile = if ($Mode -eq "SAD") { Join-Path $AiRoot "prompts\forum_roles\${role}_sys.md" } else { "" }
-        
+        $RoundPromptFile = Join-Path $ForumDir "prompt_r${CurrentRound}_${participant}.txt"
+        $RoundOutputFile = Join-Path $ForumDir "output_r${CurrentRound}_${participant}.md"
         [System.IO.File]::WriteAllText($RoundPromptFile, $Prompt, [System.Text.Encoding]::UTF8)
 
+        $RolePromptFile = ""
+        if ($Mode -eq "SAD") {
+            $RolePromptFile = Join-Path $AiRoot "prompts\forum_roles\${participant}_sys.md"
+        }
+
         try {
-            if ($role -eq "realist" -and $Mode -eq "SAD") {
-                # Realist pass in SAD mode uses the Moderator invocation for higher weight
+            if ($Mode -eq "SAD" -and $participant -eq "realist") {
                 $output = Invoke-Moderator -PromptFile $RoundPromptFile -ProjectPath $ProjectPath -RolePromptFile $RolePromptFile
             } else {
-                $output = Invoke-Agent -Agent $agent -PromptFile $RoundPromptFile -ProjectPath $ProjectPath -RolePromptFile $RolePromptFile
+                $execAgent = if ($Mode -eq "SAD") { $PrimaryAgent } else { $participant }
+                $output = Invoke-Agent -Agent $execAgent -PromptFile $RoundPromptFile -ProjectPath $ProjectPath -RolePromptFile $RolePromptFile
             }
             $exitCode = if ($LASTEXITCODE -is [int]) { $LASTEXITCODE } else { 0 }
             if (-not $output) { $output = "(no output returned)" }
         } catch {
-            $output = "EXCEPTION in round ${CurrentRound} (${role}): $($_.Exception.Message)"
+            $output = "EXCEPTION in round ${CurrentRound} (${participant}): $($_.Exception.Message)"
             $exitCode = 1
         }
 
-        # ... (OutputStr processing, Digest extraction, stateUpdate extraction unchanged)
+        $outputStr = if ($output -is [array]) { $output -join "`n" } else { "$output" }
+        [System.IO.File]::WriteAllText($RoundOutputFile, $outputStr, [System.Text.Encoding]::UTF8)
+
+        $digest = Get-Section -Text $outputStr -SectionName "DIGEST"
+        $stateUpdate = Get-Section -Text $outputStr -SectionName "STATE UPDATE"
+        if (!$digest) { $digest = Limit-Text -Text $outputStr -MaxChars 1200 }
+        if (!$stateUpdate) { $stateUpdate = "(No explicit state update provided.)" }
+        $digest = Limit-Text -Text $digest -MaxChars 1600
+        $stateUpdate = Limit-Text -Text $stateUpdate -MaxChars 2400
 
         if ($exitCode -ne 0 -or $outputStr -match "^(EXCEPTION|error:|ERR\s*\|)") {
             $FailureCount++
-            Add-Content -LiteralPath $RunLogFile -Encoding UTF8 -Value "- Round ${CurrentRound} ${role}: FAILED. See $RoundOutputFile"
+            Add-Content -LiteralPath $RunLogFile -Encoding UTF8 -Value "- Round ${CurrentRound} ${participant}: FAILED. See $RoundOutputFile"
         } else {
-            Add-Content -LiteralPath $RunLogFile -Encoding UTF8 -Value "- Round ${CurrentRound} ${role}: complete. See $RoundOutputFile"
+            Add-Content -LiteralPath $RunLogFile -Encoding UTF8 -Value "- Round ${CurrentRound} ${participant}: complete. See $RoundOutputFile"
         }
 
         if ($FailureCount -ge 2) {
-            # ... (FailedState logic unchanged)
+            $failedState = Get-Content -LiteralPath $StateFile -Raw -Encoding UTF8
+            $failedState = $failedState -replace "(?m)^Status:.*$", "Status: failed"
+            $failedState += "`n`n## [ADJOURNMENT]`nForum stopped after $FailureCount agent failures. Check forum_run_log.md and transcript files.`n"
+            [System.IO.File]::WriteAllText($StateFile, $failedState, [System.Text.Encoding]::UTF8)
             $StopForum = $true
             break
         }
 
-        # Moderator Pass
         Write-Host "Updating Blackboard State..." -ForegroundColor Gray
         $ModeratorPrompt = @"
 You are the moderator of a Research Convergence Forum.
 Update the blackboard using only the compact digest and proposed state update below.
 Do not copy the full transcript. Do not remove already settled convergence-log decisions unless they are explicitly contradicted and you explain why.
 
-ROLE: $role
+AGENT: $participant
 ROUND: $CurrentRound
 
 AGENT DIGEST:
@@ -216,7 +340,7 @@ Round: $CurrentRound
 ## [LATEST DIGESTS]
 "@
 
-        $ModeratorPromptFile = Join-Path $ForumDir "moderator_prompt_r${CurrentRound}_${role}.txt"
+        $ModeratorPromptFile = Join-Path $ForumDir "moderator_prompt_r${CurrentRound}_${participant}.txt"
         [System.IO.File]::WriteAllText($ModeratorPromptFile, $ModeratorPrompt, [System.Text.Encoding]::UTF8)
 
         try {
@@ -226,14 +350,15 @@ Round: $CurrentRound
             if (Test-ForumState -Text $cleanState) {
                 [System.IO.File]::WriteAllText($StateFile, $cleanState, [System.Text.Encoding]::UTF8)
             } else {
-                Add-Content -LiteralPath $RunLogFile -Encoding UTF8 -Value "- Round ${CurrentRound} ${role}: moderator state rejected; previous state preserved."
+                Add-Content -LiteralPath $RunLogFile -Encoding UTF8 -Value "- Round ${CurrentRound} ${participant}: moderator state rejected; previous state preserved."
             }
         } catch {
-            Add-Content -LiteralPath $RunLogFile -Encoding UTF8 -Value "- Round ${CurrentRound} ${role}: moderator failed: $($_.Exception.Message)"
+            Add-Content -LiteralPath $RunLogFile -Encoding UTF8 -Value "- Round ${CurrentRound} ${participant}: moderator failed: $($_.Exception.Message)"
         }
 
         $StateContent = Get-Content -LiteralPath $StateFile -Raw -Encoding UTF8
-        # ... (ConvergenceSection extraction unchanged)
+        $ConvergenceSection = if ($StateContent -match "(?ms)## \[CONVERGENCE LOG\]\s*(.*?)(?=^## \[|\z)") { $Matches[1].Trim() } else { "" }
+        [System.IO.File]::WriteAllText($ConvergenceLogFile, "# Convergence Log`n`nUpdated: $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')`n`n$ConvergenceSection`n", [System.Text.Encoding]::UTF8)
 
         if ($StateContent -match "(?m)^Status:\s*(converged|adjourned|failed)\s*$") {
             $StopForum = $true
@@ -241,11 +366,14 @@ Round: $CurrentRound
             break
         }
     }
-    $CurrentRound++
 }
 
-# ... (FinalFile, Duration, Auto-Close logic unchanged)
-
+$PostLoopState = Get-Content -LiteralPath $StateFile -Raw -Encoding UTF8
+if ($PostLoopState -match "(?m)^Status:\s*active\s*$") {
+    $PostLoopState = $PostLoopState -replace "(?m)^Status:.*$", "Status: adjourned"
+    $PostLoopState += "`n`n## [ADJOURNMENT]`nForum stopped after $MaxRounds rounds without convergence.`n"
+    [System.IO.File]::WriteAllText($StateFile, $PostLoopState, [System.Text.Encoding]::UTF8)
+}
 
 $EndTime = Get-Date
 $Duration = ($EndTime - $StartTime).ToString("hh\:mm\:ss")
@@ -264,9 +392,12 @@ Add-Content -LiteralPath $RunLogFile -Encoding UTF8 -Value "`nFinished: $(Get-Da
 Add-Content -LiteralPath $RunLogFile -Encoding UTF8 -Value "Final state: $FinalFile"
 
 Write-Host "Forum concluded. Results in $ForumDir" -ForegroundColor Cyan
-try { Invoke-Item $FinalFile } catch { Write-Host "WARN | Could not open final forum file: $($_.Exception.Message)" -ForegroundColor Yellow }
+Write-Host "Final state: $FinalFile" -ForegroundColor DarkGray
+if ($OpenFinal) {
+    try { Invoke-Item $FinalFile } catch { Write-Host "WARN | Could not open final forum file: $($_.Exception.Message)" -ForegroundColor Yellow }
+}
 
-if ($ProjectPath) {
+if ($ProjectPath -and $AutoClose) {
     $finalExcerpt = Get-Content -LiteralPath $FinalFile -Raw -Encoding UTF8
     $finalExcerpt = Limit-Text -Text $finalExcerpt -MaxChars 3000
     $gitStatus = (& git -C $ProjectPath status --short 2>&1) -join "`n"
@@ -277,7 +408,7 @@ Project directory: $ProjectPath
 
 FORUM SESSION:
 - Date: $(Get-Date -Format 'yyyy-MM-dd HH:mm')
-- Task: $Task
+- Task: $TaskName
 - Agents: $($AgentsArray -join ' -> ')
 - Duration: $Duration
 - Output: $FinalFile

@@ -248,7 +248,20 @@ Symptom: `The term '.\helpi.ps1' is not recognized as a name of a cmdlet, functi
 
 ---
 
-## Adding new entries
+### 20. `&&` is not a valid statement separator in PowerShell
+**Status:** platform-fact
+
+The `&&` operator is only available in PowerShell 7+. On this machine, some environments (or the default PowerShell version invoked by agents) may not support it. Use `;` for sequential execution or `if ($?) { ... }` for conditional execution.
+
+**Wrong pattern (do not repeat):**
+`git status && git add .`
+
+**Correct pattern:**
+`git status; git add .`
+or
+`git status; if ($?) { git add . }`
+
+Symptom: `The token '&&' is not a valid statement separator in this version.` This has occurred during git operations and multi-tool pushes.
 
 When an issue recurs (2+ times), append a new numbered entry here with:
 

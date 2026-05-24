@@ -18,6 +18,8 @@ param(
 
 . "$PSScriptRoot\config.ps1"
 
+$ForumTemplateNames = @("lit-review", "math-verify", "repro-audit", "final-pass", "code-audit")
+
 # ── Auto-detect project from current working directory ─────────────
 function Get-ProjectFromCwd {
     $cwd = (Get-Location).Path
@@ -54,21 +56,44 @@ function Set-LastProject([string]$proj) {
     Set-Content -Path $helpiStateFile -Value $proj -Encoding UTF8
 }
 
+function Test-ForumTemplateName([string]$value) {
+    if (!$value) { return $false }
+    return $ForumTemplateNames -contains $value.ToLowerInvariant()
+}
+
+function Resolve-ForumProjectFallback {
+    $proj = Get-ProjectFromCwd
+    if (!$proj) { $proj = Get-LastProject }
+    return $proj
+}
+
+# helpi 25 supports compact template syntax:
+#   helpi 25 code-audit
+#   helpi 25 code-audit -Agent codex -Mode SAD
+if ($Cmd -eq "25" -and (Test-ForumTemplateName $Project) -and !$TexFile) {
+    $TexFile = $Project
+    $Project = Resolve-ForumProjectFallback
+}
+
 # ── Command definitions ────────────────────────────────────────────
 $commands = @(
-    [PSCustomObject]@{ N=1;  NeedsProject=$true;  Tag="ONCE";    Name="Create new project";                        Example="new_project.ps1 -Project XXX" },
+    [PSCustomObject]@{ N=1;  NeedsProject=$true;  Tag="ONCE";    Name="Create new project";
+         Example="new_project.ps1 -Project XXX" },
     [PSCustomObject]@{ N=2;  NeedsProject=$false; Tag="AUTO 4h"; Name="Pull all projects from Overleaf";           Example="sync_all.ps1" },
     [PSCustomObject]@{ N=3;  NeedsProject=$true;  Tag="MANUAL";  Name="Pull one project from Overleaf";            Example="sync_one.ps1 -Project XXX" },
     [PSCustomObject]@{ N=4;  NeedsProject=$true;  Tag="MANUAL";  Name="Push local edits to Overleaf";              Example="push_to_overleaf.ps1 -Project XXX" },
     [PSCustomObject]@{ N=5;  NeedsProject=$true;  Tag="MANUAL";  Name="Compile + open project (VS Code + PDF)";    Example="open_project.ps1 -Project XXX" },
-    [PSCustomObject]@{ N=6;  NeedsProject=$true;  Tag="MANUAL";  Name="Compile LaTeX + open PDF";                  Example="compile_latex.ps1 -Project XXX" },
+    [PSCustomObject]@{ N=6;  NeedsProject=$true;  Tag="MANUAL";  Name="Compile LaTeX + open PDF";
+         Example="compile_latex.ps1 -Project XXX" },
     [PSCustomObject]@{ N=7;  NeedsProject=$true;  Tag="MANUAL";  Name="Log + handover + open in browser";          Example="claude -p close.md + handover in XXX" },
     [PSCustomObject]@{ N=8;  NeedsProject=$true;  Tag="MANUAL";  Name="Snapshot Overleaf source (git tag)";        Example="snapshot.ps1 -Project XXX [-Tag V2]" },
     [PSCustomObject]@{ N=9;  NeedsProject=$true;  Tag="MANUAL";  Name="Rollback last N code commits";              Example="rollback.ps1 -Project XXX -N 1" },
-    [PSCustomObject]@{ N=10; NeedsProject=$true;  Tag="MANUAL";  Name="Build submission package";                  Example="submit.ps1 -Project XXX" },
+    [PSCustomObject]@{ N=10; NeedsProject=$true;  Tag="MANUAL";  Name="Build submission package";
+         Example="submit.ps1 -Project XXX" },
     [PSCustomObject]@{ N=11; NeedsProject=$true;  Tag="MANUAL";  Name="Reviewer scaffold (.txt -> LaTeX + push)";  Example="respond_scaffold.md in XXX" },
     [PSCustomObject]@{ N=12; NeedsProject=$true;  Tag="MANUAL";  Name="Reviewer draft loop (pull -> draft -> push)";Example="respond_draft.md in XXX" },
-    [PSCustomObject]@{ N=13; NeedsProject=$false; Tag="INFO";    Name="Project status dashboard";                  Example="status.ps1" },
+    [PSCustomObject]@{ N=13; NeedsProject=$false; Tag="INFO";    Name="Project status dashboard";
+         Example="status.ps1" },
     [PSCustomObject]@{ N=14; NeedsProject=$false; Tag="INFO";    Name="Open project network graph";                Example="network.ps1" },
     [PSCustomObject]@{ N=15; NeedsProject=$false; Tag="INFO";    Name="Open infrastructure guide";                 Example="Start-Process infrastructure.html" },
     [PSCustomObject]@{ N=16; NeedsProject=$false; Tag="MANUAL";  Name="Generate docs (summary + full HTML/PDF)";   Example="generate_docs.ps1" },
@@ -78,8 +103,8 @@ $commands = @(
     [PSCustomObject]@{ N=20; NeedsProject=$false; Tag="ONCE";    Name="Restore infrastructure on replacement machine"; Example="restore.ps1" },
     [PSCustomObject]@{ N=21; NeedsProject=$false; Tag="ONCE";    Name="First-time setup for a new user/colleague";    Example="setup.ps1" },
     [PSCustomObject]@{ N=22; NeedsProject=$true;  Tag="MANUAL";  Name="Compress AI log (trim old sessions)";           Example="compress_log.ps1 -Project XXX" },
-    [PSCustomObject]@{ N=23; NeedsProject=$true;  Tag="MANUAL";  Name="Push code/ to GitHub";                   
-       Example="push_to_github.ps1 -Project XXX" },
+    [PSCustomObject]@{ N=23; NeedsProject=$true;  Tag="MANUAL";  Name="Push code/ to GitHub";
+         Example="push_to_github.ps1 -Project XXX" },
     [PSCustomObject]@{ N=24; NeedsProject=$true;  Tag="MANUAL";  Name="Boil paper to technical one-pager";              Example="generate_onepager.ps1 -Project XXX" },
     [PSCustomObject]@{ N=25; NeedsProject=$true;  Tag="MANUAL";  Name="Convergence Forum (Multi-agent/Single-agent debate)";
        Example="run_forum.ps1 -Project XXX -Task '...' [-Mode SAD]" }
@@ -392,6 +417,12 @@ function Show-CommandHelp {
             "Orchestrates a discussion forum between agents to reach consensus",
             "on a complex research task.",
             "",
+            "Templates (Task shortcuts):",
+            "  lit-review   Systematic literature search and gap detection",
+            "  math-verify  Formal proof and notation audit",
+            "  repro-audit  Code reproduction and artifact fidelity check",
+            "  final-pass   7-pillar manuscript editorial audit",
+            "",
             "Modes:",
             "  Forum (default): Multi-agent round-robin (Claude -> Gemini -> Codex).",
             "  SAD (Single-Agent Debate): One agent takes three roles sequentially:",
@@ -402,7 +433,7 @@ function Show-CommandHelp {
             "forum_state.md: convergence log, active arena, parking lot, and latest digests.",
             "",
             "Arguments:",
-            "  Task: The agenda or question to debate (required).",
+            "  Task: The agenda or question to debate (required). Can be a template name.",
             "  Agents: Comma-separated list (default: claude,gemini,codex). In SAD mode,",
             "          uses only the first agent in the list.",
             "  Mode: 'Forum' or 'SAD'.",
@@ -411,12 +442,17 @@ function Show-CommandHelp {
             "",
             "When to use: to stress-test methodology, brainstorm, or resolve contradictions.",
             "",
+            "Shortcut from inside a project or AI_auto:",
+            "  helpi 25 code-audit",
+            "  helpi 25 code-audit -Agent codex -Mode SAD",
+            "",
             "Example (Multi-agent):",
-            "  helpi 25 $p 'Which estimator fits our 20-year longitudinal data best?'",
+            "  helpi 25 $p lit-review",
+            "  helpi 25 $p code-audit",
             "  helpi 25 $p 'Auditing Theorem 3.1' -Agent gemini,claude",
             "",
             "Example (Single-agent debate):",
-            "  helpi 25 $p 'Verify Section 4 results' -Agent gemini -Mode SAD"
+            "  helpi 25 $p repro-audit -Agent gemini -Mode SAD"
         )}
         default { @("No help available for command $n.") }
     }
@@ -493,10 +529,10 @@ function Get-CommandPreview {
              if ($texFile) { "generate_onepager.ps1 -Project $proj -TexFile $texFile$agentText" }
              else          { "generate_onepager.ps1 -Project $proj$agentText" }
            }
-        25 { 
+        25 {
              $modeText = if ($mode) { " -Mode $mode" } else { "" }
              $agentText = if ($agent) { " -Agents $agent" } else { "" }
-             "run_forum.ps1 -ProjectName $proj -Task '$texFile'$agentText$modeText" 
+             "run_forum.ps1 -ProjectName $proj -Task '$texFile'$agentText$modeText"
            }
     }
 }
@@ -517,7 +553,7 @@ function Invoke-Command-N {
         Write-Host "ERR | helpi 24 -Agent must be auto, claude, or codex." -ForegroundColor Red
         return
     }
-    
+
     # helpi 25 mapping: texFile is the task, agent is the agent list
     if ($n -eq 25 -and $texFile -match '^(?i)(claude|gemini|codex)(,.*)?$' -and !$agent) {
         $agent = $texFile
@@ -645,25 +681,65 @@ function Invoke-Command-N {
         23 { if ($texFile) { & "$aiRoot\push_to_github.ps1" -Project $proj -RepoName $texFile }
              else          { & "$aiRoot\push_to_github.ps1" -Project $proj } }
         24 { if ($texFile) { & "$aiRoot\generate_onepager.ps1" -Project $proj -TexFile $texFile -Agent $(if ($agent) { $agent } else { "auto" }) }
-             else          { & "$aiRoot\generate_onepager.ps1" -Project $proj -Agent $(if ($agent) { $agent } else { "auto" }) } }
-        25 {
+             else          { & "$aiRoot\generate_onepager.ps1" -Project $proj -Agent $(if ($agent) { $agent } else { "auto" }) } }        25 {
              if (!$texFile) {
                  if ([Console]::IsInputRedirected) {
                      Write-Host "ERR | helpi 25 requires a forum task in non-interactive shells." -ForegroundColor Red
                      return
                  }
-                 $texFile = Read-Host "  Forum task"
-                 if (!$texFile) {
-                     Write-Host "ERR | No forum task provided." -ForegroundColor Red
-                     return
+
+                 Write-Host ""
+                 Write-Host "  Select a Convergence Forum template:" -ForegroundColor Cyan
+                 Write-Host "  [1] lit-review   (Literature search and gap detection)"
+                 Write-Host "  [2] math-verify  (Formal proof and notation audit)"
+                 Write-Host "  [3] repro-audit  (Code reproduction and artifact fidelity)"
+                 Write-Host "  [4] final-pass   (7-pillar manuscript editorial audit)"
+                 Write-Host "  [5] code-audit   (Syntax check and architectural opinion)"
+                 Write-Host "  [6] Custom task..."
+                 Write-Host ""
+                 $choice = Read-Host "  Selection [1-5]"
+
+                 $templateMap = @{
+                     "1" = "lit-review"
+                     "2" = "math-verify"
+                     "3" = "repro-audit"
+                     "4" = "final-pass"
+                     "5" = "code-audit"
+                 }
+
+                 if ($templateMap.ContainsKey($choice)) {
+                     $texFile = $templateMap[$choice]
+                     Write-Host "  Selected template: $texFile" -ForegroundColor Gray
+                 } else {
+                     $texFile = Read-Host "  Forum task"
+                     if (!$texFile) {
+                         Write-Host "ERR | No forum task provided." -ForegroundColor Red
+                         return
+                     }
                  }
              }
+
+             if (!$Mode -and ![Console]::IsInputRedirected) {
+                 Write-Host ""
+                 Write-Host "  Select forum mode:" -ForegroundColor Cyan
+                 Write-Host "  [1] Forum  (Multi-agent)"
+                 Write-Host "  [2] SAD    (Single-agent debate)"
+                 Write-Host ""
+                 $mChoice = Read-Host "  Selection [1-2, default 1]"
+                 if ($mChoice -eq "2") {
+                     $Mode = "SAD"
+                 } else {
+                     $Mode = "Forum"
+                 }
+                 Write-Host "  Selected mode: $Mode" -ForegroundColor Gray
+             }
+
              $forumParams = @{
                  ProjectName = $proj
                  Task        = $texFile
              }
              if ($agent) { $forumParams.Agents = $agent }
-             if ($mode)  { $forumParams.Mode   = $mode }
+             if ($Mode)  { $forumParams.Mode   = $Mode }
              & "$aiRoot\run_forum.ps1" @forumParams
            }
     }

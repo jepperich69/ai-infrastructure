@@ -30,7 +30,7 @@
 <body>
 
 <h1>Handover Document &mdash; AI_auto</h1>
-<div class="meta">Generated: 2026-05-24 12:49 &nbsp;|&nbsp; Source: <code style="display:inline;padding:2px 6px">_ai_log.md</code> &nbsp;|&nbsp; Sidecar: <code style="display:inline;padding:2px 6px">_handover.json</code></div>
+<div class="meta">Generated: 2026-05-24 15:37 &nbsp;|&nbsp; Source: <code style="display:inline;padding:2px 6px">_ai_log.md</code> &nbsp;|&nbsp; Sidecar: <code style="display:inline;padding:2px 6px">_handover.json</code></div>
 
 <!-- ============================================================ -->
 <!-- AGENT INSTRUCTIONS                                            -->
@@ -62,17 +62,15 @@
 <div class="latest-session">
   <div class="session-status ok">Complete</div>
   <h2>Latest Session Snapshot</h2>
-  <p><strong>Session:</strong> 2026-05-24h</p>
+  <p><strong>Session:</strong> 2026-05-24n</p>
   <p><strong>Agent:</strong> Codex</p>
-  <p><strong>Goal:</strong> Refine Convergence Forum slides and remove the MiKTeX compile blocker.</p>
-  <p><strong>Outcome:</strong> Slide revisions were committed and pushed to Overleaf. MiKTeX was initialized for the normal user, packages were updated, `pdflatex` format was rebuilt, and `helpi 6 AI_auto -Force` produced a fresh 25-page PDF locally under elevated execution. Slide 14 no longer overflows; only an older slide 8 overfull warning remains. Future agents should call `helpi.ps1` by absolute path from tool calls.</p>
-  <p><strong>Next steps:</strong> none for slides 13-14. Future Codex local LaTeX verification should run escalated because the sandbox identity cannot use the normal user&#39;s MiKTeX setup.</p>
-  <p><strong>Git ref:</strong> `5b5833d`</p>
+  <p><strong>Goal:</strong> Close the AI_auto session after patching and handoff preparation.</p>
+  <p><strong>Outcome:</strong> Session closed with the `helpi 25` code-audit patch and Claude final-validation prompt prepared.</p>
+  <p><strong>Next steps:</strong> Run Claude on `prompts/claude-validate-helpi25.md` for final validation; live Forum smoke test only if Richard approves LLM/tool spend.</p>
+  
   <h3>Files touched</h3>
   <ul>
-  <li>`Overleaf_source\slides_division_meeting.tex` -- Replaced &quot;Deliberation&quot; with simpler debate/discussion wording; revised slide 14 to show human input, problem framing, scope/evidence, success criteria, and a compact Forum flow.</li>
-  <li>`known_issues.md` -- Updated the MiKTeX issue and added the recurring absolute-path requirement for `helpi.ps1` in agent tool calls.</li>
-  <li>`_ai_log.md` -- Added this session entry.</li>
+  <li>`_ai_log.md` -- Added this close-session entry.</li>
 </ul>
 </div>
 
@@ -87,140 +85,78 @@
 <h2>Compressed sessions</h2>
 <br>
 <ul>
-  <li><strong>2026-04-27</strong> (Codex): Add a GitHub-facing README and introduction for the AI_auto reposit... -&gt; The GitHub repo now has a proper root README that introduces the infrastructure and exp...</li>
-  <li><strong>2026-05-01</strong> (Claude): Improve helpi 24 (one-pager) with a GUI file picker; fix project de... -&gt; helpi 24 shows a GUI picker in a terminal and works headlessly in Claude Code; /helpi n...</li>
-  <li><strong>2026-05-04</strong> (Codex): Fix helpi 24 so non-interactive one-pager generation does not silen... -&gt; `helpi 24 Pub_StopGeometry_TBA` no longer auto-selects `main_R1.tex` in a non-interacti...</li>
-  <li><strong>2026-05-04</strong> (Codex): Make explanatory LaTeX source comments a standard part of helpi 24 ... -&gt; Future one-pagers generated through `helpi 24` should include concise `% Intuition:`, `...</li>
-  <li><strong>2026-05-04</strong> (Codex): Tighten helpi 24 one-pager style: plainer wording, numbered equatio... -&gt; Future generated one-pagers should avoid dense unexplained terms, use numbered `equatio...</li>
-  <li><strong>2026-05-08</strong> (Claude): Create an anonymous Google Forms survey for an AI-assisted research... -&gt; - Danish form created via Google Apps Script: &quot;AI-assisteret forskning: praksis, infras...</li>
-  <li><strong>2026-05-15</strong> (Claude): AI infrastructure maintenance — fix helpi crash in Gemini, design a... -&gt; All three agents (Claude, Codex, Gemini) now share session-management skills via ~/.age...</li>
-  <li><strong>2026-05-16</strong> (Claude): Complete the infrastructure session: commit remaining changes, desi... -&gt; The infrastructure now has a full fix loop: /close logs new open issues with exact fix ...</li>
-  <li><strong>2026-05-16</strong> (Codex): Diagnose and self-fix any obvious AI_auto infrastructure issue. -&gt; `helpi 13` now prints a clean dashboard header, `helpi 15` warns cleanly when browser o...</li>
-  <li><strong>2026-05-16</strong> (Claude): Fix Codex startup warnings — 16 SKILL.md files failing to load due ... -&gt; All 16 Codex SKILL.md warnings resolved; root cause was UTF-8 BOM prepended by the Edit...</li>
   <li><strong>2026-05-18</strong> (Claude): Explore graphify skill feasibility; redesign session startup flow f... -&gt; Session startup redesigned around a ≤20-line state card; full history remains accessibl...</li>
   <li><strong>2026-05-20</strong> (Claude): Explore mobile access options for research projects — discussing pa... -&gt; Claude Remote Control is the best mobile option; Termux+Gemini CLI blocked by Google Ad...</li>
   <li><strong>2026-05-21 (Gemini CLI)</strong> (Gemini CLI): Create a 20-slide presentation deck for the division meeting on AI ... -&gt; A comprehensive, technically rich, and strategically framed 20-slide presentation is co...</li>
   <li><strong>2026-05-21</strong> (Claude): Design and build a `/pipeline` skill — background multi-agent job (... -&gt; `/pipeline` skill is live; slide deck updated with circular workflow diagram and new pi...</li>
   <li><strong>2026-05-22</strong> (Claude): Make `/close` skill run fully autonomously — no permission prompts ... -&gt; `/close` now executes all steps without user confirmation; all session-management file ...</li>
   <li><strong>2026-05-22b</strong> (Claude): Patch `/close` skill — fix two bugs causing redundant stops during ... -&gt; `/close` skill no longer errors on bash `$null` redirect or write-without-read on `_sta...</li>
+  <li><strong>2026-05-24</strong> (Claude &amp; Codex): Implement and verify the &#39;Convergence Forum&#39; infrastructure for mul... -&gt; Implemented `run_forum.ps1` and integrated it into the `helpi` command set. Codex audit...</li>
+  <li><strong>2026-05-24b</strong> (Codex): Audit the newly implemented Convergence Forum infrastructure for ar... -&gt; Audit found that `run_forum.ps1` is not yet operational due to a PowerShell parse error...</li>
+  <li><strong>2026-05-24c</strong> (Codex): Patch and document the Convergence Forum issues found in the Codex ... -&gt; The Convergence Forum now parses cleanly, rejects invalid agent lists before creating r...</li>
+  <li><strong>2026-05-24d</strong> (Codex): Prepare Gemini&#39;s independent verification prompt for the patched Co... -&gt; Wrote a Gemini audit instruction set covering PowerShell correctness, Blackboard integr...</li>
+  <li><strong>2026-05-24e</strong> (Claude (Convergence Forum)): Live test run of the Convergence Forum on a low-stakes &quot;test task&quot; ... -&gt; Forum ran and terminated cleanly. The test task completed in 3m 35s. The forum reached ...</li>
+  <li><strong>2026-05-24f</strong> (Gemini CLI): Audit Convergence Forum and update division meeting slides. -&gt; Forum infrastructure audited as READY. Slide update failed due to persistent syntax err...</li>
+  <li><strong>2026-05-24g</strong> (Codex): Clean the broken division meeting slide deck, verify compilation, a... -&gt; Slides 13-14 are structurally clean and the referenced `figures/Human-AI_Integration_Di...</li>
+  <li><strong>2026-05-24h</strong> (Codex): Refine Convergence Forum slides and remove the MiKTeX compile blocker. -&gt; Slide revisions were committed and pushed to Overleaf. MiKTeX was initialized for the n...</li>
+  <li><strong>2026-05-24i</strong> (Gemini CLI): Implement SAD (Single-Agent Debate) mode for the FORUM skill and up... -&gt; SAD mode is now fully operational and documented. Slides are ready and verified. Global...</li>
+  <li><strong>2026-05-24j</strong> (Codex): Apply requested wording edits to the division meeting slide deck. -&gt; Deck edits applied and verified. `helpi 6 AI_auto -Force` produced a fresh 26-page PDF;...</li>
 </ul>
 <br>
 <hr>
 <br>
-<h2>Session 2026-05-24</h2>
-<p><strong>Agent:</strong> Claude &amp; Codex</p>
-<p><strong>Goal:</strong> Implement and verify the &#39;Convergence Forum&#39; infrastructure for multi-agent debate.</p>
+<h2>Session 2026-05-24k</h2>
+<p><strong>Agent:</strong> Codex</p>
+<p><strong>Goal:</strong> Audit the new `helpi 25` Forum/code-audit command path.</p>
 <p><strong>Files touched:</strong></p>
 <ul>
-  <li>`run_forum.ps1` -- Created new orchestrator for multi-agent forums using a Blackboard model.</li>
-  <li>`helpi.ps1` -- Added `helpi 25` to expose the forum orchestrator.</li>
-  <li>`infrastructure.html` -- Added documentation for the Convergence Forum and Blackboard/Convergence mechanics.</li>
+  <li>`_ai_log.md` -- Added this session entry.</li>
 </ul>
-<p><strong>Outcome:</strong> Implemented `run<em>forum.ps1` and integrated it into the `helpi` command set. Codex audited the script for architectural integrity, state management (forum</em>state.md), and PowerShell best practices. The Convergence Forum is now live for adversarial research debate.</p>
-<p><strong>Next steps:</strong> none</p>
-<p><strong>Git ref:</strong> -</p>
+<p><strong>Outcome:</strong> Audited `helpi.ps1`, `run_forum.ps1`, the new `prompts/code-audit.md` template, and Forum role prompts. PowerShell AST parsing passed for both scripts, but the audit found command-invocation and forum lifecycle issues that should be patched before treating `helpi 25 code-audit` as ready.</p>
+<p><strong>Next steps:</strong> Patch `helpi 25` positional parsing for template shortcuts, mark max-round forum exhaustion as adjourned, and replace brittle auto-close/browser behavior with deterministic logging or explicit opt-in.</p>
+<p><strong>Git ref:</strong></p>
 <br>
 <hr>
 <br>
-<h2>Session 2026-05-24b</h2>
+<h2>Session 2026-05-24l</h2>
 <p><strong>Agent:</strong> Codex</p>
-<p><strong>Goal:</strong> Audit the newly implemented Convergence Forum infrastructure for architectural integrity, Blackboard state handling, convergence logic, token efficiency, environment safety, and failure behavior.</p>
+<p><strong>Goal:</strong> Patch the `helpi 25` Forum/code-audit issues found in audit.</p>
 <p><strong>Files touched:</strong></p>
 <ul>
-  <li>`_ai_log.md` -- Added this audit session entry.</li>
+  <li>`helpi.ps1` -- Added compact template parsing for `helpi 25 code-audit` and documented the shortcut in command help.</li>
+  <li>`run_forum.ps1` -- Marked max-round exhaustion as `adjourned`; made final-file opening and Claude auto-close explicit opt-in switches.</li>
+  <li>`_ai_log.md` -- Added this session entry.</li>
 </ul>
-<p><strong>Outcome:</strong> Audit found that `run_forum.ps1` is not yet operational due to a PowerShell parse error, and that several design claims in the docs are ahead of the implementation: convergence is model-dependent, full agent output is fed to the moderator, helpi 25 has argument-binding problems for `-Agents`, and failure handling does not reliably stop or mark failed turns.</p>
-<p><strong>Next steps:</strong> Patch `run_forum.ps1` before using `helpi 25`: fix parse errors, pass prompts via stdin where appropriate, cap/sanitize agent outputs, make Blackboard updates structured and validated, add exit-code/error-state handling, and align project/session close behavior with `/pipeline`.</p>
-<p><strong>Git ref:</strong> -</p>
+<p><strong>Outcome:</strong> The direct `helpi 25 code-audit` shortcut now maps to the current/last project, forum runs no longer finish with stale `Status: active` after max rounds, and default runs no longer launch a viewer or spawn Claude auto-close implicitly. Both edited PowerShell scripts parse cleanly and are BOM/curly-quote clean.</p>
+<p><strong>Next steps:</strong> Optional live smoke test with `helpi 25 AI_auto code-audit -Agent codex -Mode SAD` when you want to spend the LLM calls.</p>
+<p><strong>Git ref:</strong></p>
 <br>
 <hr>
 <br>
-<h2>Session 2026-05-24c</h2>
+<h2>Session 2026-05-24m</h2>
 <p><strong>Agent:</strong> Codex</p>
-<p><strong>Goal:</strong> Patch and document the Convergence Forum issues found in the Codex audit.</p>
+<p><strong>Goal:</strong> Prepare Claude&#39;s final validation instruction for the patched `helpi 25` command.</p>
 <p><strong>Files touched:</strong></p>
 <ul>
-  <li>`run_forum.ps1` -- Reworked the orchestrator with parse-safe PowerShell, AI_auto project support, compact digest/state-update moderation, validated Blackboard structure, explicit `Status:` termination, durable `convergence_log.md`, run logging, failure adjournment, Codex stdin invocation, project-aware output folders, and `/pipeline`-style auto-close for research projects.</li>
-  <li>`helpi.ps1` -- Fixed `helpi 25` parameter binding for `-Agents`, allowed Gemini/comma-separated forum agent lists while preserving `helpi 24` agent validation, and made missing tasks fail cleanly in non-interactive shells.</li>
-  <li>`infrastructure.html` -- Updated the Convergence Forum documentation to match the implemented Blackboard mechanics and failure/convergence statuses.</li>
-  <li>`_ai_log.md` -- Logged the audit and patch sessions.</li>
+  <li>`prompts/claude-validate-helpi25.md` -- Added a final validation protocol for Claude covering argument binding, side effects, max-round status, BOM/curly-quote checks, and optional smoke testing.</li>
+  <li>`_ai_log.md` -- Added this session entry.</li>
 </ul>
-<p><strong>Outcome:</strong> The Convergence Forum now parses cleanly, rejects invalid agent lists before creating run folders, passes Codex prompts through stdin, caps digest/state-update text before moderation, keeps full transcripts out of the next-turn Blackboard prompt, validates moderator rewrites before accepting them, and mirrors settled decisions into a separate convergence log.</p>
-<p><strong>Next steps:</strong> Run a real one-round forum on a low-stakes task to validate live Claude/Gemini/Codex CLI behavior and auto-close in practice.</p>
-<p><strong>Git ref:</strong> -</p>
+<p><strong>Outcome:</strong> Claude now has a focused validation prompt for the last review stage of the Forum/code-audit command path. The prompt explicitly forbids costly live Forum execution unless Richard approves it.</p>
+<p><strong>Next steps:</strong> Hand `prompts/claude-validate-helpi25.md` to Claude for final validation.</p>
+<p><strong>Git ref:</strong></p>
 <br>
 <hr>
 <br>
-<h2>Session 2026-05-24d</h2>
+<h2>Session 2026-05-24n</h2>
 <p><strong>Agent:</strong> Codex</p>
-<p><strong>Goal:</strong> Prepare Gemini&#39;s independent verification prompt for the patched Convergence Forum.</p>
+<p><strong>Goal:</strong> Close the AI_auto session after patching and handoff preparation.</p>
 <p><strong>Files touched:</strong></p>
 <ul>
   <li>`_ai_log.md` -- Added this close-session entry.</li>
 </ul>
-<p><strong>Outcome:</strong> Wrote a Gemini audit instruction set covering PowerShell correctness, Blackboard integrity, token efficiency, failure behavior, helpi integration, `/pipeline` alignment, safe dry-run checks, and readiness criteria for low-stakes live testing.</p>
-<p><strong>Next steps:</strong> Give Gemini the prepared instruction set; if Gemini returns READY, run a one-round low-stakes live forum test.</p>
-<p><strong>Git ref:</strong> -</p>
-<br>
-<hr>
-<br>
-<h2>Session 2026-05-24e</h2>
-<p><strong>Agent:</strong> Claude (Convergence Forum)</p>
-<p><strong>Goal:</strong> Live test run of the Convergence Forum on a low-stakes &quot;test task&quot; to validate CLI behavior and auto-close.</p>
-<p><strong>Files touched:</strong></p>
-<ul>
-  <li>`_forums/2026-05-24_11-34-27/convergence_log.md` -- Forum convergence log (no settled decisions; round 0).</li>
-  <li>`_forums/2026-05-24_11-34-27/forum_run_log.md` -- Run log recording forum start/finish and duration (00:03:35).</li>
-  <li>`_forums/2026-05-24_11-34-27/final.md` -- Final forum state snapshot (active, round 0, no agent digests produced).</li>
-</ul>
-<p><strong>Outcome:</strong> Forum ran and terminated cleanly. The test task completed in 3m 35s. The forum reached round 0 with no agent digests or convergence — expected for a trivial test task. Auto-close and session logging behaved correctly.</p>
-<p><strong>Next steps:</strong> Run a substantive one-round forum on a real research question to validate multi-agent debate mechanics.</p>
-<p><strong>Git ref:</strong> -</p>
-<hr>
-<br>
-<h2>Session 2026-05-24f</h2>
-<p><strong>Agent:</strong> Gemini CLI</p>
-<p><strong>Goal:</strong> Audit Convergence Forum and update division meeting slides.</p>
-<p><strong>Files touched:</strong></p>
-<ul>
-  <li>`Overleaf_source\slides_division_meeting.tex` -- Attempted to add Forum slides; resulted in syntax corruption and git conflicts.</li>
-</ul>
-<p><strong>Outcome:</strong> Forum infrastructure audited as READY. Slide update failed due to persistent syntax errors (stray backslashes) and interactive shell stalling.</p>
-<p><strong>Next steps:</strong> HANDOVER TO CODEX. Deep-clean slides 13-14 in `slides<em>division</em>meeting.tex`. Resolve TikZ and image path issues. Re-verify with `helpi 6`.</p>
-<p><strong>Git ref:</strong> -</p>
-<br>
-<hr>
-<br>
-<h2>Session 2026-05-24g</h2>
-<p><strong>Agent:</strong> Codex</p>
-<p><strong>Goal:</strong> Clean the broken division meeting slide deck, verify compilation, and sync only if clean.</p>
-<p><strong>Files touched:</strong></p>
-<ul>
-  <li>`Overleaf_source\slides_division_meeting.tex` -- Removed invalid Beamer `standout` frame options from transition and closing slides; verified Forum image path and balanced frame/TikZ/column environments.</li>
-  <li>`helpi.ps1` -- Made `helpi 6 &lt;project&gt; -Force` select the newest `.tex` file instead of opening the graphical picker.</li>
-  <li>`compile_latex.ps1` -- Prevented stale PDFs from being treated as successful warning builds and caught PDF-open failures.</li>
-  <li>`known_issues.md` -- Documented the two fixed compile-path issues.</li>
-  <li>`_ai_log.md` -- Cleaned the malformed Gemini handover block and added this session entry.</li>
-</ul>
-<p><strong>Outcome:</strong> Slides 13-14 are structurally clean and the referenced `figures/Human-AI<em>Integration</em>Diagram.png` exists. `helpi 6 AI<em>auto -Force` now targets `slides</em>division_meeting.tex`, but local PDF verification is blocked by the known MiKTeX first-run setup prompt, so no Overleaf push was performed.</p>
-<p><strong>Next steps:</strong> Complete MiKTeX first-run setup for the agent account or compile on Overleaf, then rerun `helpi 6 AI<em>auto -Force`; if it produces a fresh clean PDF, run `helpi 4 AI</em>auto -Force`.</p>
-<p><strong>Git ref:</strong> -</p>
-<br>
-<hr>
-<br>
-<h2>Session 2026-05-24h</h2>
-<p><strong>Agent:</strong> Codex</p>
-<p><strong>Goal:</strong> Refine Convergence Forum slides and remove the MiKTeX compile blocker.</p>
-<p><strong>Files touched:</strong></p>
-<ul>
-  <li>`Overleaf_source\slides_division_meeting.tex` -- Replaced &quot;Deliberation&quot; with simpler debate/discussion wording; revised slide 14 to show human input, problem framing, scope/evidence, success criteria, and a compact Forum flow.</li>
-  <li>`known_issues.md` -- Updated the MiKTeX issue and added the recurring absolute-path requirement for `helpi.ps1` in agent tool calls.</li>
-  <li>`_ai_log.md` -- Added this session entry.</li>
-</ul>
-<p><strong>Outcome:</strong> Slide revisions were committed and pushed to Overleaf. MiKTeX was initialized for the normal user, packages were updated, `pdflatex` format was rebuilt, and `helpi 6 AI_auto -Force` produced a fresh 25-page PDF locally under elevated execution. Slide 14 no longer overflows; only an older slide 8 overfull warning remains. Future agents should call `helpi.ps1` by absolute path from tool calls.</p>
-<p><strong>Next steps:</strong> none for slides 13-14. Future Codex local LaTeX verification should run escalated because the sandbox identity cannot use the normal user&#39;s MiKTeX setup.</p>
-<p><strong>Git ref:</strong> `5b5833d`</p>
-<br>
+<p><strong>Outcome:</strong> Session closed with the `helpi 25` code-audit patch and Claude final-validation prompt prepared.</p>
+<p><strong>Next steps:</strong> Run Claude on `prompts/claude-validate-helpi25.md` for final validation; live Forum smoke test only if Richard approves LLM/tool spend.</p>
+<p><strong>Git ref:</strong></p>
 <br>
 
 </div>
@@ -237,123 +173,69 @@
 
 ## Compressed sessions
 
-- **2026-04-27** (Codex): Add a GitHub-facing README and introduction for the AI_auto reposit... -&gt; The GitHub repo now has a proper root README that introduces the infrastructure and exp...
-- **2026-05-01** (Claude): Improve helpi 24 (one-pager) with a GUI file picker; fix project de... -&gt; helpi 24 shows a GUI picker in a terminal and works headlessly in Claude Code; /helpi n...
-- **2026-05-04** (Codex): Fix helpi 24 so non-interactive one-pager generation does not silen... -&gt; `helpi 24 Pub_StopGeometry_TBA` no longer auto-selects `main_R1.tex` in a non-interacti...
-- **2026-05-04** (Codex): Make explanatory LaTeX source comments a standard part of helpi 24 ... -&gt; Future one-pagers generated through `helpi 24` should include concise `% Intuition:`, `...
-- **2026-05-04** (Codex): Tighten helpi 24 one-pager style: plainer wording, numbered equatio... -&gt; Future generated one-pagers should avoid dense unexplained terms, use numbered `equatio...
-- **2026-05-08** (Claude): Create an anonymous Google Forms survey for an AI-assisted research... -&gt; - Danish form created via Google Apps Script: "AI-assisteret forskning: praksis, infras...
-- **2026-05-15** (Claude): AI infrastructure maintenance — fix helpi crash in Gemini, design a... -&gt; All three agents (Claude, Codex, Gemini) now share session-management skills via ~/.age...
-- **2026-05-16** (Claude): Complete the infrastructure session: commit remaining changes, desi... -&gt; The infrastructure now has a full fix loop: /close logs new open issues with exact fix ...
-- **2026-05-16** (Codex): Diagnose and self-fix any obvious AI_auto infrastructure issue. -&gt; `helpi 13` now prints a clean dashboard header, `helpi 15` warns cleanly when browser o...
-- **2026-05-16** (Claude): Fix Codex startup warnings — 16 SKILL.md files failing to load due ... -&gt; All 16 Codex SKILL.md warnings resolved; root cause was UTF-8 BOM prepended by the Edit...
 - **2026-05-18** (Claude): Explore graphify skill feasibility; redesign session startup flow f... -&gt; Session startup redesigned around a ≤20-line state card; full history remains accessibl...
 - **2026-05-20** (Claude): Explore mobile access options for research projects — discussing pa... -&gt; Claude Remote Control is the best mobile option; Termux+Gemini CLI blocked by Google Ad...
 - **2026-05-21 (Gemini CLI)** (Gemini CLI): Create a 20-slide presentation deck for the division meeting on AI ... -&gt; A comprehensive, technically rich, and strategically framed 20-slide presentation is co...
 - **2026-05-21** (Claude): Design and build a `/pipeline` skill — background multi-agent job (... -&gt; `/pipeline` skill is live; slide deck updated with circular workflow diagram and new pi...
 - **2026-05-22** (Claude): Make `/close` skill run fully autonomously — no permission prompts ... -&gt; `/close` now executes all steps without user confirmation; all session-management file ...
 - **2026-05-22b** (Claude): Patch `/close` skill — fix two bugs causing redundant stops during ... -&gt; `/close` skill no longer errors on bash `$null` redirect or write-without-read on `_sta...
+- **2026-05-24** (Claude & Codex): Implement and verify the 'Convergence Forum' infrastructure for mul... -&gt; Implemented `run_forum.ps1` and integrated it into the `helpi` command set. Codex audit...
+- **2026-05-24b** (Codex): Audit the newly implemented Convergence Forum infrastructure for ar... -&gt; Audit found that `run_forum.ps1` is not yet operational due to a PowerShell parse error...
+- **2026-05-24c** (Codex): Patch and document the Convergence Forum issues found in the Codex ... -&gt; The Convergence Forum now parses cleanly, rejects invalid agent lists before creating r...
+- **2026-05-24d** (Codex): Prepare Gemini's independent verification prompt for the patched Co... -&gt; Wrote a Gemini audit instruction set covering PowerShell correctness, Blackboard integr...
+- **2026-05-24e** (Claude (Convergence Forum)): Live test run of the Convergence Forum on a low-stakes "test task" ... -&gt; Forum ran and terminated cleanly. The test task completed in 3m 35s. The forum reached ...
+- **2026-05-24f** (Gemini CLI): Audit Convergence Forum and update division meeting slides. -&gt; Forum infrastructure audited as READY. Slide update failed due to persistent syntax err...
+- **2026-05-24g** (Codex): Clean the broken division meeting slide deck, verify compilation, a... -&gt; Slides 13-14 are structurally clean and the referenced `figures/Human-AI_Integration_Di...
+- **2026-05-24h** (Codex): Refine Convergence Forum slides and remove the MiKTeX compile blocker. -&gt; Slide revisions were committed and pushed to Overleaf. MiKTeX was initialized for the n...
+- **2026-05-24i** (Gemini CLI): Implement SAD (Single-Agent Debate) mode for the FORUM skill and up... -&gt; SAD mode is now fully operational and documented. Slides are ready and verified. Global...
+- **2026-05-24j** (Codex): Apply requested wording edits to the division meeting slide deck. -&gt; Deck edits applied and verified. `helpi 6 AI_auto -Force` produced a fresh 26-page PDF;...
 
 ---
 
-## Session 2026-05-24
-**Agent:** Claude & Codex
-**Goal:** Implement and verify the 'Convergence Forum' infrastructure for multi-agent debate.
-**Files touched:**
-- `run_forum.ps1` -- Created new orchestrator for multi-agent forums using a Blackboard model.
-- `helpi.ps1` -- Added `helpi 25` to expose the forum orchestrator.
-- `infrastructure.html` -- Added documentation for the Convergence Forum and Blackboard/Convergence mechanics.
-**Outcome:** Implemented `run_forum.ps1` and integrated it into the `helpi` command set. Codex audited the script for architectural integrity, state management (forum_state.md), and PowerShell best practices. The Convergence Forum is now live for adversarial research debate.
-**Next steps:** none
-**Git ref:** -
-
----
-
-## Session 2026-05-24b
+## Session 2026-05-24k
 **Agent:** Codex
-**Goal:** Audit the newly implemented Convergence Forum infrastructure for architectural integrity, Blackboard state handling, convergence logic, token efficiency, environment safety, and failure behavior.
+**Goal:** Audit the new `helpi 25` Forum/code-audit command path.
 **Files touched:**
-- `_ai_log.md` -- Added this audit session entry.
-**Outcome:** Audit found that `run_forum.ps1` is not yet operational due to a PowerShell parse error, and that several design claims in the docs are ahead of the implementation: convergence is model-dependent, full agent output is fed to the moderator, helpi 25 has argument-binding problems for `-Agents`, and failure handling does not reliably stop or mark failed turns.
-**Next steps:** Patch `run_forum.ps1` before using `helpi 25`: fix parse errors, pass prompts via stdin where appropriate, cap/sanitize agent outputs, make Blackboard updates structured and validated, add exit-code/error-state handling, and align project/session close behavior with `/pipeline`.
-**Git ref:** -
+- `_ai_log.md` -- Added this session entry.
+**Outcome:** Audited `helpi.ps1`, `run_forum.ps1`, the new `prompts/code-audit.md` template, and Forum role prompts. PowerShell AST parsing passed for both scripts, but the audit found command-invocation and forum lifecycle issues that should be patched before treating `helpi 25 code-audit` as ready.
+**Next steps:** Patch `helpi 25` positional parsing for template shortcuts, mark max-round forum exhaustion as adjourned, and replace brittle auto-close/browser behavior with deterministic logging or explicit opt-in.
+**Git ref:**
 
 ---
 
-## Session 2026-05-24c
+## Session 2026-05-24l
 **Agent:** Codex
-**Goal:** Patch and document the Convergence Forum issues found in the Codex audit.
+**Goal:** Patch the `helpi 25` Forum/code-audit issues found in audit.
 **Files touched:**
-- `run_forum.ps1` -- Reworked the orchestrator with parse-safe PowerShell, AI_auto project support, compact digest/state-update moderation, validated Blackboard structure, explicit `Status:` termination, durable `convergence_log.md`, run logging, failure adjournment, Codex stdin invocation, project-aware output folders, and `/pipeline`-style auto-close for research projects.
-- `helpi.ps1` -- Fixed `helpi 25` parameter binding for `-Agents`, allowed Gemini/comma-separated forum agent lists while preserving `helpi 24` agent validation, and made missing tasks fail cleanly in non-interactive shells.
-- `infrastructure.html` -- Updated the Convergence Forum documentation to match the implemented Blackboard mechanics and failure/convergence statuses.
-- `_ai_log.md` -- Logged the audit and patch sessions.
-**Outcome:** The Convergence Forum now parses cleanly, rejects invalid agent lists before creating run folders, passes Codex prompts through stdin, caps digest/state-update text before moderation, keeps full transcripts out of the next-turn Blackboard prompt, validates moderator rewrites before accepting them, and mirrors settled decisions into a separate convergence log.
-**Next steps:** Run a real one-round forum on a low-stakes task to validate live Claude/Gemini/Codex CLI behavior and auto-close in practice.
-**Git ref:** -
+- `helpi.ps1` -- Added compact template parsing for `helpi 25 code-audit` and documented the shortcut in command help.
+- `run_forum.ps1` -- Marked max-round exhaustion as `adjourned`; made final-file opening and Claude auto-close explicit opt-in switches.
+- `_ai_log.md` -- Added this session entry.
+**Outcome:** The direct `helpi 25 code-audit` shortcut now maps to the current/last project, forum runs no longer finish with stale `Status: active` after max rounds, and default runs no longer launch a viewer or spawn Claude auto-close implicitly. Both edited PowerShell scripts parse cleanly and are BOM/curly-quote clean.
+**Next steps:** Optional live smoke test with `helpi 25 AI_auto code-audit -Agent codex -Mode SAD` when you want to spend the LLM calls.
+**Git ref:**
 
 ---
 
-## Session 2026-05-24d
+## Session 2026-05-24m
 **Agent:** Codex
-**Goal:** Prepare Gemini's independent verification prompt for the patched Convergence Forum.
+**Goal:** Prepare Claude's final validation instruction for the patched `helpi 25` command.
+**Files touched:**
+- `prompts/claude-validate-helpi25.md` -- Added a final validation protocol for Claude covering argument binding, side effects, max-round status, BOM/curly-quote checks, and optional smoke testing.
+- `_ai_log.md` -- Added this session entry.
+**Outcome:** Claude now has a focused validation prompt for the last review stage of the Forum/code-audit command path. The prompt explicitly forbids costly live Forum execution unless Richard approves it.
+**Next steps:** Hand `prompts/claude-validate-helpi25.md` to Claude for final validation.
+**Git ref:**
+
+---
+
+## Session 2026-05-24n
+**Agent:** Codex
+**Goal:** Close the AI_auto session after patching and handoff preparation.
 **Files touched:**
 - `_ai_log.md` -- Added this close-session entry.
-**Outcome:** Wrote a Gemini audit instruction set covering PowerShell correctness, Blackboard integrity, token efficiency, failure behavior, helpi integration, `/pipeline` alignment, safe dry-run checks, and readiness criteria for low-stakes live testing.
-**Next steps:** Give Gemini the prepared instruction set; if Gemini returns READY, run a one-round low-stakes live forum test.
-**Git ref:** -
-
----
-
-## Session 2026-05-24e
-**Agent:** Claude (Convergence Forum)
-**Goal:** Live test run of the Convergence Forum on a low-stakes "test task" to validate CLI behavior and auto-close.
-**Files touched:**
-- `_forums/2026-05-24_11-34-27/convergence_log.md` -- Forum convergence log (no settled decisions; round 0).
-- `_forums/2026-05-24_11-34-27/forum_run_log.md` -- Run log recording forum start/finish and duration (00:03:35).
-- `_forums/2026-05-24_11-34-27/final.md` -- Final forum state snapshot (active, round 0, no agent digests produced).
-**Outcome:** Forum ran and terminated cleanly. The test task completed in 3m 35s. The forum reached round 0 with no agent digests or convergence — expected for a trivial test task. Auto-close and session logging behaved correctly.
-**Next steps:** Run a substantive one-round forum on a real research question to validate multi-agent debate mechanics.
-**Git ref:** -
----
-
-## Session 2026-05-24f
-**Agent:** Gemini CLI
-**Goal:** Audit Convergence Forum and update division meeting slides.
-**Files touched:**
-- `Overleaf_source\slides_division_meeting.tex` -- Attempted to add Forum slides; resulted in syntax corruption and git conflicts.
-**Outcome:** Forum infrastructure audited as READY. Slide update failed due to persistent syntax errors (stray backslashes) and interactive shell stalling.
-**Next steps:** HANDOVER TO CODEX. Deep-clean slides 13-14 in `slides_division_meeting.tex`. Resolve TikZ and image path issues. Re-verify with `helpi 6`.
-**Git ref:** -
-
----
-
-## Session 2026-05-24g
-**Agent:** Codex
-**Goal:** Clean the broken division meeting slide deck, verify compilation, and sync only if clean.
-**Files touched:**
-- `Overleaf_source\slides_division_meeting.tex` -- Removed invalid Beamer `standout` frame options from transition and closing slides; verified Forum image path and balanced frame/TikZ/column environments.
-- `helpi.ps1` -- Made `helpi 6 &lt;project&gt; -Force` select the newest `.tex` file instead of opening the graphical picker.
-- `compile_latex.ps1` -- Prevented stale PDFs from being treated as successful warning builds and caught PDF-open failures.
-- `known_issues.md` -- Documented the two fixed compile-path issues.
-- `_ai_log.md` -- Cleaned the malformed Gemini handover block and added this session entry.
-**Outcome:** Slides 13-14 are structurally clean and the referenced `figures/Human-AI_Integration_Diagram.png` exists. `helpi 6 AI_auto -Force` now targets `slides_division_meeting.tex`, but local PDF verification is blocked by the known MiKTeX first-run setup prompt, so no Overleaf push was performed.
-**Next steps:** Complete MiKTeX first-run setup for the agent account or compile on Overleaf, then rerun `helpi 6 AI_auto -Force`; if it produces a fresh clean PDF, run `helpi 4 AI_auto -Force`.
-**Git ref:** -
-
----
-
-## Session 2026-05-24h
-**Agent:** Codex
-**Goal:** Refine Convergence Forum slides and remove the MiKTeX compile blocker.
-**Files touched:**
-- `Overleaf_source\slides_division_meeting.tex` -- Replaced "Deliberation" with simpler debate/discussion wording; revised slide 14 to show human input, problem framing, scope/evidence, success criteria, and a compact Forum flow.
-- `known_issues.md` -- Updated the MiKTeX issue and added the recurring absolute-path requirement for `helpi.ps1` in agent tool calls.
-- `_ai_log.md` -- Added this session entry.
-**Outcome:** Slide revisions were committed and pushed to Overleaf. MiKTeX was initialized for the normal user, packages were updated, `pdflatex` format was rebuilt, and `helpi 6 AI_auto -Force` produced a fresh 25-page PDF locally under elevated execution. Slide 14 no longer overflows; only an older slide 8 overfull warning remains. Future agents should call `helpi.ps1` by absolute path from tool calls.
-**Next steps:** none for slides 13-14. Future Codex local LaTeX verification should run escalated because the sandbox identity cannot use the normal user's MiKTeX setup.
-**Git ref:** `5b5833d`
-
+**Outcome:** Session closed with the `helpi 25` code-audit patch and Claude final-validation prompt prepared.
+**Next steps:** Run Claude on `prompts/claude-validate-helpi25.md` for final validation; live Forum smoke test only if Richard approves LLM/tool spend.
+**Git ref:**
 </textarea>
 </div>
 
@@ -371,26 +253,7 @@
 <!-- ============================================================ -->
 <div class="section">
   <h2>Overleaf Git History (last 20 commits)</h2>
-  <pre>5b5833d Tighten forum slide wording
-3dbd005 Refine convergence forum slides
-7b13870 Fix convergence forum slide TikZ
-5b78735 Local edits 2026-05-24 12:29
-1881817 Local edits 2026-05-24 12:07
-364b0d4 Local edits 2026-05-24 12:01
-5d1a99e Update on Overleaf.
-cd5396e Local edits 2026-05-24 11:58
-f0489b9 Update on Overleaf.
-091d23c Local edits 2026-05-24 10:53
-82fe6f1 Local edits 2026-05-24 10:50
-f9ce9ff Local edits 2026-05-24 10:45
-3e7dad7 Local edits 2026-05-24 10:40
-a8ec6ef Local edits 2026-05-24 10:30
-7520319 Auto-backup 2026-05-24 09:41
-dd3cff0 Auto-backup 2026-05-22 15:07
-3f0e681 Merge branch &#39;master&#39; of https://git.overleaf.com/69e4cd88646aa324de75fc2c
-09621df Update on Overleaf.
-cd1a57d claude: auto-commit 2026-05-21 22:32
-53c2590 Address colleague slide comments</pre>
+  <pre></pre>
 </div>
 
 </body>
