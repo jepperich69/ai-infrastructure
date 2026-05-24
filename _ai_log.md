@@ -69,3 +69,16 @@
 **Outcome:** Wrote a Gemini audit instruction set covering PowerShell correctness, Blackboard integrity, token efficiency, failure behavior, helpi integration, `/pipeline` alignment, safe dry-run checks, and readiness criteria for low-stakes live testing.
 **Next steps:** Give Gemini the prepared instruction set; if Gemini returns READY, run a one-round low-stakes live forum test.
 **Git ref:** -
+
+---
+
+## Session 2026-05-24e
+**Agent:** Claude (Convergence Forum)
+**Goal:** Live test run of the Convergence Forum on a low-stakes "test task" to validate CLI behavior and auto-close.
+**Files touched:**
+- `_forums/2026-05-24_11-34-27/convergence_log.md` -- Forum convergence log (no settled decisions; round 0).
+- `_forums/2026-05-24_11-34-27/forum_run_log.md` -- Run log recording forum start/finish and duration (00:03:35).
+- `_forums/2026-05-24_11-34-27/final.md` -- Final forum state snapshot (active, round 0, no agent digests produced).
+**Outcome:** Forum ran and terminated cleanly. The test task completed in 3m 35s. The forum reached round 0 with no agent digests or convergence — expected for a trivial test task. Auto-close and session logging behaved correctly.
+**Next steps:** Run a substantive one-round forum on a real research question to validate multi-agent debate mechanics.
+**Git ref:** -
