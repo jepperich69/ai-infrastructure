@@ -1,0 +1,52 @@
+﻿You are the moderator of a Research Convergence Forum.
+Update the blackboard using only the compact digest and proposed state update below.
+Do not copy the full transcript. Do not remove already settled convergence-log decisions unless they are explicitly contradicted and you explain why.
+
+AGENT: realist
+ROUND: 1
+
+AGENT DIGEST:
+The Realist has read `run_forum.ps1` and found two confirmed blocking bugs. First, the moderator state rejection (lines 350–353): Claude wraps output in prose, the `Get-CleanState` regex fails to match, the state file is never updated, and both Critic and Advocate rounds silently lost their contributions — confirmed by the run log. Second, the realist inherits a stale Round 0 blackboard as a direct consequence, making SAD mode synthesis architecturally broken when the moderator fails. A third design issue: moderator rejection does not increment `$FailureCount`, so the forum can run all rounds with silently dropped state and still exit as `adjourned` rather than `failed`. The Advocate's lifecycle and invocation concerns are already resolved in the code. The Critic's "freeze" prescription is rejected — the artifact is named and auditable now. One fix unblocks everything: make the moderator output reliable (strip prose wrapping, or tighten the Claude prompt to return only the blackboard block), and count moderator rejections toward the failure threshold.
+
+AGENT PROPOSED STATE UPDATE:
+[CONVERGENCE LOG]
+- Audit artifact identified: `run_forum.ps1` (the `run_forum.ps1` script in `AI_auto/`).
+- SETTLED: Two confirmed blocking bugs. (1) Moderator state rejection silently drops agent contributions when Claude wraps output in prose — confirmed by run log. (2) Stale blackboard propagation: realist receives Round 0 state because prior moderator passes failed, breaking SAD synthesis chain.
+- SETTLED: Silent failure accumulation is a confirmed design gap — moderator rejections do not increment `$FailureCount`, masking data loss.
+
+[ACTIVE ARENA]
+- PRIMARY FIX (blocking): Harden moderator output parsing — either constrain the Claude moderator prompt to return only the blackboard block, or apply a more robust strip/retry before rejecting the state. Count moderator rejections toward `$FailureCount`.
+- SECONDARY (non-blocking): Realist-as-moderator double-pass is redundant but not broken; park unless the primary fix is insufficient.
+
+[PARKING LOT]
+- Advocate's "composable invocation" and "infrastructure primitive" framing — valid aspiration, not a blocking audit criterion.
+- Realist double-moderator call inefficiency — park after primary fix confirmed.
+
+CURRENT BLACKBOARD STATE:
+# Convergence Forum: code-audit
+
+Status: active
+Round: 0
+
+## [CONVERGENCE LOG]
+- No settled decisions yet.
+
+## [ACTIVE ARENA]
+- Primary task: code-audit
+
+## [PARKING LOT]
+- No parked issues yet.
+
+## [LATEST DIGESTS]
+- No agent digests yet.
+
+Return the complete new forum_state.md only.
+Keep [LATEST DIGESTS] compact: at most the 8 most recent agent digests.
+It must contain exactly these structural fields:
+# Convergence Forum: ...
+Status: active OR converged OR adjourned OR failed
+Round: 1
+## [CONVERGENCE LOG]
+## [ACTIVE ARENA]
+## [PARKING LOT]
+## [LATEST DIGESTS]
