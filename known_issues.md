@@ -172,11 +172,11 @@ Get-ChildItem $dir -Recurse -Filter "SKILL.md" | ForEach-Object {
 ---
 
 ### 12. MiKTeX first-run setup prompt blocks non-interactive latexmk
-**Status:** open
+**Status:** platform-fact
 **Affects:** Local LaTeX compilation from Codex/non-interactive PowerShell sessions.
-**Fix:** Complete MiKTeX's first-run setup for the account used by the non-interactive agent, or run a one-time interactive MiKTeX console/setup before relying on `latexmk` in Codex sessions.
+**Fix:** MiKTeX is initialized and updated for the normal `rich` Windows user as of 2026-05-24. Codex's sandbox identity can still see MiKTeX as "fresh" because it cannot write the per-user MiKTeX setup under `AppData`. For reliable local compile verification from Codex, run `helpi 6 <Project> -Force` with escalated permissions so it executes under the initialized user context.
 
-Symptom: `latexmk -pdf ...` exits immediately with "It seems that this is a fresh TeX installation. Please finish the setup before proceeding." Overleaf compilation is unaffected; local compile verification cannot be trusted until the setup prompt is cleared.
+Symptom if run inside the sandbox identity: `latexmk -pdf ...` exits immediately with "It seems that this is a fresh TeX installation. Please finish the setup before proceeding." Symptom is avoided by escalated compile. Verified on 2026-05-24 with a fresh local PDF build of `AI_auto/Overleaf_source/slides_division_meeting.tex`.
 
 ---
 
@@ -214,6 +214,37 @@ When `Get-Content $file -Raw` produces a very large string (tested: ~294KB) and 
 ### 16. `< $null` stdin redirect is not valid inside a PowerShell switch block
 **Status:** platform-fact
 `& command arg < $null` works at statement level but inside a `switch` block PowerShell raises "The '<' operator is reserved for future use." Do not add stdin null-redirect inside switch cases. At statement level outside switch, `< $null` is valid and skips the 3-second stdin wait that `claude -p` otherwise incurs.
+
+---
+
+### 17. `helpi 6 -Force` still opened the graphical TeX picker
+**Status:** fixed (2026-05-24)
+**Affects:** `AI_auto/helpi.ps1`
+**Fix:** When command 6 is run with `-Force` and no `-TexFile`, `helpi.ps1` now resolves the newest `.tex` file in `Overleaf_source` and passes it explicitly to `compile_latex.ps1`.
+
+Symptom: `helpi 6 AI_auto -Force` bypassed the top-level confirmation prompt but then stalled in `Out-GridView` inside `compile_latex.ps1` whenever a project had multiple `.tex` files.
+
+---
+
+### 18. `compile_latex.ps1` treated stale PDFs as successful warning builds
+**Status:** fixed (2026-05-24)
+**Affects:** `AI_auto/compile_latex.ps1`
+**Fix:** The script now records the compile start time and only treats a nonzero LaTeX exit as a warning build if the PDF was freshly regenerated. It also catches PDF-open failures so a sandboxed viewer launch does not mask compile status.
+
+Symptom: when MiKTeX exited before compiling, the script found an old PDF in `out/`, printed a warning, and attempted to open the stale PDF as if compilation had succeeded.
+
+---
+
+### 19. Relative `.\helpi.ps1` can fail in agent tool calls
+**Status:** platform-fact
+
+Some agent tool executions do not resolve `.\helpi.ps1` from the apparent project root, even when the request says the current directory is `AI_auto` or a `workdir` was supplied. Use the absolute script path instead:
+
+```powershell
+& "C:\Users\rich\OneDrive - Danmarks Tekniske Universitet\JR\AI_auto\helpi.ps1" 6 AI_auto -Force
+```
+
+Symptom: `The term '.\helpi.ps1' is not recognized as a name of a cmdlet, function, script file, or executable program.` This has recurred during Codex LaTeX verification. For local compile verification, combine the absolute path with escalated execution because MiKTeX is initialized for the normal `rich` user, not the sandbox identity.
 
 ---
 

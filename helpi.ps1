@@ -144,6 +144,7 @@ function Show-CommandHelp {
             "Compile LaTeX + open PDF",
             "Runs latexmk on the chosen .tex file (with -g to force recompile) and opens",
             "the resulting PDF. Prompts you to pick a .tex file if more than one exists.",
+            "With -Force and no -TexFile, uses the most recently modified .tex file.",
             "",
             "When to use: standalone compile without opening the full VS Code workspace.",
             "",
@@ -516,6 +517,19 @@ function Invoke-Command-N {
     }
 
     if ($proj) { Set-LastProject $proj }
+
+    if ($n -eq 6 -and $Force -and !$texFile) {
+        $projRoot  = Resolve-ProjectRoot $proj
+        $sourceDir = Join-Path $projRoot "Overleaf_source"
+        $candidate = Get-ChildItem $sourceDir -Filter "*.tex" -File |
+                     Sort-Object LastWriteTime -Descending |
+                     Select-Object -First 1
+        if (!$candidate) {
+            Write-Host "ERR | No .tex files found in $sourceDir" -ForegroundColor Red
+            return
+        }
+        $texFile = $candidate.Name
+    }
 
     $preview = Get-CommandPreview -n $n -proj $proj -texFile $texFile -agent $agent
     Write-Host ""

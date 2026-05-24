@@ -66,6 +66,7 @@ $pdflatex = Join-Path $miktexBin "pdflatex.exe"
 
 # Use latexmk if available (handles bibliography passes automatically), else pdflatex
 $env:BIBINPUTS = "$sourceDir;" + $env:BIBINPUTS
+$compileStarted = Get-Date
 
 if (Test-Path $latexmk) {
     $pdflatexFwd = $pdflatex -replace '\\', '/'
@@ -77,7 +78,11 @@ if (Test-Path $latexmk) {
 
 $pdfPath = Join-Path $outDir ($TexFile -replace "\.tex$", ".pdf")
 if ($LASTEXITCODE -ne 0) {
+    $freshPdf = $false
     if (Test-Path $pdfPath) {
+        $freshPdf = ((Get-Item $pdfPath).LastWriteTime -ge $compileStarted.AddSeconds(-2))
+    }
+    if ($freshPdf) {
         Write-Host ""
         Write-Host "WARN | Compilation finished with warnings (missing figures/refs). Opening PDF anyway."
     } else {
@@ -92,7 +97,11 @@ if ($LASTEXITCODE -ne 0) {
 if (Test-Path $pdfPath) {
     Write-Host ""
     Write-Host "OK   | Opening: $pdfPath"
-    Start-Process $pdfPath
+    try {
+        Start-Process $pdfPath -ErrorAction Stop
+    } catch {
+        Write-Host "WARN | PDF was generated, but could not be opened automatically: $($_.Exception.Message)"
+    }
 } else {
     Write-Host "ERR  | PDF not found after compilation: $pdfPath"
     exit 1
