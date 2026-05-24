@@ -263,6 +263,23 @@ or
 
 Symptom: `The token '&&' is not a valid statement separator in this version.` This has occurred during git operations and multi-tool pushes.
 
+### 21. Forum role files contain `=== DIGEST ===` placeholders — blackboard never updated
+**Status:** fixed (2026-05-24)
+**Affects:** `AI_auto/prompts/forum_roles/critic_sys.md`, `advocate_sys.md`, `realist_sys.md`
+
+Each role file ended with:
+```
+=== DIGEST === (max 200 words)
+=== STATE UPDATE === (proposed edits to BLACKBOARD)
+```
+These lines are prepended to the participant prompt. `Get-Section` in `run_forum.ps1` uses a regex that finds the **first** occurrence of `=== DIGEST ===` in the combined text — which is always the placeholder line in the role file, not the agent's actual response. Result: `$digest` = `"(max 200 words)"` and `$stateUpdate` = `"(proposed edits to BLACKBOARD)"` on every turn. The moderator receives garbage and produces a state that fails `Test-ForumState`, so `"moderator state rejected; previous state preserved"` is logged every round and the blackboard stays at its initial state throughout the entire forum run.
+
+**Fix (applied 2026-05-24):** Removed the `=== DIGEST ===` and `=== STATE UPDATE ===` trailing lines from all three role files. The output-format instruction already appears in the main participant prompt; the role files should only carry role identity and behavioral guidance.
+
+Symptom: every line in `forum_run_log.md` reads `moderator state rejected; previous state preserved`, and `forum_state.md` remains at `Round: 0` with no settled decisions after multiple rounds.
+
+---
+
 When an issue recurs (2+ times), append a new numbered entry here with:
 
 ```
