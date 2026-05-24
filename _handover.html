@@ -30,7 +30,7 @@
 <body>
 
 <h1>Handover Document &mdash; AI_auto</h1>
-<div class="meta">Generated: 2026-05-24 16:04 &nbsp;|&nbsp; Source: <code style="display:inline;padding:2px 6px">_ai_log.md</code> &nbsp;|&nbsp; Sidecar: <code style="display:inline;padding:2px 6px">_handover.json</code></div>
+<div class="meta">Generated: 2026-05-24 16:06 &nbsp;|&nbsp; Source: <code style="display:inline;padding:2px 6px">_ai_log.md</code> &nbsp;|&nbsp; Sidecar: <code style="display:inline;padding:2px 6px">_handover.json</code></div>
 
 <!-- ============================================================ -->
 <!-- AGENT INSTRUCTIONS                                            -->
@@ -65,15 +65,15 @@
   <p><strong>Session:</strong> 2026-05-24o</p>
   <p><strong>Agent:</strong> Claude Sonnet 4.6</p>
   <p><strong>Goal:</strong> Claude final validation of patched `helpi 25` command; live smoke test.</p>
-  <p><strong>Outcome:</strong> Validation verdict READY; smoke test revealed the role-file `=== DIGEST ===` placeholder bug that prevented blackboard from ever updating — fixed in all three role files and logged as issue #21.</p>
+  <p><strong>Outcome:</strong> Validation verdict READY; smoke test revealed the role-file `=== DIGEST ===` placeholder bug that prevented blackboard from ever updating &#226;€” fixed in all three role files and logged as issue #21.</p>
   <p><strong>Next steps:</strong> Run a fresh smoke test to confirm blackboard updates correctly with the role-file fix applied</p>
   <p><strong>Git ref:</strong> 9df201c</p>
   <h3>Files touched</h3>
   <ul>
-  <li>`prompts/forum_roles/critic_sys.md` — removed trailing `=== DIGEST ===` / `=== STATE UPDATE ===` placeholder lines that caused `Get-Section` to extract template text instead of agent output</li>
-  <li>`prompts/forum_roles/advocate_sys.md` — same fix</li>
-  <li>`prompts/forum_roles/realist_sys.md` — same fix</li>
-  <li>`known_issues.md` — added issue #21 documenting the role-file placeholder bug (status: fixed 2026-05-24)</li>
+  <li>`prompts/forum_roles/critic_sys.md` &#226;€” removed trailing `=== DIGEST ===` / `=== STATE UPDATE ===` placeholder lines that caused `Get-Section` to extract template text instead of agent output</li>
+  <li>`prompts/forum_roles/advocate_sys.md` &#226;€” same fix</li>
+  <li>`prompts/forum_roles/realist_sys.md` &#226;€” same fix</li>
+  <li>`known_issues.md` &#226;€” added issue #21 documenting the role-file placeholder bug (status: fixed 2026-05-24)</li>
 </ul>
 </div>
 
@@ -88,11 +88,11 @@
 <h2>Compressed sessions</h2>
 <br>
 <ul>
-  <li><strong>2026-05-20</strong> (Claude): Explore mobile access options for research projects — discussing pa... -&gt; Claude Remote Control is the best mobile option; Termux+Gemini CLI blocked by Google Ad...</li>
+  <li><strong>2026-05-20</strong> (Claude): Explore mobile access options for research projects &#226;€” discussing pa... -&gt; Claude Remote Control is the best mobile option; Termux+Gemini CLI blocked by Google Ad...</li>
   <li><strong>2026-05-21 (Gemini CLI)</strong> (Gemini CLI): Create a 20-slide presentation deck for the division meeting on AI ... -&gt; A comprehensive, technically rich, and strategically framed 20-slide presentation is co...</li>
-  <li><strong>2026-05-21</strong> (Claude): Design and build a `/pipeline` skill — background multi-agent job (... -&gt; `/pipeline` skill is live; slide deck updated with circular workflow diagram and new pi...</li>
-  <li><strong>2026-05-22</strong> (Claude): Make `/close` skill run fully autonomously — no permission prompts ... -&gt; `/close` now executes all steps without user confirmation; all session-management file ...</li>
-  <li><strong>2026-05-22b</strong> (Claude): Patch `/close` skill — fix two bugs causing redundant stops during ... -&gt; `/close` skill no longer errors on bash `$null` redirect or write-without-read on `_sta...</li>
+  <li><strong>2026-05-21</strong> (Claude): Design and build a `/pipeline` skill &#226;€” background multi-agent job (... -&gt; `/pipeline` skill is live; slide deck updated with circular workflow diagram and new pi...</li>
+  <li><strong>2026-05-22</strong> (Claude): Make `/close` skill run fully autonomously &#226;€” no permission prompts ... -&gt; `/close` now executes all steps without user confirmation; all session-management file ...</li>
+  <li><strong>2026-05-22b</strong> (Claude): Patch `/close` skill &#226;€” fix two bugs causing redundant stops during ... -&gt; `/close` skill no longer errors on bash `$null` redirect or write-without-read on `_sta...</li>
   <li><strong>2026-05-24</strong> (Claude &amp; Codex): Implement and verify the &#39;Convergence Forum&#39; infrastructure for mul... -&gt; Implemented `run_forum.ps1` and integrated it into the `helpi` command set. Codex audit...</li>
   <li><strong>2026-05-24b</strong> (Codex): Audit the newly implemented Convergence Forum infrastructure for ar... -&gt; Audit found that `run_forum.ps1` is not yet operational due to a PowerShell parse error...</li>
   <li><strong>2026-05-24c</strong> (Codex): Patch and document the Convergence Forum issues found in the Codex ... -&gt; The Convergence Forum now parses cleanly, rejects invalid agent lists before creating r...</li>
@@ -155,12 +155,12 @@
 <p><strong>Goal:</strong> Claude final validation of patched `helpi 25` command; live smoke test.</p>
 <p><strong>Files touched:</strong></p>
 <ul>
-  <li>`prompts/forum_roles/critic_sys.md` — removed trailing `=== DIGEST ===` / `=== STATE UPDATE ===` placeholder lines that caused `Get-Section` to extract template text instead of agent output</li>
-  <li>`prompts/forum_roles/advocate_sys.md` — same fix</li>
-  <li>`prompts/forum_roles/realist_sys.md` — same fix</li>
-  <li>`known_issues.md` — added issue #21 documenting the role-file placeholder bug (status: fixed 2026-05-24)</li>
+  <li>`prompts/forum_roles/critic_sys.md` &#226;€” removed trailing `=== DIGEST ===` / `=== STATE UPDATE ===` placeholder lines that caused `Get-Section` to extract template text instead of agent output</li>
+  <li>`prompts/forum_roles/advocate_sys.md` &#226;€” same fix</li>
+  <li>`prompts/forum_roles/realist_sys.md` &#226;€” same fix</li>
+  <li>`known_issues.md` &#226;€” added issue #21 documenting the role-file placeholder bug (status: fixed 2026-05-24)</li>
 </ul>
-<p><strong>Outcome:</strong> Validation verdict READY; smoke test revealed the role-file `=== DIGEST ===` placeholder bug that prevented blackboard from ever updating — fixed in all three role files and logged as issue #21.</p>
+<p><strong>Outcome:</strong> Validation verdict READY; smoke test revealed the role-file `=== DIGEST ===` placeholder bug that prevented blackboard from ever updating &#226;€” fixed in all three role files and logged as issue #21.</p>
 <p><strong>Next steps:</strong></p>
 <ul>
   <li>Run a fresh smoke test to confirm blackboard updates correctly with the role-file fix applied</li>
@@ -176,17 +176,17 @@
 <div class="section">
   <h2>Editable Source (_ai_log.md)</h2>
   <div class="label">Copy this, update it with your session entry, and paste back into _ai_log.md</div>
-  <textarea id="mdSource" spellcheck="false"># AI Session Log — AI Infrastructure Project
+  <textarea id="mdSource" spellcheck="false"># AI Session Log â€” AI Infrastructure Project
 
 ---
 
 ## Compressed sessions
 
-- **2026-05-20** (Claude): Explore mobile access options for research projects — discussing pa... -&gt; Claude Remote Control is the best mobile option; Termux+Gemini CLI blocked by Google Ad...
+- **2026-05-20** (Claude): Explore mobile access options for research projects â€” discussing pa... -&gt; Claude Remote Control is the best mobile option; Termux+Gemini CLI blocked by Google Ad...
 - **2026-05-21 (Gemini CLI)** (Gemini CLI): Create a 20-slide presentation deck for the division meeting on AI ... -&gt; A comprehensive, technically rich, and strategically framed 20-slide presentation is co...
-- **2026-05-21** (Claude): Design and build a `/pipeline` skill — background multi-agent job (... -&gt; `/pipeline` skill is live; slide deck updated with circular workflow diagram and new pi...
-- **2026-05-22** (Claude): Make `/close` skill run fully autonomously — no permission prompts ... -&gt; `/close` now executes all steps without user confirmation; all session-management file ...
-- **2026-05-22b** (Claude): Patch `/close` skill — fix two bugs causing redundant stops during ... -&gt; `/close` skill no longer errors on bash `$null` redirect or write-without-read on `_sta...
+- **2026-05-21** (Claude): Design and build a `/pipeline` skill â€” background multi-agent job (... -&gt; `/pipeline` skill is live; slide deck updated with circular workflow diagram and new pi...
+- **2026-05-22** (Claude): Make `/close` skill run fully autonomously â€” no permission prompts ... -&gt; `/close` now executes all steps without user confirmation; all session-management file ...
+- **2026-05-22b** (Claude): Patch `/close` skill â€” fix two bugs causing redundant stops during ... -&gt; `/close` skill no longer errors on bash `$null` redirect or write-without-read on `_sta...
 - **2026-05-24** (Claude & Codex): Implement and verify the 'Convergence Forum' infrastructure for mul... -&gt; Implemented `run_forum.ps1` and integrated it into the `helpi` command set. Codex audit...
 - **2026-05-24b** (Codex): Audit the newly implemented Convergence Forum infrastructure for ar... -&gt; Audit found that `run_forum.ps1` is not yet operational due to a PowerShell parse error...
 - **2026-05-24c** (Codex): Patch and document the Convergence Forum issues found in the Codex ... -&gt; The Convergence Forum now parses cleanly, rejects invalid agent lists before creating r...
@@ -241,11 +241,11 @@
 **Agent:** Claude Sonnet 4.6
 **Goal:** Claude final validation of patched `helpi 25` command; live smoke test.
 **Files touched:**
-- `prompts/forum_roles/critic_sys.md` — removed trailing `=== DIGEST ===` / `=== STATE UPDATE ===` placeholder lines that caused `Get-Section` to extract template text instead of agent output
-- `prompts/forum_roles/advocate_sys.md` — same fix
-- `prompts/forum_roles/realist_sys.md` — same fix
-- `known_issues.md` — added issue #21 documenting the role-file placeholder bug (status: fixed 2026-05-24)
-**Outcome:** Validation verdict READY; smoke test revealed the role-file `=== DIGEST ===` placeholder bug that prevented blackboard from ever updating — fixed in all three role files and logged as issue #21.
+- `prompts/forum_roles/critic_sys.md` â€” removed trailing `=== DIGEST ===` / `=== STATE UPDATE ===` placeholder lines that caused `Get-Section` to extract template text instead of agent output
+- `prompts/forum_roles/advocate_sys.md` â€” same fix
+- `prompts/forum_roles/realist_sys.md` â€” same fix
+- `known_issues.md` â€” added issue #21 documenting the role-file placeholder bug (status: fixed 2026-05-24)
+**Outcome:** Validation verdict READY; smoke test revealed the role-file `=== DIGEST ===` placeholder bug that prevented blackboard from ever updating â€” fixed in all three role files and logged as issue #21.
 **Next steps:**
 - Run a fresh smoke test to confirm blackboard updates correctly with the role-file fix applied
 **Git ref:** 9df201c

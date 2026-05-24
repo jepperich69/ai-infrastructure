@@ -1,22 +1,24 @@
-{
-  "project": "AI_auto",
-  "generated": "2026-05-24 16:04",
-  "source": "_ai_log.md",
-  "latest_session": {
-    "title": "2026-05-24o",
-    "agent": "Claude Sonnet 4.6",
-    "goal": "Claude final validation of patched `helpi 25` command; live smoke test.",
-    "outcome": "Validation verdict READY; smoke test revealed the role-file `=== DIGEST ===` placeholder bug that prevented blackboard from ever updating — fixed in all three role files and logged as issue #21.",
-    "next_steps": "Run a fresh smoke test to confirm blackboard updates correctly with the role-file fix applied",
-    "git_ref": "9df201c",
-    "files_touched": [
-      "`prompts/forum_roles/critic_sys.md` — removed trailing `=== DIGEST ===` / `=== STATE UPDATE ===` placeholder lines that caused `Get-Section` to extract template text instead of agent output",
-      "`prompts/forum_roles/advocate_sys.md` — same fix",
-      "`prompts/forum_roles/realist_sys.md` — same fix",
-      "`known_issues.md` — added issue #21 documenting the role-file placeholder bug (status: fixed 2026-05-24)"
-    ]
-  },
-  "latest_session_complete": true,
-  "latest_session_missing": null,
-  "session_count": 4
+﻿{
+    "project":  "AI_auto",
+    "generated":  "2026-05-24 16:06",
+    "source":  "_ai_log.md",
+    "latest_session":  {
+                           "title":  "2026-05-24o",
+                           "agent":  "Claude Sonnet 4.6",
+                           "goal":  "Claude final validation of patched `helpi 25` command; live smoke test.",
+                           "outcome":  "Validation verdict READY; smoke test revealed the role-file `=== DIGEST ===` placeholder bug that prevented blackboard from ever updating â€” fixed in all three role files and logged as issue #21.",
+                           "next_steps":  "Run a fresh smoke test to confirm blackboard updates correctly with the role-file fix applied",
+                           "git_ref":  "9df201c",
+                           "files_touched":  [
+                                                 "`prompts/forum_roles/critic_sys.md` â€” removed trailing `=== DIGEST ===` / `=== STATE UPDATE ===` placeholder lines that caused `Get-Section` to extract template text instead of agent output",
+                                                 "`prompts/forum_roles/advocate_sys.md` â€” same fix",
+                                                 "`prompts/forum_roles/realist_sys.md` â€” same fix",
+                                                 "`known_issues.md` â€” added issue #21 documenting the role-file placeholder bug (status: fixed 2026-05-24)"
+                                             ]
+                       },
+    "latest_session_complete":  true,
+    "latest_session_missing":  {
+
+                               },
+    "session_count":  4
 }
