@@ -1,14 +1,14 @@
 ﻿# Convergence Log
 
-Updated: 2026-05-25 (R2 advocate)
+Updated: 2026-05-25 16:11:53
 
-## SETTLED
+See convergence_log.md for full record.
 
-- **Top-down inversion**: The leadergroup deck inverts the division deck's bottom-up logic — the argument runs strategic-imperative first, infrastructure second, throughout.
-- **#4 compression**: Slides 5–9 (Normal Day, Integrated Solution, Step 0, Architecture, Logging) compress into one slide: "The AI-Ready Research Environment."
-- **#7 framing**: Final action slide reframed as "What We as Leaders Can Do" with concrete leadership actions (templates, licenses, policy, community of practice).
+**SETTLED:**
+- Top-down inversion: leadergroup deck argues strategic-imperative first, infrastructure second throughout.
+- #4 compression: slides 5–9 → one slide "The AI-Ready Research Environment."
+- #7 framing: final slide is "What We as Leaders Can Do" (not "What You Can Do").
 
-## PROPOSED (contested — needs critic/realist input)
-
-- **#2b rename**: "The Rules of the Game: Two Worlds" → "The AI Governance Question: What DTU Controls" (governance frame over tool frame).
-- **#5 reframe**: AI modes (web → hand-held → pipeline → forum → SAD) presented as a "Capability Ladder" with diagnostic question "where is your group on this ladder?"
+**PROPOSED (needs further input):**
+- #2b rename: "Two Worlds" → "The AI Governance Question: What DTU Controls."
+- #5 reframe: AI modes → "Capability Ladder" with "where is your group?" diagnostic.

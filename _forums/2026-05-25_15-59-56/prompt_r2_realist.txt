@@ -1,6 +1,8 @@
-﻿# Forum Run Log
+﻿You are a participant in a Research Convergence Forum.
+Your job is to stress-test the current task and help move the forum toward a defensible consensus.
 
-Task: This slide show "slides_division_meeting.tex" is now perfect for the division meeting. However, it is a bit too technical for the leadergroup meeting which should be a bit more strategic.
+CURRENT BLACKBOARD STATE:
+# Convergence Forum: This slide show "slides_division_meeting.tex" is now perfect for the division meeting. However, it is a bit too technical for the leadergroup meeting which should be a bit more strategic.
 
 Create therefore a new slide desk called "slides_leadergroup_meeting.tex" where you re-use the division slides.
 
@@ -67,18 +69,45 @@ is sort of ok. But expand the figure a bit to have more papers, maybe even two l
 #7 The framing of the slides should be from "what you can do!" to what we as leaders can do? One example is "Next Steps: What You Can Do"
 
 	
-Agents: claude
-Mode: SAD
-Started: 2026-05-25 15:59:56
 
-- Round 1 critic: complete. See C:\Users\rich\OneDrive - Danmarks Tekniske Universitet\JR\AI_auto\_forums\2026-05-25_15-59-56\output_r1_critic.md
-- Round 1 critic: moderator state rejected; previous state preserved.
-- Round 1 advocate: complete. See C:\Users\rich\OneDrive - Danmarks Tekniske Universitet\JR\AI_auto\_forums\2026-05-25_15-59-56\output_r1_advocate.md
-- Round 1 advocate: moderator state rejected; previous state preserved.
-- Round 1 realist: complete. See C:\Users\rich\OneDrive - Danmarks Tekniske Universitet\JR\AI_auto\_forums\2026-05-25_15-59-56\output_r1_realist.md
-- Round 1 realist: moderator state rejected; previous state preserved.
-- Round 2 critic: FAILED. See C:\Users\rich\OneDrive - Danmarks Tekniske Universitet\JR\AI_auto\_forums\2026-05-25_15-59-56\output_r2_critic.md
-- Round 2 critic: moderator state rejected; previous state preserved.
-- Round 2 advocate: complete. See C:\Users\rich\OneDrive - Danmarks Tekniske Universitet\JR\AI_auto\_forums\2026-05-25_15-59-56\output_r2_advocate.md
-- Round 2 advocate: moderator state applied. 3 items settled, 2 proposed, 4 open questions in active arena.
-- Round 2 advocate: moderator state rejected; previous state preserved.
+Status: active
+Round: 2
+
+## [CONVERGENCE LOG]
+See convergence_log.md for full record.
+
+**SETTLED:**
+- Top-down inversion: leadergroup deck argues strategic-imperative first, infrastructure second throughout.
+- #4 compression: slides 5–9 → one slide "The AI-Ready Research Environment."
+- #7 framing: final slide is "What We as Leaders Can Do" (not "What You Can Do").
+
+**PROPOSED (needs further input):**
+- #2b rename: "Two Worlds" → "The AI Governance Question: What DTU Controls."
+- #5 reframe: AI modes → "Capability Ladder" with "where is your group?" diagnostic.
+
+## [ACTIVE ARENA]
+- Open: Should the Schumpeter slide move from Part II to Part I (before infrastructure)? Advocate: yes — urgency before solution. Needs critic/realist.
+- Open: Should /family figure show lossy compression across multi-hop chains explicitly, or stay clean/optimistic? Advocate: honest > optimistic.
+- Open: Should "No fixed AI template" slide body be dropped entirely, or kept in abbreviated form? Advocate: drop body, extract alertblock to closing.
+- Open: Productivity slide — should presenter's firsthand 50% figure be placed explicitly alongside McKinsey 30–80%, with explicit note that study lag understates current gains?
+
+## [PARKING LOT]
+- Teaching/admin scope: exact wording of "door-closing" sentence (focus-on-research framing) — park for implementation.
+- /family figure TikZ: two-layer expansion with lossy-compression annotation — nontrivial, park until slide structure settled.
+
+## [LATEST DIGESTS]
+- R1 critic/advocate/realist (ALL FAILED): truncated prompts, no substantive output.
+- R2 critic (FAILED): no substantive output.
+- R2 advocate: Full position filed. Core claim — deck must invert bottom-up division logic into top-down strategic argument. Proposed 14-slide structure. Settled 3 items; proposed 2 more.
+
+INSTRUCTIONS:
+1. Provide a focused adversarial contribution. Avoid restating settled decisions.
+2. End your response with exactly these two sections:
+
+=== DIGEST ===
+A max 200-word summary of your new contribution.
+
+=== STATE UPDATE ===
+Concrete proposed edits to [CONVERGENCE LOG], [ACTIVE ARENA], or [PARKING LOT].
+
+AGENT ROLE: realist
