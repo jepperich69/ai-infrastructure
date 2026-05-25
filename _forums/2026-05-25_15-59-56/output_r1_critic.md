@@ -1,0 +1,1 @@
+﻿Your message appears to be cut off ΓÇö it ends mid-sentence at "and that optimistic". Could you resend the full message?
