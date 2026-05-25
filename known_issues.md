@@ -309,3 +309,14 @@ Symptom: Forum finishes in seconds with Status: failed. output_r1_*.md files con
 **Fix:** Add `--skip-trust` to the `gemini` invocation in `Invoke-Agent`. While the CLI tool might already have it, ensuring it is passed explicitly prevents potential trust-blocking prompts in non-interactive sessions. Additionally, investigate why `output_r1_critic.md` shows `read_file` failing on `Overleaf_source` files due to ignore patterns.
 
 Symptom: Forum rounds take several minutes and then time out or fail. Output logs show node-pty errors (`AttachConsole failed`) and tool execution failures.
+
+---
+
+### 24. `claude --print` returns "Not logged in" when spawned from within a Claude Code session
+**Status:** platform-fact
+
+Running `claude --print --bare` as a subprocess while an interactive Claude Code session is already active causes the child process to return "Not logged in - Please run /login" and exit 1. The forum script (`run_forum.ps1`) catches this pattern and aborts with "Agent 'claude' is not authenticated."
+
+Root cause: Claude Code's credential store cannot be accessed by a nested subprocess while the parent session holds it. The interactive session authenticates via browser OAuth; the subprocess sees the credentials as unavailable.
+
+Workaround: Always run `helpi 25` (and any script that invokes `claude --print`) from a fresh PowerShell window where no Claude Code session is currently active. Close this Claude Code session first, then run the forum.

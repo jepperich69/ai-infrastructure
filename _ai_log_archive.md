@@ -120,3 +120,10 @@
 ## Archived 2026-05-24 (1 entry)
 
 - **2026-05-18** (Claude): Explore graphify skill feasibility; redesign session startup flow f... -> Session startup redesigned around a ≤20-line state card; full history remains accessibl...
+
+
+---
+
+## Archived 2026-05-25 (1 entry)
+
+- **2026-05-20** (Claude): Explore mobile access options for research projects — discussing pa... -> Claude Remote Control is the best mobile option; Termux+Gemini CLI blocked by Google Ad...

@@ -4,7 +4,6 @@
 
 ## Compressed sessions
 
-- **2026-05-20** (Claude): Explore mobile access options for research projects — discussing pa... -> Claude Remote Control is the best mobile option; Termux+Gemini CLI blocked by Google Ad...
 - **2026-05-21 (Gemini CLI)** (Gemini CLI): Create a 20-slide presentation deck for the division meeting on AI ... -> A comprehensive, technically rich, and strategically framed 20-slide presentation is co...
 - **2026-05-21** (Claude): Design and build a `/pipeline` skill — background multi-agent job (... -> `/pipeline` skill is live; slide deck updated with circular workflow diagram and new pi...
 - **2026-05-22** (Claude): Make `/close` skill run fully autonomously — no permission prompts ... -> `/close` now executes all steps without user confirmation; all session-management file ...
@@ -20,19 +19,7 @@
 - **2026-05-24i** (Gemini CLI): Implement SAD (Single-Agent Debate) mode for the FORUM skill and up... -> SAD mode is now fully operational and documented. Slides are ready and verified. Global...
 - **2026-05-24j** (Codex): Apply requested wording edits to the division meeting slide deck. -> Deck edits applied and verified. `helpi 6 AI_auto -Force` produced a fresh 26-page PDF;...
 - **2026-05-24k** (Codex): Audit the new `helpi 25` Forum/code-audit command path. -> Audited `helpi.ps1`, `run_forum.ps1`, the new `prompts/code-audit.md` template, and For...
-
----
-
-## Session 2026-05-24l
-**Agent:** Codex
-**Goal:** Patch the `helpi 25` Forum/code-audit issues found in audit.
-**Files touched:**
-- `helpi.ps1` -- Added compact template parsing for `helpi 25 code-audit` and documented the shortcut in command help.
-- `run_forum.ps1` -- Marked max-round exhaustion as `adjourned`; made final-file opening and Claude auto-close explicit opt-in switches.
-- `_ai_log.md` -- Added this session entry.
-**Outcome:** The direct `helpi 25 code-audit` shortcut now maps to the current/last project, forum runs no longer finish with stale `Status: active` after max rounds, and default runs no longer launch a viewer or spawn Claude auto-close implicitly. Both edited PowerShell scripts parse cleanly and are BOM/curly-quote clean.
-**Next steps:** Optional live smoke test with `helpi 25 AI_auto code-audit -Agent codex -Mode SAD` when you want to spend the LLM calls.
-**Git ref:**
+- **2026-05-24l** (Codex): Patch the `helpi 25` Forum/code-audit issues found in audit. -> The direct `helpi 25 code-audit` shortcut now maps to the current/last project, forum r...
 
 ---
 
@@ -71,3 +58,18 @@
 **Next steps:**
 - Run a fresh smoke test to confirm blackboard updates correctly with the role-file fix applied
 **Git ref:** 9df201c
+
+---
+
+## Session 2026-05-25
+**Agent:** Claude Sonnet 4.6
+**Goal:** Debug `claude --print` authentication failure in Convergence Forum (helpi 25 SAD mode); earlier in-session helpi.ps1 and run_forum.ps1 patches.
+**Files touched:**
+- `helpi.ps1` — multiple patches (15:07-15:26): helpi 25 argument binding and forum integration fixes
+- `run_forum.ps1` — patches to SAD mode and agent invocation (15:18-15:26)
+- `known_issues.md` — added issue #24: nested Claude Code subprocess auth failure
+**Outcome:** Identified that `claude --print` returns "Not logged in" when spawned as a subprocess while a Claude Code session is active; workaround is to close the Claude Code session before running the forum.
+**Next steps:**
+- Test `helpi 25` from a fresh PowerShell window with no active Claude Code session
+- Confirm forum SAD mode works end-to-end with the slides_leadergroup prompt
+**Git ref:** 19027ba

@@ -1,7 +1,8 @@
-# State — 2026-05-24
+# State — 2026-05-25
 **Phase:** Active development
-**Last session:** Claude final validation of `helpi 25`; smoke test found and fixed role-file placeholder bug that prevented blackboard updates.
+**Last session:** Diagnosed `claude --print` nested-session auth failure blocking forum SAD mode; helpi.ps1 and run_forum.ps1 patches applied earlier today.
 **Next:**
-- Run a fresh smoke test to confirm blackboard updates correctly with the role-file fix applied
-**Git ref:** 9df201c
+- Test `helpi 25` from a fresh PowerShell window (no active Claude Code session)
+- Confirm forum SAD mode works end-to-end with slides_leadergroup prompt
+**Git ref:** 19027ba
 **Agent:** Claude Sonnet 4.6
