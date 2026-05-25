@@ -30,7 +30,7 @@
 <body>
 
 <h1>Handover Document &mdash; AI_auto</h1>
-<div class="meta">Generated: 2026-05-25 15:42 &nbsp;|&nbsp; Source: <code style="display:inline;padding:2px 6px">_ai_log.md</code> &nbsp;|&nbsp; Sidecar: <code style="display:inline;padding:2px 6px">_handover.json</code></div>
+<div class="meta">Generated: 2026-05-25 18:57 &nbsp;|&nbsp; Source: <code style="display:inline;padding:2px 6px">_ai_log.md</code> &nbsp;|&nbsp; Sidecar: <code style="display:inline;padding:2px 6px">_handover.json</code></div>
 
 <!-- ============================================================ -->
 <!-- AGENT INSTRUCTIONS                                            -->
@@ -60,19 +60,18 @@
 <!-- LATEST SESSION SNAPSHOT                                       -->
 <!-- ============================================================ -->
 <div class="latest-session">
-  <div class="session-status ok">Complete</div>
+  <div class="session-status warn">Incomplete - missing: Outcome</div>
   <h2>Latest Session Snapshot</h2>
-  <p><strong>Session:</strong> 2026-05-25</p>
-  <p><strong>Agent:</strong> Claude Sonnet 4.6</p>
-  <p><strong>Goal:</strong> Debug `claude --print` authentication failure in Convergence Forum (helpi 25 SAD mode); earlier in-session helpi.ps1 and run_forum.ps1 patches.</p>
-  <p><strong>Outcome:</strong> Identified that `claude --print` returns &quot;Not logged in&quot; when spawned as a subprocess while a Claude Code session is active; workaround is to close the Claude Code session before running the forum.</p>
-  <p><strong>Next steps:</strong> Test `helpi 25` from a fresh PowerShell window with no active Claude Code session Confirm forum SAD mode works end-to-end with the slides_leadergroup prompt</p>
-  <p><strong>Git ref:</strong> 19027ba</p>
+  <p><strong>Session:</strong> 2026-05-25c</p>
+  <p><strong>Agent:</strong> Gemini CLI (gemini-2.5-flash)</p>
+  <p><strong>Goal:</strong> Create refined &#39;V2&#39; leadergroup slides; simplify language and add leadership action items.</p>
+  <p><strong>Outcome:</strong> </p>
+  <p><strong>Next steps:</strong> Push final V2 to Overleaf; present the deck.</p>
+  <p><strong>Git ref:</strong> -</p>
   <h3>Files touched</h3>
   <ul>
-  <li>`helpi.ps1` — multiple patches (15:07-15:26): helpi 25 argument binding and forum integration fixes</li>
-  <li>`run_forum.ps1` — patches to SAD mode and agent invocation (15:18-15:26)</li>
-  <li>`known_issues.md` — added issue #24: nested Claude Code subprocess auth failure</li>
+  <li>`Overleaf_source/slides_leadergroup_meeting_v2.tex` -- 22-slide deck with simplified &#39;farm boy&#39; language and new leadership initiatives.</li>
+  <li>Outcome: Successfully created a hybrid deck with direct, non-technical strategic framing. Merged technical slides 11-12 into a single &quot;Consensus Forum&quot; anchor slide. Added the &quot;DTU common token pool&quot; and &quot;Departmental Task Force&quot; as concrete leadership next steps. Enlarged key diagrams for better visibility.</li>
 </ul>
 </div>
 
@@ -84,91 +83,85 @@
   <br>
 <hr>
 <br>
-<h2>Compressed sessions</h2>
+<h2>Compressed sessions</h2>
 <br>
 <ul>
-  <li><strong>2026-05-21 (Gemini CLI)</strong> (Gemini CLI): Create a 20-slide presentation deck for the division meeting on AI ... -&gt; A comprehensive, technically rich, and strategically framed 20-slide presentation is co...</li>
-  <li><strong>2026-05-21</strong> (Claude): Design and build a `/pipeline` skill — background multi-agent job (... -&gt; `/pipeline` skill is live; slide deck updated with circular workflow diagram and new pi...</li>
-  <li><strong>2026-05-22</strong> (Claude): Make `/close` skill run fully autonomously — no permission prompts ... -&gt; `/close` now executes all steps without user confirmation; all session-management file ...</li>
-  <li><strong>2026-05-22b</strong> (Claude): Patch `/close` skill — fix two bugs causing redundant stops during ... -&gt; `/close` skill no longer errors on bash `$null` redirect or write-without-read on `_sta...</li>
-  <li><strong>2026-05-24</strong> (Claude &amp; Codex): Implement and verify the &#39;Convergence Forum&#39; infrastructure for mul... -&gt; Implemented `run_forum.ps1` and integrated it into the `helpi` command set. Codex audit...</li>
-  <li><strong>2026-05-24b</strong> (Codex): Audit the newly implemented Convergence Forum infrastructure for ar... -&gt; Audit found that `run_forum.ps1` is not yet operational due to a PowerShell parse error...</li>
-  <li><strong>2026-05-24c</strong> (Codex): Patch and document the Convergence Forum issues found in the Codex ... -&gt; The Convergence Forum now parses cleanly, rejects invalid agent lists before creating r...</li>
-  <li><strong>2026-05-24d</strong> (Codex): Prepare Gemini&#39;s independent verification prompt for the patched Co... -&gt; Wrote a Gemini audit instruction set covering PowerShell correctness, Blackboard integr...</li>
-  <li><strong>2026-05-24e</strong> (Claude (Convergence Forum)): Live test run of the Convergence Forum on a low-stakes &quot;test task&quot; ... -&gt; Forum ran and terminated cleanly. The test task completed in 3m 35s. The forum reached ...</li>
-  <li><strong>2026-05-24f</strong> (Gemini CLI): Audit Convergence Forum and update division meeting slides. -&gt; Forum infrastructure audited as READY. Slide update failed due to persistent syntax err...</li>
-  <li><strong>2026-05-24g</strong> (Codex): Clean the broken division meeting slide deck, verify compilation, a... -&gt; Slides 13-14 are structurally clean and the referenced `figures/Human-AI_Integration_Di...</li>
-  <li><strong>2026-05-24h</strong> (Codex): Refine Convergence Forum slides and remove the MiKTeX compile blocker. -&gt; Slide revisions were committed and pushed to Overleaf. MiKTeX was initialized for the n...</li>
-  <li><strong>2026-05-24i</strong> (Gemini CLI): Implement SAD (Single-Agent Debate) mode for the FORUM skill and up... -&gt; SAD mode is now fully operational and documented. Slides are ready and verified. Global...</li>
-  <li><strong>2026-05-24j</strong> (Codex): Apply requested wording edits to the division meeting slide deck. -&gt; Deck edits applied and verified. `helpi 6 AI_auto -Force` produced a fresh 26-page PDF;...</li>
-  <li><strong>2026-05-24k</strong> (Codex): Audit the new `helpi 25` Forum/code-audit command path. -&gt; Audited `helpi.ps1`, `run_forum.ps1`, the new `prompts/code-audit.md` template, and For...</li>
-  <li><strong>2026-05-24l</strong> (Codex): Patch the `helpi 25` Forum/code-audit issues found in audit. -&gt; The direct `helpi 25 code-audit` shortcut now maps to the current/last project, forum r...</li>
+  <li><strong>2026-05-21 (Gemini CLI)</strong> (Gemini CLI): Create a 20-slide presentation deck for the division meeting on AI ... -&gt; A comprehensive, technically rich, and strategically framed 20-slide presentation is co...</li>
+  <li><strong>2026-05-21</strong> (Claude): Design and build a `/pipeline` skill &#226;€” background multi-agent job (... -&gt; `/pipeline` skill is live; slide deck updated with circular workflow diagram and new pi...</li>
+  <li><strong>2026-05-22</strong> (Claude): Make `/close` skill run fully autonomously &#226;€” no permission prompts ... -&gt; `/close` now executes all steps without user confirmation; all session-management file ...</li>
+  <li><strong>2026-05-22b</strong> (Claude): Patch `/close` skill &#226;€” fix two bugs causing redundant stops during ... -&gt; `/close` skill no longer errors on bash `$null` redirect or write-without-read on `_sta...</li>
+  <li><strong>2026-05-24</strong> (Claude &amp; Codex): Implement and verify the &#39;Convergence Forum&#39; infrastructure for mul... -&gt; Implemented `run_forum.ps1` and integrated it into the `helpi` command set. Codex audit...</li>
+  <li><strong>2026-05-24b</strong> (Codex): Audit the newly implemented Convergence Forum infrastructure for ar... -&gt; Audit found that `run_forum.ps1` is not yet operational due to a PowerShell parse error...</li>
+  <li><strong>2026-05-24c</strong> (Codex): Patch and document the Convergence Forum issues found in the Codex ... -&gt; The Convergence Forum now parses cleanly, rejects invalid agent lists before creating r...</li>
+  <li><strong>2026-05-24d</strong> (Codex): Prepare Gemini&#39;s independent verification prompt for the patched Co... -&gt; Wrote a Gemini audit instruction set covering PowerShell correctness, Blackboard integr...</li>
+  <li><strong>2026-05-24e</strong> (Claude (Convergence Forum)): Live test run of the Convergence Forum on a low-stakes &quot;test task&quot; ... -&gt; Forum ran and terminated cleanly. The test task completed in 3m 35s. The forum reached ...</li>
+  <li><strong>2026-05-24f</strong> (Gemini CLI): Audit Convergence Forum and update division meeting slides. -&gt; Forum infrastructure audited as READY. Slide update failed due to persistent syntax err...</li>
+  <li><strong>2026-05-24g</strong> (Codex): Clean the broken division meeting slide deck, verify compilation, a... -&gt; Slides 13-14 are structurally clean and the referenced `figures/Human-AI_Integration_Di...</li>
+  <li><strong>2026-05-24h</strong> (Codex): Refine Convergence Forum slides and remove the MiKTeX compile blocker. -&gt; Slide revisions were committed and pushed to Overleaf. MiKTeX was initialized for the n...</li>
+  <li><strong>2026-05-24i</strong> (Gemini CLI): Implement SAD (Single-Agent Debate) mode for the FORUM skill and up... -&gt; SAD mode is now fully operational and documented. Slides are ready and verified. Global...</li>
+  <li><strong>2026-05-24j</strong> (Codex): Apply requested wording edits to the division meeting slide deck. -&gt; Deck edits applied and verified. `helpi 6 AI_auto -Force` produced a fresh 26-page PDF;...</li>
+  <li><strong>2026-05-24k</strong> (Codex): Audit the new `helpi 25` Forum/code-audit command path. -&gt; Audited `helpi.ps1`, `run_forum.ps1`, the new `prompts/code-audit.md` template, and For...</li>
+  <li><strong>2026-05-24l</strong> (Codex): Patch the `helpi 25` Forum/code-audit issues found in audit. -&gt; The direct `helpi 25 code-audit` shortcut now maps to the current/last project, forum r...</li>
 </ul>
 <br>
 <hr>
 <br>
-<h2>Session 2026-05-24m</h2>
-<p><strong>Agent:</strong> Codex</p>
-<p><strong>Goal:</strong> Prepare Claude&#39;s final validation instruction for the patched `helpi 25` command.</p>
-<p><strong>Files touched:</strong></p>
+<h2>Session 2026-05-24m</h2>
+<p><strong>Agent:</strong> Codex</p>
+<p><strong>Goal:</strong> Prepare Claude&#39;s final validation instruction for the patched `helpi 25` command.</p>
+<p><strong>Files touched:</strong></p>
 <ul>
-  <li>`prompts/claude-validate-helpi25.md` -- Added a final validation protocol for Claude covering argument binding, side effects, max-round status, BOM/curly-quote checks, and optional smoke testing.</li>
-  <li>`_ai_log.md` -- Added this session entry.</li>
+  <li>`prompts/claude-validate-helpi25.md` -- Added a final validation protocol for Claude covering argument binding, side effects, max-round status, BOM/curly-quote checks, and optional smoke testing.</li>
+  <li>`_ai_log.md` -- Added this session entry.</li>
 </ul>
-<p><strong>Outcome:</strong> Claude now has a focused validation prompt for the last review stage of the Forum/code-audit command path. The prompt explicitly forbids costly live Forum execution unless Richard approves it.</p>
-<p><strong>Next steps:</strong> Hand `prompts/claude-validate-helpi25.md` to Claude for final validation.</p>
-<p><strong>Git ref:</strong></p>
+<p><strong>Outcome:</strong> Claude now has a focused validation prompt for the last review stage of the Forum/code-audit command path. The prompt explicitly forbids costly live Forum execution unless Richard approves it.</p>
+<p><strong>Next steps:</strong> Hand `prompts/claude-validate-helpi25.md` to Claude for final validation.</p>
+<p><strong>Git ref:</strong></p>
 <br>
 <hr>
 <br>
-<h2>Session 2026-05-24n</h2>
-<p><strong>Agent:</strong> Codex</p>
-<p><strong>Goal:</strong> Close the AI_auto session after patching and handoff preparation.</p>
-<p><strong>Files touched:</strong></p>
+<h2>Session 2026-05-24n</h2>
+<p><strong>Agent:</strong> Codex</p>
+<p><strong>Goal:</strong> Close the AI_auto session after patching and handoff preparation.</p>
+<p><strong>Files touched:</strong></p>
 <ul>
-  <li>`_ai_log.md` -- Added this close-session entry.</li>
+  <li>`_ai_log.md` -- Added this close-session entry.</li>
 </ul>
-<p><strong>Outcome:</strong> Session closed with the `helpi 25` code-audit patch and Claude final-validation prompt prepared.</p>
-<p><strong>Next steps:</strong> Run Claude on `prompts/claude-validate-helpi25.md` for final validation; live Forum smoke test only if Richard approves LLM/tool spend.</p>
-<p><strong>Git ref:</strong></p>
+<p><strong>Outcome:</strong> Session closed with the `helpi 25` code-audit patch and Claude final-validation prompt prepared.</p>
+<p><strong>Next steps:</strong> Run Claude on `prompts/claude-validate-helpi25.md` for final validation; live Forum smoke test only if Richard approves LLM/tool spend.</p>
+<p><strong>Git ref:</strong></p>
 <br>
 <hr>
 <br>
-<h2>Session 2026-05-24o</h2>
-<p><strong>Agent:</strong> Claude Sonnet 4.6</p>
-<p><strong>Goal:</strong> Claude final validation of patched `helpi 25` command; live smoke test.</p>
-<p><strong>Files touched:</strong></p>
+<h2>Session 2026-05-24o</h2>
+<p><strong>Agent:</strong> Claude Sonnet 4.6</p>
+<p><strong>Goal:</strong> Claude final validation of patched `helpi 25` command; live smoke test.</p>
+<p><strong>Files touched:</strong></p>
 <ul>
-  <li>`prompts/forum_roles/critic_sys.md` — removed trailing `=== DIGEST ===` / `=== STATE UPDATE ===` placeholder lines that caused `Get-Section` to extract template text instead of agent output</li>
-  <li>`prompts/forum_roles/advocate_sys.md` — same fix</li>
-  <li>`prompts/forum_roles/realist_sys.md` — same fix</li>
-  <li>`known_issues.md` — added issue #21 documenting the role-file placeholder bug (status: fixed 2026-05-24)</li>
+  <li>`prompts/forum_roles/critic_sys.md` &#226;€” removed trailing `=== DIGEST ===` / `=== STATE UPDATE ===` placeholder lines that caused `Get-Section` to extract template text instead of agent output</li>
+  <li>`prompts/forum_roles/advocate_sys.md` &#226;€” same fix</li>
+  <li>`prompts/forum_roles/realist_sys.md` &#226;€” same fix</li>
+  <li>`known_issues.md` &#226;€” added issue #21 documenting the role-file placeholder bug (status: fixed 2026-05-24)</li>
 </ul>
-<p><strong>Outcome:</strong> Validation verdict READY; smoke test revealed the role-file `=== DIGEST ===` placeholder bug that prevented blackboard from ever updating — fixed in all three role files and logged as issue #21.</p>
-<p><strong>Next steps:</strong></p>
+<p><strong>Outcome:</strong> Validation verdict READY; smoke test revealed the role-file `=== DIGEST ===` placeholder bug that prevented blackboard from ever updating &#226;€” fixed in all three role files and logged as issue #21.</p>
+<p><strong>Next steps:</strong></p>
 <ul>
-  <li>Run a fresh smoke test to confirm blackboard updates correctly with the role-file fix applied</li>
+  <li>Run a fresh smoke test to confirm blackboard updates correctly with the role-file fix applied</li>
 </ul>
-<p><strong>Git ref:</strong> 9df201c</p>
+<p><strong>Git ref:</strong> 9df201c</p>
 <br>
 <hr>
 <br>
-<h2>Session 2026-05-25</h2>
-<p><strong>Agent:</strong> Claude Sonnet 4.6</p>
-<p><strong>Goal:</strong> Debug `claude --print` authentication failure in Convergence Forum (helpi 25 SAD mode); earlier in-session helpi.ps1 and run_forum.ps1 patches.</p>
-<p><strong>Files touched:</strong></p>
+<h2>Session 2026-05-25c</h2>
+<p><strong>Agent:</strong> Gemini CLI (gemini-2.5-flash)</p>
+<p><strong>Goal:</strong> Create refined &#39;V2&#39; leadergroup slides; simplify language and add leadership action items.</p>
+<p><strong>Files touched:</strong></p>
 <ul>
-  <li>`helpi.ps1` — multiple patches (15:07-15:26): helpi 25 argument binding and forum integration fixes</li>
-  <li>`run_forum.ps1` — patches to SAD mode and agent invocation (15:18-15:26)</li>
-  <li>`known_issues.md` — added issue #24: nested Claude Code subprocess auth failure</li>
+  <li>`Overleaf_source/slides_leadergroup_meeting_v2.tex` -- 22-slide deck with simplified &#39;farm boy&#39; language and new leadership initiatives.</li>
 </ul>
-<p><strong>Outcome:</strong> Identified that `claude --print` returns &quot;Not logged in&quot; when spawned as a subprocess while a Claude Code session is active; workaround is to close the Claude Code session before running the forum.</p>
-<p><strong>Next steps:</strong></p>
-<ul>
-  <li>Test `helpi 25` from a fresh PowerShell window with no active Claude Code session</li>
-  <li>Confirm forum SAD mode works end-to-end with the slides_leadergroup prompt</li>
-</ul>
-<p><strong>Git ref:</strong> 19027ba</p>
+<p>Outcome: Successfully created a hybrid deck with direct, non-technical strategic framing. Merged technical slides 11-12 into a single &quot;Consensus Forum&quot; anchor slide. Added the &quot;DTU common token pool&quot; and &quot;Departmental Task Force&quot; as concrete leadership next steps. Enlarged key diagrams for better visibility.</p>
+<p><strong>Next steps:</strong> Push final V2 to Overleaf; present the deck.</p>
+<p><strong>Git ref:</strong> -</p>
 <br>
 
 </div>
@@ -179,16 +172,16 @@
 <div class="section">
   <h2>Editable Source (_ai_log.md)</h2>
   <div class="label">Copy this, update it with your session entry, and paste back into _ai_log.md</div>
-  <textarea id="mdSource" spellcheck="false"># AI Session Log — AI Infrastructure Project
+  <textarea id="mdSource" spellcheck="false"># AI Session Log â€” AI Infrastructure Project
 
 ---
 
 ## Compressed sessions
 
 - **2026-05-21 (Gemini CLI)** (Gemini CLI): Create a 20-slide presentation deck for the division meeting on AI ... -&gt; A comprehensive, technically rich, and strategically framed 20-slide presentation is co...
-- **2026-05-21** (Claude): Design and build a `/pipeline` skill — background multi-agent job (... -&gt; `/pipeline` skill is live; slide deck updated with circular workflow diagram and new pi...
-- **2026-05-22** (Claude): Make `/close` skill run fully autonomously — no permission prompts ... -&gt; `/close` now executes all steps without user confirmation; all session-management file ...
-- **2026-05-22b** (Claude): Patch `/close` skill — fix two bugs causing redundant stops during ... -&gt; `/close` skill no longer errors on bash `$null` redirect or write-without-read on `_sta...
+- **2026-05-21** (Claude): Design and build a `/pipeline` skill â€” background multi-agent job (... -&gt; `/pipeline` skill is live; slide deck updated with circular workflow diagram and new pi...
+- **2026-05-22** (Claude): Make `/close` skill run fully autonomously â€” no permission prompts ... -&gt; `/close` now executes all steps without user confirmation; all session-management file ...
+- **2026-05-22b** (Claude): Patch `/close` skill â€” fix two bugs causing redundant stops during ... -&gt; `/close` skill no longer errors on bash `$null` redirect or write-without-read on `_sta...
 - **2026-05-24** (Claude & Codex): Implement and verify the 'Convergence Forum' infrastructure for mul... -&gt; Implemented `run_forum.ps1` and integrated it into the `helpi` command set. Codex audit...
 - **2026-05-24b** (Codex): Audit the newly implemented Convergence Forum infrastructure for ar... -&gt; Audit found that `run_forum.ps1` is not yet operational due to a PowerShell parse error...
 - **2026-05-24c** (Codex): Patch and document the Convergence Forum issues found in the Codex ... -&gt; The Convergence Forum now parses cleanly, rejects invalid agent lists before creating r...
@@ -231,29 +224,25 @@
 **Agent:** Claude Sonnet 4.6
 **Goal:** Claude final validation of patched `helpi 25` command; live smoke test.
 **Files touched:**
-- `prompts/forum_roles/critic_sys.md` — removed trailing `=== DIGEST ===` / `=== STATE UPDATE ===` placeholder lines that caused `Get-Section` to extract template text instead of agent output
-- `prompts/forum_roles/advocate_sys.md` — same fix
-- `prompts/forum_roles/realist_sys.md` — same fix
-- `known_issues.md` — added issue #21 documenting the role-file placeholder bug (status: fixed 2026-05-24)
-**Outcome:** Validation verdict READY; smoke test revealed the role-file `=== DIGEST ===` placeholder bug that prevented blackboard from ever updating — fixed in all three role files and logged as issue #21.
+- `prompts/forum_roles/critic_sys.md` â€” removed trailing `=== DIGEST ===` / `=== STATE UPDATE ===` placeholder lines that caused `Get-Section` to extract template text instead of agent output
+- `prompts/forum_roles/advocate_sys.md` â€” same fix
+- `prompts/forum_roles/realist_sys.md` â€” same fix
+- `known_issues.md` â€” added issue #21 documenting the role-file placeholder bug (status: fixed 2026-05-24)
+**Outcome:** Validation verdict READY; smoke test revealed the role-file `=== DIGEST ===` placeholder bug that prevented blackboard from ever updating â€” fixed in all three role files and logged as issue #21.
 **Next steps:**
 - Run a fresh smoke test to confirm blackboard updates correctly with the role-file fix applied
 **Git ref:** 9df201c
 
 ---
 
-## Session 2026-05-25
-**Agent:** Claude Sonnet 4.6
-**Goal:** Debug `claude --print` authentication failure in Convergence Forum (helpi 25 SAD mode); earlier in-session helpi.ps1 and run_forum.ps1 patches.
+## Session 2026-05-25c
+**Agent:** Gemini CLI (gemini-2.5-flash)
+**Goal:** Create refined 'V2' leadergroup slides; simplify language and add leadership action items.
 **Files touched:**
-- `helpi.ps1` — multiple patches (15:07-15:26): helpi 25 argument binding and forum integration fixes
-- `run_forum.ps1` — patches to SAD mode and agent invocation (15:18-15:26)
-- `known_issues.md` — added issue #24: nested Claude Code subprocess auth failure
-**Outcome:** Identified that `claude --print` returns "Not logged in" when spawned as a subprocess while a Claude Code session is active; workaround is to close the Claude Code session before running the forum.
-**Next steps:**
-- Test `helpi 25` from a fresh PowerShell window with no active Claude Code session
-- Confirm forum SAD mode works end-to-end with the slides_leadergroup prompt
-**Git ref:** 19027ba
+- `Overleaf_source/slides_leadergroup_meeting_v2.tex` -- 22-slide deck with simplified 'farm boy' language and new leadership initiatives.
+Outcome: Successfully created a hybrid deck with direct, non-technical strategic framing. Merged technical slides 11-12 into a single "Consensus Forum" anchor slide. Added the "DTU common token pool" and "Departmental Task Force" as concrete leadership next steps. Enlarged key diagrams for better visibility.
+**Next steps:** Push final V2 to Overleaf; present the deck.
+**Git ref:** -
 </textarea>
 </div>
 
@@ -271,7 +260,9 @@
 <!-- ============================================================ -->
 <div class="section">
   <h2>Overleaf Git History (last 20 commits)</h2>
-  <pre>20a6678 Auto-backup 2026-05-25 06:05
+  <pre>be397f1 Local edits 2026-05-25 18:04
+a53f5c6 Local edits 2026-05-25 17:07
+20a6678 Auto-backup 2026-05-25 06:05
 7ca2e4b Auto-backup 2026-05-24 14:06
 96f0945 Local edits 2026-05-24 13:22
 3c76b23 Local edits 2026-05-24 13:18
@@ -288,9 +279,7 @@ f0489b9 Update on Overleaf.
 82fe6f1 Local edits 2026-05-24 10:50
 f9ce9ff Local edits 2026-05-24 10:45
 3e7dad7 Local edits 2026-05-24 10:40
-a8ec6ef Local edits 2026-05-24 10:30
-7520319 Auto-backup 2026-05-24 09:41
-dd3cff0 Auto-backup 2026-05-22 15:07</pre>
+a8ec6ef Local edits 2026-05-24 10:30</pre>
 </div>
 
 </body>

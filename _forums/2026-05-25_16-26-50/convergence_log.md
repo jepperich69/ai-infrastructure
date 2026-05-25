@@ -1,0 +1,5 @@
+﻿# Convergence Log
+
+Updated: 2026-05-25 16:44:14
+
+- No settled decisions yet.

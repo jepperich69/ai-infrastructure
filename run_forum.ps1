@@ -143,7 +143,10 @@ function Invoke-Agent {
             return $promptText | & gemini --approval-mode yolo --skip-trust  --output-format text 2>&1
         }
         "codex" {
-            return $promptText | & codex exec --skip-git-repo-check --color never 2>&1
+            if ($ProjectPath) {
+                return $promptText | & codex exec --skip-git-repo-check --color never --cd $ProjectPath - 2>&1
+            }
+            return $promptText | & codex exec --skip-git-repo-check --color never - 2>&1
         }
         default {
             throw "Unknown forum agent '$Agent'. Use a comma-separated list from: claude, gemini, codex."       
@@ -285,10 +288,16 @@ AGENT ROLE: $participant
         $digest = Limit-Text -Text $digest -MaxChars 1600
         $stateUpdate = Limit-Text -Text $stateUpdate -MaxChars 2400
 
-        if ($outputStr -match "Not logged in|Please run /login|please run /login") {
-            Write-Host "ERR | Agent '$execAgent' is not authenticated. Run: $execAgent login" -ForegroundColor Red
-            Write-Host "     Then re-run the forum." -ForegroundColor Red
-            exit 1
+        # Check for authentication errors, but anchor to line-start to avoid false positives in debug dumps
+        if ($outputStr -split "`n" | Where-Object { $_.Trim() -match "^(Not logged in|Please run /login|please run /login)" }) {
+            # Special case: if we actually got a valid response structure, ignore auth-like noise in stderr
+            if ($digest -and $stateUpdate -and $stateUpdate -ne "(No explicit state update provided.)") {
+                # Continue - it was likely just noise in a stack trace or debug dump
+            } else {
+                Write-Host "ERR | Agent '$execAgent' is not authenticated. Run: $execAgent login" -ForegroundColor Red
+                Write-Host "     Then re-run the forum." -ForegroundColor Red
+                exit 1
+            }
         }
 
         if ($exitCode -ne 0 -or $outputStr -match "^(EXCEPTION|error:|ERR\s*\|)") {
@@ -388,7 +397,12 @@ Duration: $Duration
 Add-Content -LiteralPath $RunLogFile -Encoding UTF8 -Value "`nFinished: $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"
 Add-Content -LiteralPath $RunLogFile -Encoding UTF8 -Value "Final state: $FinalFile"
 
-Write-Host "Forum concluded. Results in $ForumDir" -ForegroundColor Cyan
+$FinalStatus = if ($FinalState -match "(?m)^Status:\s*(\S+)\s*$") { $Matches[1] } else { "unknown" }
+if ($FinalStatus -eq "failed") {
+    Write-Host "Forum failed. Results in $ForumDir" -ForegroundColor Red
+} else {
+    Write-Host "Forum concluded ($FinalStatus). Results in $ForumDir" -ForegroundColor Cyan
+}
 Write-Host "Final state: $FinalFile" -ForegroundColor DarkGray
 if ($OpenFinal) {
     try { Invoke-Item $FinalFile } catch { Write-Host "WARN | Could not open final forum file: $($_.Exception.Message)" -ForegroundColor Yellow }

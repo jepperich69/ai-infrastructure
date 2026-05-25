@@ -320,3 +320,21 @@ Running `claude --print --bare` as a subprocess while an interactive Claude Code
 Root cause: Claude Code's credential store cannot be accessed by a nested subprocess while the parent session holds it. The interactive session authenticates via browser OAuth; the subprocess sees the credentials as unavailable.
 
 Workaround: Always run `helpi 25` (and any script that invokes `claude --print`) from a fresh PowerShell window where no Claude Code session is currently active. Close this Claude Code session first, then run the forum.
+
+---
+
+### 25. Convergence Forum authentication check false positive
+**Status:** fixed (2026-05-25)
+**Affects:** `AI_auto/run_forum.ps1`
+**Fix:** Anchored the "Not logged in" regex to the start of the line and added a fallback check: if a valid agent response (Digest and State Update) is found, the authentication error string is ignored.
+
+Symptom: Forum crashes with "Agent 'gemini' is not authenticated" even when gemini is logged in. This happens if an agent hits a rate limit (429) or other error that causes the CLI to dump the full request body (which contains the project context and `AGENTS.md`, which in turn contains the string "Not logged in" as part of Issue #24's description).
+
+---
+
+### 26. Codex CLI stdin prompt missing in Convergence Forum
+**Status:** fixed (2026-05-25)
+**Affects:** `AI_auto/run_forum.ps1`; same pattern appeared in an older generated `_pipelines/.../run_pipeline.ps1`, while the current `~/.claude/skills/pipeline/skill.md` template already uses the corrected form.
+**Fix:** When piping prompts into Codex from PowerShell, always pass `-` as the explicit prompt argument to `codex exec` so the CLI reads stdin. In `run_forum.ps1`, use `codex exec --skip-git-repo-check --color never --cd <ProjectPath> -` for project forums and `codex exec --skip-git-repo-check --color never -` otherwise. Also changed the final console footer to print `Forum failed` when the blackboard state is failed instead of always printing `Forum concluded`.
+
+Symptom: `helpi 25` with SAD mode and Codex agent finishes in a few seconds. `forum_run_log.md` marks each role as `FAILED`, each `output_r1_*.md` contains "No prompt provided. Either specify one as an argument or pipe the prompt into stdin.", and `final.md` has `Status: failed`, but the console still prints "Forum concluded."
