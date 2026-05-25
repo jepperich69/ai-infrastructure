@@ -4,3 +4,4 @@
 [2026-05-25 15:07] Edit:  helpi.ps1
 [2026-05-25 15:07] Edit:  helpi.ps1
 [2026-05-25 15:08] Bash:  cd "C:\Users\rich\OneDrive - Danmarks Tekniske Universitet\JR\AI_auto" && pwsh -NoProfile -File help...
+[2026-05-25 15:12] Edit:  helpi.ps1

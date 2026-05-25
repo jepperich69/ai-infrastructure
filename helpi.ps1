@@ -709,7 +709,7 @@ function Invoke-Command-N {
                  Write-Host "  [5] code-audit   (Syntax check and architectural opinion)"
                  Write-Host "  [6] Custom task..."
                  Write-Host ""
-                 $choice = Read-Host "  Selection [1-5]"
+                 $choice = Read-Host "  Selection [1-6]"
 
                  $templateMap = @{
                      "1" = "lit-review"
