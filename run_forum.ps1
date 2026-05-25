@@ -285,6 +285,12 @@ AGENT ROLE: $participant
         $digest = Limit-Text -Text $digest -MaxChars 1600
         $stateUpdate = Limit-Text -Text $stateUpdate -MaxChars 2400
 
+        if ($outputStr -match "Not logged in|Please run /login|please run /login") {
+            Write-Host "ERR | Agent '$execAgent' is not authenticated. Run: $execAgent login" -ForegroundColor Red
+            Write-Host "     Then re-run the forum." -ForegroundColor Red
+            exit 1
+        }
+
         if ($exitCode -ne 0 -or $outputStr -match "^(EXCEPTION|error:|ERR\s*\|)") {
             $FailureCount++
             Add-Content -LiteralPath $RunLogFile -Encoding UTF8 -Value "- Round ${CurrentRound} ${participant}: FAILED. See $RoundOutputFile"
