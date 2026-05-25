@@ -1,2 +1,6 @@
 [2026-05-24 16:04] Write: _state\current.md
 [2026-05-24 16:06] Bash:  cd "C:\Users\rich\OneDrive - Danmarks Tekniske Universitet\JR\AI_auto" && git rev-parse --short HEAD...
+[2026-05-25 15:07] Edit:  helpi.ps1
+[2026-05-25 15:07] Edit:  helpi.ps1
+[2026-05-25 15:07] Edit:  helpi.ps1
+[2026-05-25 15:08] Bash:  cd "C:\Users\rich\OneDrive - Danmarks Tekniske Universitet\JR\AI_auto" && pwsh -NoProfile -File help...

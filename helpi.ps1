@@ -530,9 +530,10 @@ function Get-CommandPreview {
              else          { "generate_onepager.ps1 -Project $proj$agentText" }
            }
         25 {
-             $modeText = if ($Mode) { " -Mode $Mode" } else { "" }
-             $agentText = if ($Agent) { " -Agents $Agent" } else { "" }
-             "run_forum.ps1 -ProjectName $proj -Task '$texFile'$agentText$modeText"
+             $modeText  = if ($Mode)    { " -Mode $Mode" }           else { "" }
+             $agentText = if ($Agent)   { " -Agents $Agent" }        else { "" }
+             $taskText  = if ($texFile) { " -Task '$texFile'" }      else { " -Task <required>" }
+             "run_forum.ps1 -ProjectName $proj$taskText$agentText$modeText"
            }
     }
 }
@@ -653,7 +654,7 @@ function Invoke-Command-N {
            }
         11 {
                $projRoot   = Resolve-ProjectRoot $proj
-               $round      = if ($Force) { "R1" } else { Read-Host "  Round? (e.g. R1, R2)" }
+               $round      = if ($Force -or [Console]::IsInputRedirected) { "R1" } else { Read-Host "  Round? (e.g. R1, R2)" }
                if (!$round) { $round = "R1" }
                $promptText = (Get-Content (Join-Path $aiRoot "prompts\respond_scaffold.md") -Raw -Encoding UTF8) -replace '\$ROUND', $round
                Push-Location $projRoot
@@ -662,7 +663,7 @@ function Invoke-Command-N {
            }
         12 {
                $projRoot   = Resolve-ProjectRoot $proj
-               $round      = if ($Force) { "R1" } else { Read-Host "  Round? (e.g. R1, R2)" }
+               $round      = if ($Force -or [Console]::IsInputRedirected) { "R1" } else { Read-Host "  Round? (e.g. R1, R2)" }
                if (!$round) { $round = "R1" }
                $promptText = (Get-Content (Join-Path $aiRoot "prompts\respond_draft.md") -Raw -Encoding UTF8) -replace '\$ROUND', $round
                Push-Location $projRoot
@@ -684,12 +685,18 @@ function Invoke-Command-N {
         22 { & "$aiRoot\compress_log.ps1" -Project $proj }
         23 { if ($texFile) { & "$aiRoot\push_to_github.ps1" -Project $proj -RepoName $texFile }
              else          { & "$aiRoot\push_to_github.ps1" -Project $proj } }
-        24 { if ($texFile) { & "$aiRoot\generate_onepager.ps1" -Project $proj -TexFile $texFile -Agent $(if ($agent) { $agent } else { "auto" }) }
-             else          { & "$aiRoot\generate_onepager.ps1" -Project $proj -Agent $(if ($agent) { $agent } else { "auto" }) } }
+        24 { if ($texFile) { & "$aiRoot\generate_onepager.ps1" -Project $proj -TexFile $texFile -Agent $(if ($agent) { $agent } else { "gemini" }) }
+             else          { & "$aiRoot\generate_onepager.ps1" -Project $proj -Agent $(if ($agent) { $agent } else { "gemini" }) } }
         25 {
              if (!$texFile -and !$Force) {
                  if ([Console]::IsInputRedirected) {
-                     Write-Host "ERR | helpi 25 requires a forum task in non-interactive shells." -ForegroundColor Red
+                     Write-Host "ERR | helpi 25 requires a task argument in non-interactive shells." -ForegroundColor Red
+                     Write-Host ""
+                     Write-Host "  Templates:  lit-review | math-verify | repro-audit | final-pass | code-audit" -ForegroundColor DarkGray
+                     Write-Host "  Usage:      helpi 25 $proj code-audit" -ForegroundColor DarkGray
+                     Write-Host "              helpi 25 $proj lit-review -Mode SAD -Agent gemini" -ForegroundColor DarkGray
+                     Write-Host "              helpi 25 $proj 'My custom task string'" -ForegroundColor DarkGray
+                     Write-Host ""
                      return
                  }
 

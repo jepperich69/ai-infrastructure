@@ -128,7 +128,7 @@ function Invoke-Agent {
             return $promptText | & claude --dangerously-skip-permissions --print --bare 2>&1
         }
         "gemini" {
-            return $promptText | & gemini --approval-mode yolo --skip-trust --output-format text 2>&1
+            return $promptText | & gemini --approval-mode yolo --skip-trust  --output-format text 2>&1
         }
         "codex" {
             return $promptText | & codex exec --skip-git-repo-check --color never 2>&1
@@ -420,7 +420,7 @@ DO EXACTLY THIS:
     if (-not $closed) {
         try {
             Write-Host "Attempting automated session close via Gemini..." -ForegroundColor Gray
-            $closePromptText | & gemini --approval-mode yolo --skip-trust --output-format text 2>&1
+            $closePromptText | & gemini --approval-mode yolo --skip-trust  --output-format text 2>&1
             $closed = $true
         } catch {
             Add-Content -LiteralPath $RunLogFile -Encoding UTF8 -Value "Auto-close failed (all models): $($_.Exception.Message)" 

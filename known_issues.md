@@ -302,3 +302,10 @@ Also update the compact block in `~/.claude/CLAUDE.md` and `~/.codex/config.toml
 
 Symptom: Forum finishes in seconds with Status: failed. output_r1_*.md files contain 'Cannot use both --yolo (-y) and --approval-mode together.'
 
+
+### 23. Convergence Forum stalls during agent turn
+**Status:** open
+**Affects:** `AI_auto/run_forum.ps1`
+**Fix:** Add `--skip-trust` to the `gemini` invocation in `Invoke-Agent`. While the CLI tool might already have it, ensuring it is passed explicitly prevents potential trust-blocking prompts in non-interactive sessions. Additionally, investigate why `output_r1_critic.md` shows `read_file` failing on `Overleaf_source` files due to ignore patterns.
+
+Symptom: Forum rounds take several minutes and then time out or fail. Output logs show node-pty errors (`AttachConsole failed`) and tool execution failures.
