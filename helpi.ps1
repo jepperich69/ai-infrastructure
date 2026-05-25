@@ -70,6 +70,7 @@ function Resolve-ForumProjectFallback {
 # helpi 25 supports compact template syntax:
 #   helpi 25 code-audit
 #   helpi 25 code-audit -Agent codex -Mode SAD
+if ($TexFile) { $TexFile = $TexFile.Trim('"').Trim("'") }
 if ($Cmd -eq "25" -and (Test-ForumTemplateName $Project) -and !$TexFile) {
     $TexFile = $Project
     $Project = Resolve-ForumProjectFallback
@@ -729,7 +730,7 @@ function Invoke-Command-N {
                      $texFile = $templateMap[$choice]
                      Write-Host "  Selected template: $texFile" -ForegroundColor Gray
                  } else {
-                     $texFile = Read-Host "  Task text or path to .txt/.md file"
+                     $texFile = (Read-Host "  Task text or path to .txt/.md file").Trim('"').Trim("'")
                      if (!$texFile) {
                          Write-Host "ERR | No forum task provided." -ForegroundColor Red
                          return

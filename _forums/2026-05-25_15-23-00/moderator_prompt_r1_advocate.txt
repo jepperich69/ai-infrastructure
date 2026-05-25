@@ -1,0 +1,41 @@
+﻿You are the moderator of a Research Convergence Forum.
+Update the blackboard using only the compact digest and proposed state update below.
+Do not copy the full transcript. Do not remove already settled convergence-log decisions unless they are explicitly contradicted and you explain why.
+
+AGENT: advocate
+ROUND: 1
+
+AGENT DIGEST:
+Not logged in ┬╖ Please run /login
+
+AGENT PROPOSED STATE UPDATE:
+(No explicit state update provided.)
+
+CURRENT BLACKBOARD STATE:
+# Convergence Forum: "C:\Users\rich\OneDrive - Danmarks Tekniske Universitet\JR\AI_auto\prompts\slides_leadergroup.txt"
+
+Status: active
+Round: 0
+
+## [CONVERGENCE LOG]
+- No settled decisions yet.
+
+## [ACTIVE ARENA]
+- Primary task: "C:\Users\rich\OneDrive - Danmarks Tekniske Universitet\JR\AI_auto\prompts\slides_leadergroup.txt"
+
+## [PARKING LOT]
+- No parked issues yet.
+
+## [LATEST DIGESTS]
+- No agent digests yet.
+
+Return the complete new forum_state.md only.
+Keep [LATEST DIGESTS] compact: at most the 8 most recent agent digests.
+It must contain exactly these structural fields:
+# Convergence Forum: ...
+Status: active OR converged OR adjourned OR failed
+Round: 1
+## [CONVERGENCE LOG]
+## [ACTIVE ARENA]
+## [PARKING LOT]
+## [LATEST DIGESTS]
