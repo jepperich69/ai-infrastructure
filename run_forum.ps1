@@ -1,4 +1,4 @@
-<#
+﻿<#
 .SYNOPSIS
     Orchestrates a multi-agent "Convergence Forum" discussion to reach consensus on research tasks.
     Uses a blackboard model with compact digests for token efficiency.
@@ -45,7 +45,7 @@ param(
     [switch]$AutoClose
 )
 
-$ErrorActionPreference = "Stop"
+$ErrorActionPreference = "Continue"
 
 $AiRoot = $PSScriptRoot
 $PubRoot = "C:\Users\rich\OneDrive - Danmarks Tekniske Universitet\JR\Publikationer"
@@ -76,7 +76,7 @@ function Get-Section {
         [string]$Text,
         [string]$SectionName
     )
-    $pattern = "(?ms)^===\s*$([regex]::Escape($SectionName))\s*===\s*(.*?)(?=^===\s*[^`r`n]+?\s*===|\z)"
+    $pattern = "(?ms)^===\s*$([regex]::Escape($SectionName))\s*===\s*(.*?)(?=^===\s*[^`r`n]+?\s*===|\z)"        
     $match = [regex]::Match($Text, $pattern)
     if ($match.Success) { return $match.Groups[1].Value.Trim() }
     return ""
@@ -123,39 +123,20 @@ function Invoke-Agent {
     switch ($Agent) {
         "claude" {
             if ($ProjectPath) {
-                return & claude --add-dir $ProjectPath -p $promptText 2>&1
+                return $promptText | & claude --add-dir $ProjectPath --dangerously-skip-permissions --print --bare 2>&1
             }
-            return & claude -p $promptText 2>&1
+            return $promptText | & claude --dangerously-skip-permissions --print --bare 2>&1
         }
         "gemini" {
-            return & gemini -p $promptText --yolo --output-format text 2>&1
+            return $promptText | & gemini --approval-mode yolo --skip-trust --output-format text 2>&1
         }
         "codex" {
             return $promptText | & codex exec --skip-git-repo-check --color never 2>&1
         }
         default {
-            throw "Unknown forum agent '$Agent'. Use a comma-separated list from: claude, gemini, codex."
+            throw "Unknown forum agent '$Agent'. Use a comma-separated list from: claude, gemini, codex."       
         }
     }
-}
-
-function Invoke-Moderator {
-    param(
-        [string]$PromptFile,
-        [string]$ProjectPath,
-        [string]$RolePromptFile = ""
-    )
-
-    $promptText = Get-Content -LiteralPath $PromptFile -Raw -Encoding UTF8
-    if ($RolePromptFile -and (Test-Path -LiteralPath $RolePromptFile)) {
-        $roleText = Get-Content -LiteralPath $RolePromptFile -Raw -Encoding UTF8
-        $promptText = $roleText + "`n`n" + $promptText
-    }
-
-    if ($ProjectPath) {
-        return & claude --add-dir $ProjectPath -p $promptText 2>&1
-    }
-    return & claude -p $promptText 2>&1
 }
 
 $ProjectPath = ""
@@ -190,7 +171,7 @@ foreach ($agent in $AgentsArray) {
 }
 
 $Timestamp = Get-Date -Format "yyyy-MM-dd_HH-mm-ss"
-$ForumRoot = if ($ProjectPath) { Join-Path $ProjectPath "_forums" } else { Join-Path $AiRoot "_forums" }
+$ForumRoot = if ($ProjectPath) { Join-Path $ProjectPath "_forums" } else { Join-Path $AiRoot "_forums" }        
 $ForumDir = Join-Path $ForumRoot $Timestamp
 New-Item -ItemType Directory -Path $ForumDir -Force | Out-Null
 
@@ -231,14 +212,17 @@ Write-Host "Starting Convergence Forum in $ForumDir" -ForegroundColor Cyan
 $ParticipantList = @()
 if ($Mode -eq "SAD") {
     $PrimaryAgent = $AgentsArray[0]
+    $ModeratorAgent = $PrimaryAgent
     $ParticipantList = @("critic", "advocate", "realist")
 } else {
+    $ModeratorAgent = "claude"
     $ParticipantList = $AgentsArray
 }
 
 for ($CurrentRound = 1; $CurrentRound -le $MaxRounds -and -not $StopForum; $CurrentRound++) {
     foreach ($participant in $ParticipantList) {
-        Write-Host "Round ${CurrentRound}: Role $participant is thinking..." -ForegroundColor Yellow
+        $execAgent = if ($Mode -eq "SAD") { $PrimaryAgent } else { $participant }
+        Write-Host "Round ${CurrentRound}: Role $participant ($execAgent) is thinking..." -ForegroundColor Yellow
 
         $BlackboardState = Get-Content -LiteralPath $StateFile -Raw -Encoding UTF8
         $Prompt = @"
@@ -271,12 +255,7 @@ AGENT ROLE: $participant
         }
 
         try {
-            if ($Mode -eq "SAD" -and $participant -eq "realist") {
-                $output = Invoke-Moderator -PromptFile $RoundPromptFile -ProjectPath $ProjectPath -RolePromptFile $RolePromptFile
-            } else {
-                $execAgent = if ($Mode -eq "SAD") { $PrimaryAgent } else { $participant }
-                $output = Invoke-Agent -Agent $execAgent -PromptFile $RoundPromptFile -ProjectPath $ProjectPath -RolePromptFile $RolePromptFile
-            }
+            $output = Invoke-Agent -Agent $execAgent -PromptFile $RoundPromptFile -ProjectPath $ProjectPath -RolePromptFile $RolePromptFile
             $exitCode = if ($LASTEXITCODE -is [int]) { $LASTEXITCODE } else { 0 }
             if (-not $output) { $output = "(no output returned)" }
         } catch {
@@ -301,7 +280,7 @@ AGENT ROLE: $participant
             Add-Content -LiteralPath $RunLogFile -Encoding UTF8 -Value "- Round ${CurrentRound} ${participant}: complete. See $RoundOutputFile"
         }
 
-        if ($FailureCount -ge 2) {
+        if ($FailureCount -ge 3) {
             $failedState = Get-Content -LiteralPath $StateFile -Raw -Encoding UTF8
             $failedState = $failedState -replace "(?m)^Status:.*$", "Status: failed"
             $failedState += "`n`n## [ADJOURNMENT]`nForum stopped after $FailureCount agent failures. Check forum_run_log.md and transcript files.`n"
@@ -340,11 +319,11 @@ Round: $CurrentRound
 ## [LATEST DIGESTS]
 "@
 
-        $ModeratorPromptFile = Join-Path $ForumDir "moderator_prompt_r${CurrentRound}_${participant}.txt"
-        [System.IO.File]::WriteAllText($ModeratorPromptFile, $ModeratorPrompt, [System.Text.Encoding]::UTF8)
+        $ModeratorPromptFile = Join-Path $ForumDir "moderator_prompt_r${CurrentRound}_${participant}.txt"       
+        [System.IO.File]::WriteAllText($ModeratorPromptFile, $ModeratorPrompt, [System.Text.Encoding]::UTF8)    
 
         try {
-            $ModOutput = Invoke-Moderator -PromptFile $ModeratorPromptFile -ProjectPath $ProjectPath
+            $ModOutput = Invoke-Agent -Agent $ModeratorAgent -PromptFile $ModeratorPromptFile -ProjectPath $ProjectPath
             $ModOutputStr = if ($ModOutput -is [array]) { $ModOutput -join "`n" } else { "$ModOutput" }
             $cleanState = Get-CleanState -Text $ModOutputStr
             if (Test-ForumState -Text $cleanState) {
@@ -371,7 +350,7 @@ Round: $CurrentRound
 $PostLoopState = Get-Content -LiteralPath $StateFile -Raw -Encoding UTF8
 if ($PostLoopState -match "(?m)^Status:\s*active\s*$") {
     $PostLoopState = $PostLoopState -replace "(?m)^Status:.*$", "Status: adjourned"
-    $PostLoopState += "`n`n## [ADJOURNMENT]`nForum stopped after $MaxRounds rounds without convergence.`n"
+    $PostLoopState += "`n`n## [ADJOURNMENT]`nForum stopped after $MaxRounds rounds without convergence.`n"      
     [System.IO.File]::WriteAllText($StateFile, $PostLoopState, [System.Text.Encoding]::UTF8)
 }
 
@@ -386,7 +365,7 @@ Started: $($StartTime.ToString('yyyy-MM-dd HH:mm:ss'))
 Finished: $($EndTime.ToString('yyyy-MM-dd HH:mm:ss'))
 Duration: $Duration
 "@
-[System.IO.File]::WriteAllText($FinalFile, ($FinalState.Trim() + $Footer), [System.Text.Encoding]::UTF8)
+[System.IO.File]::WriteAllText($FinalFile, ($FinalState.Trim() + $Footer), [System.Text.Encoding]::UTF8)        
 
 Add-Content -LiteralPath $RunLogFile -Encoding UTF8 -Value "`nFinished: $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"
 Add-Content -LiteralPath $RunLogFile -Encoding UTF8 -Value "Final state: $FinalFile"
@@ -422,16 +401,30 @@ $gitStatus
 DO EXACTLY THIS:
 1. Read ${ProjectPath}\_ai_log.md.
 2. Append a new session block matching the existing format.
-3. Include the forum task, agents, outcome summary, changed files from git status, and path to final.md.
+3. Include the forum task, agents, outcome summary, changed files from git status, and path to final.md.        
 4. Run: helpi 7 $ProjectName
 "@
 
     $ClosePromptFile = Join-Path $ForumDir "close_prompt.txt"
     [System.IO.File]::WriteAllText($ClosePromptFile, $ClosePrompt, [System.Text.Encoding]::UTF8)
+    $closePromptText = Get-Content -LiteralPath $ClosePromptFile -Raw -Encoding UTF8
+    $closed = $false
     try {
-        & claude --dangerously-skip-permissions --add-dir $ProjectPath -p (Get-Content -LiteralPath $ClosePromptFile -Raw -Encoding UTF8)
+        Write-Host "Attempting automated session close via Claude..." -ForegroundColor Gray
+        $closePromptText | & claude --dangerously-skip-permissions --print --bare --add-dir $ProjectPath 2>&1
+        $closed = $true
     } catch {
-        Add-Content -LiteralPath $RunLogFile -Encoding UTF8 -Value "Auto-close failed: $($_.Exception.Message)"
-        Write-Host "WARN | Auto-close failed: $($_.Exception.Message)" -ForegroundColor Yellow
+        Write-Host "WARN | Claude close failed: $($_.Exception.Message). Trying Gemini..." -ForegroundColor Yellow
+    }
+
+    if (-not $closed) {
+        try {
+            Write-Host "Attempting automated session close via Gemini..." -ForegroundColor Gray
+            $closePromptText | & gemini --approval-mode yolo --skip-trust --output-format text 2>&1
+            $closed = $true
+        } catch {
+            Add-Content -LiteralPath $RunLogFile -Encoding UTF8 -Value "Auto-close failed (all models): $($_.Exception.Message)" 
+            Write-Host "WARN | Auto-close failed: $($_.Exception.Message)" -ForegroundColor Yellow
+        }
     }
 }

@@ -52,7 +52,7 @@ function Get-LastProject {
 
 function Set-LastProject([string]$proj) {
     if (!$proj) { return }
-    if (!(Test-Path $helpiStateDir)) { New-Item -ItemType Directory -Path $helpiStateDir -Force | Out-Null }
+    if (!(Test-Path $helpiStateDir)) { New-Item -ItemType Directory -Path $helpiStateDir -Force | Out-Null }    
     Set-Content -Path $helpiStateFile -Value $proj -Encoding UTF8
 }
 
@@ -80,22 +80,27 @@ $commands = @(
     [PSCustomObject]@{ N=1;  NeedsProject=$true;  Tag="ONCE";    Name="Create new project";
          Example="new_project.ps1 -Project XXX" },
     [PSCustomObject]@{ N=2;  NeedsProject=$false; Tag="AUTO 4h"; Name="Pull all projects from Overleaf";           Example="sync_all.ps1" },
-    [PSCustomObject]@{ N=3;  NeedsProject=$true;  Tag="MANUAL";  Name="Pull one project from Overleaf";            Example="sync_one.ps1 -Project XXX" },
-    [PSCustomObject]@{ N=4;  NeedsProject=$true;  Tag="MANUAL";  Name="Push local edits to Overleaf";              Example="push_to_overleaf.ps1 -Project XXX" },
+    [PSCustomObject]@{ N=3;  NeedsProject=$true;  Tag="MANUAL";  Name="Pull one project from Overleaf";         
+   Example="sync_one.ps1 -Project XXX" },
+    [PSCustomObject]@{ N=4;  NeedsProject=$true;  Tag="MANUAL";  Name="Push local edits to Overleaf";           
+   Example="push_to_overleaf.ps1 -Project XXX" },
     [PSCustomObject]@{ N=5;  NeedsProject=$true;  Tag="MANUAL";  Name="Compile + open project (VS Code + PDF)";    Example="open_project.ps1 -Project XXX" },
     [PSCustomObject]@{ N=6;  NeedsProject=$true;  Tag="MANUAL";  Name="Compile LaTeX + open PDF";
          Example="compile_latex.ps1 -Project XXX" },
     [PSCustomObject]@{ N=7;  NeedsProject=$true;  Tag="MANUAL";  Name="Log + handover + open in browser";          Example="claude -p close.md + handover in XXX" },
     [PSCustomObject]@{ N=8;  NeedsProject=$true;  Tag="MANUAL";  Name="Snapshot Overleaf source (git tag)";        Example="snapshot.ps1 -Project XXX [-Tag V2]" },
-    [PSCustomObject]@{ N=9;  NeedsProject=$true;  Tag="MANUAL";  Name="Rollback last N code commits";              Example="rollback.ps1 -Project XXX -N 1" },
+    [PSCustomObject]@{ N=9;  NeedsProject=$true;  Tag="MANUAL";  Name="Rollback last N code commits";           
+   Example="rollback.ps1 -Project XXX -N 1" },
     [PSCustomObject]@{ N=10; NeedsProject=$true;  Tag="MANUAL";  Name="Build submission package";
          Example="submit.ps1 -Project XXX" },
     [PSCustomObject]@{ N=11; NeedsProject=$true;  Tag="MANUAL";  Name="Reviewer scaffold (.txt -> LaTeX + push)";  Example="respond_scaffold.md in XXX" },
     [PSCustomObject]@{ N=12; NeedsProject=$true;  Tag="MANUAL";  Name="Reviewer draft loop (pull -> draft -> push)";Example="respond_draft.md in XXX" },
     [PSCustomObject]@{ N=13; NeedsProject=$false; Tag="INFO";    Name="Project status dashboard";
          Example="status.ps1" },
-    [PSCustomObject]@{ N=14; NeedsProject=$false; Tag="INFO";    Name="Open project network graph";                Example="network.ps1" },
-    [PSCustomObject]@{ N=15; NeedsProject=$false; Tag="INFO";    Name="Open infrastructure guide";                 Example="Start-Process infrastructure.html" },
+    [PSCustomObject]@{ N=14; NeedsProject=$false; Tag="INFO";    Name="Open project network graph";             
+   Example="network.ps1" },
+    [PSCustomObject]@{ N=15; NeedsProject=$false; Tag="INFO";    Name="Open infrastructure guide";              
+   Example="Start-Process infrastructure.html" },
     [PSCustomObject]@{ N=16; NeedsProject=$false; Tag="MANUAL";  Name="Generate docs (summary + full HTML/PDF)";   Example="generate_docs.ps1" },
     [PSCustomObject]@{ N=17; NeedsProject=$false; Tag="INFO";    Name="Claude Code in-session command reference";   Example="(cheatsheet -- no args needed)" },
     [PSCustomObject]@{ N=18; NeedsProject=$false; Tag="MANUAL";  Name="Toggle Claude model-check on/off";            Example="(edits memory -- persists to next session)" },
@@ -140,82 +145,77 @@ function Show-CommandHelp {
         )}
         3  { @(
             "Pull one project from Overleaf",
-            "Runs 'git pull' in a single project's Overleaf_source/ folder.",
-            "Faster than helpi 2 when you only need one project up to date.",
+            "Runs 'git pull' in Overleaf_source/ for the specified project.",
+            "",
+            "When to use: before opening a project to ensure you have the latest co-author edits.",
             "",
             "Example:",
             "  helpi 3 $p"
         )}
         4  { @(
             "Push local edits to Overleaf",
-            "Pushes changes in Overleaf_source/ back to the Overleaf git remote.",
+            "Runs git add, git commit -m 'AI sync', and git push in Overleaf_source/.",
             "",
-            "When to use: after editing manuscript files locally (e.g. via VS Code).",
+            "When to use: after making changes to the manuscript locally.",
             "",
             "Example:",
             "  helpi 4 $p"
         )}
         5  { @(
             "Compile + open project (VS Code + PDF)",
-            "The main 'start working' command. Picks a .tex file, compiles it, opens VS Code",
-            "on the chosen file, opens File Explorer on the project root, and opens the",
-            "freshly compiled PDF. Also auto-inits code/ git repo if missing.",
+            "Opens the project folder in VS Code, runs latexmk via compile_latex.ps1,",
+            "and opens the resulting PDF in the default viewer.",
             "",
-            "When to use: beginning of a working session on a project.",
+            "When to use: start of a working session.",
             "",
             "Example:",
             "  helpi 5 $p"
         )}
         6  { @(
             "Compile LaTeX + open PDF",
-            "Runs latexmk on the chosen .tex file (with -g to force recompile) and opens",
-            "the resulting PDF. Prompts you to pick a .tex file if more than one exists.",
-            "With -Force and no -TexFile, uses the most recently modified .tex file.",
+            "Runs latexmk -pdf on the main manuscript and opens the PDF.",
+            "If several candidates exist, asks which one to compile.",
             "",
-            "When to use: standalone compile without opening the full VS Code workspace.",
+            "When to use: quick recompile to check formatting or references.",
             "",
             "Example:",
             "  helpi 6 $p"
         )}
         7  { @(
             "Log + handover + open in browser",
-            "Runs claude -p with the /close prompt: writes session block to _ai_log.md,",
-            "updates .claude/CLAUDE.md, regenerates _handover.html + AGENTS.md,",
-            "then opens the handover in the browser.",
+            "The standard session-close pipeline:",
+            "(1) runs /close in Claude (if in an AI shell),",
+            "(2) runs generate_handover.ps1 to build _handover.html,",
+            "(3) opens _handover.html in the browser.",
             "",
-            "When to use: end of a working session, or mid-session checkpoint.",
+            "When to use: end of a working session or major checkpoint.",
             "",
             "Example:",
             "  helpi 7 $p"
         )}
         8  { @(
             "Snapshot Overleaf source (git tag)",
-            "Creates an annotated git tag (snapshot-v1, snapshot-v2, ...) on the current",
-            "HEAD of Overleaf_source/. Captures the full manuscript state: .tex, .bib,",
-            "figures, style files. Aborts if there are uncommitted changes.",
-            "",
-            "When to use: before submitting, before a major revision, or at any milestone.",
-            "Lets you diff or restore any file back to that exact state later.",
+            "Creates a named git tag in Overleaf_source/ and pushes it to Overleaf.",
+            "Useful for versioning before a major rewrite or reviewer round.",
             "",
             "Example:",
-            "  helpi 8 $p              # auto-increments version",
-            "  helpi 8 $p V2-before-R1 # custom label"
+            "  helpi 8 $p V1-before-Gunnar-comments"
         )}
         9  { @(
             "Rollback last N code commits",
-            "Runs 'git reset --hard HEAD~N' in the project's code/ repo.",
-            "Prompts for N (default 1). PERMANENT - use with care.",
+            "Hard-resets the code/ repository to HEAD~N. PERMANENT.",
             "",
-            "When to use: to undo recent code changes that broke something.",
+            "When to use: to undo a series of bad code changes or accidental deletions.",
             "",
             "Example:",
-            "  helpi 9 $p   # then enter N when prompted"
+            "  helpi 9 $p 1"
         )}
         10 { @(
             "Build submission package",
-            "Assembles a complete journal submission folder under _submissions/YYYY-MM-DD_Journal/.",
-            "Steps: (1) compile manuscript, (2) extract front page, (3) inline bibliography,",
-            "(4) submission zip, (5) blind manuscript + zip, (6) latexdiff vs previous version,",
+            "The full 'prepare for submission' pipeline:",
+            "(1) safety-pull, (2) compile, (3) check for missing refs,",
+            "(4) bundle all .tex files (flattening includes), (5) bundle figures,",
+            "(6) zip everything for journal/conference version,",
             "(7) copy generated cover letter / highlights / author statement.",
             "If no staged content exists, generates deterministic staging files locally.",
             "",
@@ -475,7 +475,7 @@ function Show-Menu {
     $detected = $forProject -ne "" -and $forProject -ne "XXX"
 
     Write-Host ""
-    Write-Host "  Research Infrastructure  |  helpi <N> [Project]  |  helpi <N> ?" -ForegroundColor Cyan
+    Write-Host "  Research Infrastructure  |  helpi <N> [Project]  |  helpi <N> ?" -ForegroundColor Cyan        
     if ($detected) {
         Write-Host "  Detected project: $forProject" -ForegroundColor Yellow
     }
@@ -530,8 +530,8 @@ function Get-CommandPreview {
              else          { "generate_onepager.ps1 -Project $proj$agentText" }
            }
         25 {
-             $modeText = if ($mode) { " -Mode $mode" } else { "" }
-             $agentText = if ($agent) { " -Agents $agent" } else { "" }
+             $modeText = if ($Mode) { " -Mode $Mode" } else { "" }
+             $agentText = if ($Agent) { " -Agents $Agent" } else { "" }
              "run_forum.ps1 -ProjectName $proj -Task '$texFile'$agentText$modeText"
            }
     }
@@ -587,15 +587,17 @@ function Invoke-Command-N {
     Write-Host "  [$n] $($c.Name)$(if ($proj) { "  ->  $proj" })" -ForegroundColor Cyan
     Write-Host "  $preview" -ForegroundColor DarkYellow
     Write-Host ""
-    if ($Force -or [Console]::IsInputRedirected) {
-        Write-Host "  Running..." -ForegroundColor DarkGray
-    } else {
+    
+    $runNow = $Force -or [Console]::IsInputRedirected
+    if (!$runNow) {
         Write-Host "  [Enter] run  |  [any other key] cancel  (press Up to edit at prompt)" -ForegroundColor DarkGray
         try { [Microsoft.PowerShell.PSConsoleReadLine]::AddToHistory($preview) } catch {}
         $key = $host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
         Write-Host ""
-        if ($key.VirtualKeyCode -ne 13) { return }
+        if ($key.VirtualKeyCode -eq 13) { $runNow = $true }
     }
+
+    if (!$runNow) { return }
 
     switch ($n) {
         1  { & "$aiRoot\new_project.ps1" -Project $proj }
@@ -611,7 +613,7 @@ function Invoke-Command-N {
                $projRoot        = Resolve-ProjectRoot $proj
                $closePromptPath = Join-Path $env:USERPROFILE ".claude\commands\close.md"
                if (!(Test-Path $closePromptPath)) {
-                   Write-Host "ERR  | close.md not found: $closePromptPath" -ForegroundColor Red; return
+                   Write-Host "ERR  | close.md not found: $closePromptPath" -ForegroundColor Red; return        
                }
                $closePrompt = Get-Content $closePromptPath -Raw -Encoding UTF8
                Push-Location $projRoot
@@ -624,14 +626,16 @@ function Invoke-Command-N {
                }
            }
         8  {
-               $tag = Read-Host "  Version label? (e.g. V2, V2-before-submission; leave blank to auto)"
+               $tag = if ($Force) { "" } else { Read-Host "  Version label? (e.g. V2, V2-before-submission; leave blank to auto)" }
                if ($tag) { & "$aiRoot\snapshot.ps1" -Project $proj -Tag $tag }
                else      { & "$aiRoot\snapshot.ps1" -Project $proj }
            }
         9  {
                $rollN = 1
-               $input = Read-Host "  Commits to roll back? (default 1)"
-               if ($input -match "^\d+$") { $rollN = [int]$input }
+               if (!$Force) {
+                   $input = Read-Host "  Commits to roll back? (default 1)"
+                   if ($input -match "^\d+$") { $rollN = [int]$input }
+               }
                & "$aiRoot\rollback.ps1" -Project $proj -N $rollN
            }
         10 {
@@ -649,7 +653,7 @@ function Invoke-Command-N {
            }
         11 {
                $projRoot   = Resolve-ProjectRoot $proj
-               $round      = Read-Host "  Round? (e.g. R1, R2)"
+               $round      = if ($Force) { "R1" } else { Read-Host "  Round? (e.g. R1, R2)" }
                if (!$round) { $round = "R1" }
                $promptText = (Get-Content (Join-Path $aiRoot "prompts\respond_scaffold.md") -Raw -Encoding UTF8) -replace '\$ROUND', $round
                Push-Location $projRoot
@@ -658,7 +662,7 @@ function Invoke-Command-N {
            }
         12 {
                $projRoot   = Resolve-ProjectRoot $proj
-               $round      = Read-Host "  Round? (e.g. R1, R2)"
+               $round      = if ($Force) { "R1" } else { Read-Host "  Round? (e.g. R1, R2)" }
                if (!$round) { $round = "R1" }
                $promptText = (Get-Content (Join-Path $aiRoot "prompts\respond_draft.md") -Raw -Encoding UTF8) -replace '\$ROUND', $round
                Push-Location $projRoot
@@ -681,8 +685,9 @@ function Invoke-Command-N {
         23 { if ($texFile) { & "$aiRoot\push_to_github.ps1" -Project $proj -RepoName $texFile }
              else          { & "$aiRoot\push_to_github.ps1" -Project $proj } }
         24 { if ($texFile) { & "$aiRoot\generate_onepager.ps1" -Project $proj -TexFile $texFile -Agent $(if ($agent) { $agent } else { "auto" }) }
-             else          { & "$aiRoot\generate_onepager.ps1" -Project $proj -Agent $(if ($agent) { $agent } else { "auto" }) } }        25 {
-             if (!$texFile) {
+             else          { & "$aiRoot\generate_onepager.ps1" -Project $proj -Agent $(if ($agent) { $agent } else { "auto" }) } }
+        25 {
+             if (!$texFile -and !$Force) {
                  if ([Console]::IsInputRedirected) {
                      Write-Host "ERR | helpi 25 requires a forum task in non-interactive shells." -ForegroundColor Red
                      return
@@ -719,7 +724,7 @@ function Invoke-Command-N {
                  }
              }
 
-             if (!$Mode -and ![Console]::IsInputRedirected) {
+             if (!$Mode -and !$Force -and ![Console]::IsInputRedirected) {
                  Write-Host ""
                  Write-Host "  Select forum mode:" -ForegroundColor Cyan
                  Write-Host "  [1] Forum  (Multi-agent)"
@@ -728,11 +733,30 @@ function Invoke-Command-N {
                  $mChoice = Read-Host "  Selection [1-2, default 1]"
                  if ($mChoice -eq "2") {
                      $Mode = "SAD"
+                     if (!$agent) {
+                         Write-Host ""
+                         Write-Host "  Select agent for SAD debate:" -ForegroundColor Cyan
+                         Write-Host "  [1] Claude"
+                         Write-Host "  [2] Gemini"
+                         Write-Host "  [3] Codex"
+                         Write-Host ""
+                         $aChoice = Read-Host "  Selection [1-3, default 1]"
+                         $agent = switch ($aChoice) {
+                             "2"     { "gemini" }
+                             "3"     { "codex" }
+                             default { "claude" }
+                         }
+                         Write-Host "  Selected agent: $agent" -ForegroundColor Gray
+                     }
                  } else {
                      $Mode = "Forum"
                  }
                  Write-Host "  Selected mode: $Mode" -ForegroundColor Gray
              }
+
+             # Fallbacks for headless/Force mode
+             if (!$texFile) { $texFile = "final-pass" }
+             if (!$Mode)    { $Mode = "Forum" }
 
              $forumParams = @{
                  ProjectName = $proj
@@ -792,7 +816,7 @@ function Show-ClaudeCheatsheet {
     Write-Host "  TIPS" -ForegroundColor DarkYellow
     Write-Host "  - /model keeps history;  'claude --model X' starts a fresh session." -ForegroundColor DarkGray
     Write-Host "  - Run /compact every ~10 exchanges to keep costs low." -ForegroundColor DarkGray
-    Write-Host "  - helpi 17 from terminal;  '! helpi 17' from inside Claude." -ForegroundColor DarkGray
+    Write-Host "  - helpi 17 from terminal;  '! helpi 17' from inside Claude." -ForegroundColor DarkGray        
     Write-Host ""
 }
 
@@ -813,7 +837,7 @@ function Toggle-ModelCheck {
         $content = $content -replace "(\-\-\-\r?\n)", "`$1`nSTATUS: DISABLED`n"
         Set-Content $memFile $content -Encoding UTF8 -NoNewline
         Write-Host ""
-        Write-Host "  Model-check DISABLED -- Claude will skip model suggestions." -ForegroundColor Yellow
+        Write-Host "  Model-check DISABLED -- Claude will skip model suggestions." -ForegroundColor Yellow      
     }
     Write-Host "  Takes effect from the next Claude session. Tell Claude 'model check off/on' for the current session." -ForegroundColor DarkGray
     Write-Host ""

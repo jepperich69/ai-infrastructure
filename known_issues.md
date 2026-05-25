@@ -1,4 +1,4 @@
-# Environment map — this machine
+﻿# Environment map â€” this machine
 
 Reference document. The compact version of this lives inline in `~/.claude/CLAUDE.md`
 and `~/.codex/config.toml`. Update both when new facts are confirmed.
@@ -12,13 +12,13 @@ and `~/.codex/config.toml`. Update both when new facts are confirmed.
 | PowerShell | 7.6.1 | `C:\Program Files\PowerShell\7\pwsh.exe` | Yes |
 | R | 4.5.2 | `C:\Users\rich\AppData\Local\Programs\R\R-4.5.2\bin\R.exe` | **No** |
 | Python (miniconda) | 3.13.9 | `C:\Users\rich\AppData\Local\miniconda3\python.exe` | **No** |
-| conda | — | `C:\Users\rich\AppData\Local\miniconda3\Scripts\conda.exe` | **No** |
+| conda | â€” | `C:\Users\rich\AppData\Local\miniconda3\Scripts\conda.exe` | **No** |
 | pdflatex / latexmk / xelatex | MiKTeX | `C:\Users\rich\AppData\Local\Programs\MiKTeX\miktex\bin\x64\` | Yes |
 | git | 2.54.0 | `C:\Program Files\Git\cmd\git.exe` | Yes |
 | gh (GitHub CLI) | 2.88.1 | `C:\Program Files\GitHub CLI\gh.exe` | Yes |
 | Node.js | v24.15.0 | `C:\Program Files\nodejs\node.exe` | Yes |
-| Stata | — | — | **Not installed** |
-| Julia | — | — | **Not installed** |
+| Stata | â€” | â€” | **Not installed** |
+| Julia | â€” | â€” | **Not installed** |
 
 Conda environments: `base` (default), `pyopt`
 
@@ -31,7 +31,7 @@ Conda environments: `base` (default), `pyopt`
 | JR root | `C:\Users\rich\OneDrive - Danmarks Tekniske Universitet\JR\` |
 | Research projects | `...\JR\Publikationer\` (101 folders, prefix `Pub_` / `Pro_` / `PhD_`) |
 | AI infrastructure | `...\JR\AI_auto\` |
-| Sensitive data | `...\JR\Sensitive_Data\` — agents must not read or write here |
+| Sensitive data | `...\JR\Sensitive_Data\` â€” agents must not read or write here |
 | R scripts (shared) | `...\JR\Rscripts\` |
 
 ---
@@ -50,15 +50,15 @@ Conda environments: `base` (default), `pyopt`
 ## Known platform issues
 
 Each entry has a **Status** field:
-- `platform-fact` — not fixable in code; agents must route around it permanently
-- `fixed (YYYY-MM-DD)` — was broken, now patched; do not revert
-- `open` — confirmed bug with a known fix not yet applied; `/catch-up` will handle it
+- `platform-fact` â€” not fixable in code; agents must route around it permanently
+- `fixed (YYYY-MM-DD)` â€” was broken, now patched; do not revert
+- `open` â€” confirmed bug with a known fix not yet applied; `/catch-up` will handle it
 
 ---
 
 ### 1. `python3` not available
 **Status:** platform-fact
-`python3` is a Windows Store alias → exit 49. Use full path:
+`python3` is a Windows Store alias â†’ exit 49. Use full path:
 `C:\Users\rich\AppData\Local\miniconda3\python.exe`
 
 ### 2. R not in PATH
@@ -93,7 +93,7 @@ prefer the PowerShell tool for file operations.
 
 ### 7. `pwsh -EncodedCommand` inline
 **Status:** platform-fact
-Fragile — Base64 encoding from Bash corrupts silently. Write a `.ps1` file instead.
+Fragile â€” Base64 encoding from Bash corrupts silently. Write a `.ps1` file instead.
 
 ### 8. Codex: Unix commands on Windows
 **Status:** platform-fact
@@ -108,7 +108,7 @@ Fragile — Base64 encoding from Bash corrupts silently. Write a `.ps1` file ins
 `Overleaf_source/` as a plain subdirectory inside that repo.
 
 Problems this causes:
-- `helpi 4` (push_to_overleaf.ps1) runs `git push origin`, so it pushes to GitHub — Overleaf never updates.
+- `helpi 4` (push_to_overleaf.ps1) runs `git push origin`, so it pushes to GitHub â€” Overleaf never updates.
 - When the full repo IS pushed to Overleaf, it arrives with `main.tex` buried in `Overleaf_source/`, not at the root. Overleaf can't compile it by default.
 - Recovery requires a plumbing-level `commit-tree` push because Overleaf blocks force pushes.
 
@@ -140,11 +140,11 @@ The fix is already in `helpi.ps1`; do not revert it.
 
 ---
 
-### 11. Edit/Write tools write UTF-8 BOM — breaks YAML frontmatter and shebangs
+### 11. Edit/Write tools write UTF-8 BOM â€” breaks YAML frontmatter and shebangs
 **Status:** platform-fact
 
 The Claude Code Edit and Write tools write files with a UTF-8 BOM (`EF BB BF`) on Windows. Any format that requires the file to start at byte 0 with specific content will silently break:
-- Codex rejects `SKILL.md` files where `---` is not the literal first bytes — shows "missing YAML frontmatter delimited by ---" even when frontmatter is present.
+- Codex rejects `SKILL.md` files where `---` is not the literal first bytes â€” shows "missing YAML frontmatter delimited by ---" even when frontmatter is present.
 - Shell scripts with `#!` shebangs will also break.
 
 **Fix (apply after any Edit/Write to a format-sensitive file):**
@@ -184,7 +184,7 @@ Symptom if run inside the sandbox identity: `latexmk -pdf ...` exits immediately
 **Status:** fixed (2026-05-22)
 
 Literal Unicode dashes (U+2013 en-dash, U+2014 em-dash) in `.tex` source files
-produce garbled output ("Çö", "Çô") in latexdiff PDFs. Latexdiff's internal
+produce garbled output ("Ã‡Ã¶", "Ã‡Ã´") in latexdiff PDFs. Latexdiff's internal
 normalisation step re-encodes the file and corrupts multi-byte UTF-8 sequences.
 
 **Fix (applied 2026-05-22 to `AI_auto/submit.ps1`):**
@@ -263,7 +263,7 @@ or
 
 Symptom: `The token '&&' is not a valid statement separator in this version.` This has occurred during git operations and multi-tool pushes.
 
-### 21. Forum role files contain `=== DIGEST ===` placeholders — blackboard never updated
+### 21. Forum role files contain `=== DIGEST ===` placeholders â€” blackboard never updated
 **Status:** fixed (2026-05-24)
 **Affects:** `AI_auto/prompts/forum_roles/critic_sys.md`, `advocate_sys.md`, `realist_sys.md`
 
@@ -272,7 +272,7 @@ Each role file ended with:
 === DIGEST === (max 200 words)
 === STATE UPDATE === (proposed edits to BLACKBOARD)
 ```
-These lines are prepended to the participant prompt. `Get-Section` in `run_forum.ps1` uses a regex that finds the **first** occurrence of `=== DIGEST ===` in the combined text — which is always the placeholder line in the role file, not the agent's actual response. Result: `$digest` = `"(max 200 words)"` and `$stateUpdate` = `"(proposed edits to BLACKBOARD)"` on every turn. The moderator receives garbage and produces a state that fails `Test-ForumState`, so `"moderator state rejected; previous state preserved"` is logged every round and the blackboard stays at its initial state throughout the entire forum run.
+These lines are prepended to the participant prompt. `Get-Section` in `run_forum.ps1` uses a regex that finds the **first** occurrence of `=== DIGEST ===` in the combined text â€” which is always the placeholder line in the role file, not the agent's actual response. Result: `$digest` = `"(max 200 words)"` and `$stateUpdate` = `"(proposed edits to BLACKBOARD)"` on every turn. The moderator receives garbage and produces a state that fails `Test-ForumState`, so `"moderator state rejected; previous state preserved"` is logged every round and the blackboard stays at its initial state throughout the entire forum run.
 
 **Fix (applied 2026-05-24):** Removed the `=== DIGEST ===` and `=== STATE UPDATE ===` trailing lines from all three role files. The output-format instruction already appears in the main participant prompt; the role files should only carry role identity and behavioral guidance.
 
@@ -284,7 +284,7 @@ When an issue recurs (2+ times), append a new numbered entry here with:
 
 ```
 ### N. <short title>
-**Status:** open
+**Status:** fixed (2026-05-25)
 **Affects:** `<file path(s)>`
 **Fix:** <exact one-paragraph description of what to change>
 <symptom and context>
@@ -294,3 +294,11 @@ Change status to `fixed (YYYY-MM-DD)` once the fix is applied (by `/catch-up` or
 For issues that cannot be fixed in code, use `platform-fact` and omit the **Affects** / **Fix** fields.
 
 Also update the compact block in `~/.claude/CLAUDE.md` and `~/.codex/config.toml` for platform-facts.
+
+### 22. Convergence Forum fails when using Gemini agent
+**Status:** fixed (2026-05-25)
+**Affects:** `AI_auto/run_forum.ps1` 
+**Fix:** Remove the redundant --yolo flag from the gemini invocation in Invoke-Agent. The CLI now forbids using both --yolo and --approval-mode together. Use only --approval-mode yolo.
+
+Symptom: Forum finishes in seconds with Status: failed. output_r1_*.md files contain 'Cannot use both --yolo (-y) and --approval-mode together.'
+

@@ -1,0 +1,48 @@
+﻿You are the moderator of a Research Convergence Forum.
+Update the blackboard using only the compact digest and proposed state update below.
+Do not copy the full transcript. Do not remove already settled convergence-log decisions unless they are explicitly contradicted and you explain why.
+
+AGENT: advocate
+ROUND: 1
+
+AGENT DIGEST:
+The ADVOCATE argues against a narrow "arithmetic checker" framing for math-verify. The high-impact vision is a three-level semantic consistency oracle: (1) symbolic algebra verification via CAS integration, (2) logical consistency checking between prose claims and prior equations, and (3) citation-to-claim fidelity. Economic theory derivations routinely contain sign errors, flawed monotonicity arguments, and incorrect simplification claims that survive peer review ΓÇö no existing tool targets these. A rigorous math-verify system becomes a trust layer that every downstream pipeline agent depends on, yielding compounding leverage across the entire research stack. Treat this as foundational infrastructure, not a convenience check.
+
+AGENT PROPOSED STATE UPDATE:
+**[ACTIVE ARENA]**
+- Primary task: math-verify
+- ADVOCATE position: Build a three-level semantic oracle (CAS algebra, prose-equation consistency, citation fidelity) ΓÇö not a syntax/arithmetic checker
+- Key open question: Which verification level is the highest-ROI entry point given implementation cost?
+
+**[PARKING LOT]**
+- CAS bridge options: SymPy (Python, free), Mathematica (licensed, more powerful) ΓÇö needs decision
+- Scope: economic theory derivations as primary target domain (vs. general math)
+
+CURRENT BLACKBOARD STATE:
+# Convergence Forum: math-verify
+
+Status: active
+Round: 0
+
+## [CONVERGENCE LOG]
+- No settled decisions yet.
+
+## [ACTIVE ARENA]
+- Primary task: math-verify
+
+## [PARKING LOT]
+- No parked issues yet.
+
+## [LATEST DIGESTS]
+- No agent digests yet.
+
+Return the complete new forum_state.md only.
+Keep [LATEST DIGESTS] compact: at most the 8 most recent agent digests.
+It must contain exactly these structural fields:
+# Convergence Forum: ...
+Status: active OR converged OR adjourned OR failed
+Round: 1
+## [CONVERGENCE LOG]
+## [ACTIVE ARENA]
+## [PARKING LOT]
+## [LATEST DIGESTS]
