@@ -1,0 +1,1 @@
+﻿Your message appears to be cut off ΓÇö it ends mid-sentence in the Behavioral Mandate section. What would you like me to do with this role prompt?
