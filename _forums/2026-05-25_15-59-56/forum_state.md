@@ -67,19 +67,31 @@ is sort of ok. But expand the figure a bit to have more papers, maybe even two l
 	
 
 Status: active
-Round: 1
+Round: 2
 
 ## [CONVERGENCE LOG]
-- No settled decisions yet.
+See convergence_log.md for full record.
+
+**SETTLED:**
+- Top-down inversion: leadergroup deck argues strategic-imperative first, infrastructure second throughout.
+- #4 compression: slides 5–9 → one slide "The AI-Ready Research Environment."
+- #7 framing: final slide is "What We as Leaders Can Do" (not "What You Can Do").
+
+**PROPOSED (needs further input):**
+- #2b rename: "Two Worlds" → "The AI Governance Question: What DTU Controls."
+- #5 reframe: AI modes → "Capability Ladder" with "where is your group?" diagnostic.
 
 ## [ACTIVE ARENA]
-- Primary task: Create `slides_leadergroup_meeting.tex` as a strategic (non-technical) reuse of `slides_division_meeting.tex`, following the 7 structural suggestions in the task brief.
-- Open questions pending critic input: slide ordering, compression strategy for #4 slides, framing shift (#7), depth of /family figure (#6).
+- Open: Should the Schumpeter slide move from Part II to Part I (before infrastructure)? Advocate: yes — urgency before solution. Needs critic/realist.
+- Open: Should /family figure show lossy compression across multi-hop chains explicitly, or stay clean/optimistic? Advocate: honest > optimistic.
+- Open: Should "No fixed AI template" slide body be dropped entirely, or kept in abbreviated form? Advocate: drop body, extract alertblock to closing.
+- Open: Productivity slide — should presenter's firsthand 50% figure be placed explicitly alongside McKinsey 30–80%, with explicit note that study lag understates current gains?
 
 ## [PARKING LOT]
-- No parked issues yet.
+- Teaching/admin scope: exact wording of "door-closing" sentence (focus-on-research framing) — park for implementation.
+- /family figure TikZ: two-layer expansion with lossy-compression annotation — nontrivial, park until slide structure settled.
 
 ## [LATEST DIGESTS]
-- R1 critic (FAILED): Agent received a truncated prompt and returned a meta-error ("message cut off") with no substantive critique. No state update provided. Round 1 critic output is void.
-- R1 advocate (FAILED): Agent received a truncated prompt and returned a meta-error ("message cut off") with no substantive advocacy. No state update provided. Round 1 advocate output is void.
-- R1 realist (FAILED): Agent received a truncated prompt and returned a meta-error ("message cut off") with no substantive realist analysis. No state update provided. Round 1 realist output is void.
+- R1 critic/advocate/realist (ALL FAILED): truncated prompts, no substantive output.
+- R2 critic (FAILED): no substantive output.
+- R2 advocate: Full position filed. Core claim — deck must invert bottom-up division logic into top-down strategic argument. Proposed 14-slide structure. Settled 3 items; proposed 2 more.
