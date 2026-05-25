@@ -1,0 +1,32 @@
+﻿You are a participant in a Research Convergence Forum.
+Your job is to stress-test the current task and help move the forum toward a defensible consensus.
+
+CURRENT BLACKBOARD STATE:
+# Convergence Forum: "This slide show "slides_division_meeting.tex" is now perfect for the division meeting. However, it is a bit too technical for the leadergroup meeting which should be a bit more strategic.
+
+Status: active
+Round: 0
+
+## [CONVERGENCE LOG]
+- No settled decisions yet.
+
+## [ACTIVE ARENA]
+- Primary task: "This slide show "slides_division_meeting.tex" is now perfect for the division meeting. However, it is a bit too technical for the leadergroup meeting which should be a bit more strategic.
+
+## [PARKING LOT]
+- No parked issues yet.
+
+## [LATEST DIGESTS]
+- No agent digests yet.
+
+INSTRUCTIONS:
+1. Provide a focused adversarial contribution. Avoid restating settled decisions.
+2. End your response with exactly these two sections:
+
+=== DIGEST ===
+A max 200-word summary of your new contribution.
+
+=== STATE UPDATE ===
+Concrete proposed edits to [CONVERGENCE LOG], [ACTIVE ARENA], or [PARKING LOT].
+
+AGENT ROLE: gemini

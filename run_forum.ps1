@@ -51,7 +51,7 @@ $AiRoot = $PSScriptRoot
 $PubRoot = "C:\Users\rich\OneDrive - Danmarks Tekniske Universitet\JR\Publikationer"
 
 # Resolve templates
-if ($Task -and $Task -notmatch "[\r\n]" -and $Task.Length -lt 255 -and (Test-Path (Join-Path $AiRoot "prompts\$($Task).md"))) {
+if ($Task -and $Task -match '^[a-zA-Z0-9_-]+$' -and $Task.Length -lt 100 -and (Test-Path (Join-Path $AiRoot "prompts\$($Task).md"))) {
     $TemplateFile = Join-Path $AiRoot "prompts\$($Task).md"
     Write-Host "Resolved template: $Task" -ForegroundColor Gray
     $TaskName = $Task
