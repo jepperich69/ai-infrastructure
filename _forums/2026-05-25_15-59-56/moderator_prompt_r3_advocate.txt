@@ -1,3 +1,24 @@
+﻿You are the moderator of a Research Convergence Forum.
+Update the blackboard using only the compact digest and proposed state update below.
+Do not copy the full transcript. Do not remove already settled convergence-log decisions unless they are explicitly contradicted and you explain why.
+
+AGENT: advocate
+ROUND: 3
+
+AGENT DIGEST:
+R3 Advocate files positions on all four open items. Transition slide: reject "could be" in favor of "Where leading groups are positioning themselves now" ΓÇö avoids forecast problem without hedging. #2b title: reject both Realist and Critic proposals; counter-propose "Why DTU Builds Its Own AI Agents" as a headline that positions DTU as strategic, not reactive; fallback "DTU's AI Architecture: In-House Agents vs. Cloud Tools." Productivity: defend "floors not ceilings" ΓÇö Critic's causal claim (studies used old tools) is the argument for that phrasing, not an alternative to it; propose keeping both together. Scope binary: choose B (mention + commitment), one sentence: "Today's focus: research. Separate conversations are needed for teaching and admin ΓÇö both are in scope, neither is simple."
+
+AGENT PROPOSED STATE UPDATE:
+**ACTIVE ARENA ΓÇö update:**
+- **Transition slide framing:** Advocate proposes "Where leading groups are positioning themselves now." Three-way: Critic wants aspiration ("could be"), Advocate wants trend-claim ("are positioning"), Realist position pending.
+- **#2b title:** Now four-way: Original, Realist ("DTU's AI Choices: In-House vs. Cloud Agents"), Critic ("DTU's AI Policy: What's Approved and Why It Matters"), Advocate ("Why DTU Builds Its Own AI Agents" / fallback "DTU's AI Architecture: In-House Agents vs. Cloud Tools"). Realist arbitration needed.
+- **Productivity phrasing:** Advocate defends "floors not ceilings" + causal claim as complementary, not competing. Critic/Realist must accept combined framing or escalate.
+- **Scope slide binary:** Advocate chooses B with minimal commitment ("Today's focus: research. Separate conversations needed for teaching and admin ΓÇö both in scope, neither simple."). If Critic accepts, move to SETTLED.
+
+**PROPOSED (add):**
+- Scope slide language: "Today's focus: research. Separate conversations are needed for teaching and admin ΓÇö both are in scope for DTU's AI strategy, neither is simple."
+
+CURRENT BLACKBOARD STATE:
 # Convergence Forum: This slide show "slides_division_meeting.tex" is now perfect for the division meeting. However, it is a bit too technical for the leadergroup meeting which should be a bit more strategic.
 
 Create therefore a new slide desk called "slides_leadergroup_meeting.tex" where you re-use the division slides.
@@ -83,14 +104,13 @@ See convergence_log.md for full record.
 - Productivity slide: include firsthand ~50% figure; frame as directional evidence, not benchmark; note measurement is contested; note studies used 1-2 year old tools (phrasing "floors not ceilings" under active dispute — see arena).
 
 **PROPOSED (needs further input):**
-- #2b rename: four competing proposals — original "Two Worlds", Realist's "DTU's AI Choices: In-House vs. Cloud Agents", Critic's "DTU's AI Policy: What's Approved and Why It Matters", Advocate's "Why DTU Builds Its Own AI Agents" (fallback: "DTU's AI Architecture: In-House Agents vs. Cloud Tools"). Realist arbitration needed.
-- Scope slide language: "Today's focus: research. Separate conversations are needed for teaching and admin — both are in scope for DTU's AI strategy, neither is simple." (Advocate B-choice; pending Critic acceptance.)
+- #2b rename: three competing proposals — original "Two Worlds", Realist's "DTU's AI Choices: In-House vs. Cloud Agents", Critic's "DTU's AI Policy: What's Approved and Why It Matters."
 
 ## [ACTIVE ARENA]
-- **Transition slide framing:** Three-way contest. Critic wants aspiration ("could be"). Advocate proposes trend-claim: "Where leading groups are positioning themselves now" — accurate, avoids forecast, carries strategic charge. Realist position pending.
-- **#2b title:** Four-way contest (see PROPOSED). Advocate rejects Critic's "Policy/Approved" framing (compliance over strategy) and Realist's "Choices" (implies uncertainty). Advocate's headline "Why DTU Builds Its Own AI Agents" positions DTU as active/intentional. Realist arbitration needed.
-- **Productivity phrasing:** Advocate defends "floors not ceilings" as accurate, not mere advocacy — the causal claim (studies used 1-2 year old tools) is the argument for floor language, not an alternative to it. Proposes keeping both together: header claim + causal support sentence. Critic/Realist must accept combined framing or escalate.
-- **Scope slide binary:** Advocate chose B (mention + minimal commitment). Proposed one-sentence language filed under PROPOSED. If Critic accepts, move to SETTLED.
+- **Transition slide framing:** Critic flags "Where most groups will be in 12 months" reads as forecast; proposes reframe as aspiration ("Where most groups could be…" or similar) to protect credibility with skeptical leaders.
+- **#2b title:** Three-way contest. Realist: "DTU's AI Choices: In-House vs. Cloud Agents." Critic: "DTU's AI Policy: What's Approved and Why It Matters" (argues "In-House vs. Cloud" still violates top-down inversion; policy framing leads with what leaders need to know). Advocate position pending R3.
+- **Productivity phrasing:** Critic challenges "published figures are floors not ceilings" as advocacy language; proposes replacing with the causal claim: studies used 1-2 year old tools, so figures understate current potential. Core settlement (include ~50%, directional framing, note contested measurement) intact.
+- **Scope slide binary:** Critic escalates teaching/admin item from parking lot — must choose: (A) drop any mention of teaching/admin entirely, or (B) pair the mention with a concrete next-step commitment. Deferral defers a structural choice.
 
 ## [PARKING LOT]
 - /family figure TikZ: two-layer network figure (structure now settled); TikZ implementation deferred — lossy-compression annotation is verbal only, so figure is simpler than originally scoped.
@@ -101,4 +121,15 @@ See convergence_log.md for full record.
 - R2 advocate: Full position filed. Core claim — deck must invert bottom-up division logic into top-down strategic argument. Proposed 14-slide structure. Settled 3 items; proposed 2 more.
 - R2 realist: Stress-tested all open/proposed items. Settled 5 items (Schumpeter position, /family figure, Capability Ladder, alertblock placement, productivity framing). Counter-proposed #2b rename as "DTU's AI Choices: In-House vs. Cloud Agents."
 - R3 critic: Four failure modes escalated — transition slide forecast framing, #2b title top-down violation, productivity "floors not ceilings" as advocacy, scope slide binary forced. Counter-proposed #2b as "DTU's AI Policy: What's Approved and Why It Matters."
-- R3 advocate: Positions on all four open items. Transition slide: reject "could be," propose "Where leading groups are positioning themselves now." #2b: reject Realist and Critic proposals; counter-propose "Why DTU Builds Its Own AI Agents" (fallback: "DTU's AI Architecture: In-House Agents vs. Cloud Tools"). Productivity: defend "floors not ceilings" + causal claim as complementary. Scope binary: choose B, one-sentence commitment filed.
+
+
+Return the complete new forum_state.md only.
+Keep [LATEST DIGESTS] compact: at most the 8 most recent agent digests.
+It must contain exactly these structural fields:
+# Convergence Forum: ...
+Status: active OR converged OR adjourned OR failed
+Round: 3
+## [CONVERGENCE LOG]
+## [ACTIVE ARENA]
+## [PARKING LOT]
+## [LATEST DIGESTS]
