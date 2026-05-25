@@ -1,0 +1,1 @@
+﻿Your message appears to be cut off ΓÇö it ends mid-sentence at "Find the So". Were you pasting a role definition or prompt? What would you like me to do with it?
