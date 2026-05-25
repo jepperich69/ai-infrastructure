@@ -82,3 +82,4 @@ Round: 1
 ## [LATEST DIGESTS]
 - R1 critic (FAILED): Agent received a truncated prompt and returned a meta-error ("message cut off") with no substantive critique. No state update provided. Round 1 critic output is void.
 - R1 advocate (FAILED): Agent received a truncated prompt and returned a meta-error ("message cut off") with no substantive advocacy. No state update provided. Round 1 advocate output is void.
+- R1 realist (FAILED): Agent received a truncated prompt and returned a meta-error ("message cut off") with no substantive realist analysis. No state update provided. Round 1 realist output is void.
