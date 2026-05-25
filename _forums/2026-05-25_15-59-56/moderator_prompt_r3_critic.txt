@@ -1,3 +1,22 @@
+﻿You are the moderator of a Research Convergence Forum.
+Update the blackboard using only the compact digest and proposed state update below.
+Do not copy the full transcript. Do not remove already settled convergence-log decisions unless they are explicitly contradicted and you explain why.
+
+AGENT: critic
+ROUND: 3
+
+AGENT DIGEST:
+R3 Critic contribution filed. Four failure modes identified and escalated:
+
+1. **Transition slide** ΓÇö "Where most groups will be in 12 months" is a forecast; reframe as aspiration to avoid credibility risk with skeptical leaders.
+2. **#2b title** ΓÇö "In-House vs. Cloud Agents" still violates the settled top-down inversion; counter-proposed "DTU's AI Policy: What's Approved and Why It Matters."
+3. **Productivity framing** ΓÇö "floors not ceilings" is advocacy, not argument; replace with the actual causal claim (studies used 1-2 year old tools).
+4. **Scope slide** ΓÇö parking the teaching/admin wording defers a structural choice; needs a binary decision (drop mention entirely, or pair with a concrete next-step commitment).
+
+AGENT PROPOSED STATE UPDATE:
+(No explicit state update provided.)
+
+CURRENT BLACKBOARD STATE:
 # Convergence Forum: This slide show "slides_division_meeting.tex" is now perfect for the division meeting. However, it is a bit too technical for the leadergroup meeting which should be a bit more strategic.
 
 Create therefore a new slide desk called "slides_leadergroup_meeting.tex" where you re-use the division slides.
@@ -67,7 +86,7 @@ is sort of ok. But expand the figure a bit to have more papers, maybe even two l
 	
 
 Status: active
-Round: 3
+Round: 2
 
 ## [CONVERGENCE LOG]
 See convergence_log.md for full record.
@@ -79,19 +98,17 @@ See convergence_log.md for full record.
 - Schumpeter position: slides 3–4 (after scope), not slide 2. Sequence: Scope → Stakes → AI Requirements → Capabilities.
 - /family figure: two-layer structure (honest scope); lossy-compression stays verbal/notes only.
 - #5 Capability Ladder: ≤5 rungs, role-recognizable descriptions, tool-agnostic language.
-- "No fixed AI template" body: drop entirely. Alertblock → standalone transition slide between Capability Ladder and closing (framing under active dispute — see arena).
-- Productivity slide: include firsthand ~50% figure; frame as directional evidence, not benchmark; note measurement is contested; note studies used 1-2 year old tools (phrasing "floors not ceilings" under active dispute — see arena).
+- "No fixed AI template" body: drop entirely. Alertblock → standalone transition slide ("Where most groups will be in 12 months") between Capability Ladder and closing.
+- Productivity slide: include firsthand ~50% figure; frame as directional evidence, not benchmark; note measurement is contested; published figures are floors not ceilings.
 
 **PROPOSED (needs further input):**
-- #2b rename: three competing proposals — original "Two Worlds", Realist's "DTU's AI Choices: In-House vs. Cloud Agents", Critic's "DTU's AI Policy: What's Approved and Why It Matters."
+- #2b rename: "DTU's AI Choices: In-House vs. Cloud Agents" (Realist counter-proposal; rejects Advocate's compliance-framing title and original "Two Worlds").
 
 ## [ACTIVE ARENA]
-- **Transition slide framing:** Critic flags "Where most groups will be in 12 months" reads as forecast; proposes reframe as aspiration ("Where most groups could be…" or similar) to protect credibility with skeptical leaders.
-- **#2b title:** Three-way contest. Realist: "DTU's AI Choices: In-House vs. Cloud Agents." Critic: "DTU's AI Policy: What's Approved and Why It Matters" (argues "In-House vs. Cloud" still violates top-down inversion; policy framing leads with what leaders need to know). Advocate position pending R3.
-- **Productivity phrasing:** Critic challenges "published figures are floors not ceilings" as advocacy language; proposes replacing with the causal claim: studies used 1-2 year old tools, so figures understate current potential. Core settlement (include ~50%, directional framing, note contested measurement) intact.
-- **Scope slide binary:** Critic escalates teaching/admin item from parking lot — must choose: (A) drop any mention of teaching/admin entirely, or (B) pair the mention with a concrete next-step commitment. Deferral defers a structural choice.
+- (All R2 items resolved — awaiting R3 or moderator close.)
 
 ## [PARKING LOT]
+- Teaching/admin scope: exact wording of "door-closing" sentence (focus-on-research framing) — park for implementation.
 - /family figure TikZ: two-layer network figure (structure now settled); TikZ implementation deferred — lossy-compression annotation is verbal only, so figure is simpler than originally scoped.
 
 ## [LATEST DIGESTS]
@@ -99,4 +116,14 @@ See convergence_log.md for full record.
 - R2 critic (FAILED): no substantive output.
 - R2 advocate: Full position filed. Core claim — deck must invert bottom-up division logic into top-down strategic argument. Proposed 14-slide structure. Settled 3 items; proposed 2 more.
 - R2 realist: Stress-tested all open/proposed items. Settled 5 items (Schumpeter position, /family figure, Capability Ladder, alertblock placement, productivity framing). Counter-proposed #2b rename as "DTU's AI Choices: In-House vs. Cloud Agents."
-- R3 critic: Four failure modes escalated — transition slide forecast framing, #2b title top-down violation, productivity "floors not ceilings" as advocacy, scope slide binary forced. Counter-proposed #2b as "DTU's AI Policy: What's Approved and Why It Matters."
+
+Return the complete new forum_state.md only.
+Keep [LATEST DIGESTS] compact: at most the 8 most recent agent digests.
+It must contain exactly these structural fields:
+# Convergence Forum: ...
+Status: active OR converged OR adjourned OR failed
+Round: 3
+## [CONVERGENCE LOG]
+## [ACTIVE ARENA]
+## [PARKING LOT]
+## [LATEST DIGESTS]
