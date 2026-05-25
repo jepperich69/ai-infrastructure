@@ -135,9 +135,9 @@ function Invoke-Agent {
     switch ($Agent) {
         "claude" {
             if ($ProjectPath) {
-                return $promptText | & claude --add-dir $ProjectPath --dangerously-skip-permissions --print --bare 2>&1
+                return & claude --add-dir $ProjectPath --dangerously-skip-permissions -p $promptText 2>&1
             }
-            return $promptText | & claude --dangerously-skip-permissions --print --bare 2>&1
+            return & claude --dangerously-skip-permissions -p $promptText 2>&1
         }
         "gemini" {
             return $promptText | & gemini --approval-mode yolo --skip-trust  --output-format text 2>&1
@@ -429,7 +429,7 @@ DO EXACTLY THIS:
     $closed = $false
     try {
         Write-Host "Attempting automated session close via Claude..." -ForegroundColor Gray
-        $closePromptText | & claude --dangerously-skip-permissions --print --bare --add-dir $ProjectPath 2>&1
+        & claude --dangerously-skip-permissions --add-dir $ProjectPath -p $closePromptText 2>&1
         $closed = $true
     } catch {
         Write-Host "WARN | Claude close failed: $($_.Exception.Message). Trying Gemini..." -ForegroundColor Yellow
