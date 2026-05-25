@@ -530,9 +530,15 @@ function Get-CommandPreview {
              else          { "generate_onepager.ps1 -Project $proj$agentText" }
            }
         25 {
-             $modeText  = if ($Mode)    { " -Mode $Mode" }           else { "" }
-             $agentText = if ($Agent)   { " -Agents $Agent" }        else { "" }
-             $taskText  = if ($texFile) { " -Task '$texFile'" }      else { " -Task <required>" }
+             $modeText  = if ($Mode)    { " -Mode $Mode" }      else { "" }
+             $agentText = if ($Agent)   { " -Agents $Agent" }   else { "" }
+             if (!$texFile) {
+                 $taskText = " -Task <required>"
+             } elseif (Test-Path -LiteralPath $texFile -PathType Leaf -ErrorAction SilentlyContinue) {
+                 $taskText = " -TaskFile '$texFile'"
+             } else {
+                 $taskText = " -Task '$texFile'"
+             }
              "run_forum.ps1 -ProjectName $proj$taskText$agentText$modeText"
            }
     }
@@ -695,7 +701,7 @@ function Invoke-Command-N {
                      Write-Host "  Templates:  lit-review | math-verify | repro-audit | final-pass | code-audit" -ForegroundColor DarkGray
                      Write-Host "  Usage:      helpi 25 $proj code-audit" -ForegroundColor DarkGray
                      Write-Host "              helpi 25 $proj lit-review -Mode SAD -Agent gemini" -ForegroundColor DarkGray
-                     Write-Host "              helpi 25 $proj 'My custom task string'" -ForegroundColor DarkGray
+                     Write-Host "              helpi 25 $proj 'C:\path\to\task.txt'" -ForegroundColor DarkGray
                      Write-Host ""
                      return
                  }
@@ -723,7 +729,7 @@ function Invoke-Command-N {
                      $texFile = $templateMap[$choice]
                      Write-Host "  Selected template: $texFile" -ForegroundColor Gray
                  } else {
-                     $texFile = Read-Host "  Forum task"
+                     $texFile = Read-Host "  Task text or path to .txt/.md file"
                      if (!$texFile) {
                          Write-Host "ERR | No forum task provided." -ForegroundColor Red
                          return
@@ -765,9 +771,11 @@ function Invoke-Command-N {
              if (!$texFile) { $texFile = "final-pass" }
              if (!$Mode)    { $Mode = "Forum" }
 
-             $forumParams = @{
-                 ProjectName = $proj
-                 Task        = $texFile
+             $forumParams = @{ ProjectName = $proj }
+             if (Test-Path -LiteralPath $texFile -PathType Leaf -ErrorAction SilentlyContinue) {
+                 $forumParams.TaskFile = $texFile
+             } else {
+                 $forumParams.Task = $texFile
              }
              if ($agent) { $forumParams.Agents = $agent }
              if ($Mode)  { $forumParams.Mode   = $Mode }

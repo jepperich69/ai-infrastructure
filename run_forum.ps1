@@ -26,9 +26,9 @@
 #>
 
 param(
-    [Parameter(Mandatory=$true)]
-    [ValidateNotNullOrEmpty()]
-    [string]$Task,
+    [string]$Task = "",
+
+    [string]$TaskFile = "",
 
     [string]$ProjectName = "",
 
@@ -46,6 +46,18 @@ param(
 )
 
 $ErrorActionPreference = "Continue"
+
+if (!$Task -and !$TaskFile) {
+    Write-Error "Either -Task or -TaskFile is required."
+    exit 1
+}
+if ($TaskFile) {
+    if (!(Test-Path -LiteralPath $TaskFile)) {
+        Write-Error "TaskFile not found: $TaskFile"
+        exit 1
+    }
+    $Task = Get-Content -LiteralPath $TaskFile -Raw -Encoding UTF8
+}
 
 $AiRoot = $PSScriptRoot
 $PubRoot = "C:\Users\rich\OneDrive - Danmarks Tekniske Universitet\JR\Publikationer"
