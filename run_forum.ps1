@@ -40,6 +40,13 @@ param(
     [ValidateSet("Forum", "SAD")]
     [string]$Mode = "Forum",
 
+    # Stage controls how conservative agents are:
+    #   draft    - adversarial stress-testing, open to major changes (default)
+    #   revision - surgical edits only, paper is in R1/R2 state
+    #   final    - defect detection only, no suggestions
+    [ValidateSet("draft", "revision", "final")]
+    [string]$Stage = "draft",
+
     [switch]$OpenFinal,
 
     [switch]$AutoClose,
@@ -49,6 +56,53 @@ param(
 )
 
 $ErrorActionPreference = "Continue"
+
+$StageLabel = switch ($Stage) {
+    "revision" { "REVISION (R1/R2)" }
+    "final"    { "FINAL PRE-SUBMISSION" }
+    default    { "DRAFT" }
+}
+
+$StageRoleHeader = switch ($Stage) {
+    "revision" {
+@"
+You are a participant in a Research Convergence Forum on a paper in active revision ($StageLabel state).
+The manuscript is substantially complete. Your role is SURGICAL EDITING, not improvement.
+"@
+    }
+    "final" {
+@"
+You are a participant in a Research Convergence Forum on a paper in final pre-submission state.
+The manuscript is complete. Your role is DEFECT DETECTION ONLY -- not improvement, not restructuring.
+"@
+    }
+    default {
+@"
+You are a participant in a Research Convergence Forum.
+Your job is to stress-test the current task and help move the forum toward a defensible consensus.
+"@
+    }
+}
+
+$StageConstraint = switch ($Stage) {
+    "revision" {
+@"
+STAGE CONSTRAINT ($StageLabel): Changes must be minimal and directly tied to the task. Do NOT suggest restructuring, rewrites, new framings, or concerns not raised by the task. If you see something outside the task scope, park it -- do not expand on it.
+"@
+    }
+    "final" {
+@"
+STAGE CONSTRAINT ($StageLabel): Only flag a change if it corrects a clear error (factual, logical, or grammatical). Do not reframe, restructure, or improve. Do not suggest anything that is not broken.
+"@
+    }
+    default { "" }
+}
+
+$StageInstruction1 = switch ($Stage) {
+    "revision" { "1. Provide a focused, conservative contribution strictly within the task scope. Avoid restating settled decisions." }
+    "final"    { "1. Identify only clear defects within the task scope. Do not propose improvements." }
+    default    { "1. Provide a focused adversarial contribution. Avoid restating settled decisions." }
+}
 
 if (!$Task -and !$TaskFile) {
     Write-Error "Either -Task or -TaskFile is required."
@@ -340,6 +394,7 @@ $InitialState = @"
 
 Status: active
 Round: 0
+Stage: $StageLabel
 
 ## [CONVERGENCE LOG]
 - No settled decisions yet.
@@ -356,7 +411,7 @@ Round: 0
 
 [System.IO.File]::WriteAllText($StateFile, $InitialState, [System.Text.Encoding]::UTF8)
 [System.IO.File]::WriteAllText($ConvergenceLogFile, "# Convergence Log`n`nStarted: $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')`n`n- No settled decisions yet.`n", [System.Text.Encoding]::UTF8)
-[System.IO.File]::WriteAllText($RunLogFile, "# Forum Run Log`n`nTask: $TaskName`nAgents: $Agents`nMode: $Mode`nStarted: $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')`n`n", [System.Text.Encoding]::UTF8)
+[System.IO.File]::WriteAllText($RunLogFile, "# Forum Run Log`n`nTask: $TaskName`nAgents: $Agents`nMode: $Mode`nStage: $StageLabel`nStarted: $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')`n`n", [System.Text.Encoding]::UTF8)
 
 $StopForum = $false
 $FailureCount = 0
@@ -381,14 +436,13 @@ for ($CurrentRound = 1; $CurrentRound -le $MaxRounds -and -not $StopForum; $Curr
 
         $BlackboardState = Get-Content -LiteralPath $StateFile -Raw -Encoding UTF8
         $Prompt = @"
-You are a participant in a Research Convergence Forum.
-Your job is to stress-test the current task and help move the forum toward a defensible consensus.
-
+$StageRoleHeader
+$StageConstraint
 CURRENT BLACKBOARD STATE:
 $BlackboardState
 
 INSTRUCTIONS:
-1. Provide a focused adversarial contribution. Avoid restating settled decisions.
+$StageInstruction1
 2. End your response with exactly these two sections:
 
 === DIGEST ===
@@ -473,6 +527,7 @@ AGENT ROLE: $participant
 You are the moderator of a Research Convergence Forum.
 Update the blackboard using only the compact digest and proposed state update below.
 Do not copy the full transcript. Do not remove already settled convergence-log decisions unless they are explicitly contradicted and you explain why.
+$StageConstraint
 
 AGENT: $participant
 ROUND: $CurrentRound

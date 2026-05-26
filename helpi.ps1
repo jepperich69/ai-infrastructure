@@ -13,6 +13,7 @@ param(
     [string]$TexFile = "",
     [string]$Agent   = "",
     [string]$Mode    = "",
+    [string]$Stage   = "",
     [switch]$Force
 )
 
@@ -438,10 +439,15 @@ function Show-CommandHelp {
             "  Agents: Comma-separated list (default: claude,gemini,codex). In SAD mode,",
             "          uses only the first agent in the list.",
             "  Mode: 'Forum' or 'SAD'.",
+            "  Stage: Controls agent conservatism.",
+            "    draft    (default) -- adversarial stress-testing, open to major changes",
+            "    revision           -- surgical edits only; for R1/R2 revision state",
+            "    final              -- defect detection only; no suggestions",
             "",
             "Output: Timestamped folder in _forums/ with full transcripts and forum_state.md.",
             "",
             "When to use: to stress-test methodology, brainstorm, or resolve contradictions.",
+            "Use -Stage revision for R1/R2 responses; -Stage final before submission.",
             "",
             "Shortcut from inside a project or AI_auto:",
             "  helpi 25 code-audit",
@@ -451,9 +457,10 @@ function Show-CommandHelp {
             "  helpi 25 $p lit-review",
             "  helpi 25 $p code-audit",
             "  helpi 25 $p 'Auditing Theorem 3.1' -Agent gemini,claude",
+            "  helpi 25 $p final-pass -Stage revision",
             "",
             "Example (Single-agent debate):",
-            "  helpi 25 $p repro-audit -Agent gemini -Mode SAD"
+            "  helpi 25 $p repro-audit -Agent gemini -Mode SAD -Stage revision"
         )}
         default { @("No help available for command $n.") }
     }
@@ -533,6 +540,7 @@ function Get-CommandPreview {
         25 {
              $modeText  = if ($Mode)    { " -Mode $Mode" }      else { "" }
              $agentText = if ($Agent)   { " -Agents $Agent" }   else { "" }
+             $stageText = if ($Stage)   { " -Stage $Stage" }    else { "" }
              if (!$texFile) {
                  $taskText = " -Task <required>"
              } elseif (Test-Path -LiteralPath $texFile -PathType Leaf -ErrorAction SilentlyContinue) {
@@ -540,7 +548,7 @@ function Get-CommandPreview {
              } else {
                  $taskText = " -Task '$texFile'"
              }
-             "run_forum.ps1 -ProjectName $proj$taskText$agentText$modeText"
+             "run_forum.ps1 -ProjectName $proj$taskText$agentText$modeText$stageText"
            }
     }
 }
@@ -780,6 +788,7 @@ function Invoke-Command-N {
              }
              if ($agent) { $forumParams.Agents = $agent }
              if ($Mode)  { $forumParams.Mode   = $Mode }
+             if ($Stage) { $forumParams.Stage  = $Stage }
              & "$aiRoot\run_forum.ps1" @forumParams
            }
     }
