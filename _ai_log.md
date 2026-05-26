@@ -4,7 +4,6 @@
 
 ## Compressed sessions
 
-- **2026-05-22** (Claude): Make `/close` skill run fully autonomously — no permission prompts ... -> `/close` now executes all steps without user confirmation; all session-management file ...
 - **2026-05-22b** (Claude): Patch `/close` skill — fix two bugs causing redundant stops during ... -> `/close` skill no longer errors on bash `$null` redirect or write-without-read on `_sta...
 - **2026-05-24** (Claude & Codex): Implement and verify the 'Convergence Forum' infrastructure for mul... -> Implemented `run_forum.ps1` and integrated it into the `helpi` command set. Codex audit...
 - **2026-05-24b** (Codex): Audit the newly implemented Convergence Forum infrastructure for ar... -> Audit found that `run_forum.ps1` is not yet operational due to a PowerShell parse error...
@@ -20,21 +19,7 @@
 - **2026-05-24l** (Codex): Patch the `helpi 25` Forum/code-audit issues found in audit. -> The direct `helpi 25 code-audit` shortcut now maps to the current/last project, forum r...
 - **2026-05-24m** (Codex): Prepare Claude's final validation instruction for the patched `help... -> Claude now has a focused validation prompt for the last review stage of the Forum/code-...
 - **2026-05-24n** (Codex): Close the AI_auto session after patching and handoff preparation. -> Session closed with the `helpi 25` code-audit patch and Claude final-validation prompt ...
-
----
-
-## Session 2026-05-24o
-**Agent:** Claude Sonnet 4.6
-**Goal:** Claude final validation of patched `helpi 25` command; live smoke test.
-**Files touched:**
-- `prompts/forum_roles/critic_sys.md` — removed trailing `=== DIGEST ===` / `=== STATE UPDATE ===` placeholder lines that caused `Get-Section` to extract template text instead of agent output
-- `prompts/forum_roles/advocate_sys.md` — same fix
-- `prompts/forum_roles/realist_sys.md` — same fix
-- `known_issues.md` — added issue #21 documenting the role-file placeholder bug (status: fixed 2026-05-24)
-**Outcome:** Validation verdict READY; smoke test revealed the role-file `=== DIGEST ===` placeholder bug that prevented blackboard from ever updating — fixed in all three role files and logged as issue #21.
-**Next steps:**
-- Run a fresh smoke test to confirm blackboard updates correctly with the role-file fix applied
-**Git ref:** 9df201c
+- **2026-05-24o** (Claude): Claude final validation of patched `helpi 25` command; live smoke t... -> Validation verdict READY; smoke test revealed the role-file `=== DIGEST ===` placeholde...
 
 ---
 
@@ -77,3 +62,15 @@ Outcome: Successfully created a hybrid deck with direct, non-technical strategic
 **Outcome:** Six clean survey result slides added to the division meeting Beamer deck and successfully pushed to Overleaf.
 **Next steps:** none
 **Git ref:** —
+
+---
+
+## Session 2026-05-26b
+**Agent:** Claude Sonnet 4.6
+**Goal:** Add `-Stage` parameter to the Convergence Forum to prevent agents from over-inventing changes when a paper is in a settled R1/R2 state.
+**Files touched:**
+- `run_forum.ps1` — added `-Stage` param (draft/revision/final); agent prompt, moderator prompt, and initial blackboard state now reflect stage-specific framing and constraints
+- `helpi.ps1` — added `-Stage` param, interactive stage-selection prompt (numbers 1-3), wired through to `run_forum.ps1`, updated help text and generated command string
+**Outcome:** Forum agents now operate in surgical/defect-detection mode when `-Stage revision` or `-Stage final` is passed, preventing scope creep on settled manuscripts.
+**Next steps:** none
+**Git ref:** c7499a3

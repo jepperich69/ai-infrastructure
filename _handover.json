@@ -1,23 +1,17 @@
 {
   "project": "AI_auto",
-  "generated": "2026-05-26 13:48",
+  "generated": "2026-05-26 14:40",
   "source": "_ai_log.md",
   "latest_session": {
-    "title": "2026-05-26",
+    "title": "2026-05-26b",
     "agent": "Claude Sonnet 4.6",
-    "goal": "Generate survey visualizations from questionnaire Excel data and wire them into the division meeting Beamer slides.",
-    "outcome": "Six clean survey result slides added to the division meeting Beamer deck and successfully pushed to Overleaf.",
+    "goal": "Add `-Stage` parameter to the Convergence Forum to prevent agents from over-inventing changes when a paper is in a settled R1/R2 state.",
+    "outcome": "Forum agents now operate in surgical/defect-detection mode when `-Stage revision` or `-Stage final` is passed, preventing scope creep on settled manuscripts.",
     "next_steps": "none",
-    "git_ref": "—",
+    "git_ref": "c7499a3",
     "files_touched": [
-      "`literature/survey_figures/fig1_adoption.png` — donut chart: 90% AI adoption (n=29)",
-      "`literature/survey_figures/fig2_where.png` — h-bar: where AI is already used",
-      "`literature/survey_figures/fig3_integration.png` — h-bar: AI integration depth (65% copy/paste only)",
-      "`literature/survey_figures/fig4_infrastructure.png` — side-by-side: file backup and version control",
-      "`literature/survey_figures/fig5_wishes.png` — h-bar: most desired AI capabilities",
-      "`literature/survey_figures/fig6_course.png` — bar: course interest (93% Yes/Maybe)",
-      "`Overleaf_source/figures/fig*.png` — copied for Beamer inclusion",
-      "`Overleaf_source/slides_division_meeting.tex` — replaced placeholder slide 4 with 6 real survey slides (one figure per frame), pushed to Overleaf"
+      "`run_forum.ps1` — added `-Stage` param (draft/revision/final); agent prompt, moderator prompt, and initial blackboard state now reflect stage-specific framing and constraints",
+      "`helpi.ps1` — added `-Stage` param, interactive stage-selection prompt (numbers 1-3), wired through to `run_forum.ps1`, updated help text and generated command string"
     ]
   },
   "latest_session_complete": true,
