@@ -671,7 +671,8 @@ if ($nCopied -eq 0) {
 }
 
 # -- [7b] Response letter -----------------------------------------------------
-$responseTexFiles = Get-ChildItem $sourceDir -Filter "Response*.tex" -File -ErrorAction SilentlyContinue
+$responseTexFiles = Get-ChildItem $sourceDir -Filter "*.tex" -File -ErrorAction SilentlyContinue |
+    Where-Object { $_.Name -imatch 'response' }
 $responseToken = [regex]::Match($baseName, "R\d+[A-Za-z]*").Value
 $responseTex = $null
 if ($responseTexFiles.Count -gt 0) {
