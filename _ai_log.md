@@ -4,8 +4,6 @@
 
 ## Compressed sessions
 
-- **2026-05-21 (Gemini CLI)** (Gemini CLI): Create a 20-slide presentation deck for the division meeting on AI ... -> A comprehensive, technically rich, and strategically framed 20-slide presentation is co...
-- **2026-05-21** (Claude): Design and build a `/pipeline` skill — background multi-agent job (... -> `/pipeline` skill is live; slide deck updated with circular workflow diagram and new pi...
 - **2026-05-22** (Claude): Make `/close` skill run fully autonomously — no permission prompts ... -> `/close` now executes all steps without user confirmation; all session-management file ...
 - **2026-05-22b** (Claude): Patch `/close` skill — fix two bugs causing redundant stops during ... -> `/close` skill no longer errors on bash `$null` redirect or write-without-read on `_sta...
 - **2026-05-24** (Claude & Codex): Implement and verify the 'Convergence Forum' infrastructure for mul... -> Implemented `run_forum.ps1` and integrated it into the `helpi` command set. Codex audit...
@@ -20,29 +18,8 @@
 - **2026-05-24j** (Codex): Apply requested wording edits to the division meeting slide deck. -> Deck edits applied and verified. `helpi 6 AI_auto -Force` produced a fresh 26-page PDF;...
 - **2026-05-24k** (Codex): Audit the new `helpi 25` Forum/code-audit command path. -> Audited `helpi.ps1`, `run_forum.ps1`, the new `prompts/code-audit.md` template, and For...
 - **2026-05-24l** (Codex): Patch the `helpi 25` Forum/code-audit issues found in audit. -> The direct `helpi 25 code-audit` shortcut now maps to the current/last project, forum r...
-
----
-
-## Session 2026-05-24m
-**Agent:** Codex
-**Goal:** Prepare Claude's final validation instruction for the patched `helpi 25` command.
-**Files touched:**
-- `prompts/claude-validate-helpi25.md` -- Added a final validation protocol for Claude covering argument binding, side effects, max-round status, BOM/curly-quote checks, and optional smoke testing.
-- `_ai_log.md` -- Added this session entry.
-**Outcome:** Claude now has a focused validation prompt for the last review stage of the Forum/code-audit command path. The prompt explicitly forbids costly live Forum execution unless Richard approves it.
-**Next steps:** Hand `prompts/claude-validate-helpi25.md` to Claude for final validation.
-**Git ref:**
-
----
-
-## Session 2026-05-24n
-**Agent:** Codex
-**Goal:** Close the AI_auto session after patching and handoff preparation.
-**Files touched:**
-- `_ai_log.md` -- Added this close-session entry.
-**Outcome:** Session closed with the `helpi 25` code-audit patch and Claude final-validation prompt prepared.
-**Next steps:** Run Claude on `prompts/claude-validate-helpi25.md` for final validation; live Forum smoke test only if Richard approves LLM/tool spend.
-**Git ref:**
+- **2026-05-24m** (Codex): Prepare Claude's final validation instruction for the patched `help... -> Claude now has a focused validation prompt for the last review stage of the Forum/code-...
+- **2026-05-24n** (Codex): Close the AI_auto session after patching and handoff preparation. -> Session closed with the `helpi 25` code-audit patch and Claude final-validation prompt ...
 
 ---
 
@@ -68,7 +45,7 @@
 - `Overleaf_source/slides_leadergroup_meeting_v2.tex` -- 22-slide deck with simplified 'farm boy' language and new leadership initiatives.
 Outcome: Successfully created a hybrid deck with direct, non-technical strategic framing. Merged technical slides 11-12 into a single "Consensus Forum" anchor slide. Added the "DTU common token pool" and "Departmental Task Force" as concrete leadership next steps. Enlarged key diagrams for better visibility.
 **Next steps:** Push final V2 to Overleaf; present the deck.
-**Git ref:** -
+**Git ref:**
 
 ---
 
@@ -81,4 +58,22 @@ Outcome: Successfully created a hybrid deck with direct, non-technical strategic
 - `C:\Users\rich\.claude\skills\pipeline\skill.md` -- Updated the pipeline template to call `codex.cmd exec ... -` instead of the PowerShell shim.
 **Outcome:** Codex-only SAD now works end to end from normal PowerShell. Final smoke test `verify if 2+2=4` converged at `_forums/2026-05-26_00-00-41` with console output `Forum status: converged. Closing forum.` and `Forum concluded (converged)`. The failure chain was: PowerShell npm shim rejected pipeline input; `codex exec` needed explicit `-` for stdin; synchronous Codex calls could stall without writing output; `Start-Job` was unstable (`coreclr.dll` load failures); `cmd.exe /c codex.cmd` quoting broke OneDrive paths; `ProcessStartInfo.ArgumentList` failed under Windows PowerShell 5.1; Codex CLI echo/stderr could contaminate parsed sections; malformed/rejected moderator states previously discarded valid digests; and `Test-ForumState` used `-like` on bracketed section names, where `[]` are wildcard character classes.
 **Next steps:** Use this smoke test before future forum refactors: `.\run_forum.ps1 -ProjectName Pub_QP_SAA_MC -Task "verify if 2+2=4" -Agents codex -Mode SAD -MaxRounds 1`. Nested Codex calls from inside a Codex sandbox can still show expected `401 Unauthorized` transport errors and should not be treated as representative of the normal PowerShell path.
-**Git ref:** -
+**Git ref:**
+
+---
+
+## Session 2026-05-26
+**Agent:** Claude Sonnet 4.6
+**Goal:** Generate survey visualizations from questionnaire Excel data and wire them into the division meeting Beamer slides.
+**Files touched:**
+- `literature/survey_figures/fig1_adoption.png` — donut chart: 90% AI adoption (n=29)
+- `literature/survey_figures/fig2_where.png` — h-bar: where AI is already used
+- `literature/survey_figures/fig3_integration.png` — h-bar: AI integration depth (65% copy/paste only)
+- `literature/survey_figures/fig4_infrastructure.png` — side-by-side: file backup and version control
+- `literature/survey_figures/fig5_wishes.png` — h-bar: most desired AI capabilities
+- `literature/survey_figures/fig6_course.png` — bar: course interest (93% Yes/Maybe)
+- `Overleaf_source/figures/fig*.png` — copied for Beamer inclusion
+- `Overleaf_source/slides_division_meeting.tex` — replaced placeholder slide 4 with 6 real survey slides (one figure per frame), pushed to Overleaf
+**Outcome:** Six clean survey result slides added to the division meeting Beamer deck and successfully pushed to Overleaf.
+**Next steps:** none
+**Git ref:** —

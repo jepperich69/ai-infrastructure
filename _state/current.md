@@ -1,8 +1,7 @@
-# State — 2026-05-25
+# State — 2026-05-26
 **Phase:** Active development
-**Last session:** Diagnosed `claude --print` nested-session auth failure blocking forum SAD mode; helpi.ps1 and run_forum.ps1 patches applied earlier today.
+**Last session:** Generated 6 survey result figures from questionnaire Excel (n=29) and wired them into the division meeting Beamer deck as real slides; pushed to Overleaf.
 **Next:**
-- Test `helpi 25` from a fresh PowerShell window (no active Claude Code session)
-- Confirm forum SAD mode works end-to-end with slides_leadergroup prompt
-**Git ref:** 19027ba
+- none (division meeting slides are ready)
+**Git ref:** —
 **Agent:** Claude Sonnet 4.6

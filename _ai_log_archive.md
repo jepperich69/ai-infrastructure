@@ -127,3 +127,11 @@
 ## Archived 2026-05-25 (1 entry)
 
 - **2026-05-20** (Claude): Explore mobile access options for research projects — discussing pa... -> Claude Remote Control is the best mobile option; Termux+Gemini CLI blocked by Google Ad...
+
+
+---
+
+## Archived 2026-05-26 (2 entries)
+
+- **2026-05-21 (Gemini CLI)** (Gemini CLI): Create a 20-slide presentation deck for the division meeting on AI ... -> A comprehensive, technically rich, and strategically framed 20-slide presentation is co...
+- **2026-05-21** (Claude): Design and build a `/pipeline` skill — background multi-agent job (... -> `/pipeline` skill is live; slide deck updated with circular workflow diagram and new pi...
