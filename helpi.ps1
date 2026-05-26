@@ -776,9 +776,26 @@ function Invoke-Command-N {
                  Write-Host "  Selected mode: $Mode" -ForegroundColor Gray
              }
 
+             if (!$Stage -and !$Force -and ![Console]::IsInputRedirected) {
+                 Write-Host ""
+                 Write-Host "  Select forum stage:" -ForegroundColor Cyan
+                 Write-Host "  [1] draft    - stress-test, open to major changes"
+                 Write-Host "  [2] revision - surgical edits only (R1/R2)"
+                 Write-Host "  [3] final    - defect detection only"
+                 Write-Host ""
+                 $sChoice = Read-Host "  Selection [1-3, default 1]"
+                 $Stage = switch ($sChoice) {
+                     "2"     { "revision" }
+                     "3"     { "final" }
+                     default { "draft" }
+                 }
+                 Write-Host "  Selected stage: $Stage" -ForegroundColor Gray
+             }
+
              # Fallbacks for headless/Force mode
              if (!$texFile) { $texFile = "final-pass" }
              if (!$Mode)    { $Mode = "Forum" }
+             if (!$Stage)   { $Stage = "draft" }
 
              $forumParams = @{ ProjectName = $proj }
              if (Test-Path -LiteralPath $texFile -PathType Leaf -ErrorAction SilentlyContinue) {
