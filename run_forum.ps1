@@ -42,7 +42,10 @@ param(
 
     [switch]$OpenFinal,
 
-    [switch]$AutoClose
+    [switch]$AutoClose,
+
+    [ValidateRange(1, 7200)]
+    [int]$AgentTimeoutSeconds = 900
 )
 
 $ErrorActionPreference = "Continue"
@@ -113,9 +116,149 @@ function Test-ForumState {
         "## [LATEST DIGESTS]"
     )
     foreach ($needle in $required) {
-        if ($Text -notlike "*$needle*") { return $false }
+        if (-not $Text.Contains($needle)) { return $false }
     }
     return $true
+}
+
+function Get-StateSection {
+    param(
+        [string]$Text,
+        [string]$SectionName
+    )
+    $pattern = "(?ms)^## \[$([regex]::Escape($SectionName))\]\s*(.*?)(?=^## \[|\z)"
+    $match = [regex]::Match($Text, $pattern)
+    if ($match.Success) { return $match.Groups[1].Value.Trim() }
+    return ""
+}
+
+function Update-StateFallback {
+    param(
+        [string]$CurrentState,
+        [string]$Round,
+        [string]$Participant,
+        [string]$Digest,
+        [string]$StateUpdate
+    )
+
+    $title = if ($CurrentState -match "(?m)^# Convergence Forum:.*$") { $Matches[0] } else { "# Convergence Forum: $TaskName" }
+    $convergence = Get-StateSection -Text $CurrentState -SectionName "CONVERGENCE LOG"
+    $arena = Get-StateSection -Text $CurrentState -SectionName "ACTIVE ARENA"
+    $parking = Get-StateSection -Text $CurrentState -SectionName "PARKING LOT"
+    $latest = Get-StateSection -Text $CurrentState -SectionName "LATEST DIGESTS"
+
+    if (!$convergence) { $convergence = "- No settled decisions yet." }
+    if (!$arena) { $arena = "- Primary task: $TaskName" }
+    if (!$parking) { $parking = "- No parked issues yet." }
+
+    $compactUpdate = (Limit-Text -Text $StateUpdate -MaxChars 700) -replace "(`r`n|`n|`r)+", " | "
+    if ($compactUpdate -and $compactUpdate -ne "(No explicit state update provided.)") {
+        $convergence = ($convergence.TrimEnd() + "`n- Round ${Round} ${Participant} proposed update: $compactUpdate").Trim()
+    }
+
+    $compactDigest = (Limit-Text -Text $Digest -MaxChars 500) -replace "(`r`n|`n|`r)+", " "
+    $digestLines = @("- Round ${Round} ${Participant}: $compactDigest")
+    if ($latest -and $latest -ne "- No agent digests yet.") {
+        $digestLines += ($latest -split "(`r`n|`n|`r)" | Where-Object { $_.Trim() } | Select-Object -First 7)
+    }
+    $latest = ($digestLines | Select-Object -First 8) -join "`n"
+
+    return @"
+$title
+
+Status: active
+Round: $Round
+
+## [CONVERGENCE LOG]
+$convergence
+
+## [ACTIVE ARENA]
+$arena
+
+## [PARKING LOT]
+$parking
+
+## [LATEST DIGESTS]
+$latest
+"@.Trim()
+}
+
+function Invoke-CodexAgent {
+    param(
+        [string]$PromptText,
+        [string]$ProjectPath,
+        [int]$TimeoutSeconds = 900
+    )
+
+    $nodeExe = "C:\Program Files\nodejs\node.exe"
+    $codexJs = "C:\Users\rich\AppData\Roaming\npm\node_modules\@openai\codex\bin\codex.js"
+    if (-not (Test-Path -LiteralPath $nodeExe)) {
+        $nodeExe = "node.exe"
+    }
+    if (-not (Test-Path -LiteralPath $codexJs)) {
+        $script:LASTEXITCODE = 127
+        return "ERR | Codex CLI entrypoint not found: $codexJs"
+    }
+
+    $psi = [System.Diagnostics.ProcessStartInfo]::new()
+    $psi.FileName = $nodeExe
+    $processArgs = @(
+        "`"$codexJs`"",
+        "exec",
+        "--skip-git-repo-check",
+        "--color",
+        "never"
+    )
+    if ($ProjectPath) {
+        $processArgs += "--cd"
+        $processArgs += "`"$ProjectPath`""
+    }
+    $processArgs += "-"
+    $psi.Arguments = $processArgs -join " "
+    $psi.UseShellExecute = $false
+    $psi.RedirectStandardInput = $true
+    $psi.RedirectStandardOutput = $true
+    $psi.RedirectStandardError = $true
+    $psi.CreateNoWindow = $true
+    $psi.StandardOutputEncoding = [System.Text.Encoding]::UTF8
+    $psi.StandardErrorEncoding = [System.Text.Encoding]::UTF8
+
+    $proc = [System.Diagnostics.Process]::new()
+    $proc.StartInfo = $psi
+    [void]$proc.Start()
+
+    $stdoutTask = $proc.StandardOutput.ReadToEndAsync()
+    $stderrTask = $proc.StandardError.ReadToEndAsync()
+    $proc.StandardInput.Write($PromptText)
+    $proc.StandardInput.Close()
+
+    if (-not $proc.WaitForExit($TimeoutSeconds * 1000)) {
+        try { $proc.Kill($true) } catch {}
+        $script:LASTEXITCODE = 124
+        return "ERR | codex timed out after ${TimeoutSeconds}s before returning output."
+    }
+
+    $script:LASTEXITCODE = $proc.ExitCode
+    $stdout = $stdoutTask.GetAwaiter().GetResult()
+    $stderr = $stderrTask.GetAwaiter().GetResult()
+    $combined = (($stdout, $stderr) | Where-Object { $_ }) -join "`n"
+    $fatalPattern = "(?i)(401 Unauthorized|403 Forbidden|Not logged in|Please run /login|stream disconnected before completion|failed to connect to websocket)"
+    if ($combined -match $fatalPattern) {
+        return $combined
+    }
+
+    $clean = $stdout -replace "`r`n", "`n"
+    $matches = [regex]::Matches($clean, "(?ms)^codex\s*$\n(.*)")
+    if ($matches.Count -gt 0) {
+        $clean = $matches[$matches.Count - 1].Groups[1].Value
+    }
+    $clean = [regex]::Replace($clean, "(?ms)\ntokens used\n.*\z", "")
+    $clean = ($clean -split "`n" | Where-Object { $_.Trim() -ne "System.Management.Automation.RemoteException" }) -join "`n"
+    $clean = $clean.Trim()
+    if ($clean) {
+        return $clean
+    }
+    return $combined
 }
 
 function Invoke-Agent {
@@ -143,10 +286,7 @@ function Invoke-Agent {
             return $promptText | & gemini --approval-mode yolo --skip-trust  --output-format text 2>&1
         }
         "codex" {
-            if ($ProjectPath) {
-                return $promptText | & codex exec --skip-git-repo-check --color never --cd $ProjectPath - 2>&1
-            }
-            return $promptText | & codex exec --skip-git-repo-check --color never - 2>&1
+            return Invoke-CodexAgent -PromptText $promptText -ProjectPath $ProjectPath -TimeoutSeconds $AgentTimeoutSeconds
         }
         default {
             throw "Unknown forum agent '$Agent'. Use a comma-separated list from: claude, gemini, codex."       
@@ -300,7 +440,19 @@ AGENT ROLE: $participant
             }
         }
 
-        if ($exitCode -ne 0 -or $outputStr -match "^(EXCEPTION|error:|ERR\s*\|)") {
+        $hasStructuredResponse = (
+            $digest -and
+            $stateUpdate -and
+            $stateUpdate -ne "(No explicit state update provided.)"
+        )
+        $fatalAgentOutput = $outputStr -match "(?i)(401 Unauthorized|403 Forbidden|Not logged in|Please run /login|stream disconnected before completion|failed to connect to websocket|codex timed out)"
+        $explicitAgentError = $outputStr -match "(?mi)^\s*(EXCEPTION|ERROR:|ERR\s*\||error:)"
+        $agentFailed = (
+            ($fatalAgentOutput -and -not $hasStructuredResponse) -or
+            (($exitCode -ne 0 -or $explicitAgentError) -and -not $hasStructuredResponse)
+        )
+
+        if ($agentFailed) {
             $FailureCount++
             Add-Content -LiteralPath $RunLogFile -Encoding UTF8 -Value "- Round ${CurrentRound} ${participant}: FAILED. See $RoundOutputFile"
         } else {
@@ -347,19 +499,25 @@ Round: $CurrentRound
 "@
 
         $ModeratorPromptFile = Join-Path $ForumDir "moderator_prompt_r${CurrentRound}_${participant}.txt"       
+        $ModeratorOutputFile = Join-Path $ForumDir "moderator_output_r${CurrentRound}_${participant}.md"
         [System.IO.File]::WriteAllText($ModeratorPromptFile, $ModeratorPrompt, [System.Text.Encoding]::UTF8)    
 
         try {
             $ModOutput = Invoke-Agent -Agent $ModeratorAgent -PromptFile $ModeratorPromptFile -ProjectPath $ProjectPath
             $ModOutputStr = if ($ModOutput -is [array]) { $ModOutput -join "`n" } else { "$ModOutput" }
+            [System.IO.File]::WriteAllText($ModeratorOutputFile, $ModOutputStr, [System.Text.Encoding]::UTF8)
             $cleanState = Get-CleanState -Text $ModOutputStr
             if (Test-ForumState -Text $cleanState) {
                 [System.IO.File]::WriteAllText($StateFile, $cleanState, [System.Text.Encoding]::UTF8)
             } else {
-                Add-Content -LiteralPath $RunLogFile -Encoding UTF8 -Value "- Round ${CurrentRound} ${participant}: moderator state rejected; previous state preserved."
+                $fallbackState = Update-StateFallback -CurrentState (Get-Content -LiteralPath $StateFile -Raw -Encoding UTF8) -Round $CurrentRound -Participant $participant -Digest $digest -StateUpdate $stateUpdate
+                [System.IO.File]::WriteAllText($StateFile, $fallbackState, [System.Text.Encoding]::UTF8)
+                Add-Content -LiteralPath $RunLogFile -Encoding UTF8 -Value "- Round ${CurrentRound} ${participant}: moderator state rejected; fallback state applied. See $ModeratorOutputFile"
             }
         } catch {
-            Add-Content -LiteralPath $RunLogFile -Encoding UTF8 -Value "- Round ${CurrentRound} ${participant}: moderator failed: $($_.Exception.Message)"
+            $fallbackState = Update-StateFallback -CurrentState (Get-Content -LiteralPath $StateFile -Raw -Encoding UTF8) -Round $CurrentRound -Participant $participant -Digest $digest -StateUpdate $stateUpdate
+            [System.IO.File]::WriteAllText($StateFile, $fallbackState, [System.Text.Encoding]::UTF8)
+            Add-Content -LiteralPath $RunLogFile -Encoding UTF8 -Value "- Round ${CurrentRound} ${participant}: moderator failed; fallback state applied: $($_.Exception.Message)"
         }
 
         $StateContent = Get-Content -LiteralPath $StateFile -Raw -Encoding UTF8

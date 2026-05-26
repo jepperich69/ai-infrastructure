@@ -69,3 +69,16 @@
 Outcome: Successfully created a hybrid deck with direct, non-technical strategic framing. Merged technical slides 11-12 into a single "Consensus Forum" anchor slide. Added the "DTU common token pool" and "Departmental Task Force" as concrete leadership next steps. Enlarged key diagrams for better visibility.
 **Next steps:** Push final V2 to Overleaf; present the deck.
 **Git ref:** -
+
+---
+
+## Session 2026-05-25d
+**Agent:** Codex
+**Goal:** Diagnose and patch Codex-only SAD failures in `helpi 25`.
+**Files touched:**
+- `run_forum.ps1` -- Reworked Codex invocation to bypass the npm PowerShell shim, launch the Codex JS entrypoint through `node.exe`, feed prompts through redirected stdin, enforce `-AgentTimeoutSeconds`, clean Codex CLI transcript echoes before parsing sections, save moderator transcripts, apply fallback blackboard updates when needed, and validate bracketed section headers literally.
+- `known_issues.md` -- Added/updated forum failure notes for Codex stdin binding, stalls, timeout handling, API-error classification, malformed moderator output, and PowerShell bracket wildcard validation.
+- `C:\Users\rich\.claude\skills\pipeline\skill.md` -- Updated the pipeline template to call `codex.cmd exec ... -` instead of the PowerShell shim.
+**Outcome:** Codex-only SAD now works end to end from normal PowerShell. Final smoke test `verify if 2+2=4` converged at `_forums/2026-05-26_00-00-41` with console output `Forum status: converged. Closing forum.` and `Forum concluded (converged)`. The failure chain was: PowerShell npm shim rejected pipeline input; `codex exec` needed explicit `-` for stdin; synchronous Codex calls could stall without writing output; `Start-Job` was unstable (`coreclr.dll` load failures); `cmd.exe /c codex.cmd` quoting broke OneDrive paths; `ProcessStartInfo.ArgumentList` failed under Windows PowerShell 5.1; Codex CLI echo/stderr could contaminate parsed sections; malformed/rejected moderator states previously discarded valid digests; and `Test-ForumState` used `-like` on bracketed section names, where `[]` are wildcard character classes.
+**Next steps:** Use this smoke test before future forum refactors: `.\run_forum.ps1 -ProjectName Pub_QP_SAA_MC -Task "verify if 2+2=4" -Agents codex -Mode SAD -MaxRounds 1`. Nested Codex calls from inside a Codex sandbox can still show expected `401 Unauthorized` transport errors and should not be treated as representative of the normal PowerShell path.
+**Git ref:** -

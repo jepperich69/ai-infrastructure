@@ -334,7 +334,43 @@ Symptom: Forum crashes with "Agent 'gemini' is not authenticated" even when gemi
 
 ### 26. Codex CLI stdin prompt missing in Convergence Forum
 **Status:** fixed (2026-05-25)
-**Affects:** `AI_auto/run_forum.ps1`; same pattern appeared in an older generated `_pipelines/.../run_pipeline.ps1`, while the current `~/.claude/skills/pipeline/skill.md` template already uses the corrected form.
-**Fix:** When piping prompts into Codex from PowerShell, always pass `-` as the explicit prompt argument to `codex exec` so the CLI reads stdin. In `run_forum.ps1`, use `codex exec --skip-git-repo-check --color never --cd <ProjectPath> -` for project forums and `codex exec --skip-git-repo-check --color never -` otherwise. Also changed the final console footer to print `Forum failed` when the blackboard state is failed instead of always printing `Forum concluded`.
+**Affects:** `AI_auto/run_forum.ps1`, `~/.claude/skills/pipeline/skill.md`; same pattern appeared in an older generated `_pipelines/.../run_pipeline.ps1`.
+**Fix:** When piping prompts into Codex from PowerShell, bypass the npm PowerShell shim and pass `-` as the explicit prompt argument so the CLI reads stdin. In the `/pipeline` skill template, use `codex.cmd exec ... -` instead of `codex exec ... -`. In `run_forum.ps1`, launch Codex through `node.exe` and the installed `@openai/codex/bin/codex.js` entrypoint with `System.Diagnostics.ProcessStartInfo.Arguments`; this avoids the PowerShell shim, `cmd.exe` quoting issues with OneDrive paths, and the Windows PowerShell 5.1 incompatibility with `ProcessStartInfo.ArgumentList`. Also changed the final forum console footer to print `Forum failed` when the blackboard state is failed instead of always printing `Forum concluded`.
 
 Symptom: `helpi 25` with SAD mode and Codex agent finishes in a few seconds. `forum_run_log.md` marks each role as `FAILED`, each `output_r1_*.md` contains "No prompt provided. Either specify one as an argument or pipe the prompt into stdin.", and `final.md` has `Status: failed`, but the console still prints "Forum concluded."
+
+---
+
+### 27. Convergence Forum Codex turn can hang without writing output
+**Status:** fixed (2026-05-25)
+**Affects:** `AI_auto/run_forum.ps1`
+**Fix:** Wrap Codex forum turns in a direct .NET `System.Diagnostics.Process` call to `node.exe` plus the installed Codex JS entrypoint, feed the prompt through redirected stdin, and enforce a configurable timeout (`-AgentTimeoutSeconds`, default 900). Avoid `Start-Job`: repeated background PowerShell jobs can fail with `Failed to load ... coreclr.dll, HRESULT: 0x800705AF`. Avoid `cmd.exe /c codex.cmd`: nested quoting can fail with `The filename, directory name, or volume label syntax is incorrect.` On timeout, kill the process tree, set `$LASTEXITCODE = 124`, and return `ERR | codex timed out after Ns before returning output.` so the forum writes `output_r*_*.md`, increments the failure count, and can close with `Status: failed` instead of leaving a half-created folder.
+
+Symptom: after fixing stdin with `codex exec ... -`, `helpi 25` in Codex SAD mode creates `forum_run_log.md`, `forum_state.md`, `convergence_log.md`, and `prompt_r1_critic.txt`, then stalls indefinitely. No `output_r1_critic.md` and no `final.md` are written because `run_forum.ps1` is blocked waiting for `codex exec` to return.
+
+---
+
+### 28. Convergence Forum marks Codex 401/API errors as complete
+**Status:** fixed (2026-05-25)
+**Affects:** `AI_auto/run_forum.ps1`
+**Fix:** Expand forum agent failure detection to match uppercase `ERROR:`, `401 Unauthorized`, `403 Forbidden`, login prompts, websocket connection failures, and stream-disconnect messages. However, do not treat nonzero exit codes or generic error-looking noise as failure when the transcript contains valid `DIGEST` and `STATE UPDATE` sections; Codex can produce a valid answer while PowerShell job output contains shim/noise lines.
+
+Symptom: a Codex-only SAD smoke test for `verify if 2+2=4` produced `output_r1_*.md` files containing repeated `401 Unauthorized` websocket errors, but `forum_run_log.md` marked all roles as `complete` and `final.md` ended as `Status: adjourned`.
+
+---
+
+### 29. Convergence Forum loses valid digests when moderator output is malformed
+**Status:** fixed (2026-05-25)
+**Affects:** `AI_auto/run_forum.ps1`
+**Fix:** Save raw moderator transcripts as `moderator_output_r*_*.md`. If moderator output fails `Test-ForumState`, apply a deterministic fallback update from the already-parsed `DIGEST` and `STATE UPDATE` sections instead of preserving the previous blackboard unchanged. Also make `Test-ForumState` use literal `.Contains(...)` checks rather than PowerShell `-like`, because section names such as `## [CONVERGENCE LOG]` contain brackets, and brackets are wildcard character classes in `-like` patterns.
+
+Symptom: Codex SAD roles complete successfully and produce valid `=== DIGEST ===` / `=== STATE UPDATE ===` sections. Moderator output may also be valid and contain all required sections, but every moderator update is logged as `moderator state rejected`; `final.md` remains at `Round: 0` or relies on fallback state rather than accepting the moderator's `Status: converged`.
+
+---
+
+### 30. `helpi` cannot update last-project state from Codex sandbox
+**Status:** platform-fact
+
+When `helpi` runs from a Codex sandboxed session, the requested operation may complete successfully but the wrapper can still emit `Access to the path ... AI_auto\_state\last_project.txt is denied` when it tries to remember the last active project. Treat this state-write failure as non-fatal if the requested helper action reports success. If the last-project shortcut is needed, run the same `helpi` command from a normal PowerShell window or with escalated permissions.
+
+Symptom: `helpi 22 Pub_StopGeometry_TBA -Force` reported successful log compression, then failed at `Set-Content -Path $helpiStateFile -Value $proj -Encoding UTF8` for `AI_auto\_state\last_project.txt`.
