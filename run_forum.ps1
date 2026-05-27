@@ -104,6 +104,15 @@ $StageInstruction1 = switch ($Stage) {
     default    { "1. Provide a focused adversarial contribution. Avoid restating settled decisions." }
 }
 
+$ForumReadOnlyConstraint = @"
+
+FORUM CONSTRAINT -- READ ONLY: This is a Convergence Forum advisory session.
+You produce TEXT SUGGESTIONS ONLY. You MUST NOT edit, create, write, or delete any file.
+If you want to suggest a change to the manuscript or code, describe it in your response text.
+The researcher reads the forum output and applies changes manually.
+Any file edit made during this forum session is a policy violation.
+"@
+
 if (!$Task -and !$TaskFile) {
     Write-Error "Either -Task or -TaskFile is required."
     exit 1
@@ -332,12 +341,12 @@ function Invoke-Agent {
     switch ($Agent) {
         "claude" {
             if ($ProjectPath) {
-                return & claude --add-dir $ProjectPath --dangerously-skip-permissions -p $promptText 2>&1
+                return & claude --add-dir $ProjectPath --permission-mode plan -p $promptText 2>&1
             }
-            return & claude --dangerously-skip-permissions -p $promptText 2>&1
+            return & claude --permission-mode plan -p $promptText 2>&1
         }
         "gemini" {
-            return $promptText | & gemini --approval-mode yolo --skip-trust  --output-format text 2>&1
+            return $promptText | & gemini --approval-mode plan --skip-trust --output-format text 2>&1
         }
         "codex" {
             return Invoke-CodexAgent -PromptText $promptText -ProjectPath $ProjectPath -TimeoutSeconds $AgentTimeoutSeconds
@@ -438,6 +447,7 @@ for ($CurrentRound = 1; $CurrentRound -le $MaxRounds -and -not $StopForum; $Curr
         $Prompt = @"
 $StageRoleHeader
 $StageConstraint
+$ForumReadOnlyConstraint
 CURRENT BLACKBOARD STATE:
 $BlackboardState
 
@@ -528,6 +538,7 @@ You are the moderator of a Research Convergence Forum.
 Update the blackboard using only the compact digest and proposed state update below.
 Do not copy the full transcript. Do not remove already settled convergence-log decisions unless they are explicitly contradicted and you explain why.
 $StageConstraint
+$ForumReadOnlyConstraint
 
 AGENT: $participant
 ROUND: $CurrentRound
