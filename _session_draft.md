@@ -6,3 +6,5 @@
 [2026-05-27 11:30] Edit:  infrastructure.html
 [2026-05-27 11:30] Edit:  infrastructure.html
 [2026-05-27 11:30] Edit:  _ai_log.md
+[2026-05-27 11:33] Write: C:\Users\rich\.claude\projects\C--Users-rich-OneDrive---Danmarks-Tekniske-Universitet-JR-AI-auto\memory\project_code_folder_restructure.md
+[2026-05-27 11:34] Edit:  C:\Users\rich\.claude\projects\C--Users-rich-OneDrive---Danmarks-Tekniske-Universitet-JR-AI-auto\memory\MEMORY.md
