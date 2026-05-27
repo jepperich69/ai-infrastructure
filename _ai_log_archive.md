@@ -149,3 +149,10 @@
 ## Archived 2026-05-27 (1 entry)
 
 - **2026-05-22b** (Claude): Patch `/close` skill — fix two bugs causing redundant stops during ... -> `/close` skill no longer errors on bash `$null` redirect or write-without-read on `_sta...
+
+
+---
+
+## Archived 2026-05-27 (1 entry)
+
+- **2026-05-24** (Claude & Codex): Implement and verify the 'Convergence Forum' infrastructure for mul... -> Implemented `run_forum.ps1` and integrated it into the `helpi` command set. Codex audit...

@@ -1,21 +1,18 @@
 {
   "project": "AI_auto",
-  "generated": "2026-05-27 11:56",
+  "generated": "2026-05-27 14:44",
   "source": "_ai_log.md",
   "latest_session": {
-    "title": "2026-05-27",
+    "title": "2026-05-27b",
     "agent": "Claude Sonnet 4.6",
-    "goal": "Document helpi 25, fix /close permission prompts, and harden the Convergence Forum against agents editing project files.",
-    "outcome": "helpi 25 is documented, /close now runs without permission prompts, and forum agents can no longer edit manuscript or code files directly.",
-    "next_steps": "Run `helpi 16` to rebuild PDF/HTML documentation from updated infrastructure.html Restructure AI_auto root (move .ps1 to code/ subfolder) — deferred, see memory note",
-    "git_ref": "9f0d4cf",
+    "goal": "Add automatic backup and restore of `~/.claude/` so the AI infrastructure can be fully recovered on a new machine.",
+    "outcome": "`~/.claude/` is now backed up to `_claude_backup/` (OneDrive + GitHub) on every session stop; `helpi 20` on a new machine fully restores the Claude config automatically.",
+    "next_steps": "none",
+    "git_ref": "a77081e",
     "files_touched": [
-      "`infrastructure.html` — updated helpi 25 section: added `-Stage` description (draft/revision/final), fixed template count (4→5), updated table row and cheatsheet with full syntax",
-      "`~/.claude/settings.json` — added missing PowerShell tool permissions (`PowerShell(git *)`, `PowerShell(helpi *)`, `PowerShell(Get-ChildItem*)`, `PowerShell(Test-Path*)`, `PowerShell(New-Item*)`) and memory file write patterns (`~/.claude/projects/**/*.md`) to fix /close permission prompts",
-      "`run_forum.ps1` — enforced read-only forum mode: Claude now uses `--permission-mode plan`, Gemini uses `--approval-mode plan` (both replacing unrestricted modes); added `$ForumReadOnlyConstraint` block to every agent and moderator prompt",
-      "`memory/feedback_close_autonomous.md` — updated with root cause and full permission list",
-      "`memory/project_code_folder_restructure.md` — new note: deferred plan to move .ps1 scripts to code/ subfolder",
-      "`memory/project_forum_readonly.md` — new note: forum read-only protection rationale and rules"
+      "`sync_claude_config.ps1` — new script: `-Backup` mirrors `~/.claude/` (CLAUDE.md, settings.json, commands/, skills/, projects/*.md) to `_claude_backup/`; `-Restore` reverses it",
+      "`~/.claude/settings.json` — added `sync_claude_config.ps1 -Backup` as first Stop hook so backup runs automatically every session end before auto_commit",
+      "`restore.ps1` — replaced step 6 (which only printed an error if `~/.claude` was missing) with auto-restore from `_claude_backup/` when available"
     ]
   },
   "latest_session_complete": true,

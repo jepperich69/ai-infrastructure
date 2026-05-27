@@ -4,7 +4,6 @@
 
 ## Compressed sessions
 
-- **2026-05-24** (Claude & Codex): Implement and verify the 'Convergence Forum' infrastructure for mul... -> Implemented `run_forum.ps1` and integrated it into the `helpi` command set. Codex audit...
 - **2026-05-24b** (Codex): Audit the newly implemented Convergence Forum infrastructure for ar... -> Audit found that `run_forum.ps1` is not yet operational due to a PowerShell parse error...
 - **2026-05-24c** (Codex): Patch and document the Convergence Forum issues found in the Codex ... -> The Convergence Forum now parses cleanly, rejects invalid agent lists before creating r...
 - **2026-05-24d** (Codex): Prepare Gemini's independent verification prompt for the patched Co... -> Wrote a Gemini audit instruction set covering PowerShell correctness, Blackboard integr...
@@ -20,19 +19,7 @@
 - **2026-05-24n** (Codex): Close the AI_auto session after patching and handoff preparation. -> Session closed with the `helpi 25` code-audit patch and Claude final-validation prompt ...
 - **2026-05-24o** (Claude): Claude final validation of patched `helpi 25` command; live smoke t... -> Validation verdict READY; smoke test revealed the role-file `=== DIGEST ===` placeholde...
 - **2026-05-25c** (Gemini CLI (gemini-2.5-flash)): Create refined 'V2' leadergroup slides; simplify language and add l... -> --
-
----
-
-## Session 2026-05-25d
-**Agent:** Codex
-**Goal:** Diagnose and patch Codex-only SAD failures in `helpi 25`.
-**Files touched:**
-- `run_forum.ps1` -- Reworked Codex invocation to bypass the npm PowerShell shim, launch the Codex JS entrypoint through `node.exe`, feed prompts through redirected stdin, enforce `-AgentTimeoutSeconds`, clean Codex CLI transcript echoes before parsing sections, save moderator transcripts, apply fallback blackboard updates when needed, and validate bracketed section headers literally.
-- `known_issues.md` -- Added/updated forum failure notes for Codex stdin binding, stalls, timeout handling, API-error classification, malformed moderator output, and PowerShell bracket wildcard validation.
-- `C:\Users\rich\.claude\skills\pipeline\skill.md` -- Updated the pipeline template to call `codex.cmd exec ... -` instead of the PowerShell shim.
-**Outcome:** Codex-only SAD now works end to end from normal PowerShell. Final smoke test `verify if 2+2=4` converged at `_forums/2026-05-26_00-00-41` with console output `Forum status: converged. Closing forum.` and `Forum concluded (converged)`. The failure chain was: PowerShell npm shim rejected pipeline input; `codex exec` needed explicit `-` for stdin; synchronous Codex calls could stall without writing output; `Start-Job` was unstable (`coreclr.dll` load failures); `cmd.exe /c codex.cmd` quoting broke OneDrive paths; `ProcessStartInfo.ArgumentList` failed under Windows PowerShell 5.1; Codex CLI echo/stderr could contaminate parsed sections; malformed/rejected moderator states previously discarded valid digests; and `Test-ForumState` used `-like` on bracketed section names, where `[]` are wildcard character classes.
-**Next steps:** Use this smoke test before future forum refactors: `.\run_forum.ps1 -ProjectName Pub_QP_SAA_MC -Task "verify if 2+2=4" -Agents codex -Mode SAD -MaxRounds 1`. Nested Codex calls from inside a Codex sandbox can still show expected `401 Unauthorized` transport errors and should not be treated as representative of the normal PowerShell path.
-**Git ref:**
+- **2026-05-25d** (Codex): Diagnose and patch Codex-only SAD failures in `helpi 25`. -> Codex-only SAD now works end to end from normal PowerShell. Final smoke test `verify if...
 
 ---
 
@@ -69,6 +56,19 @@
 - Run `helpi 16` to rebuild PDF/HTML documentation from updated infrastructure.html
 - Restructure AI_auto root (move .ps1 to code/ subfolder) — deferred, see memory note
 **Git ref:** 9f0d4cf
+
+---
+
+## Session 2026-05-27b
+**Agent:** Claude Sonnet 4.6
+**Goal:** Add automatic backup and restore of `~/.claude/` so the AI infrastructure can be fully recovered on a new machine.
+**Files touched:**
+- `sync_claude_config.ps1` — new script: `-Backup` mirrors `~/.claude/` (CLAUDE.md, settings.json, commands/, skills/, projects/*.md) to `_claude_backup/`; `-Restore` reverses it
+- `~/.claude/settings.json` — added `sync_claude_config.ps1 -Backup` as first Stop hook so backup runs automatically every session end before auto_commit
+- `restore.ps1` — replaced step 6 (which only printed an error if `~/.claude` was missing) with auto-restore from `_claude_backup/` when available
+**Outcome:** `~/.claude/` is now backed up to `_claude_backup/` (OneDrive + GitHub) on every session stop; `helpi 20` on a new machine fully restores the Claude config automatically.
+**Next steps:** none
+**Git ref:** a77081e
 
 ---
 
