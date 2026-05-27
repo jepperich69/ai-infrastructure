@@ -1,0 +1,62 @@
+{
+  "autoUpdatesChannel": "latest",
+  "permissions": {
+    "allow": [
+      "Bash(helpi*)",
+      "Bash(git *)",
+      "Bash(git)",
+      "Bash(pwsh*)",
+      "PowerShell(helpi *)",
+      "PowerShell(helpi.ps1*)",
+      "PowerShell(git *)",
+      "PowerShell(git)",
+      "PowerShell(pwsh*)",
+      "PowerShell(Remove-Item*)",
+      "PowerShell(Get-ChildItem*)",
+      "PowerShell(Test-Path*)",
+      "PowerShell(New-Item*)",
+      "Edit(C:/Users/rich/OneDrive*/**/_ai_log.md)",
+      "Write(C:/Users/rich/OneDrive*/**/_ai_log.md)",
+      "Edit(C:/Users/rich/OneDrive*/**/_state/current.md)",
+      "Write(C:/Users/rich/OneDrive*/**/_state/current.md)",
+      "Edit(C:/Users/rich/OneDrive*/**/.claude/CLAUDE.md)",
+      "Write(C:/Users/rich/OneDrive*/**/.claude/CLAUDE.md)",
+      "Edit(C:/Users/rich/OneDrive*/**/known_issues.md)",
+      "Write(C:/Users/rich/OneDrive*/**/known_issues.md)",
+      "Edit(C:/Users/rich/.claude/CLAUDE.md)",
+      "Write(C:/Users/rich/.claude/CLAUDE.md)",
+      "Edit(C:/Users/rich/.claude/projects/**/*.md)",
+      "Write(C:/Users/rich/.claude/projects/**/*.md)"
+    ],
+    "deny": [
+      "Read(C:/Users/rich/OneDrive*/JR/Sensitive_Data/**)"
+    ]
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write|Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "pwsh -NoProfile -NonInteractive -File \"C:/Users/rich/OneDrive - Danmarks Tekniske Universitet/JR/AI_auto/log_tool_use.ps1\" -Agent Claude"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "pwsh -NoProfile -NonInteractive -File \"C:/Users/rich/OneDrive - Danmarks Tekniske Universitet/JR/AI_auto/sync_claude_config.ps1\" -Backup"
+          },
+          {
+            "type": "command",
+            "command": "powershell -NoProfile -NonInteractive -File \"C:/Users/rich/OneDrive - Danmarks Tekniske Universitet/JR/AI_auto/auto_commit_hook.ps1\""
+          }
+        ]
+      }
+    ]
+  }
+}

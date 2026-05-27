@@ -83,18 +83,17 @@ if (Test-Path $profilePath) {
 
 # ── 6. Claude config folder (~/.claude) ───────────────────────────
 Write-Host ""
-Write-Host "  6. Claude config folder" -ForegroundColor DarkYellow
-if (Test-Path "$claudeDir\CLAUDE.md") {
-    Write-Host "  $ok ~/.claude/CLAUDE.md present" -ForegroundColor Green
+Write-Host "  6. Claude config folder (~/.claude)" -ForegroundColor DarkYellow
+$backupDir = Join-Path $aiRoot "_claude_backup"
+$claudeOk  = (Test-Path "$claudeDir\CLAUDE.md") -and (Test-Path "$claudeDir\commands\close.md")
+if ($claudeOk) {
+    Write-Host "  $ok ~/.claude already present (CLAUDE.md + commands/)" -ForegroundColor Green
+} elseif (Test-Path $backupDir) {
+    Write-Host "  $fix Restoring ~/.claude from _claude_backup/ ..." -ForegroundColor Yellow
+    & "$aiRoot\sync_claude_config.ps1" -Restore
 } else {
-    Write-Host "  $err ~/.claude/CLAUDE.md missing." -ForegroundColor Red
-    Write-Host "       Copy from another machine or restore from backup." -ForegroundColor DarkGray
-}
-if (Test-Path "$claudeDir\commands\close.md") {
-    Write-Host "  $ok ~/.claude/commands/ present" -ForegroundColor Green
-} else {
-    Write-Host "  $err ~/.claude/commands/ missing." -ForegroundColor Red
-    Write-Host "       Copy from another machine or restore from backup." -ForegroundColor DarkGray
+    Write-Host "  $err ~/.claude missing and no _claude_backup/ found." -ForegroundColor Red
+    Write-Host "       Cannot auto-restore. Copy ~/.claude from another machine or cloud backup." -ForegroundColor DarkGray
 }
 
 # ── 7. Scheduled task (auto-sync every 4h) ───────────────────────
