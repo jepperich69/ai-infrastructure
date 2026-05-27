@@ -390,7 +390,7 @@
     <li><b>SAD (Single-Agent Debate):</b> A single agent takes three distinct roles sequentially: <b>The Critic</b> (skeptical peer reviewer), <b>The Advocate</b> (visionary co-author), and <b>The Realist</b> (Senior PI / Auditor). This mode is highly effective at breaking AI sycophancy with lower token overhead.</li>
   </ul>
   <p>
-    The forum supports four built-in <b>Consensus Templates</b> (task shortcuts) for standardized research auditing:
+    The forum supports five built-in <b>Consensus Templates</b> (task shortcuts) for standardized research auditing:
   </p>
   <ul>
     <li><code>lit-review</code>: Systematic search and gap detection matrix builder.</li>
@@ -398,6 +398,14 @@
     <li><code>repro-audit</code>: 5-check verifier for reproduction suites (Seeds, Artifact parity).</li>
     <li><code>final-pass</code>: 7-pillar manuscript audit (Consistency, Seams, Compliance).</li>
     <li><code>code-audit</code>: PowerShell syntax verification and architectural opinion.</li>
+  </ul>
+  <p>
+    The <code>-Stage</code> parameter controls how conservative agents are &mdash; calibrated to the manuscript lifecycle:
+  </p>
+  <ul>
+    <li><b>draft</b> (default): Full adversarial stress-testing; agents may suggest major changes.</li>
+    <li><b>revision</b>: Surgical edits only &mdash; use when the paper is in an R1/R2 revision cycle.</li>
+    <li><b>final</b>: Defect detection only &mdash; no suggestions, no restructuring; use before submission.</li>
   </ul>
   <p>
     To prevent token bloat, both modes use a <b>Blackboard Model</b>: the next agent turn sees
@@ -1046,7 +1054,7 @@ helpi 3 Pub_X main.tex             # run command 3 with a specific .tex file</pr
     <tr><td>22</td><td>Compress AI log (trim old sessions)</td><td><code>compress_log.ps1 -Project Pub_XXX</code> &mdash; keeps last 4 sessions verbatim; collapses older ones to one-liners; archives beyond 16. Runs automatically at <code>/close</code>.</td><td><span class="tag manual">manual</span></td></tr>
     <tr><td>23</td><td>Push code/ to GitHub</td><td><code>push_to_github.ps1 -Project Pub_XXX</code> &mdash; creates GitHub repo via <code>gh</code> CLI if no remote exists, then pushes. No browser needed. Default: private repo named <code>&lt;project&gt;-code</code>.</td><td><span class="tag manual">manual</span></td></tr>
     <tr><td>24</td><td>Boil paper to technical one-pager</td><td>Reads main .tex and generates a self-contained LaTeX note distilling core ideas, formulas, and checks. Compiles to one A4 page. Uses <code>generate_onepager.ps1</code>.</td><td><span class="tag manual">manual</span></td></tr>
-    <tr><td>25</td><td>Convergence Forum (Multi-agent / SAD debate)</td><td><code>run_forum.ps1 -Project XXX -Task '...' [-Mode SAD]</code> &mdash; orchestrates adversarial debate to reach stress-tested consensus. <b>Forum</b> mode uses multiple agents; <b>SAD</b> mode uses one agent in three roles (Critic, Advocate, Realist).</td><td><span class="tag manual">manual</span></td></tr>
+    <tr><td>25</td><td>Convergence Forum (Multi-agent / SAD debate)</td><td><code>run_forum.ps1 -Project XXX -Task '...' [-Mode Forum|SAD] [-Stage draft|revision|final]</code> &mdash; orchestrates adversarial debate to reach stress-tested consensus. <b>Forum</b> mode uses multiple agents (default: Claude, Gemini, Codex); <b>SAD</b> mode uses one agent in three roles (Critic, Advocate, Realist). <code>-Stage</code> controls agent conservatism: <b>draft</b> (full debate), <b>revision</b> (surgical edits), <b>final</b> (defect detection only).</td><td><span class="tag manual">manual</span></td></tr>
   </table>
 </div>
 
@@ -2253,7 +2261,7 @@ Goal: Add robustness checks to results
         <tr><td>helpi 22 Pub_XXX</td><td>Compress AI log — keeps last 4 sessions, one-liners for older</td></tr>
         <tr><td>helpi 23 Pub_XXX</td><td>Push code/ to GitHub (creates repo via gh CLI if needed)</td></tr>
         <tr><td>helpi 24 Pub_XXX</td><td>Boil paper to technical one-pager (core idea + checks)</td></tr>
-        <tr><td>helpi 25 XXX 'Task'</td><td>Convergence Forum &mdash; adversarial multi-agent debate</td></tr>
+        <tr><td>helpi 25 XXX 'Task' [-Mode SAD] [-Stage revision]</td><td>Convergence Forum &mdash; adversarial multi-agent debate; stage controls agent conservatism (draft/revision/final)</td></tr>
       </table>
     </div>
 

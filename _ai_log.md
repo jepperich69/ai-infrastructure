@@ -65,6 +65,17 @@ Outcome: Successfully created a hybrid deck with direct, non-technical strategic
 
 ---
 
+## Session 2026-05-27
+**Agent:** Claude Sonnet 4.6
+**Goal:** Document the completed Helpi 25 (Convergence Forum) feature in the log and infrastructure documentation.
+**Files touched:**
+- `infrastructure.html` — added `-Stage` parameter description (draft/revision/final) to the helpi 25 narrative; updated table row with full syntax; updated cheatsheet entry to show mode and stage flags
+**Outcome:** Documentation now fully covers all helpi 25 parameters: Mode (Forum/SAD), Agents, Stage, OpenFinal, AutoClose, AgentTimeoutSeconds. The `-Stage` lifecycle control was previously only in the script help text; it now appears in the HTML docs and cheatsheet.
+**Next steps:** Run `helpi 16` to regenerate the PDF/HTML documentation builds.
+**Git ref:**
+
+---
+
 ## Session 2026-05-26b
 **Agent:** Claude Sonnet 4.6
 **Goal:** Add `-Stage` parameter to the Convergence Forum to prevent agents from over-inventing changes when a paper is in a settled R1/R2 state.
