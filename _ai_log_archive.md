@@ -142,3 +142,10 @@
 ## Archived 2026-05-26 (1 entry)
 
 - **2026-05-22** (Claude): Make `/close` skill run fully autonomously — no permission prompts ... -> `/close` now executes all steps without user confirmation; all session-management file ...
+
+
+---
+
+## Archived 2026-05-27 (1 entry)
+
+- **2026-05-22b** (Claude): Patch `/close` skill — fix two bugs causing redundant stops during ... -> `/close` skill no longer errors on bash `$null` redirect or write-without-read on `_sta...

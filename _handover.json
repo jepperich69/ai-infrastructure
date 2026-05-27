@@ -1,17 +1,21 @@
 {
   "project": "AI_auto",
-  "generated": "2026-05-26 14:40",
+  "generated": "2026-05-27 11:56",
   "source": "_ai_log.md",
   "latest_session": {
-    "title": "2026-05-26b",
+    "title": "2026-05-27",
     "agent": "Claude Sonnet 4.6",
-    "goal": "Add `-Stage` parameter to the Convergence Forum to prevent agents from over-inventing changes when a paper is in a settled R1/R2 state.",
-    "outcome": "Forum agents now operate in surgical/defect-detection mode when `-Stage revision` or `-Stage final` is passed, preventing scope creep on settled manuscripts.",
-    "next_steps": "none",
-    "git_ref": "c7499a3",
+    "goal": "Document helpi 25, fix /close permission prompts, and harden the Convergence Forum against agents editing project files.",
+    "outcome": "helpi 25 is documented, /close now runs without permission prompts, and forum agents can no longer edit manuscript or code files directly.",
+    "next_steps": "Run `helpi 16` to rebuild PDF/HTML documentation from updated infrastructure.html Restructure AI_auto root (move .ps1 to code/ subfolder) — deferred, see memory note",
+    "git_ref": "9f0d4cf",
     "files_touched": [
-      "`run_forum.ps1` — added `-Stage` param (draft/revision/final); agent prompt, moderator prompt, and initial blackboard state now reflect stage-specific framing and constraints",
-      "`helpi.ps1` — added `-Stage` param, interactive stage-selection prompt (numbers 1-3), wired through to `run_forum.ps1`, updated help text and generated command string"
+      "`infrastructure.html` — updated helpi 25 section: added `-Stage` description (draft/revision/final), fixed template count (4→5), updated table row and cheatsheet with full syntax",
+      "`~/.claude/settings.json` — added missing PowerShell tool permissions (`PowerShell(git *)`, `PowerShell(helpi *)`, `PowerShell(Get-ChildItem*)`, `PowerShell(Test-Path*)`, `PowerShell(New-Item*)`) and memory file write patterns (`~/.claude/projects/**/*.md`) to fix /close permission prompts",
+      "`run_forum.ps1` — enforced read-only forum mode: Claude now uses `--permission-mode plan`, Gemini uses `--approval-mode plan` (both replacing unrestricted modes); added `$ForumReadOnlyConstraint` block to every agent and moderator prompt",
+      "`memory/feedback_close_autonomous.md` — updated with root cause and full permission list",
+      "`memory/project_code_folder_restructure.md` — new note: deferred plan to move .ps1 scripts to code/ subfolder",
+      "`memory/project_forum_readonly.md` — new note: forum read-only protection rationale and rules"
     ]
   },
   "latest_session_complete": true,

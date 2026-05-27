@@ -1,7 +1,8 @@
-# State — 2026-05-26
+# State — 2026-05-27
 **Phase:** Active development
-**Last session:** Added `-Stage` parameter (draft/revision/final) to Convergence Forum to prevent agents from over-inventing changes on settled R1/R2 manuscripts.
+**Last session:** Documented helpi 25, fixed /close permission prompts, and hardened the Convergence Forum so agents cannot edit manuscript or code files directly.
 **Next:**
-- none
-**Git ref:** c7499a3
+- Run `helpi 16` to rebuild PDF/HTML docs from updated infrastructure.html
+- Restructure AI_auto root: move .ps1 scripts to code/ subfolder (deferred)
+**Git ref:** 9f0d4cf
 **Agent:** Claude Sonnet 4.6

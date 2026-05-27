@@ -4,7 +4,6 @@
 
 ## Compressed sessions
 
-- **2026-05-22b** (Claude): Patch `/close` skill — fix two bugs causing redundant stops during ... -> `/close` skill no longer errors on bash `$null` redirect or write-without-read on `_sta...
 - **2026-05-24** (Claude & Codex): Implement and verify the 'Convergence Forum' infrastructure for mul... -> Implemented `run_forum.ps1` and integrated it into the `helpi` command set. Codex audit...
 - **2026-05-24b** (Codex): Audit the newly implemented Convergence Forum infrastructure for ar... -> Audit found that `run_forum.ps1` is not yet operational due to a PowerShell parse error...
 - **2026-05-24c** (Codex): Patch and document the Convergence Forum issues found in the Codex ... -> The Convergence Forum now parses cleanly, rejects invalid agent lists before creating r...
@@ -20,17 +19,7 @@
 - **2026-05-24m** (Codex): Prepare Claude's final validation instruction for the patched `help... -> Claude now has a focused validation prompt for the last review stage of the Forum/code-...
 - **2026-05-24n** (Codex): Close the AI_auto session after patching and handoff preparation. -> Session closed with the `helpi 25` code-audit patch and Claude final-validation prompt ...
 - **2026-05-24o** (Claude): Claude final validation of patched `helpi 25` command; live smoke t... -> Validation verdict READY; smoke test revealed the role-file `=== DIGEST ===` placeholde...
-
----
-
-## Session 2026-05-25c
-**Agent:** Gemini CLI (gemini-2.5-flash)
-**Goal:** Create refined 'V2' leadergroup slides; simplify language and add leadership action items.
-**Files touched:**
-- `Overleaf_source/slides_leadergroup_meeting_v2.tex` -- 22-slide deck with simplified 'farm boy' language and new leadership initiatives.
-Outcome: Successfully created a hybrid deck with direct, non-technical strategic framing. Merged technical slides 11-12 into a single "Consensus Forum" anchor slide. Added the "DTU common token pool" and "Departmental Task Force" as concrete leadership next steps. Enlarged key diagrams for better visibility.
-**Next steps:** Push final V2 to Overleaf; present the deck.
-**Git ref:**
+- **2026-05-25c** (Gemini CLI (gemini-2.5-flash)): Create refined 'V2' leadergroup slides; simplify language and add l... -> --
 
 ---
 
@@ -67,12 +56,19 @@ Outcome: Successfully created a hybrid deck with direct, non-technical strategic
 
 ## Session 2026-05-27
 **Agent:** Claude Sonnet 4.6
-**Goal:** Document the completed Helpi 25 (Convergence Forum) feature in the log and infrastructure documentation.
+**Goal:** Document helpi 25, fix /close permission prompts, and harden the Convergence Forum against agents editing project files.
 **Files touched:**
-- `infrastructure.html` — added `-Stage` parameter description (draft/revision/final) to the helpi 25 narrative; updated table row with full syntax; updated cheatsheet entry to show mode and stage flags
-**Outcome:** Documentation now fully covers all helpi 25 parameters: Mode (Forum/SAD), Agents, Stage, OpenFinal, AutoClose, AgentTimeoutSeconds. The `-Stage` lifecycle control was previously only in the script help text; it now appears in the HTML docs and cheatsheet.
-**Next steps:** Run `helpi 16` to regenerate the PDF/HTML documentation builds.
-**Git ref:**
+- `infrastructure.html` — updated helpi 25 section: added `-Stage` description (draft/revision/final), fixed template count (4→5), updated table row and cheatsheet with full syntax
+- `~/.claude/settings.json` — added missing PowerShell tool permissions (`PowerShell(git *)`, `PowerShell(helpi *)`, `PowerShell(Get-ChildItem*)`, `PowerShell(Test-Path*)`, `PowerShell(New-Item*)`) and memory file write patterns (`~/.claude/projects/**/*.md`) to fix /close permission prompts
+- `run_forum.ps1` — enforced read-only forum mode: Claude now uses `--permission-mode plan`, Gemini uses `--approval-mode plan` (both replacing unrestricted modes); added `$ForumReadOnlyConstraint` block to every agent and moderator prompt
+- `memory/feedback_close_autonomous.md` — updated with root cause and full permission list
+- `memory/project_code_folder_restructure.md` — new note: deferred plan to move .ps1 scripts to code/ subfolder
+- `memory/project_forum_readonly.md` — new note: forum read-only protection rationale and rules
+**Outcome:** helpi 25 is documented, /close now runs without permission prompts, and forum agents can no longer edit manuscript or code files directly.
+**Next steps:**
+- Run `helpi 16` to rebuild PDF/HTML documentation from updated infrastructure.html
+- Restructure AI_auto root (move .ps1 to code/ subfolder) — deferred, see memory note
+**Git ref:** 9f0d4cf
 
 ---
 
