@@ -10,3 +10,4 @@
 - [/close runs autonomously](feedback_close_autonomous.md) — all /close file writes pre-approved in global settings.json; never pause for confirmation
 - [AI_auto code/ folder restructure](project_code_folder_restructure.md) — deferred: move ~26 .ps1 scripts to code/ subfolder; update helpi.cmd + config.ps1 $aiRoot
 - [Forum read-only protection](project_forum_readonly.md) — helpi 25 agents use plan mode; never restore yolo/dangerously-skip-permissions for forum agents
+- [Writing style guide](project_writing_style_guide.md) — style from 5 classic papers wired into global CLAUDE.md; governs all research text editing/drafting
