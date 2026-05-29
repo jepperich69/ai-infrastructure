@@ -297,8 +297,8 @@
       <div><a href="#helpi7" style="color:inherit;">7 &mdash; Session Logging &amp; Handover</a></div>
       <div><a href="#helpi89" style="color:inherit;">8/9 &mdash; Snapshot &amp; Rollback</a></div>
       <div><a href="#helpi1012" style="color:inherit;">10–12 &mdash; Submit &amp; Reviewer Loop</a></div>
-      <div><a href="#helpi1319" style="color:inherit;">13–23 &mdash; Status, Network, Guide, Docs, Cheatsheet, Model-check, Slides, Compress Log, Push GitHub</a></div>
-      <div><a href="#quickref" style="color:inherit;">Quick Command Reference (helpi 1–23)</a></div>
+      <div><a href="#helpi1319" style="color:inherit;">13–25 &mdash; Status, Network, Guide, Docs, Cheatsheet, Model-check, Slides, Compress Log, Push GitHub, One-pager, Forum</a></div>
+      <div><a href="#quickref" style="color:inherit;">Quick Command Reference (helpi 1–25)</a></div>
     </div>
 
     <div>
@@ -907,7 +907,7 @@ helpi 9 Pub_XXX -N 3      # undo last 3 commits</pre>
 <!-- STATUS / NETWORK / DOCS                                         -->
 <!-- ═══════════════════════════════════════════════════════════════ -->
 <div class="section teal" id="helpi1319">
-  <h2>13–23 &mdash; Status, Network, Guide, Docs, Cheatsheet, Model-check, Slides, Compress Log, Push GitHub</h2>
+  <h2>13–25 &mdash; Status, Network, Guide, Docs, Cheatsheet, Model-check, Slides, Compress Log, Push GitHub, Technical One-pager, Convergence Forum</h2>
 
   <table class="cmd-table">
     <tr><th>#</th><th>What it does</th><th>Usage</th></tr>
@@ -966,6 +966,16 @@ helpi 9 Pub_XXX -N 3      # undo last 3 commits</pre>
       <td>Push code/ to GitHub &mdash; pushes the project's <code>code/</code> git repo to GitHub. If no remote exists, creates the GitHub repo via <code>gh</code> CLI (no browser needed), sets it as <code>origin</code>, and pushes in one step. Default repo name: <code>&lt;project&gt;-code</code> (private). Pass a custom name as third argument; <code>public</code> as fourth for a public repo. Requires <code>gh auth login</code>.</td>
       <td><code>helpi 23 Pub_XXX</code></td>
     </tr>
+    <tr>
+      <td>24</td>
+      <td>Technical one-pager from paper &mdash; reads the main manuscript and generates a self-contained LaTeX note distilling the core idea, key assumptions, main result, and key formulas onto a single A4 page. Compiles to PDF automatically. Useful before a talk, a referee response, or a project kickoff to refresh the central ideas quickly.</td>
+      <td><code>helpi 24 Pub_XXX</code></td>
+    </tr>
+    <tr>
+      <td>25</td>
+      <td>Convergence Forum &mdash; adversarial multi-agent debate to reach a stress-tested consensus on a research task. Two modes: <strong>Forum</strong> (Claude, Gemini, Codex challenge each other in structured rounds with a Blackboard); <strong>SAD</strong> (single agent in three roles: Critic, Advocate, Realist). <code>-Stage</code> controls conservatism: <em>draft</em> (full open debate), <em>revision</em> (surgical edits only), <em>final</em> (defect detection only). Output: structured Markdown report with consensus position and dissenting views.</td>
+      <td><code>helpi 25 Pub_XXX 'Task description' [-Mode SAD] [-Stage draft|revision|final]</code></td>
+    </tr>
   </table>
 </div>
 
@@ -973,7 +983,7 @@ helpi 9 Pub_XXX -N 3      # undo last 3 commits</pre>
 <!-- HELPI / COMMAND REFERENCE                                       -->
 <!-- ═══════════════════════════════════════════════════════════════ -->
 <div class="section teal" id="quickref">
-  <h2>Quick Command Reference &mdash; <code>helpi 1&ndash;23</code></h2>
+  <h2>Quick Command Reference &mdash; <code>helpi 1&ndash;25</code></h2>
 
   <h3>Calling conventions</h3>
   <pre>helpi                              # show all commands (project auto-detected from CWD)
@@ -1168,6 +1178,68 @@ git checkout snapshot-v2                     # restore everything</pre>
       <td>Edit phase after <code>/grill-paper</code> &mdash; works through <code>grill_log.md</code> issue by issue, proposes concrete edits, records author decisions (approve / adjust / dismiss with reason), updates submission verdict to READY when all blocking issues resolved.</td>
     </tr>
   </table>
+
+  <hr>
+
+  <h3>Writing style &mdash; reference papers <span class="tag ai">AI</span></h3>
+  <p>
+    All agents apply a consistent academic writing style when editing or drafting research text.
+    The style is derived from five canonical papers stored in:
+  </p>
+  <pre>AI_auto\literature\Reference_Papers\</pre>
+  <table class="cmd-table" style="margin-top:10px;">
+    <tr><th>Paper</th><th>Why it is here</th></tr>
+    <tr><td>Einstein (1905) &mdash; On the Electrodynamics of Moving Bodies</td><td>Economy, concrete examples before abstraction, long sentences that carry exactly one logical load</td></tr>
+    <tr><td>Akerlof (1970) &mdash; The Market for Lemons</td><td>Plain prose for abstract theory, inevitable logical flow, no inflation</td></tr>
+    <tr><td>Kahneman &amp; Tversky (1979) &mdash; Prospect Theory</td><td>Precise, direct, each claim immediately supported; no hedging</td></tr>
+    <tr><td>Ioannidis (2005) &mdash; Why Most Published Research Findings Are False</td><td>Bold claims stated plainly, structured reasoning, confident without arrogance</td></tr>
+    <tr><td>Dantzig &amp; Thapa &mdash; Linear Programming: Introduction</td><td>Mathematical exposition that is precise without being opaque</td></tr>
+  </table>
+  <p style="margin-top:10px;">
+    The full style guide (<code>STYLE_GUIDE.md</code> in the same folder) is wired into
+    <code>~\.claude\CLAUDE.md</code> (Claude) and injected into <code>AGENTS.md</code>
+    on every <code>helpi 7</code> regeneration (Codex, Gemini). All agents apply the same
+    rules without being told each session.
+  </p>
+  <p>Core rules: economy (cut every word that adds no force); concrete before abstract; active voice
+  and first person plural; transitions that carry logical force (<em>This implies, It follows that</em>);
+  one logical load per sentence; consistent terminology with no synonym rotation. A banned-phrase list
+  eliminates common AI-isms: <em>delve into, showcase, leverage, nuanced, it is worth noting that,
+  in order to, utilize, furthermore</em>, and similar.</p>
+
+  <hr>
+
+  <h3>Agent task delegation &mdash; Haiku vs. Sonnet <span class="tag ai">AI</span></h3>
+  <p>
+    Not every task warrants a frontier model. The infrastructure splits work by complexity to reduce
+    both cost and latency.
+  </p>
+  <table class="cmd-table" style="margin-top:10px;">
+    <tr><th>Task type</th><th>Model</th><th>Rationale</th></tr>
+    <tr>
+      <td>Mechanical operations &mdash; session logging, file writes, log compression, handover regeneration, state card updates</td>
+      <td>Haiku</td>
+      <td>Formulaic, no judgment required. Haiku is ~12&times; cheaper and 3&ndash;5&times; faster. Runs from a short briefing prompt, so it does not reprocess the full conversation history.</td>
+    </tr>
+    <tr>
+      <td>Research work &mdash; writing, editing, analysis, code review, proof checking, reviewer responses</td>
+      <td>Sonnet / Opus</td>
+      <td>Requires full context, judgment, and domain knowledge. Frontier model quality matters here.</td>
+    </tr>
+  </table>
+  <p style="margin-top:10px;">
+    <strong>How /close uses this:</strong> when you run <code>/close</code>, the main Sonnet agent
+    gathers session context (goal, outcome, files touched) and passes a compact briefing to a
+    <strong>Haiku subagent</strong> via the <code>Agent</code> tool. Haiku performs all mechanical
+    close operations (appending the log, compressing, writing the state card, regenerating the
+    handover) without touching the conversation history. This makes each close faster and
+    significantly cheaper, especially at the end of long sessions.
+  </p>
+  <p>
+    To switch models manually within a session, use <code>/model haiku</code> or
+    <code>/model sonnet</code>. For the current session only &mdash; does not persist.
+    Use <code>helpi 18</code> to toggle the permanent model-check behavior.
+  </p>
 </div>
 
 <!-- ═══════════════════════════════════════════════════════════════ -->

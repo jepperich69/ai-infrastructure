@@ -8,10 +8,10 @@ overleaf_projects.csv
 Overleaf_source/
 
 # Generated doc exports (rebuilt by helpi 16 / generate_docs.ps1)
+# Note: infrastructure_full.pdf is tracked so GitHub always has a readable copy
 infrastructure_summary.html
 infrastructure_full.html
 infrastructure_summary.pdf
-infrastructure_full.pdf
 
 # OS noise
 Thumbs.db
