@@ -5,6 +5,37 @@ A "change" is anything that affects how you or Claude interacts with the system.
 
 ---
 
+## [v0.9] — 2026-05-29 — Convergence Forum, config backup, writing style guide, /close Haiku delegation
+
+**Convergence Forum (helpi 25)**
+- `run_forum.ps1`: new `-Stage` parameter (`draft` / `revision` / `final`) controls agent conservatism — draft allows full debate, revision restricts to surgical edits, final is defect-detection only. Wired into agent and moderator prompts and initial Blackboard state.
+- `helpi.ps1`: `-Stage` passed through to `run_forum.ps1`; interactive stage-selection prompt (1–3) added when omitted.
+- Forum agents now run in read-only plan mode (`--permission-mode plan` for Claude, `--approval-mode plan` for Gemini) — agents can never directly edit manuscript or code files.
+- `helpi 25` and `/pipeline` granted blanket approval in `AGENTS.md` — run end-to-end without per-step confirmation across all agents.
+
+**~/.claude/ backup and restore**
+- `sync_claude_config.ps1` (new): `-Backup` mirrors `~/.claude/` (CLAUDE.md, settings.json, commands/, skills/, projects/*.md) to `_claude_backup/` on OneDrive + GitHub; `-Restore` reverses it.
+- `~/.claude/settings.json`: `sync_claude_config.ps1 -Backup` wired as first Stop hook — backup runs automatically on every session end.
+- `restore.ps1`: step 6 now auto-restores from `_claude_backup/` on a new machine if the folder is present, instead of just printing an error.
+
+**Writing style guide**
+- `literature/Reference_Papers/` (new folder): five reference papers added as style anchors — Einstein (1905), Akerlof (1970), Kahneman & Tversky (1979), Ioannidis (2005), Dantzig & Thapa.
+- `literature/Reference_Papers/STYLE_GUIDE.md` (new): full style guide derived from those papers — core principles, banned-phrase table, structural patterns to avoid.
+- `~/.claude/CLAUDE.md`: "Research writing style" section added with inline dos/don'ts. Applies to all projects and all Claude sessions automatically.
+- `generate_handover.ps1`: "Writing style" section injected into `AGENTS.md` on every `helpi 7` regeneration. Codex and Gemini now receive the same style rules without being told each session.
+
+**/close Haiku delegation**
+- `~/.claude/commands/close.md` rewritten: Phase 1 (context gathering) stays on Sonnet; Phase 2 (all mechanical operations — log append, compress, state card, handover regeneration) runs via a Haiku subagent. Haiku works from a compact briefing prompt and does not reprocess the full conversation history. Result: /close is faster and ~12x cheaper per tool call for the mechanical steps.
+- `~/.claude/settings.json`: new permission patterns added — `PowerShell($*)`, `PowerShell([System.*)`, `Edit/Write(AI_auto/*.ps1)` — eliminating approval prompts for encoding checks and .ps1 edits.
+
+**Infrastructure guide**
+- `infrastructure.html`: helpi 13-25 section updated (was 13-23); detail rows added for helpi 24 (technical one-pager) and helpi 25 (Convergence Forum); quick-ref heading corrected to 1-25.
+- New subsection in §A: Writing style — reference papers (papers listed with rationale, wiring explained).
+- New subsection in §A: Agent task delegation — Haiku vs. Sonnet (table of task types, /close delegation explained).
+- `infrastructure_full.pdf` removed from `.gitignore` and now tracked in git — GitHub always has a readable copy. Rebuilt by `helpi 16`.
+
+---
+
 ## [v0.8] — 2026-04-24 — Session draft logging, collaborator handovers, environment map
 
 **Incremental session draft logging**
