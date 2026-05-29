@@ -2,77 +2,105 @@
 
 The user has finished working and wants to close the session cleanly.
 
-## Project root detection
+**This skill runs in two phases.** Phase 1 runs in the current (Sonnet) context to gather session information. Phase 2 spawns a Haiku subagent that does all mechanical file operations — it does not reprocess the conversation history, so it is fast and cheap.
 
-Walk up from the current working directory until you find a folder starting with `Pub_`, `Pro_`, or `PhD_`. That is the project root.
+---
 
-## What to do
+## Phase 1 — Gather context (you, the invoking agent)
 
-0. **Read `_session_draft.md`** if it exists in the project root — this is the live file-touch log written incrementally during the session. Use it as the authoritative list of files touched. Delete the file after writing the session block in step 3.
+### 1a. Detect project root and name
 
-1. **Get the git ref** from `code/` if it is a git repo — use the **PowerShell tool**:
-   ```
-   git -C "<root>/code" rev-parse --short HEAD 2>$null
-   ```
-   Or if running via Bash tool, use `2>/dev/null` (not `2>$null`). Use `—` if no git repo or the command fails.
-2. **Ask the user** (in a single prompt, bullet-point style) for anything not already clear from the conversation or `_session_draft.md`:
-   - One-sentence outcome
-   - Next steps (can be "none")
-   Skip asking if the answer is obvious from context.
-3. **Append** to `_ai_log.md` — find the `## Session YYYY-MM-DD` block that was opened at the start and fill it in, or append a complete block if none exists:
+Walk up from the current working directory until you find a folder whose name starts with `Pub_`, `Pro_`, `PhD_`, or is exactly `AI_auto`. That folder is the project root. Note:
+- `PROJECT_NAME` — the folder name (e.g. `AI_auto`, `Pub_Lemons`)
+- `PROJECT_ROOT` — the full absolute path
+
+### 1b. Read session draft
+
+Read `<PROJECT_ROOT>/_session_draft.md` if it exists. This is the authoritative list of files touched during the session. If it does not exist, derive the file list from the conversation.
+
+### 1c. Ask the user if needed
+
+From the conversation context and the session draft, determine:
+- **Goal** — what was the session about?
+- **Outcome** — one sentence: what was accomplished?
+- **Next steps** — what remains open? (can be "none")
+
+If any of these are not clear, ask the user in a single message (bullet-point style). Skip the question entirely if the answer is obvious from context.
+
+### 1d. Compose and spawn the Haiku agent
+
+Once you have all context, call the Agent tool with `model: "haiku"` and the self-contained prompt below. Fill in every placeholder before spawning — the Haiku agent has no access to this conversation.
 
 ```
-## Session YYYY-MM-DD
+You are closing a research session. Perform each step below in order without pausing for confirmation. All file paths below are pre-approved.
+
+SESSION CONTEXT
+- Project: <PROJECT_NAME>
+- Project root: <PROJECT_ROOT>
+- Date: <YYYY-MM-DD>
+- Goal: <GOAL>
+- Outcome: <OUTCOME>
+- Next steps: <NEXT_STEPS as bullet points, or "none">
+- Files touched:
+<FILES_TOUCHED — one "- `path` -- description" line per file>
+
+STEP A — Git ref
+Run via PowerShell tool: git -C "<PROJECT_ROOT>/code" rev-parse --short HEAD 2>$null
+Use "--" if the command fails or there is no code/ repo. Store as GIT_REF.
+
+STEP B — Append to _ai_log.md
+Append to <PROJECT_ROOT>/_ai_log.md:
+
+## Session <DATE>
 **Agent:** Claude Sonnet 4.6
-**Goal:** <from session start or conversation>
+**Goal:** <GOAL>
 **Files touched:**
-- `<file>` — <one-line description of change>
-**Outcome:** <one sentence>
-**Next steps:** <bullet points or "none">
-**Git ref:** <short SHA or —>
-```
+<FILES_TOUCHED>
+**Outcome:** <OUTCOME>
+**Next steps:** <NEXT_STEPS>
+**Git ref:** <GIT_REF>
 
-3.2 **Update the platform map** — scan the session for platform/environment discoveries (tool failures, workarounds, new paths used, software not where expected). Cross-check against `AI_auto/known_issues.md`. Rules:
-   - If nothing new: skip entirely, say nothing.
-   - If 1–2 new patterns: append a full entry to `AI_auto/known_issues.md` (this is the single source of truth all agents read). Use `**Status:** open` if the root cause can be fixed in a file; `**Status:** platform-fact` otherwise. Include **Affects:** and **Fix:** fields for open entries. Also add the short version to the inline Platform facts block in `~/.claude/CLAUDE.md`. Tell the user in one line: "Platform map updated: [what was added]. Run /catch-up to apply the fix."
-   - Only add things an agent could act on upfront — not transient failures or network blips.
+---
 
-3.5 **Clear the draft** — delete `_session_draft.md` from the project root if it exists:
-   ```
-   Remove-Item "<root>/_session_draft.md" -ErrorAction SilentlyContinue
-   ```
+STEP C — Delete session draft
+Run via PowerShell tool: Remove-Item "<PROJECT_ROOT>/_session_draft.md" -ErrorAction SilentlyContinue
 
-3.6 **Compress the log** — immediately after appending the session block, run:
-   ```
-   helpi 22 <project>
-   ```
-   where `<project>` is the folder name found in the directory walk (e.g. `Pub_XXX` or `AI_auto`). The script trims sessions older than the most recent 4 to one-liners automatically and is safe to run every time — it exits silently if the log is still short. Report any output it produces.
+STEP D — Compress the log
+Run via PowerShell tool: helpi 22 <PROJECT_NAME>
+Report any output it produces.
 
-3.7 **Write state card** — overwrite (never append) `_state/current.md` in the project root. Create `_state/` if it does not exist. **Always Read the file first** (even if you just created it) — the Write tool requires a prior Read or it will error:
+STEP E — Write state card
+First Read <PROJECT_ROOT>/_state/current.md (create _state/ with New-Item if it does not exist).
+Then Write (overwrite) <PROJECT_ROOT>/_state/current.md with:
 
-```markdown
-# State — YYYY-MM-DD
-**Phase:** <current phase from .claude/CLAUDE.md, or "—" if not set>
-**Last session:** <one-sentence outcome from step 3>
-**Next:** <next steps from step 3, as bullet points>
-**Git ref:** <short SHA or —>
+# State -- <DATE>
+**Phase:** <check <PROJECT_ROOT>/.claude/CLAUDE.md for current phase, or use "--">
+**Last session:** <OUTCOME>
+**Next:** <NEXT_STEPS>
+**Git ref:** <GIT_REF>
 **Agent:** Claude Sonnet 4.6
+
+STEP F — Update project CLAUDE.md
+Read <PROJECT_ROOT>/.claude/CLAUDE.md if it exists.
+Update only sections that changed this session:
+- Current phase (if project was submitted, revision received, accepted, etc.)
+- Standing constraints (if new notation was locked or a section frozen)
+- What NOT to touch (if files were frozen this session)
+- Key files (if a new manuscript version was created)
+Say "CLAUDE.md unchanged" if nothing needed updating, or list what you changed (one line per change).
+
+STEP G — Regenerate handover
+Run via PowerShell tool:
+pwsh -NoProfile -File "C:\Users\rich\OneDrive - Danmarks Tekniske Universitet\JR\AI_auto\generate_handover.ps1" -Project <PROJECT_NAME>
+Say "Handover regenerated." when done.
+
+STEP H — Report
+Output a brief summary of what was logged and whether the handover regenerated cleanly.
+If any manuscript files (Overleaf_source/) were in the files-touched list, remind the user: run "helpi 4 <PROJECT_NAME>" to push changes to Overleaf.
 ```
 
-This file is always overwritten — it is the single "where are we now" source, not a history.
+---
 
-4. **Update `.claude/CLAUDE.md`** — read the current file and update any sections that changed this session:
-   - `Current phase` — if the project was submitted, revision received, accepted, etc.
-   - `Standing constraints` — if new notation was locked, a section frozen, or a reviewer mandate established
-   - `What NOT to touch` — if any files were submitted or frozen this session
-   - `Key files` — if a new primary manuscript version was created (e.g. `_R1B.tex` replacing `_R1.tex`)
-   Only edit sections that actually changed. Tell the user what you updated (one line per change), or "CLAUDE.md unchanged" if nothing needed updating.
+## Phase 2 result
 
-5. **Auto-regenerate the handover** — run:
-   ```
-   pwsh -NoProfile -File "C:\Users\rich\OneDrive - Danmarks Tekniske Universitet\JR\AI_auto\generate_handover.ps1" -Project <project>
-   ```
-   Do not ask the user — just run it. Confirm with "Handover regenerated." when done.
-
-6. **Remind** the user of the one remaining optional step:
-   - Push to Overleaf if manuscript files were changed: `helpi 2 <project>`
+When the Haiku agent finishes, relay its summary to the user. The session is closed.
