@@ -8,3 +8,4 @@
 [2026-05-29 08:49] Edit:  infrastructure.html
 [2026-05-29 08:50] Edit:  infrastructure.html
 [2026-05-29 08:51] Edit:  .gitignore
+[2026-05-29 08:54] Edit:  CHANGELOG.md
