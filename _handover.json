@@ -1,18 +1,19 @@
 {
   "project": "AI_auto",
-  "generated": "2026-05-27 14:44",
+  "generated": "2026-05-29 08:31",
   "source": "_ai_log.md",
   "latest_session": {
-    "title": "2026-05-27b",
+    "title": "2026-05-29",
     "agent": "Claude Sonnet 4.6",
-    "goal": "Add automatic backup and restore of `~/.claude/` so the AI infrastructure can be fully recovered on a new machine.",
-    "outcome": "`~/.claude/` is now backed up to `_claude_backup/` (OneDrive + GitHub) on every session stop; `helpi 20` on a new machine fully restores the Claude config automatically.",
+    "goal": "Set up a writing style guide from classic reference papers to govern all research text editing and drafting.",
+    "outcome": "Writing style guide created and wired into global CLAUDE.md; tested on a research paragraph with four targeted edits.",
     "next_steps": "none",
-    "git_ref": "a77081e",
+    "git_ref": "893dd0c",
     "files_touched": [
-      "`sync_claude_config.ps1` — new script: `-Backup` mirrors `~/.claude/` (CLAUDE.md, settings.json, commands/, skills/, projects/*.md) to `_claude_backup/`; `-Restore` reverses it",
-      "`~/.claude/settings.json` — added `sync_claude_config.ps1 -Backup` as first Stop hook so backup runs automatically every session end before auto_commit",
-      "`restore.ps1` — replaced step 6 (which only printed an error if `~/.claude` was missing) with auto-restore from `_claude_backup/` when available"
+      "`literature/Reference_Papers/STYLE_GUIDE.md` — new file: full style guide derived from Einstein (1905), Akerlof (1970), Kahneman & Tversky (1979), Ioannidis (2005), Dantzig & Thapa; covers core principles, banned phrases, and structural patterns to avoid",
+      "`~/.claude/CLAUDE.md` — added \"Research writing style\" section with inline dos/don'ts; applies to all projects globally",
+      "`memory/project_writing_style_guide.md` — new memory note: where the guide lives and how it is wired",
+      "`memory/MEMORY.md` — added index entry for style guide"
     ]
   },
   "latest_session_complete": true,

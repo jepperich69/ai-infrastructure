@@ -1,7 +1,7 @@
-# State — 2026-05-27
+# State — 2026-05-29
 **Phase:** Active development
-**Last session:** Added automatic `~/.claude/` backup/restore so the full AI infrastructure (CLAUDE.md, commands, skills, memory) can be recovered on a new machine via `helpi 20`.
+**Last session:** Created writing style guide from 5 classic reference papers and wired it into global CLAUDE.md so all text editing agents apply the style automatically.
 **Next:**
 - none
-**Git ref:** a77081e
+**Git ref:** 893dd0c
 **Agent:** Claude Sonnet 4.6

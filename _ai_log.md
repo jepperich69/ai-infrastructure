@@ -4,7 +4,6 @@
 
 ## Compressed sessions
 
-- **2026-05-24b** (Codex): Audit the newly implemented Convergence Forum infrastructure for ar... -> Audit found that `run_forum.ps1` is not yet operational due to a PowerShell parse error...
 - **2026-05-24c** (Codex): Patch and document the Convergence Forum issues found in the Codex ... -> The Convergence Forum now parses cleanly, rejects invalid agent lists before creating r...
 - **2026-05-24d** (Codex): Prepare Gemini's independent verification prompt for the patched Co... -> Wrote a Gemini audit instruction set covering PowerShell correctness, Blackboard integr...
 - **2026-05-24e** (Claude (Convergence Forum)): Live test run of the Convergence Forum on a low-stakes "test task" ... -> Forum ran and terminated cleanly. The test task completed in 3m 35s. The forum reached ...
@@ -20,24 +19,7 @@
 - **2026-05-24o** (Claude): Claude final validation of patched `helpi 25` command; live smoke t... -> Validation verdict READY; smoke test revealed the role-file `=== DIGEST ===` placeholde...
 - **2026-05-25c** (Gemini CLI (gemini-2.5-flash)): Create refined 'V2' leadergroup slides; simplify language and add l... -> --
 - **2026-05-25d** (Codex): Diagnose and patch Codex-only SAD failures in `helpi 25`. -> Codex-only SAD now works end to end from normal PowerShell. Final smoke test `verify if...
-
----
-
-## Session 2026-05-26
-**Agent:** Claude Sonnet 4.6
-**Goal:** Generate survey visualizations from questionnaire Excel data and wire them into the division meeting Beamer slides.
-**Files touched:**
-- `literature/survey_figures/fig1_adoption.png` — donut chart: 90% AI adoption (n=29)
-- `literature/survey_figures/fig2_where.png` — h-bar: where AI is already used
-- `literature/survey_figures/fig3_integration.png` — h-bar: AI integration depth (65% copy/paste only)
-- `literature/survey_figures/fig4_infrastructure.png` — side-by-side: file backup and version control
-- `literature/survey_figures/fig5_wishes.png` — h-bar: most desired AI capabilities
-- `literature/survey_figures/fig6_course.png` — bar: course interest (93% Yes/Maybe)
-- `Overleaf_source/figures/fig*.png` — copied for Beamer inclusion
-- `Overleaf_source/slides_division_meeting.tex` — replaced placeholder slide 4 with 6 real survey slides (one figure per frame), pushed to Overleaf
-**Outcome:** Six clean survey result slides added to the division meeting Beamer deck and successfully pushed to Overleaf.
-**Next steps:** none
-**Git ref:** —
+- **2026-05-26** (Claude): Generate survey visualizations from questionnaire Excel data and wi... -> Six clean survey result slides added to the division meeting Beamer deck and successful...
 
 ---
 
@@ -69,6 +51,20 @@
 **Outcome:** `~/.claude/` is now backed up to `_claude_backup/` (OneDrive + GitHub) on every session stop; `helpi 20` on a new machine fully restores the Claude config automatically.
 **Next steps:** none
 **Git ref:** a77081e
+
+---
+
+## Session 2026-05-29
+**Agent:** Claude Sonnet 4.6
+**Goal:** Set up a writing style guide from classic reference papers to govern all research text editing and drafting.
+**Files touched:**
+- `literature/Reference_Papers/STYLE_GUIDE.md` — new file: full style guide derived from Einstein (1905), Akerlof (1970), Kahneman & Tversky (1979), Ioannidis (2005), Dantzig & Thapa; covers core principles, banned phrases, and structural patterns to avoid
+- `~/.claude/CLAUDE.md` — added "Research writing style" section with inline dos/don'ts; applies to all projects globally
+- `memory/project_writing_style_guide.md` — new memory note: where the guide lives and how it is wired
+- `memory/MEMORY.md` — added index entry for style guide
+**Outcome:** Writing style guide created and wired into global CLAUDE.md; tested on a research paragraph with four targeted edits.
+**Next steps:** none
+**Git ref:** 893dd0c
 
 ---
 

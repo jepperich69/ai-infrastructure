@@ -30,7 +30,7 @@
 <body>
 
 <h1>Handover Document &mdash; AI_auto</h1>
-<div class="meta">Generated: 2026-05-27 14:44 &nbsp;|&nbsp; Source: <code style="display:inline;padding:2px 6px">_ai_log.md</code> &nbsp;|&nbsp; Sidecar: <code style="display:inline;padding:2px 6px">_handover.json</code></div>
+<div class="meta">Generated: 2026-05-29 08:31 &nbsp;|&nbsp; Source: <code style="display:inline;padding:2px 6px">_ai_log.md</code> &nbsp;|&nbsp; Sidecar: <code style="display:inline;padding:2px 6px">_handover.json</code></div>
 
 <!-- ============================================================ -->
 <!-- AGENT INSTRUCTIONS                                            -->
@@ -62,17 +62,18 @@
 <div class="latest-session">
   <div class="session-status ok">Complete</div>
   <h2>Latest Session Snapshot</h2>
-  <p><strong>Session:</strong> 2026-05-27b</p>
+  <p><strong>Session:</strong> 2026-05-29</p>
   <p><strong>Agent:</strong> Claude Sonnet 4.6</p>
-  <p><strong>Goal:</strong> Add automatic backup and restore of `~/.claude/` so the AI infrastructure can be fully recovered on a new machine.</p>
-  <p><strong>Outcome:</strong> `~/.claude/` is now backed up to `_claude_backup/` (OneDrive + GitHub) on every session stop; `helpi 20` on a new machine fully restores the Claude config automatically.</p>
+  <p><strong>Goal:</strong> Set up a writing style guide from classic reference papers to govern all research text editing and drafting.</p>
+  <p><strong>Outcome:</strong> Writing style guide created and wired into global CLAUDE.md; tested on a research paragraph with four targeted edits.</p>
   <p><strong>Next steps:</strong> none</p>
-  <p><strong>Git ref:</strong> a77081e</p>
+  <p><strong>Git ref:</strong> 893dd0c</p>
   <h3>Files touched</h3>
   <ul>
-  <li>`sync_claude_config.ps1` — new script: `-Backup` mirrors `~/.claude/` (CLAUDE.md, settings.json, commands/, skills/, projects/*.md) to `_claude_backup/`; `-Restore` reverses it</li>
-  <li>`~/.claude/settings.json` — added `sync_claude_config.ps1 -Backup` as first Stop hook so backup runs automatically every session end before auto_commit</li>
-  <li>`restore.ps1` — replaced step 6 (which only printed an error if `~/.claude` was missing) with auto-restore from `_claude_backup/` when available</li>
+  <li>`literature/Reference_Papers/STYLE_GUIDE.md` — new file: full style guide derived from Einstein (1905), Akerlof (1970), Kahneman &amp; Tversky (1979), Ioannidis (2005), Dantzig &amp; Thapa; covers core principles, banned phrases, and structural patterns to avoid</li>
+  <li>`~/.claude/CLAUDE.md` — added &quot;Research writing style&quot; section with inline dos/don&#39;ts; applies to all projects globally</li>
+  <li>`memory/project_writing_style_guide.md` — new memory note: where the guide lives and how it is wired</li>
+  <li>`memory/MEMORY.md` — added index entry for style guide</li>
 </ul>
 </div>
 
@@ -87,7 +88,6 @@
 <h2>Compressed sessions</h2>
 <br>
 <ul>
-  <li><strong>2026-05-24b</strong> (Codex): Audit the newly implemented Convergence Forum infrastructure for ar... -&gt; Audit found that `run_forum.ps1` is not yet operational due to a PowerShell parse error...</li>
   <li><strong>2026-05-24c</strong> (Codex): Patch and document the Convergence Forum issues found in the Codex ... -&gt; The Convergence Forum now parses cleanly, rejects invalid agent lists before creating r...</li>
   <li><strong>2026-05-24d</strong> (Codex): Prepare Gemini&#39;s independent verification prompt for the patched Co... -&gt; Wrote a Gemini audit instruction set covering PowerShell correctness, Blackboard integr...</li>
   <li><strong>2026-05-24e</strong> (Claude (Convergence Forum)): Live test run of the Convergence Forum on a low-stakes &quot;test task&quot; ... -&gt; Forum ran and terminated cleanly. The test task completed in 3m 35s. The forum reached ...</li>
@@ -103,27 +103,8 @@
   <li><strong>2026-05-24o</strong> (Claude): Claude final validation of patched `helpi 25` command; live smoke t... -&gt; Validation verdict READY; smoke test revealed the role-file `=== DIGEST ===` placeholde...</li>
   <li><strong>2026-05-25c</strong> (Gemini CLI (gemini-2.5-flash)): Create refined &#39;V2&#39; leadergroup slides; simplify language and add l... -&gt; --</li>
   <li><strong>2026-05-25d</strong> (Codex): Diagnose and patch Codex-only SAD failures in `helpi 25`. -&gt; Codex-only SAD now works end to end from normal PowerShell. Final smoke test `verify if...</li>
+  <li><strong>2026-05-26</strong> (Claude): Generate survey visualizations from questionnaire Excel data and wi... -&gt; Six clean survey result slides added to the division meeting Beamer deck and successful...</li>
 </ul>
-<br>
-<hr>
-<br>
-<h2>Session 2026-05-26</h2>
-<p><strong>Agent:</strong> Claude Sonnet 4.6</p>
-<p><strong>Goal:</strong> Generate survey visualizations from questionnaire Excel data and wire them into the division meeting Beamer slides.</p>
-<p><strong>Files touched:</strong></p>
-<ul>
-  <li>`literature/survey_figures/fig1_adoption.png` — donut chart: 90% AI adoption (n=29)</li>
-  <li>`literature/survey_figures/fig2_where.png` — h-bar: where AI is already used</li>
-  <li>`literature/survey_figures/fig3_integration.png` — h-bar: AI integration depth (65% copy/paste only)</li>
-  <li>`literature/survey_figures/fig4_infrastructure.png` — side-by-side: file backup and version control</li>
-  <li>`literature/survey_figures/fig5_wishes.png` — h-bar: most desired AI capabilities</li>
-  <li>`literature/survey_figures/fig6_course.png` — bar: course interest (93% Yes/Maybe)</li>
-  <li>`Overleaf_source/figures/fig*.png` — copied for Beamer inclusion</li>
-  <li>`Overleaf_source/slides_division_meeting.tex` — replaced placeholder slide 4 with 6 real survey slides (one figure per frame), pushed to Overleaf</li>
-</ul>
-<p><strong>Outcome:</strong> Six clean survey result slides added to the division meeting Beamer deck and successfully pushed to Overleaf.</p>
-<p><strong>Next steps:</strong> none</p>
-<p><strong>Git ref:</strong> —</p>
 <br>
 <hr>
 <br>
@@ -164,6 +145,22 @@
 <br>
 <hr>
 <br>
+<h2>Session 2026-05-29</h2>
+<p><strong>Agent:</strong> Claude Sonnet 4.6</p>
+<p><strong>Goal:</strong> Set up a writing style guide from classic reference papers to govern all research text editing and drafting.</p>
+<p><strong>Files touched:</strong></p>
+<ul>
+  <li>`literature/Reference_Papers/STYLE_GUIDE.md` — new file: full style guide derived from Einstein (1905), Akerlof (1970), Kahneman &amp; Tversky (1979), Ioannidis (2005), Dantzig &amp; Thapa; covers core principles, banned phrases, and structural patterns to avoid</li>
+  <li>`~/.claude/CLAUDE.md` — added &quot;Research writing style&quot; section with inline dos/don&#39;ts; applies to all projects globally</li>
+  <li>`memory/project_writing_style_guide.md` — new memory note: where the guide lives and how it is wired</li>
+  <li>`memory/MEMORY.md` — added index entry for style guide</li>
+</ul>
+<p><strong>Outcome:</strong> Writing style guide created and wired into global CLAUDE.md; tested on a research paragraph with four targeted edits.</p>
+<p><strong>Next steps:</strong> none</p>
+<p><strong>Git ref:</strong> 893dd0c</p>
+<br>
+<hr>
+<br>
 <h2>Session 2026-05-26b</h2>
 <p><strong>Agent:</strong> Claude Sonnet 4.6</p>
 <p><strong>Goal:</strong> Add `-Stage` parameter to the Convergence Forum to prevent agents from over-inventing changes when a paper is in a settled R1/R2 state.</p>
@@ -191,7 +188,6 @@
 
 ## Compressed sessions
 
-- **2026-05-24b** (Codex): Audit the newly implemented Convergence Forum infrastructure for ar... -&gt; Audit found that `run_forum.ps1` is not yet operational due to a PowerShell parse error...
 - **2026-05-24c** (Codex): Patch and document the Convergence Forum issues found in the Codex ... -&gt; The Convergence Forum now parses cleanly, rejects invalid agent lists before creating r...
 - **2026-05-24d** (Codex): Prepare Gemini's independent verification prompt for the patched Co... -&gt; Wrote a Gemini audit instruction set covering PowerShell correctness, Blackboard integr...
 - **2026-05-24e** (Claude (Convergence Forum)): Live test run of the Convergence Forum on a low-stakes "test task" ... -&gt; Forum ran and terminated cleanly. The test task completed in 3m 35s. The forum reached ...
@@ -207,24 +203,7 @@
 - **2026-05-24o** (Claude): Claude final validation of patched `helpi 25` command; live smoke t... -&gt; Validation verdict READY; smoke test revealed the role-file `=== DIGEST ===` placeholde...
 - **2026-05-25c** (Gemini CLI (gemini-2.5-flash)): Create refined 'V2' leadergroup slides; simplify language and add l... -&gt; --
 - **2026-05-25d** (Codex): Diagnose and patch Codex-only SAD failures in `helpi 25`. -&gt; Codex-only SAD now works end to end from normal PowerShell. Final smoke test `verify if...
-
----
-
-## Session 2026-05-26
-**Agent:** Claude Sonnet 4.6
-**Goal:** Generate survey visualizations from questionnaire Excel data and wire them into the division meeting Beamer slides.
-**Files touched:**
-- `literature/survey_figures/fig1_adoption.png` — donut chart: 90% AI adoption (n=29)
-- `literature/survey_figures/fig2_where.png` — h-bar: where AI is already used
-- `literature/survey_figures/fig3_integration.png` — h-bar: AI integration depth (65% copy/paste only)
-- `literature/survey_figures/fig4_infrastructure.png` — side-by-side: file backup and version control
-- `literature/survey_figures/fig5_wishes.png` — h-bar: most desired AI capabilities
-- `literature/survey_figures/fig6_course.png` — bar: course interest (93% Yes/Maybe)
-- `Overleaf_source/figures/fig*.png` — copied for Beamer inclusion
-- `Overleaf_source/slides_division_meeting.tex` — replaced placeholder slide 4 with 6 real survey slides (one figure per frame), pushed to Overleaf
-**Outcome:** Six clean survey result slides added to the division meeting Beamer deck and successfully pushed to Overleaf.
-**Next steps:** none
-**Git ref:** —
+- **2026-05-26** (Claude): Generate survey visualizations from questionnaire Excel data and wi... -&gt; Six clean survey result slides added to the division meeting Beamer deck and successful...
 
 ---
 
@@ -259,6 +238,20 @@
 
 ---
 
+## Session 2026-05-29
+**Agent:** Claude Sonnet 4.6
+**Goal:** Set up a writing style guide from classic reference papers to govern all research text editing and drafting.
+**Files touched:**
+- `literature/Reference_Papers/STYLE_GUIDE.md` — new file: full style guide derived from Einstein (1905), Akerlof (1970), Kahneman & Tversky (1979), Ioannidis (2005), Dantzig & Thapa; covers core principles, banned phrases, and structural patterns to avoid
+- `~/.claude/CLAUDE.md` — added "Research writing style" section with inline dos/don'ts; applies to all projects globally
+- `memory/project_writing_style_guide.md` — new memory note: where the guide lives and how it is wired
+- `memory/MEMORY.md` — added index entry for style guide
+**Outcome:** Writing style guide created and wired into global CLAUDE.md; tested on a research paragraph with four targeted edits.
+**Next steps:** none
+**Git ref:** 893dd0c
+
+---
+
 ## Session 2026-05-26b
 **Agent:** Claude Sonnet 4.6
 **Goal:** Add `-Stage` parameter to the Convergence Forum to prevent agents from over-inventing changes when a paper is in a settled R1/R2 state.
@@ -285,7 +278,10 @@
 <!-- ============================================================ -->
 <div class="section">
   <h2>Overleaf Git History (last 20 commits)</h2>
-  <pre>aae77f0 Auto-backup 2026-05-27 09:05
+  <pre>da411a7 Merge branch &#39;master&#39; of https://git.overleaf.com/69e4cd88646aa324de75fc2c
+687fe05 Update on Overleaf.
+eff99ba Auto-backup 2026-05-27 15:08
+aae77f0 Auto-backup 2026-05-27 09:05
 7ce8100 Add survey result figures (PNG) and simplify survey slides
 8394b02 Local edits 2026-05-26 13:42
 262580a Auto-backup 2026-05-26 08:47
@@ -301,10 +297,7 @@ a53f5c6 Local edits 2026-05-25 17:07
 5b5833d Tighten forum slide wording
 3dbd005 Refine convergence forum slides
 7b13870 Fix convergence forum slide TikZ
-5b78735 Local edits 2026-05-24 12:29
-1881817 Local edits 2026-05-24 12:07
-364b0d4 Local edits 2026-05-24 12:01
-5d1a99e Update on Overleaf.</pre>
+5b78735 Local edits 2026-05-24 12:29</pre>
 </div>
 
 </body>
