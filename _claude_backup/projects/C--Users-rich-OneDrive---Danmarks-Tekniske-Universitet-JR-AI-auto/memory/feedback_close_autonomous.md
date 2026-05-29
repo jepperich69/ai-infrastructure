@@ -7,15 +7,14 @@ metadata:
   originSessionId: 9b78c1f0-9c60-4a2d-b258-0230cf1781cc
 ---
 
-`/close` should execute all its steps without asking for permission on each file edit. The user always trusts these writes.
+`/close` must execute all steps directly in the main Sonnet context — **never via a subagent**. The user always trusts these writes.
 
-**Why:** User was repeatedly approving the same low-risk edits (log entries, state card, CLAUDE.md updates) every session — unnecessary friction for a trusted, mechanical operation.
+**Why:** Subagents spawned via the `Agent` tool have an independent permission model and do NOT inherit the parent's `settings.json` allowlist. Every write inside a subagent triggers a fresh permission prompt, regardless of what's pre-approved globally. This caused 3-4 manual approvals every session even with correct allowlist entries.
 
-**How to apply:** Do not pause or ask for confirmation during /close. All relevant patterns are pre-allowed in `~/.claude/settings.json`. Root cause of previous failures: allowlist had Bash variants (`Bash(git *)`, `Bash(helpi*)`) but /close uses the PowerShell tool — PowerShell equivalents were missing. Also missing: memory file writes.
+**How to apply:** The `/close` command (at `~/.claude/commands/close.md`) was rewritten 2026-05-29 to remove the Haiku subagent entirely. All steps A–H now run in the main context, which respects the allowlist. If you ever see close steps being delegated to a subagent, that is a regression — do not spawn one.
 
-Current coverage (as of 2026-05-27):
+The `settings.json` allowlist covers all close operations for main-context execution:
 - `_ai_log.md`, `_state/current.md`, `.claude/CLAUDE.md`, `known_issues.md` — Edit + Write (OneDrive wildcard + global)
 - `~/.claude/projects/**/*.md` — Edit + Write (memory files)
-- `PowerShell(git *)`, `PowerShell(helpi *)`, `PowerShell(helpi.ps1*)` — for close-skill PowerShell tool calls
-- `PowerShell(Remove-Item*)`, `PowerShell(Get-ChildItem*)`, `PowerShell(Test-Path*)`, `PowerShell(New-Item*)` — utility ops
-- `Bash(pwsh*)`, `Bash(helpi*)`, `Bash(git *)` — Bash tool variants
+- `PowerShell(git *)`, `PowerShell(helpi *)`, `PowerShell(helpi.ps1*)`, `PowerShell(pwsh*)` — shell ops
+- `PowerShell(Remove-Item*)`, `PowerShell(New-Item*)`, etc. — utility ops

@@ -4,7 +4,6 @@
 
 ## Compressed sessions
 
-- **2026-05-24d** (Codex): Prepare Gemini's independent verification prompt for the patched Co... -> Wrote a Gemini audit instruction set covering PowerShell correctness, Blackboard integr...
 - **2026-05-24e** (Claude (Convergence Forum)): Live test run of the Convergence Forum on a low-stakes "test task" ... -> Forum ran and terminated cleanly. The test task completed in 3m 35s. The forum reached ...
 - **2026-05-24f** (Gemini CLI): Audit Convergence Forum and update division meeting slides. -> Forum infrastructure audited as READY. Slide update failed due to persistent syntax err...
 - **2026-05-24g** (Codex): Clean the broken division meeting slide deck, verify compilation, a... -> Slides 13-14 are structurally clean and the referenced `figures/Human-AI_Integration_Di...
@@ -20,19 +19,7 @@
 - **2026-05-25d** (Codex): Diagnose and patch Codex-only SAD failures in `helpi 25`. -> Codex-only SAD now works end to end from normal PowerShell. Final smoke test `verify if...
 - **2026-05-26** (Claude): Generate survey visualizations from questionnaire Excel data and wi... -> Six clean survey result slides added to the division meeting Beamer deck and successful...
 - **2026-05-27** (Claude): Document helpi 25, fix /close permission prompts, and harden the Co... -> helpi 25 is documented, /close now runs without permission prompts, and forum agents ca...
-
----
-
-## Session 2026-05-27b
-**Agent:** Claude Sonnet 4.6
-**Goal:** Add automatic backup and restore of `~/.claude/` so the AI infrastructure can be fully recovered on a new machine.
-**Files touched:**
-- `sync_claude_config.ps1` — new script: `-Backup` mirrors `~/.claude/` (CLAUDE.md, settings.json, commands/, skills/, projects/*.md) to `_claude_backup/`; `-Restore` reverses it
-- `~/.claude/settings.json` — added `sync_claude_config.ps1 -Backup` as first Stop hook so backup runs automatically every session end before auto_commit
-- `restore.ps1` — replaced step 6 (which only printed an error if `~/.claude` was missing) with auto-restore from `_claude_backup/` when available
-**Outcome:** `~/.claude/` is now backed up to `_claude_backup/` (OneDrive + GitHub) on every session stop; `helpi 20` on a new machine fully restores the Claude config automatically.
-**Next steps:** none
-**Git ref:** a77081e
+- **2026-05-27b** (Claude): Add automatic backup and restore of `~/.claude/` so the AI infrastr... -> `~/.claude/` is now backed up to `_claude_backup/` (OneDrive + GitHub) on every session...
 
 ---
 
@@ -47,6 +34,18 @@
 **Outcome:** Writing style guide created and wired into global CLAUDE.md; tested on a research paragraph with four targeted edits.
 **Next steps:** none
 **Git ref:** 893dd0c
+
+---
+
+## Session 2026-05-29c
+**Agent:** Claude Sonnet 4.6
+**Goal:** Fix `/close` to run without permission prompts
+**Files touched:**
+- `~/.claude/commands/close.md` — rewrote to remove Haiku subagent; all steps now run directly in main Sonnet context
+- `memory/feedback_close_autonomous.md` — updated with root cause (subagents don't inherit `settings.json` allowlist) and fix
+**Outcome:** Root cause identified: subagents spawned via `Agent` tool have an independent permission model and do not inherit the parent's allowlist. `/close` rewritten to execute all steps in the main context, eliminating all permission prompts.
+**Next steps:** none
+**Git ref:**
 
 ---
 

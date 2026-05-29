@@ -30,7 +30,7 @@
 <body>
 
 <h1>Handover Document &mdash; AI_auto</h1>
-<div class="meta">Generated: 2026-05-29 08:57 &nbsp;|&nbsp; Source: <code style="display:inline;padding:2px 6px">_ai_log.md</code> &nbsp;|&nbsp; Sidecar: <code style="display:inline;padding:2px 6px">_handover.json</code></div>
+<div class="meta">Generated: 2026-05-29 09:09 &nbsp;|&nbsp; Source: <code style="display:inline;padding:2px 6px">_ai_log.md</code> &nbsp;|&nbsp; Sidecar: <code style="display:inline;padding:2px 6px">_handover.json</code></div>
 
 <!-- ============================================================ -->
 <!-- AGENT INSTRUCTIONS                                            -->
@@ -62,20 +62,16 @@
 <div class="latest-session">
   <div class="session-status ok">Complete</div>
   <h2>Latest Session Snapshot</h2>
-  <p><strong>Session:</strong> 2026-05-29b</p>
+  <p><strong>Session:</strong> 2026-05-29c</p>
   <p><strong>Agent:</strong> Claude Sonnet 4.6</p>
-  <p><strong>Goal:</strong> Extend infrastructure with Haiku-delegated /close, fix permission gaps, update infrastructure guide (helpi 24/25, writing style, agent delegation), write v0.9 changelog, push all to GitHub.</p>
-  <p><strong>Outcome:</strong> /close now delegates mechanical operations to a Haiku subagent; permission patterns extended; infrastructure guide complete to helpi 25 with writing style and agent delegation sections; v0.9 changelog written; infrastructure_full.pdf tracked in git; all pushed to GitHub.</p>
+  <p><strong>Goal:</strong> Fix `/close` to run without permission prompts</p>
+  <p><strong>Outcome:</strong> Root cause identified: subagents spawned via `Agent` tool have an independent permission model and do not inherit the parent&#39;s allowlist. `/close` rewritten to execute all steps in the main context, eliminating all permission prompts.</p>
   <p><strong>Next steps:</strong> none</p>
-  <p><strong>Git ref:</strong> c567d94</p>
+  
   <h3>Files touched</h3>
   <ul>
-  <li>`generate_handover.ps1` -- added writing style section injected into AGENTS.md; fixed em-dashes to ASCII</li>
-  <li>`~/.claude/commands/close.md` -- rewritten: Phase 1 gathers context on Sonnet, Phase 2 delegates all mechanical ops to Haiku subagent</li>
-  <li>`~/.claude/settings.json` -- added PowerShell($*), PowerShell([System.*), Edit/Write(AI_auto/*.ps1) permission patterns</li>
-  <li>`infrastructure.html` -- helpi section updated 13-23 to 13-25; detail rows for helpi 24 and 25 added; writing style and agent delegation subsections added to Section A; quickref heading corrected to 1-25</li>
-  <li>`.gitignore` -- infrastructure_full.pdf removed from ignore list</li>
-  <li>`CHANGELOG.md` -- v0.9 entry added</li>
+  <li>`~/.claude/commands/close.md` — rewrote to remove Haiku subagent; all steps now run directly in main Sonnet context</li>
+  <li>`memory/feedback_close_autonomous.md` — updated with root cause (subagents don&#39;t inherit `settings.json` allowlist) and fix</li>
 </ul>
 </div>
 
@@ -90,7 +86,6 @@
 <h2>Compressed sessions</h2>
 <br>
 <ul>
-  <li><strong>2026-05-24d</strong> (Codex): Prepare Gemini&#39;s independent verification prompt for the patched Co... -&gt; Wrote a Gemini audit instruction set covering PowerShell correctness, Blackboard integr...</li>
   <li><strong>2026-05-24e</strong> (Claude (Convergence Forum)): Live test run of the Convergence Forum on a low-stakes &quot;test task&quot; ... -&gt; Forum ran and terminated cleanly. The test task completed in 3m 35s. The forum reached ...</li>
   <li><strong>2026-05-24f</strong> (Gemini CLI): Audit Convergence Forum and update division meeting slides. -&gt; Forum infrastructure audited as READY. Slide update failed due to persistent syntax err...</li>
   <li><strong>2026-05-24g</strong> (Codex): Clean the broken division meeting slide deck, verify compilation, a... -&gt; Slides 13-14 are structurally clean and the referenced `figures/Human-AI_Integration_Di...</li>
@@ -106,22 +101,8 @@
   <li><strong>2026-05-25d</strong> (Codex): Diagnose and patch Codex-only SAD failures in `helpi 25`. -&gt; Codex-only SAD now works end to end from normal PowerShell. Final smoke test `verify if...</li>
   <li><strong>2026-05-26</strong> (Claude): Generate survey visualizations from questionnaire Excel data and wi... -&gt; Six clean survey result slides added to the division meeting Beamer deck and successful...</li>
   <li><strong>2026-05-27</strong> (Claude): Document helpi 25, fix /close permission prompts, and harden the Co... -&gt; helpi 25 is documented, /close now runs without permission prompts, and forum agents ca...</li>
+  <li><strong>2026-05-27b</strong> (Claude): Add automatic backup and restore of `~/.claude/` so the AI infrastr... -&gt; `~/.claude/` is now backed up to `_claude_backup/` (OneDrive + GitHub) on every session...</li>
 </ul>
-<br>
-<hr>
-<br>
-<h2>Session 2026-05-27b</h2>
-<p><strong>Agent:</strong> Claude Sonnet 4.6</p>
-<p><strong>Goal:</strong> Add automatic backup and restore of `~/.claude/` so the AI infrastructure can be fully recovered on a new machine.</p>
-<p><strong>Files touched:</strong></p>
-<ul>
-  <li>`sync_claude_config.ps1` — new script: `-Backup` mirrors `~/.claude/` (CLAUDE.md, settings.json, commands/, skills/, projects/*.md) to `_claude_backup/`; `-Restore` reverses it</li>
-  <li>`~/.claude/settings.json` — added `sync_claude_config.ps1 -Backup` as first Stop hook so backup runs automatically every session end before auto_commit</li>
-  <li>`restore.ps1` — replaced step 6 (which only printed an error if `~/.claude` was missing) with auto-restore from `_claude_backup/` when available</li>
-</ul>
-<p><strong>Outcome:</strong> `~/.claude/` is now backed up to `<em>claude</em>backup/` (OneDrive + GitHub) on every session stop; `helpi 20` on a new machine fully restores the Claude config automatically.</p>
-<p><strong>Next steps:</strong> none</p>
-<p><strong>Git ref:</strong> a77081e</p>
 <br>
 <hr>
 <br>
@@ -138,6 +119,20 @@
 <p><strong>Outcome:</strong> Writing style guide created and wired into global CLAUDE.md; tested on a research paragraph with four targeted edits.</p>
 <p><strong>Next steps:</strong> none</p>
 <p><strong>Git ref:</strong> 893dd0c</p>
+<br>
+<hr>
+<br>
+<h2>Session 2026-05-29c</h2>
+<p><strong>Agent:</strong> Claude Sonnet 4.6</p>
+<p><strong>Goal:</strong> Fix `/close` to run without permission prompts</p>
+<p><strong>Files touched:</strong></p>
+<ul>
+  <li>`~/.claude/commands/close.md` — rewrote to remove Haiku subagent; all steps now run directly in main Sonnet context</li>
+  <li>`memory/feedback_close_autonomous.md` — updated with root cause (subagents don&#39;t inherit `settings.json` allowlist) and fix</li>
+</ul>
+<p><strong>Outcome:</strong> Root cause identified: subagents spawned via `Agent` tool have an independent permission model and do not inherit the parent&#39;s allowlist. `/close` rewritten to execute all steps in the main context, eliminating all permission prompts.</p>
+<p><strong>Next steps:</strong> none</p>
+<p><strong>Git ref:</strong></p>
 <br>
 <hr>
 <br>
@@ -169,7 +164,7 @@
 </ul>
 <p><strong>Outcome:</strong> /close now delegates mechanical operations to a Haiku subagent; permission patterns extended; infrastructure guide complete to helpi 25 with writing style and agent delegation sections; v0.9 changelog written; infrastructure_full.pdf tracked in git; all pushed to GitHub.</p>
 <p><strong>Next steps:</strong> none</p>
-<p><strong>Git ref:</strong> c567d94</p>
+<p><strong>Git ref:</strong> c567d94</p>
 <br>
 
 </div>
@@ -186,7 +181,6 @@
 
 ## Compressed sessions
 
-- **2026-05-24d** (Codex): Prepare Gemini's independent verification prompt for the patched Co... -&gt; Wrote a Gemini audit instruction set covering PowerShell correctness, Blackboard integr...
 - **2026-05-24e** (Claude (Convergence Forum)): Live test run of the Convergence Forum on a low-stakes "test task" ... -&gt; Forum ran and terminated cleanly. The test task completed in 3m 35s. The forum reached ...
 - **2026-05-24f** (Gemini CLI): Audit Convergence Forum and update division meeting slides. -&gt; Forum infrastructure audited as READY. Slide update failed due to persistent syntax err...
 - **2026-05-24g** (Codex): Clean the broken division meeting slide deck, verify compilation, a... -&gt; Slides 13-14 are structurally clean and the referenced `figures/Human-AI_Integration_Di...
@@ -202,19 +196,7 @@
 - **2026-05-25d** (Codex): Diagnose and patch Codex-only SAD failures in `helpi 25`. -&gt; Codex-only SAD now works end to end from normal PowerShell. Final smoke test `verify if...
 - **2026-05-26** (Claude): Generate survey visualizations from questionnaire Excel data and wi... -&gt; Six clean survey result slides added to the division meeting Beamer deck and successful...
 - **2026-05-27** (Claude): Document helpi 25, fix /close permission prompts, and harden the Co... -&gt; helpi 25 is documented, /close now runs without permission prompts, and forum agents ca...
-
----
-
-## Session 2026-05-27b
-**Agent:** Claude Sonnet 4.6
-**Goal:** Add automatic backup and restore of `~/.claude/` so the AI infrastructure can be fully recovered on a new machine.
-**Files touched:**
-- `sync_claude_config.ps1` — new script: `-Backup` mirrors `~/.claude/` (CLAUDE.md, settings.json, commands/, skills/, projects/*.md) to `_claude_backup/`; `-Restore` reverses it
-- `~/.claude/settings.json` — added `sync_claude_config.ps1 -Backup` as first Stop hook so backup runs automatically every session end before auto_commit
-- `restore.ps1` — replaced step 6 (which only printed an error if `~/.claude` was missing) with auto-restore from `_claude_backup/` when available
-**Outcome:** `~/.claude/` is now backed up to `_claude_backup/` (OneDrive + GitHub) on every session stop; `helpi 20` on a new machine fully restores the Claude config automatically.
-**Next steps:** none
-**Git ref:** a77081e
+- **2026-05-27b** (Claude): Add automatic backup and restore of `~/.claude/` so the AI infrastr... -&gt; `~/.claude/` is now backed up to `_claude_backup/` (OneDrive + GitHub) on every session...
 
 ---
 
@@ -229,6 +211,18 @@
 **Outcome:** Writing style guide created and wired into global CLAUDE.md; tested on a research paragraph with four targeted edits.
 **Next steps:** none
 **Git ref:** 893dd0c
+
+---
+
+## Session 2026-05-29c
+**Agent:** Claude Sonnet 4.6
+**Goal:** Fix `/close` to run without permission prompts
+**Files touched:**
+- `~/.claude/commands/close.md` — rewrote to remove Haiku subagent; all steps now run directly in main Sonnet context
+- `memory/feedback_close_autonomous.md` — updated with root cause (subagents don't inherit `settings.json` allowlist) and fix
+**Outcome:** Root cause identified: subagents spawned via `Agent` tool have an independent permission model and do not inherit the parent's allowlist. `/close` rewritten to execute all steps in the main context, eliminating all permission prompts.
+**Next steps:** none
+**Git ref:**
 
 ---
 
