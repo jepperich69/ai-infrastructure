@@ -365,6 +365,15 @@ if ((Test-Path $bblFile) -and (Get-Item $bblFile).Length -gt 0) {
 }
 $flatTexContent = Get-Content $flatTex -Raw -Encoding UTF8   # keep in memory for blind step
 
+# Flatten figure paths so the zip requires no subfolders.
+# Most journal systems (including Elsevier EM) reject zips with subdirectories.
+# Strip \graphicspath entirely and remove any path/ prefix from \includegraphics{path/file}.
+$flatTexContent = ($flatTexContent -split "`n" | Where-Object { $_ -notmatch '\\graphicspath' }) -join "`n"
+$flatTexContent = [regex]::Replace($flatTexContent,
+    '(\\includegraphics(?:\[[^\]]*\])*\{)[^}]*/([^}/]+)\}',
+    '$1$2}')
+Set-Content -Path $flatTex -Value $flatTexContent -Encoding UTF8
+
 # -- [4] Submission zip (sighted) --------------------------------------------
 Step 4 "Creating submission zip"
 $zipPath = Join-Path $outDir "Package_${prefix}.zip"
