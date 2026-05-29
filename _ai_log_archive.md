@@ -163,3 +163,10 @@
 ## Archived 2026-05-29 (1 entry)
 
 - **2026-05-24b** (Codex): Audit the newly implemented Convergence Forum infrastructure for ar... -> Audit found that `run_forum.ps1` is not yet operational due to a PowerShell parse error...
+
+
+---
+
+## Archived 2026-05-29 (1 entry)
+
+- **2026-05-24c** (Codex): Patch and document the Convergence Forum issues found in the Codex ... -> The Convergence Forum now parses cleanly, rejects invalid agent lists before creating r...

@@ -1,19 +1,21 @@
 {
   "project": "AI_auto",
-  "generated": "2026-05-29 08:44",
+  "generated": "2026-05-29 08:57",
   "source": "_ai_log.md",
   "latest_session": {
-    "title": "2026-05-29",
+    "title": "2026-05-29b",
     "agent": "Claude Sonnet 4.6",
-    "goal": "Set up a writing style guide from classic reference papers to govern all research text editing and drafting.",
-    "outcome": "Writing style guide created and wired into global CLAUDE.md; tested on a research paragraph with four targeted edits.",
+    "goal": "Extend infrastructure with Haiku-delegated /close, fix permission gaps, update infrastructure guide (helpi 24/25, writing style, agent delegation), write v0.9 changelog, push all to GitHub.",
+    "outcome": "/close now delegates mechanical operations to a Haiku subagent; permission patterns extended; infrastructure guide complete to helpi 25 with writing style and agent delegation sections; v0.9 changelog written; infrastructure_full.pdf tracked in git; all pushed to GitHub.",
     "next_steps": "none",
-    "git_ref": "893dd0c",
+    "git_ref": "c567d94",
     "files_touched": [
-      "`literature/Reference_Papers/STYLE_GUIDE.md` — new file: full style guide derived from Einstein (1905), Akerlof (1970), Kahneman & Tversky (1979), Ioannidis (2005), Dantzig & Thapa; covers core principles, banned phrases, and structural patterns to avoid",
-      "`~/.claude/CLAUDE.md` — added \"Research writing style\" section with inline dos/don'ts; applies to all projects globally",
-      "`memory/project_writing_style_guide.md` — new memory note: where the guide lives and how it is wired",
-      "`memory/MEMORY.md` — added index entry for style guide"
+      "`generate_handover.ps1` -- added writing style section injected into AGENTS.md; fixed em-dashes to ASCII",
+      "`~/.claude/commands/close.md` -- rewritten: Phase 1 gathers context on Sonnet, Phase 2 delegates all mechanical ops to Haiku subagent",
+      "`~/.claude/settings.json` -- added PowerShell($*), PowerShell([System.*), Edit/Write(AI_auto/*.ps1) permission patterns",
+      "`infrastructure.html` -- helpi section updated 13-23 to 13-25; detail rows for helpi 24 and 25 added; writing style and agent delegation subsections added to Section A; quickref heading corrected to 1-25",
+      "`.gitignore` -- infrastructure_full.pdf removed from ignore list",
+      "`CHANGELOG.md` -- v0.9 entry added"
     ]
   },
   "latest_session_complete": true,

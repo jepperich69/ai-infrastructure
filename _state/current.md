@@ -1,7 +1,6 @@
-# State — 2026-05-29
+# State -- 2026-05-29
 **Phase:** Active development
-**Last session:** Created writing style guide from 5 classic reference papers and wired it into global CLAUDE.md so all text editing agents apply the style automatically.
-**Next:**
-- none
-**Git ref:** 893dd0c
+**Last session:** /close now delegates to Haiku; infrastructure guide complete to helpi 25; writing style and agent delegation documented; v0.9 changelog pushed to GitHub.
+**Next:** none
+**Git ref:** c567d94
 **Agent:** Claude Sonnet 4.6

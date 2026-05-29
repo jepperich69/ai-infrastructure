@@ -30,7 +30,7 @@
 <body>
 
 <h1>Handover Document &mdash; AI_auto</h1>
-<div class="meta">Generated: 2026-05-29 08:44 &nbsp;|&nbsp; Source: <code style="display:inline;padding:2px 6px">_ai_log.md</code> &nbsp;|&nbsp; Sidecar: <code style="display:inline;padding:2px 6px">_handover.json</code></div>
+<div class="meta">Generated: 2026-05-29 08:57 &nbsp;|&nbsp; Source: <code style="display:inline;padding:2px 6px">_ai_log.md</code> &nbsp;|&nbsp; Sidecar: <code style="display:inline;padding:2px 6px">_handover.json</code></div>
 
 <!-- ============================================================ -->
 <!-- AGENT INSTRUCTIONS                                            -->
@@ -62,18 +62,20 @@
 <div class="latest-session">
   <div class="session-status ok">Complete</div>
   <h2>Latest Session Snapshot</h2>
-  <p><strong>Session:</strong> 2026-05-29</p>
+  <p><strong>Session:</strong> 2026-05-29b</p>
   <p><strong>Agent:</strong> Claude Sonnet 4.6</p>
-  <p><strong>Goal:</strong> Set up a writing style guide from classic reference papers to govern all research text editing and drafting.</p>
-  <p><strong>Outcome:</strong> Writing style guide created and wired into global CLAUDE.md; tested on a research paragraph with four targeted edits.</p>
+  <p><strong>Goal:</strong> Extend infrastructure with Haiku-delegated /close, fix permission gaps, update infrastructure guide (helpi 24/25, writing style, agent delegation), write v0.9 changelog, push all to GitHub.</p>
+  <p><strong>Outcome:</strong> /close now delegates mechanical operations to a Haiku subagent; permission patterns extended; infrastructure guide complete to helpi 25 with writing style and agent delegation sections; v0.9 changelog written; infrastructure_full.pdf tracked in git; all pushed to GitHub.</p>
   <p><strong>Next steps:</strong> none</p>
-  <p><strong>Git ref:</strong> 893dd0c</p>
+  <p><strong>Git ref:</strong> c567d94</p>
   <h3>Files touched</h3>
   <ul>
-  <li>`literature/Reference_Papers/STYLE_GUIDE.md` — new file: full style guide derived from Einstein (1905), Akerlof (1970), Kahneman &amp; Tversky (1979), Ioannidis (2005), Dantzig &amp; Thapa; covers core principles, banned phrases, and structural patterns to avoid</li>
-  <li>`~/.claude/CLAUDE.md` — added &quot;Research writing style&quot; section with inline dos/don&#39;ts; applies to all projects globally</li>
-  <li>`memory/project_writing_style_guide.md` — new memory note: where the guide lives and how it is wired</li>
-  <li>`memory/MEMORY.md` — added index entry for style guide</li>
+  <li>`generate_handover.ps1` -- added writing style section injected into AGENTS.md; fixed em-dashes to ASCII</li>
+  <li>`~/.claude/commands/close.md` -- rewritten: Phase 1 gathers context on Sonnet, Phase 2 delegates all mechanical ops to Haiku subagent</li>
+  <li>`~/.claude/settings.json` -- added PowerShell($*), PowerShell([System.*), Edit/Write(AI_auto/*.ps1) permission patterns</li>
+  <li>`infrastructure.html` -- helpi section updated 13-23 to 13-25; detail rows for helpi 24 and 25 added; writing style and agent delegation subsections added to Section A; quickref heading corrected to 1-25</li>
+  <li>`.gitignore` -- infrastructure_full.pdf removed from ignore list</li>
+  <li>`CHANGELOG.md` -- v0.9 entry added</li>
 </ul>
 </div>
 
@@ -88,7 +90,6 @@
 <h2>Compressed sessions</h2>
 <br>
 <ul>
-  <li><strong>2026-05-24c</strong> (Codex): Patch and document the Convergence Forum issues found in the Codex ... -&gt; The Convergence Forum now parses cleanly, rejects invalid agent lists before creating r...</li>
   <li><strong>2026-05-24d</strong> (Codex): Prepare Gemini&#39;s independent verification prompt for the patched Co... -&gt; Wrote a Gemini audit instruction set covering PowerShell correctness, Blackboard integr...</li>
   <li><strong>2026-05-24e</strong> (Claude (Convergence Forum)): Live test run of the Convergence Forum on a low-stakes &quot;test task&quot; ... -&gt; Forum ran and terminated cleanly. The test task completed in 3m 35s. The forum reached ...</li>
   <li><strong>2026-05-24f</strong> (Gemini CLI): Audit Convergence Forum and update division meeting slides. -&gt; Forum infrastructure audited as READY. Slide update failed due to persistent syntax err...</li>
@@ -104,29 +105,8 @@
   <li><strong>2026-05-25c</strong> (Gemini CLI (gemini-2.5-flash)): Create refined &#39;V2&#39; leadergroup slides; simplify language and add l... -&gt; --</li>
   <li><strong>2026-05-25d</strong> (Codex): Diagnose and patch Codex-only SAD failures in `helpi 25`. -&gt; Codex-only SAD now works end to end from normal PowerShell. Final smoke test `verify if...</li>
   <li><strong>2026-05-26</strong> (Claude): Generate survey visualizations from questionnaire Excel data and wi... -&gt; Six clean survey result slides added to the division meeting Beamer deck and successful...</li>
+  <li><strong>2026-05-27</strong> (Claude): Document helpi 25, fix /close permission prompts, and harden the Co... -&gt; helpi 25 is documented, /close now runs without permission prompts, and forum agents ca...</li>
 </ul>
-<br>
-<hr>
-<br>
-<h2>Session 2026-05-27</h2>
-<p><strong>Agent:</strong> Claude Sonnet 4.6</p>
-<p><strong>Goal:</strong> Document helpi 25, fix /close permission prompts, and harden the Convergence Forum against agents editing project files.</p>
-<p><strong>Files touched:</strong></p>
-<ul>
-  <li>`infrastructure.html` — updated helpi 25 section: added `-Stage` description (draft/revision/final), fixed template count (4→5), updated table row and cheatsheet with full syntax</li>
-  <li>`~/.claude/settings.json` — added missing PowerShell tool permissions (`PowerShell(git *)`, `PowerShell(helpi *)`, `PowerShell(Get-ChildItem*)`, `PowerShell(Test-Path*)`, `PowerShell(New-Item*)`) and memory file write patterns (`~/.claude/projects/**/*.md`) to fix /close permission prompts</li>
-  <li>`run_forum.ps1` — enforced read-only forum mode: Claude now uses `--permission-mode plan`, Gemini uses `--approval-mode plan` (both replacing unrestricted modes); added `$ForumReadOnlyConstraint` block to every agent and moderator prompt</li>
-  <li>`memory/feedback_close_autonomous.md` — updated with root cause and full permission list</li>
-  <li>`memory/project_code_folder_restructure.md` — new note: deferred plan to move .ps1 scripts to code/ subfolder</li>
-  <li>`memory/project_forum_readonly.md` — new note: forum read-only protection rationale and rules</li>
-</ul>
-<p><strong>Outcome:</strong> helpi 25 is documented, /close now runs without permission prompts, and forum agents can no longer edit manuscript or code files directly.</p>
-<p><strong>Next steps:</strong></p>
-<ul>
-  <li>Run `helpi 16` to rebuild PDF/HTML documentation from updated infrastructure.html</li>
-  <li>Restructure AI_auto root (move .ps1 to code/ subfolder) — deferred, see memory note</li>
-</ul>
-<p><strong>Git ref:</strong> 9f0d4cf</p>
 <br>
 <hr>
 <br>
@@ -171,7 +151,25 @@
 </ul>
 <p><strong>Outcome:</strong> Forum agents now operate in surgical/defect-detection mode when `-Stage revision` or `-Stage final` is passed, preventing scope creep on settled manuscripts.</p>
 <p><strong>Next steps:</strong> none</p>
-<p><strong>Git ref:</strong> c7499a3</p>
+<p><strong>Git ref:</strong> c7499a3</p>
+<br>
+<hr>
+<br>
+<h2>Session 2026-05-29b</h2>
+<p><strong>Agent:</strong> Claude Sonnet 4.6</p>
+<p><strong>Goal:</strong> Extend infrastructure with Haiku-delegated /close, fix permission gaps, update infrastructure guide (helpi 24/25, writing style, agent delegation), write v0.9 changelog, push all to GitHub.</p>
+<p><strong>Files touched:</strong></p>
+<ul>
+  <li>`generate_handover.ps1` -- added writing style section injected into AGENTS.md; fixed em-dashes to ASCII</li>
+  <li>`~/.claude/commands/close.md` -- rewritten: Phase 1 gathers context on Sonnet, Phase 2 delegates all mechanical ops to Haiku subagent</li>
+  <li>`~/.claude/settings.json` -- added PowerShell($*), PowerShell([System.*), Edit/Write(AI_auto/*.ps1) permission patterns</li>
+  <li>`infrastructure.html` -- helpi section updated 13-23 to 13-25; detail rows for helpi 24 and 25 added; writing style and agent delegation subsections added to Section A; quickref heading corrected to 1-25</li>
+  <li>`.gitignore` -- infrastructure_full.pdf removed from ignore list</li>
+  <li>`CHANGELOG.md` -- v0.9 entry added</li>
+</ul>
+<p><strong>Outcome:</strong> /close now delegates mechanical operations to a Haiku subagent; permission patterns extended; infrastructure guide complete to helpi 25 with writing style and agent delegation sections; v0.9 changelog written; infrastructure_full.pdf tracked in git; all pushed to GitHub.</p>
+<p><strong>Next steps:</strong> none</p>
+<p><strong>Git ref:</strong> c567d94</p>
 <br>
 
 </div>
@@ -188,7 +186,6 @@
 
 ## Compressed sessions
 
-- **2026-05-24c** (Codex): Patch and document the Convergence Forum issues found in the Codex ... -&gt; The Convergence Forum now parses cleanly, rejects invalid agent lists before creating r...
 - **2026-05-24d** (Codex): Prepare Gemini's independent verification prompt for the patched Co... -&gt; Wrote a Gemini audit instruction set covering PowerShell correctness, Blackboard integr...
 - **2026-05-24e** (Claude (Convergence Forum)): Live test run of the Convergence Forum on a low-stakes "test task" ... -&gt; Forum ran and terminated cleanly. The test task completed in 3m 35s. The forum reached ...
 - **2026-05-24f** (Gemini CLI): Audit Convergence Forum and update division meeting slides. -&gt; Forum infrastructure audited as READY. Slide update failed due to persistent syntax err...
@@ -204,24 +201,7 @@
 - **2026-05-25c** (Gemini CLI (gemini-2.5-flash)): Create refined 'V2' leadergroup slides; simplify language and add l... -&gt; --
 - **2026-05-25d** (Codex): Diagnose and patch Codex-only SAD failures in `helpi 25`. -&gt; Codex-only SAD now works end to end from normal PowerShell. Final smoke test `verify if...
 - **2026-05-26** (Claude): Generate survey visualizations from questionnaire Excel data and wi... -&gt; Six clean survey result slides added to the division meeting Beamer deck and successful...
-
----
-
-## Session 2026-05-27
-**Agent:** Claude Sonnet 4.6
-**Goal:** Document helpi 25, fix /close permission prompts, and harden the Convergence Forum against agents editing project files.
-**Files touched:**
-- `infrastructure.html` — updated helpi 25 section: added `-Stage` description (draft/revision/final), fixed template count (4→5), updated table row and cheatsheet with full syntax
-- `~/.claude/settings.json` — added missing PowerShell tool permissions (`PowerShell(git *)`, `PowerShell(helpi *)`, `PowerShell(Get-ChildItem*)`, `PowerShell(Test-Path*)`, `PowerShell(New-Item*)`) and memory file write patterns (`~/.claude/projects/**/*.md`) to fix /close permission prompts
-- `run_forum.ps1` — enforced read-only forum mode: Claude now uses `--permission-mode plan`, Gemini uses `--approval-mode plan` (both replacing unrestricted modes); added `$ForumReadOnlyConstraint` block to every agent and moderator prompt
-- `memory/feedback_close_autonomous.md` — updated with root cause and full permission list
-- `memory/project_code_folder_restructure.md` — new note: deferred plan to move .ps1 scripts to code/ subfolder
-- `memory/project_forum_readonly.md` — new note: forum read-only protection rationale and rules
-**Outcome:** helpi 25 is documented, /close now runs without permission prompts, and forum agents can no longer edit manuscript or code files directly.
-**Next steps:**
-- Run `helpi 16` to rebuild PDF/HTML documentation from updated infrastructure.html
-- Restructure AI_auto root (move .ps1 to code/ subfolder) — deferred, see memory note
-**Git ref:** 9f0d4cf
+- **2026-05-27** (Claude): Document helpi 25, fix /close permission prompts, and harden the Co... -&gt; helpi 25 is documented, /close now runs without permission prompts, and forum agents ca...
 
 ---
 
@@ -261,6 +241,22 @@
 **Outcome:** Forum agents now operate in surgical/defect-detection mode when `-Stage revision` or `-Stage final` is passed, preventing scope creep on settled manuscripts.
 **Next steps:** none
 **Git ref:** c7499a3
+
+---
+
+## Session 2026-05-29b
+**Agent:** Claude Sonnet 4.6
+**Goal:** Extend infrastructure with Haiku-delegated /close, fix permission gaps, update infrastructure guide (helpi 24/25, writing style, agent delegation), write v0.9 changelog, push all to GitHub.
+**Files touched:**
+- `generate_handover.ps1` -- added writing style section injected into AGENTS.md; fixed em-dashes to ASCII
+- `~/.claude/commands/close.md` -- rewritten: Phase 1 gathers context on Sonnet, Phase 2 delegates all mechanical ops to Haiku subagent
+- `~/.claude/settings.json` -- added PowerShell($*), PowerShell([System.*), Edit/Write(AI_auto/*.ps1) permission patterns
+- `infrastructure.html` -- helpi section updated 13-23 to 13-25; detail rows for helpi 24 and 25 added; writing style and agent delegation subsections added to Section A; quickref heading corrected to 1-25
+- `.gitignore` -- infrastructure_full.pdf removed from ignore list
+- `CHANGELOG.md` -- v0.9 entry added
+**Outcome:** /close now delegates mechanical operations to a Haiku subagent; permission patterns extended; infrastructure guide complete to helpi 25 with writing style and agent delegation sections; v0.9 changelog written; infrastructure_full.pdf tracked in git; all pushed to GitHub.
+**Next steps:** none
+**Git ref:** c567d94
 </textarea>
 </div>
 
