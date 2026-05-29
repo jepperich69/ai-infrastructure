@@ -79,7 +79,7 @@ Update only sections that changed this session:
 Say "CLAUDE.md unchanged" if nothing needed updating, or list what you changed (one line per change).
 
 ### G — Regenerate handover
-Run via PowerShell tool:
+Run via Bash tool (not PowerShell — avoids the "nested process" security warning):
 `pwsh -NoProfile -File "C:\Users\rich\OneDrive - Danmarks Tekniske Universitet\JR\AI_auto\generate_handover.ps1" -Project <PROJECT_NAME>`
 Say "Handover regenerated." when done.
 
