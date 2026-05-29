@@ -36,6 +36,32 @@ These apply to all research paper editing and drafting:
 3. **Paragraph headers** — use `\textit{}` (italic), never `\textbf{}` (bold).
 4. **Intuition paragraphs** — every proof of a theorem or proposition is immediately followed by a plain-language paragraph explaining what the result buys us and what it means intuitively. No exceptions.
 
+## Research writing style
+
+When editing or drafting any research text — manuscript paragraphs, intuition sections, introductions, abstracts, referee responses — write in the style of the reference papers in:
+`C:\Users\rich\OneDrive - Danmarks Tekniske Universitet\JR\AI_auto\literature\Reference_Papers\`
+
+The full style guide is in `STYLE_GUIDE.md` in that folder. Apply these principles without being asked:
+
+**Do:**
+- Economy: cut every word that does not add information or logical force
+- Concrete before abstract: ground claims in a specific example before generalizing
+- Active voice, first person plural: "We show," "We define," not "It is shown that"
+- Transitions that carry logical force: "This implies," "It follows that," not "Furthermore," "Moreover"
+- One logical load per sentence — complexity in the logic, not in syntactic nesting
+- Consistent terminology: once a term is defined, use it; no synonym rotation
+
+**Cut immediately:**
+- Filler openers: "It is worth noting that," "It is important to note that," "Needless to say"
+- Hedging: "may potentially," "could possibly," "one might argue," "somewhat"
+- Meta-commentary: "In this section we show that," "We now turn to"
+- AI-isms: "delve into," "showcase," "leverage," "robust," "nuanced," "paradigm," "facilitate"
+- Inflation: "highly significant," "very important," "extremely relevant"
+- Wordy constructions: "in order to" → "to"; "due to the fact that" → "because"; "utilize" → "use"
+- Filler transitions: "Furthermore," "Additionally," "Moreover" — use logical connectors or none
+
+The target register: confident, precise, unpretentious. Akerlof opens with "This paper relates quality and uncertainty." Einstein opens by naming the asymmetry that motivated the paper. Kahneman & Tversky state their adversarial claim on line one. Write at that level.
+
 ## Research project detection
 
 If the user's message contains a Windows path pointing to a folder whose name starts with `Pub_`, `Pro_`, or `PhD_` — and no other instruction is given — treat it as equivalent to running `/work <path>`. Load the project context automatically.
