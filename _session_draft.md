@@ -6,3 +6,16 @@
 [2026-05-30 21:18] Bash:  git push origin master
 [2026-05-30 21:19] Bash:  git remote -v && git log --oneline -3
 [2026-05-30 21:22] Bash:  cd "C:/Users/rich/OneDrive - Danmarks Tekniske Universitet/JR/AI_auto" && git add -A && git commit -...
+[2026-05-30 21:24] Edit:  infrastructure.html
+[2026-05-30 21:24] Edit:  infrastructure.html
+[2026-05-30 21:24] Edit:  infrastructure.html
+[2026-05-30 21:24] Edit:  infrastructure.html
+[2026-05-30 21:24] Edit:  infrastructure.html
+[2026-05-30 21:24] Edit:  infrastructure.html
+[2026-05-30 21:25] Edit:  infrastructure.html
+[2026-05-30 21:25] Edit:  infrastructure.html
+[2026-05-30 21:25] Edit:  infrastructure.html
+[2026-05-30 21:25] Edit:  infrastructure.html
+[2026-05-30 21:25] Edit:  infrastructure.html
+[2026-05-30 21:25] Bash:  cd "C:/Users/rich/OneDrive - Danmarks Tekniske Universitet/JR/AI_auto" && git add infrastructure.htm...
+[2026-05-30 21:25] Bash:  cd "C:/Users/rich/OneDrive - Danmarks Tekniske Universitet/JR/AI_auto" && git push origin master
