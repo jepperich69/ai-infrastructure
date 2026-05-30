@@ -5,6 +5,33 @@ A "change" is anything that affects how you or Claude interacts with the system.
 
 ---
 
+## [v1.0] — 2026-05-30 — Professional repo structure: scripts/ subfolder, config.local.ps1 split, helpi 26 update
+
+**Repository restructure**
+- All 34 PS1 scripts moved from the root to `scripts/` via `git mv` (history preserved).
+- `helpi.cmd` updated to call `scripts\helpi.ps1`; root `helpi.ps1` is now a thin shim for backward compatibility with existing shell profiles.
+- `config.ps1` refactored: `$aiRoot = Split-Path $PSScriptRoot -Parent` so it correctly points to `AI_auto/` from `scripts/`.
+
+**config.local.ps1 split (enables clean `git pull` for all users)**
+- `scripts/config.ps1` no longer contains any user-specific paths. It loads `scripts/config.local.ps1` at runtime.
+- `scripts/config.local.ps1` is gitignored — never tracked, never causes merge conflicts.
+- `scripts/config.local.example.ps1`: template users copy and fill in.
+- `scripts/setup.ps1` (helpi 21) now writes `config.local.ps1` instead of overwriting `config.ps1`.
+- Users who clone the repo and run `helpi 21` once get a clean, conflict-free update path from that point on.
+
+**helpi 26 — update command**
+- `scripts/update.ps1` (new): runs `git pull origin master`, reports version change, and automatically fixes Claude Code hook paths in `~/.claude/settings.json` if they still point to the old root location.
+- Wire: `helpi 26` or `helpi update`.
+
+**.gitignore hardened**
+- Added: `scripts/config.local.ps1`, `_ai_log.md`, `_ai_log_archive.md`, `_session_draft.md`, `_state/`, `projects.json`, `papers.csv`, `AGENTS.md`, `network.html`, `_handover.html`, `_handover.json`, `_pipelines/`, `_forums/`, `_style_edits/`, `_claude_backup/`.
+- User data and generated files no longer risk git conflicts.
+
+**~/.claude/settings.json**
+- Hook paths updated from `AI_auto\X.ps1` to `AI_auto\scripts\X.ps1` for `log_tool_use.ps1`, `sync_claude_config.ps1`, `auto_commit_hook.ps1`.
+
+---
+
 ## [v0.9] — 2026-05-29 — Convergence Forum, config backup, writing style guide, /close Haiku delegation
 
 **Convergence Forum (helpi 25)**

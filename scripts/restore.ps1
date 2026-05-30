@@ -90,7 +90,7 @@ if ($claudeOk) {
     Write-Host "  $ok ~/.claude already present (CLAUDE.md + commands/)" -ForegroundColor Green
 } elseif (Test-Path $backupDir) {
     Write-Host "  $fix Restoring ~/.claude from _claude_backup/ ..." -ForegroundColor Yellow
-    & "$aiRoot\sync_claude_config.ps1" -Restore
+    & "$PSScriptRoot\sync_claude_config.ps1" -Restore
 } else {
     Write-Host "  $err ~/.claude missing and no _claude_backup/ found." -ForegroundColor Red
     Write-Host "       Cannot auto-restore. Copy ~/.claude from another machine or cloud backup." -ForegroundColor DarkGray
@@ -105,7 +105,7 @@ if ($task) {
 } else {
     Write-Host "  $fix Registering scheduled task 'AI_AutoSync' (every 4h)..." -ForegroundColor Yellow
     $action  = New-ScheduledTaskAction -Execute "powershell.exe" `
-                 -Argument "-NoProfile -WindowStyle Hidden -File `"$aiRoot\sync_all.ps1`""
+                 -Argument "-NoProfile -WindowStyle Hidden -File `"$aiRoot\scripts\sync_all.ps1`""
     $trigger = New-ScheduledTaskTrigger -RepetitionInterval (New-TimeSpan -Hours 4) -Once `
                  -At (Get-Date).Date
     $settings = New-ScheduledTaskSettingsSet -ExecutionTimeLimit (New-TimeSpan -Minutes 10) `

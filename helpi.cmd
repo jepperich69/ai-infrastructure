@@ -1,2 +1,2 @@
 @echo off
-pwsh -NoProfile -File "%~dp0helpi.ps1" %*
+pwsh -NoProfile -File "%~dp0scripts\helpi.ps1" %*

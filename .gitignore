@@ -1,18 +1,45 @@
-# Runtime logs — not versioned
+# ── User-specific local config (never commit) ────────────────────
+# Each user creates their own from scripts/config.local.example.ps1
+scripts/config.local.ps1
+
+# ── Per-user data and state ───────────────────────────────────────
+# These are personal to each user and must not be tracked in the shared repo.
+_ai_log.md
+_ai_log_archive.md
+_session_draft.md
+_state/
+projects.json
+papers.csv
+
+# ── Generated files (rebuilt by helpi commands) ──────────────────
+AGENTS.md
+network.html
+_handover.html
+_handover.json
+
+# ── Pipeline, forum, and style-edit run outputs ──────────────────
+_pipelines/
+_forums/
+_style_edits/
+
+# ── Claude config backup (auto-synced to OneDrive, not GitHub) ───
+_claude_backup/
+
+# ── Runtime logs ─────────────────────────────────────────────────
 logs/
 
-# Volatile data files regenerated from Overleaf
+# ── Volatile data regenerated from Overleaf ──────────────────────
 overleaf_projects.csv
 
-# Overleaf clone for the infrastructure presentation/project
+# ── Overleaf clone for the infrastructure presentation/project ───
 Overleaf_source/
 
-# Generated doc exports (rebuilt by helpi 16 / generate_docs.ps1)
+# ── Generated doc exports (rebuilt by helpi 16) ──────────────────
 # Note: infrastructure_full.pdf is tracked so GitHub always has a readable copy
 infrastructure_summary.html
 infrastructure_full.html
 infrastructure_summary.pdf
 
-# OS noise
+# ── OS noise ─────────────────────────────────────────────────────
 Thumbs.db
 .DS_Store

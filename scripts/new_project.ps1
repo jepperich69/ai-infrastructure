@@ -1,4 +1,4 @@
-﻿# new_project.ps1
+﻿﻿# new_project.ps1
 # Scaffold a complete new paper project folder structure.
 #
 # Usage:
@@ -9,7 +9,7 @@ param(
     [Parameter(Mandatory=$true)]
     [string]$Project,
 
-    [string]$GitUrl = ""   # Overleaf git URL â€” clone into Overleaf_source/ if provided
+    [string]$GitUrl = ""   # Overleaf git URL â€" clone into Overleaf_source/ if provided
 )
 
 . "$PSScriptRoot\config.ps1"
@@ -22,13 +22,13 @@ if (Test-Path $projectRoot) {
 
 Write-Host "Creating project: $Project"
 
-# â”€â”€ Folder structure â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# â"€â"€ Folder structure â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€
 foreach ($sub in @("code", "code\data", "Literature")) {
     New-Item -ItemType Directory -Path (Join-Path $projectRoot $sub) -Force | Out-Null
 }
 Write-Host "OK   | Folders created (code/, code/data/, Literature/)"
 
-# â”€â”€ Overleaf_source â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# â"€â"€ Overleaf_source â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€
 $overleafDir = Join-Path $projectRoot "Overleaf_source"
 if ($GitUrl) {
     Write-Host "Cloning Overleaf repo..."
@@ -49,16 +49,16 @@ if ($GitUrl) {
         $projects | ConvertTo-Json -Depth 5 | Set-Content $jsonPath
         Write-Host "OK   | Registered in projects.json (branch: $branch)"
     } else {
-        Write-Host "ERR  | Clone failed â€” creating empty Overleaf_source/ instead"
+        Write-Host "ERR  | Clone failed â€" creating empty Overleaf_source/ instead"
         New-Item -ItemType Directory -Path $overleafDir -Force | Out-Null
     }
 } else {
     New-Item -ItemType Directory -Path $overleafDir -Force | Out-Null
     Set-Content -Path (Join-Path $overleafDir "README.md") -Value "# $Project`n`nLink Overleaf git URL here and run sync_all.ps1."
-    Write-Host "OK   | Overleaf_source/ created (placeholder â€” add git URL later)"
+    Write-Host "OK   | Overleaf_source/ created (placeholder â€" add git URL later)"
 }
 
-# â”€â”€ Git in code/ â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# â"€â"€ Git in code/ â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€
 $codeDir = Join-Path $projectRoot "code"
 $gitignore = @"
 __pycache__/
@@ -77,7 +77,7 @@ git -C $codeDir add -A
 git -C $codeDir commit --quiet -m "init: $Project"
 Write-Host "OK   | Git initialised in code/"
 
-# â”€â”€ Session log â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# â"€â"€ Session log â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€
 $logContent = @"
 # AI Session Log - $Project
 
@@ -88,7 +88,7 @@ $logContent = @"
 Set-Content -Path (Join-Path $projectRoot "_ai_log.md") -Value $logContent
 Write-Host "OK   | _ai_log.md created"
 
-# â”€â”€ Proxy-sandbox: per-project Claude permissions â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# â"€â"€ Proxy-sandbox: per-project Claude permissions â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€
 $claudeDir = Join-Path $projectRoot ".claude"
 New-Item -ItemType Directory -Path $claudeDir -Force | Out-Null
 $sandboxSettings = @"
@@ -105,12 +105,12 @@ $sandboxSettings = @"
 Set-Content -Path (Join-Path $claudeDir "settings.json") -Value $sandboxSettings
 Write-Host "OK   | .claude/settings.json created (proxy-sandbox active)"
 
-# â”€â”€ Per-project CLAUDE.md (session briefing) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# â"€â"€ Per-project CLAUDE.md (session briefing) â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€
 $claudeMd = @"
 # Project: $Project
 
 <!-- This file is read by Claude Code at session start. Keep it current but brief.
-     Session-by-session changes go in _ai_log.md â€” not here.
+     Session-by-session changes go in _ai_log.md â€" not here.
      Update this file when: co-authors change, venue changes, a section is frozen, notation is locked. -->
 
 ## What this paper is about
@@ -132,7 +132,7 @@ $claudeMd = @"
 - **Main code:** ``code/[primary script]``
 
 ## Standing constraints
-<!-- Notation conventions, frozen sections, reviewer mandates â€” things always true for this paper. -->
+<!-- Notation conventions, frozen sections, reviewer mandates â€" things always true for this paper. -->
 - [add as they emerge]
 
 ## What NOT to touch
@@ -142,14 +142,14 @@ $claudeMd = @"
 Set-Content -Path (Join-Path $claudeDir "CLAUDE.md") -Value $claudeMd
 Write-Host "OK   | .claude/CLAUDE.md created (fill in project details)"
 
-# â”€â”€ Auto-register auto-handover scheduled task (once per machine) â”€â”€
+# â"€â"€ Auto-register auto-handover scheduled task (once per machine) â"€â"€
 $taskName = "ResearchInfra_AutoHandover"
 $task = Get-ScheduledTask -TaskName $taskName -ErrorAction SilentlyContinue
 if (!$task) {
-    & "$aiRoot\auto_handover.ps1" --register
+    & "$PSScriptRoot\auto_handover.ps1" --register
     Write-Host "OK   | Auto-handover scheduled task registered ($taskName)"
 } else {
-    Write-Host "INFO | Auto-handover task already registered â€” skipping"
+    Write-Host "INFO | Auto-handover task already registered â€" skipping"
 }
 
 Write-Host ""
