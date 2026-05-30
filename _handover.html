@@ -30,7 +30,7 @@
 <body>
 
 <h1>Handover Document &mdash; AI_auto</h1>
-<div class="meta">Generated: 2026-05-29 09:20 &nbsp;|&nbsp; Source: <code style="display:inline;padding:2px 6px">_ai_log.md</code> &nbsp;|&nbsp; Sidecar: <code style="display:inline;padding:2px 6px">_handover.json</code></div>
+<div class="meta">Generated: 2026-05-30 08:43 &nbsp;|&nbsp; Source: <code style="display:inline;padding:2px 6px">_ai_log.md</code> &nbsp;|&nbsp; Sidecar: <code style="display:inline;padding:2px 6px">_handover.json</code></div>
 
 <!-- ============================================================ -->
 <!-- AGENT INSTRUCTIONS                                            -->
@@ -62,16 +62,34 @@
 <div class="latest-session">
   <div class="session-status ok">Complete</div>
   <h2>Latest Session Snapshot</h2>
-  <p><strong>Session:</strong> 2026-05-29d</p>
+  <p><strong>Session:</strong> 2026-05-30</p>
   <p><strong>Agent:</strong> Claude Sonnet 4.6</p>
-  <p><strong>Goal:</strong> Fix remaining `/close` permission prompts after subagent removal</p>
-  <p><strong>Outcome:</strong> Two root causes found and fixed: (1) `**` in the middle of Edit/Write glob patterns doesn&#39;t match in Claude Code&#39;s permission checker; (2) PowerShell built-in cmdlets need a space before `*` in the pattern. Handover call moved to Bash tool to bypass the hardcoded nested-process warning.</p>
-  <p><strong>Next steps:</strong> Verify next `/close` runs with zero prompts</p>
-  <p><strong>Git ref:</strong> --</p>
+  <p><strong>Goal:</strong> Add `/style-edit` skill for background LaTeX prose editing, then restructure the AI_auto repo for multi-user distribution (professional `scripts/` layout, clean `git pull` for users).</p>
+  <p><strong>Outcome:</strong> `/style-edit` skill added for autonomous background prose-style editing of LaTeX manuscripts. Repo restructured to v1.0: scripts in `scripts/`, `config.local.ps1` pattern ensures `git pull` never conflicts for any user, `helpi 26` provides a one-command update path. Smoke tested: helpi menu loads cleanly with all 26 commands.</p>
+  <p><strong>Next steps:</strong> Push v1.0 to GitHub so users can pull it.</p>
+  <p><strong>Git ref:</strong> 25cc6b0</p>
   <h3>Files touched</h3>
   <ul>
-  <li>`~/.claude/settings.json` — replaced `Edit/Write(C:/…/**/file.md)` patterns (** in middle, not working) with broad `Edit/Write(C:/Users/rich/OneDrive*/JR/**)` and `Edit/Write(C:/Users/rich/.claude/**)` patterns (** at end, consistent with working deny rules); fixed PowerShell cmdlet patterns to use space before * (e.g. `Remove-Item *` not `Remove-Item*`)</li>
-  <li>`~/.claude/commands/close.md` — Step G switched from PowerShell tool to Bash tool for handover call to avoid &quot;nested process&quot; security warning</li>
+  <li>`~/.claude/skills/style-edit/skill.md` -- new skill: background LaTeX style editor, section-by-section, prose only, outputs `_restyled.tex` + diff</li>
+  <li>`~/.claude/projects/.../memory/MEMORY.md` -- added style-edit skill and code-folder-restructure completion entries</li>
+  <li>`~/.claude/projects/.../memory/project_style_edit_skill.md` -- new memory file for skill</li>
+  <li>`~/.claude/projects/.../memory/project_code_folder_restructure.md` -- updated: marked completed</li>
+  <li>`scripts/` (new folder) -- all 34 PS1 scripts moved here via `git mv` (history preserved)</li>
+  <li>`scripts/config.ps1` -- refactored: `$aiRoot = Split-Path $PSScriptRoot -Parent`; removed hardcoded user paths; loads `config.local.ps1`</li>
+  <li>`scripts/config.local.ps1` -- new gitignored file: machine-specific paths for this install</li>
+  <li>`scripts/config.local.example.ps1` -- new template for new users</li>
+  <li>`scripts/helpi.ps1` -- all `$aiRoot\X.ps1` script calls changed to `$PSScriptRoot\X.ps1`; command 26 added</li>
+  <li>`scripts/setup.ps1` -- writes `config.local.ps1` instead of `config.ps1`; profile entry updated to `scripts\helpi.ps1`</li>
+  <li>`scripts/restore.ps1` -- `sync_claude_config.ps1` and scheduled task paths updated</li>
+  <li>`scripts/new_project.ps1` -- `auto_handover.ps1` ref updated to `$PSScriptRoot\`</li>
+  <li>`scripts/auto_handover.ps1` -- scheduled task and `generate_handover.ps1` paths updated</li>
+  <li>`scripts/update.ps1` -- new: `helpi 26`; runs `git pull`, reports version delta, auto-fixes hook paths in `settings.json`</li>
+  <li>`helpi.ps1` (root) -- new backward-compat shim delegating to `scripts\helpi.ps1`</li>
+  <li>`helpi.cmd` -- updated to call `scripts\helpi.ps1`</li>
+  <li>`.gitignore` -- hardened: added `config.local.ps1`, user data, generated files, pipeline/forum outputs</li>
+  <li>`~/.claude/settings.json` -- hook paths updated from `AI_auto\X.ps1` to `AI_auto\scripts\X.ps1`</li>
+  <li>`CHANGELOG.md` -- v1.0 entry added</li>
+  <li>`VERSION` -- bumped to v1.0</li>
 </ul>
 </div>
 
@@ -86,7 +104,6 @@
 <h2>Compressed sessions</h2>
 <br>
 <ul>
-  <li><strong>2026-05-24f</strong> (Gemini CLI): Audit Convergence Forum and update division meeting slides. -&gt; Forum infrastructure audited as READY. Slide update failed due to persistent syntax err...</li>
   <li><strong>2026-05-24g</strong> (Codex): Clean the broken division meeting slide deck, verify compilation, a... -&gt; Slides 13-14 are structurally clean and the referenced `figures/Human-AI_Integration_Di...</li>
   <li><strong>2026-05-24h</strong> (Codex): Refine Convergence Forum slides and remove the MiKTeX compile blocker. -&gt; Slide revisions were committed and pushed to Overleaf. MiKTeX was initialized for the n...</li>
   <li><strong>2026-05-24i</strong> (Gemini CLI): Implement SAD (Single-Agent Debate) mode for the FORUM skill and up... -&gt; SAD mode is now fully operational and documented. Slides are ready and verified. Global...</li>
@@ -102,21 +119,8 @@
   <li><strong>2026-05-27</strong> (Claude): Document helpi 25, fix /close permission prompts, and harden the Co... -&gt; helpi 25 is documented, /close now runs without permission prompts, and forum agents ca...</li>
   <li><strong>2026-05-27b</strong> (Claude): Add automatic backup and restore of `~/.claude/` so the AI infrastr... -&gt; `~/.claude/` is now backed up to `_claude_backup/` (OneDrive + GitHub) on every session...</li>
   <li><strong>2026-05-29</strong> (Claude): Set up a writing style guide from classic reference papers to gover... -&gt; Writing style guide created and wired into global CLAUDE.md; tested on a research parag...</li>
+  <li><strong>2026-05-29c</strong> (Claude): Fix `/close` to run without permission prompts -&gt; Root cause identified: subagents spawned via `Agent` tool have an independent permissio...</li>
 </ul>
-<br>
-<hr>
-<br>
-<h2>Session 2026-05-29c</h2>
-<p><strong>Agent:</strong> Claude Sonnet 4.6</p>
-<p><strong>Goal:</strong> Fix `/close` to run without permission prompts</p>
-<p><strong>Files touched:</strong></p>
-<ul>
-  <li>`~/.claude/commands/close.md` — rewrote to remove Haiku subagent; all steps now run directly in main Sonnet context</li>
-  <li>`memory/feedback_close_autonomous.md` — updated with root cause (subagents don&#39;t inherit `settings.json` allowlist) and fix</li>
-</ul>
-<p><strong>Outcome:</strong> Root cause identified: subagents spawned via `Agent` tool have an independent permission model and do not inherit the parent&#39;s allowlist. `/close` rewritten to execute all steps in the main context, eliminating all permission prompts.</p>
-<p><strong>Next steps:</strong> none</p>
-<p><strong>Git ref:</strong></p>
 <br>
 <hr>
 <br>
@@ -130,7 +134,7 @@
 </ul>
 <p><strong>Outcome:</strong> Two root causes found and fixed: (1) `**` in the middle of Edit/Write glob patterns doesn&#39;t match in Claude Code&#39;s permission checker; (2) PowerShell built-in cmdlets need a space before `*` in the pattern. Handover call moved to Bash tool to bypass the hardcoded nested-process warning.</p>
 <p><strong>Next steps:</strong> Verify next `/close` runs with zero prompts</p>
-<p><strong>Git ref:</strong> --</p>
+<p><strong>Git ref:</strong></p>
 <br>
 <hr>
 <br>
@@ -164,6 +168,38 @@
 <p><strong>Next steps:</strong> none</p>
 <p><strong>Git ref:</strong> c567d94</p>
 <br>
+<hr>
+<br>
+<h2>Session 2026-05-30</h2>
+<p><strong>Agent:</strong> Claude Sonnet 4.6</p>
+<p><strong>Goal:</strong> Add `/style-edit` skill for background LaTeX prose editing, then restructure the AI_auto repo for multi-user distribution (professional `scripts/` layout, clean `git pull` for users).</p>
+<p><strong>Files touched:</strong></p>
+<ul>
+  <li>`~/.claude/skills/style-edit/skill.md` -- new skill: background LaTeX style editor, section-by-section, prose only, outputs `_restyled.tex` + diff</li>
+  <li>`~/.claude/projects/.../memory/MEMORY.md` -- added style-edit skill and code-folder-restructure completion entries</li>
+  <li>`~/.claude/projects/.../memory/project_style_edit_skill.md` -- new memory file for skill</li>
+  <li>`~/.claude/projects/.../memory/project_code_folder_restructure.md` -- updated: marked completed</li>
+  <li>`scripts/` (new folder) -- all 34 PS1 scripts moved here via `git mv` (history preserved)</li>
+  <li>`scripts/config.ps1` -- refactored: `$aiRoot = Split-Path $PSScriptRoot -Parent`; removed hardcoded user paths; loads `config.local.ps1`</li>
+  <li>`scripts/config.local.ps1` -- new gitignored file: machine-specific paths for this install</li>
+  <li>`scripts/config.local.example.ps1` -- new template for new users</li>
+  <li>`scripts/helpi.ps1` -- all `$aiRoot\X.ps1` script calls changed to `$PSScriptRoot\X.ps1`; command 26 added</li>
+  <li>`scripts/setup.ps1` -- writes `config.local.ps1` instead of `config.ps1`; profile entry updated to `scripts\helpi.ps1`</li>
+  <li>`scripts/restore.ps1` -- `sync_claude_config.ps1` and scheduled task paths updated</li>
+  <li>`scripts/new_project.ps1` -- `auto_handover.ps1` ref updated to `$PSScriptRoot\`</li>
+  <li>`scripts/auto_handover.ps1` -- scheduled task and `generate_handover.ps1` paths updated</li>
+  <li>`scripts/update.ps1` -- new: `helpi 26`; runs `git pull`, reports version delta, auto-fixes hook paths in `settings.json`</li>
+  <li>`helpi.ps1` (root) -- new backward-compat shim delegating to `scripts\helpi.ps1`</li>
+  <li>`helpi.cmd` -- updated to call `scripts\helpi.ps1`</li>
+  <li>`.gitignore` -- hardened: added `config.local.ps1`, user data, generated files, pipeline/forum outputs</li>
+  <li>`~/.claude/settings.json` -- hook paths updated from `AI_auto\X.ps1` to `AI_auto\scripts\X.ps1`</li>
+  <li>`CHANGELOG.md` -- v1.0 entry added</li>
+  <li>`VERSION` -- bumped to v1.0</li>
+</ul>
+<p><strong>Outcome:</strong> `/style-edit` skill added for autonomous background prose-style editing of LaTeX manuscripts. Repo restructured to v1.0: scripts in `scripts/`, `config.local.ps1` pattern ensures `git pull` never conflicts for any user, `helpi 26` provides a one-command update path. Smoke tested: helpi menu loads cleanly with all 26 commands.</p>
+<p><strong>Next steps:</strong> Push v1.0 to GitHub so users can pull it.</p>
+<p><strong>Git ref:</strong> 25cc6b0</p>
+<br>
 
 </div>
 
@@ -179,7 +215,6 @@
 
 ## Compressed sessions
 
-- **2026-05-24f** (Gemini CLI): Audit Convergence Forum and update division meeting slides. -&gt; Forum infrastructure audited as READY. Slide update failed due to persistent syntax err...
 - **2026-05-24g** (Codex): Clean the broken division meeting slide deck, verify compilation, a... -&gt; Slides 13-14 are structurally clean and the referenced `figures/Human-AI_Integration_Di...
 - **2026-05-24h** (Codex): Refine Convergence Forum slides and remove the MiKTeX compile blocker. -&gt; Slide revisions were committed and pushed to Overleaf. MiKTeX was initialized for the n...
 - **2026-05-24i** (Gemini CLI): Implement SAD (Single-Agent Debate) mode for the FORUM skill and up... -&gt; SAD mode is now fully operational and documented. Slides are ready and verified. Global...
@@ -195,18 +230,7 @@
 - **2026-05-27** (Claude): Document helpi 25, fix /close permission prompts, and harden the Co... -&gt; helpi 25 is documented, /close now runs without permission prompts, and forum agents ca...
 - **2026-05-27b** (Claude): Add automatic backup and restore of `~/.claude/` so the AI infrastr... -&gt; `~/.claude/` is now backed up to `_claude_backup/` (OneDrive + GitHub) on every session...
 - **2026-05-29** (Claude): Set up a writing style guide from classic reference papers to gover... -&gt; Writing style guide created and wired into global CLAUDE.md; tested on a research parag...
-
----
-
-## Session 2026-05-29c
-**Agent:** Claude Sonnet 4.6
-**Goal:** Fix `/close` to run without permission prompts
-**Files touched:**
-- `~/.claude/commands/close.md` — rewrote to remove Haiku subagent; all steps now run directly in main Sonnet context
-- `memory/feedback_close_autonomous.md` — updated with root cause (subagents don't inherit `settings.json` allowlist) and fix
-**Outcome:** Root cause identified: subagents spawned via `Agent` tool have an independent permission model and do not inherit the parent's allowlist. `/close` rewritten to execute all steps in the main context, eliminating all permission prompts.
-**Next steps:** none
-**Git ref:**
+- **2026-05-29c** (Claude): Fix `/close` to run without permission prompts -&gt; Root cause identified: subagents spawned via `Agent` tool have an independent permissio...
 
 ---
 
@@ -218,7 +242,7 @@
 - `~/.claude/commands/close.md` — Step G switched from PowerShell tool to Bash tool for handover call to avoid "nested process" security warning
 **Outcome:** Two root causes found and fixed: (1) `**` in the middle of Edit/Write glob patterns doesn't match in Claude Code's permission checker; (2) PowerShell built-in cmdlets need a space before `*` in the pattern. Handover call moved to Bash tool to bypass the hardcoded nested-process warning.
 **Next steps:** Verify next `/close` runs with zero prompts
-**Git ref:** --
+**Git ref:**
 
 ---
 
@@ -247,6 +271,36 @@
 **Outcome:** /close now delegates mechanical operations to a Haiku subagent; permission patterns extended; infrastructure guide complete to helpi 25 with writing style and agent delegation sections; v0.9 changelog written; infrastructure_full.pdf tracked in git; all pushed to GitHub.
 **Next steps:** none
 **Git ref:** c567d94
+
+---
+
+## Session 2026-05-30
+**Agent:** Claude Sonnet 4.6
+**Goal:** Add `/style-edit` skill for background LaTeX prose editing, then restructure the AI_auto repo for multi-user distribution (professional `scripts/` layout, clean `git pull` for users).
+**Files touched:**
+- `~/.claude/skills/style-edit/skill.md` -- new skill: background LaTeX style editor, section-by-section, prose only, outputs `_restyled.tex` + diff
+- `~/.claude/projects/.../memory/MEMORY.md` -- added style-edit skill and code-folder-restructure completion entries
+- `~/.claude/projects/.../memory/project_style_edit_skill.md` -- new memory file for skill
+- `~/.claude/projects/.../memory/project_code_folder_restructure.md` -- updated: marked completed
+- `scripts/` (new folder) -- all 34 PS1 scripts moved here via `git mv` (history preserved)
+- `scripts/config.ps1` -- refactored: `$aiRoot = Split-Path $PSScriptRoot -Parent`; removed hardcoded user paths; loads `config.local.ps1`
+- `scripts/config.local.ps1` -- new gitignored file: machine-specific paths for this install
+- `scripts/config.local.example.ps1` -- new template for new users
+- `scripts/helpi.ps1` -- all `$aiRoot\X.ps1` script calls changed to `$PSScriptRoot\X.ps1`; command 26 added
+- `scripts/setup.ps1` -- writes `config.local.ps1` instead of `config.ps1`; profile entry updated to `scripts\helpi.ps1`
+- `scripts/restore.ps1` -- `sync_claude_config.ps1` and scheduled task paths updated
+- `scripts/new_project.ps1` -- `auto_handover.ps1` ref updated to `$PSScriptRoot\`
+- `scripts/auto_handover.ps1` -- scheduled task and `generate_handover.ps1` paths updated
+- `scripts/update.ps1` -- new: `helpi 26`; runs `git pull`, reports version delta, auto-fixes hook paths in `settings.json`
+- `helpi.ps1` (root) -- new backward-compat shim delegating to `scripts\helpi.ps1`
+- `helpi.cmd` -- updated to call `scripts\helpi.ps1`
+- `.gitignore` -- hardened: added `config.local.ps1`, user data, generated files, pipeline/forum outputs
+- `~/.claude/settings.json` -- hook paths updated from `AI_auto\X.ps1` to `AI_auto\scripts\X.ps1`
+- `CHANGELOG.md` -- v1.0 entry added
+- `VERSION` -- bumped to v1.0
+**Outcome:** `/style-edit` skill added for autonomous background prose-style editing of LaTeX manuscripts. Repo restructured to v1.0: scripts in `scripts/`, `config.local.ps1` pattern ensures `git pull` never conflicts for any user, `helpi 26` provides a one-command update path. Smoke tested: helpi menu loads cleanly with all 26 commands.
+**Next steps:** Push v1.0 to GitHub so users can pull it.
+**Git ref:** 25cc6b0
 </textarea>
 </div>
 
@@ -264,7 +318,10 @@
 <!-- ============================================================ -->
 <div class="section">
   <h2>Overleaf Git History (last 20 commits)</h2>
-  <pre>da411a7 Merge branch &#39;master&#39; of https://git.overleaf.com/69e4cd88646aa324de75fc2c
+  <pre>2e11a4c Auto-backup 2026-05-29 11:07
+174cf2e Merge branch &#39;master&#39; of https://git.overleaf.com/69e4cd88646aa324de75fc2c
+f591440 Update on Overleaf.
+da411a7 Merge branch &#39;master&#39; of https://git.overleaf.com/69e4cd88646aa324de75fc2c
 687fe05 Update on Overleaf.
 eff99ba Auto-backup 2026-05-27 15:08
 aae77f0 Auto-backup 2026-05-27 09:05
@@ -280,10 +337,7 @@ a53f5c6 Local edits 2026-05-25 17:07
 7ca2e4b Auto-backup 2026-05-24 14:06
 96f0945 Local edits 2026-05-24 13:22
 3c76b23 Local edits 2026-05-24 13:18
-5b5833d Tighten forum slide wording
-3dbd005 Refine convergence forum slides
-7b13870 Fix convergence forum slide TikZ
-5b78735 Local edits 2026-05-24 12:29</pre>
+5b5833d Tighten forum slide wording</pre>
 </div>
 
 </body>
