@@ -304,6 +304,7 @@
     <div>
       <div style="font-weight:bold; text-transform:uppercase; letter-spacing:0.05em; color:#4a4a9a; font-size:0.82em; margin-bottom:4px;">AI Layer &mdash; Claude Code &amp; Codex</div>
       <div><a href="#secA" style="color:inherit;">A &mdash; Claude Code Commands</a></div>
+      <div><a href="#secA-style" style="color:inherit;">A2 &mdash; /style-edit &amp; /style-apply</a></div>
       <div><a href="#secB" style="color:inherit;">B &mdash; /submit &mdash; Submission package</a></div>
       <div><a href="#secC" style="color:inherit;">C &mdash; /respond &mdash; Reviewer response loop</a></div>
       <div><a href="#secD" style="color:inherit;">D &mdash; Cross-Project Memory &amp; Feeders</a></div>
@@ -1206,6 +1207,52 @@ git checkout snapshot-v2                     # restore everything</pre>
   one logical load per sentence; consistent terminology with no synonym rotation. A banned-phrase list
   eliminates common AI-isms: <em>delve into, showcase, leverage, nuanced, it is worth noting that,
   in order to, utilize, furthermore</em>, and similar.</p>
+
+  <hr>
+
+  <h3 id="secA-style">/style-edit &mdash; Background prose style editor <span class="tag ai">AI</span></h3>
+  <p>
+    <code>/style-edit</code> rewrites the prose of a LaTeX manuscript section-by-section to match the
+    reference writing style. Math, equations, tables, figures, and all LaTeX commands are left
+    completely untouched. Bibliography/references sections are always passed through verbatim.
+    Output: a restyled <code>.tex</code> file, a <code>style_edit.diff</code>, and optionally a
+    structured review document for change-by-change approval.
+  </p>
+  <table class="cmd-table" style="margin-top:10px;">
+    <tr><th>Flag</th><th>Default</th><th>Effect</th></tr>
+    <tr><td><code>--project Pub_Name</code></td><td>&mdash;</td><td>Resolves project path and auto-detects the main <code>.tex</code> file</td></tr>
+    <tr><td><code>--agent claude|gemini|codex</code></td><td><code>claude</code></td><td>Backend model. Use <code>gemini</code> or <code>codex</code> for long papers to bypass Claude rate limits</td></tr>
+    <tr><td><code>--chunk-size N</code></td><td><code>4</code></td><td>Sections per parallel job (gemini/codex only). A 20-section paper with chunk-size 4 launches 5 parallel jobs simultaneously</td></tr>
+    <tr><td><code>--review</code></td><td>off</td><td>After assembly, generate <code>style_review.md</code> listing every changed paragraph with <code>[KEEP]</code>/<code>[REJECT]</code> markers</td></tr>
+    <tr><td><code>--out path</code></td><td><code>{project}\_style_edits\YYYY-MM-DD_HH-MM-SS\</code></td><td>Override output directory</td></tr>
+  </table>
+  <p style="margin-top:10px;"><strong>Parallel chunked processing (gemini/codex):</strong> sections are grouped into chunks of
+  <code>--chunk-size</code> and each chunk is a separate parallel PowerShell job. A stalled job times out
+  after 30 minutes and falls back to the original text for that chunk &mdash; the rest of the paper is
+  unaffected. Token counts (in/out per chunk and totals) are written to <code>token_usage.tsv</code> and
+  summarised in <code>style_edit_log.md</code>.</p>
+  <p><strong>Typical usage:</strong></p>
+  <pre>/style-edit --project Pub_MyPaper --agent gemini --review</pre>
+
+  <h3>/style-apply &mdash; Selective change approval <span class="tag ai">AI</span></h3>
+  <p>
+    After <code>/style-edit --review</code> produces <code>style_review.md</code>, open it and change
+    <code>[KEEP]</code> to <code>[REJECT]</code> on any paragraph rewrite you want to discard. Then run:
+  </p>
+  <pre>/style-apply path/to/style_review.md</pre>
+  <p>
+    The skill starts from the fully-restyled file, reverts every <code>[REJECT]</code> back to the
+    original text, and writes <code>[name]_approved.tex</code> plus <code>approved.diff</code>. Both open
+    automatically. Unmarked changes default to <code>[KEEP]</code>. Safe to re-run after further edits
+    to the review doc.
+  </p>
+  <table class="cmd-table" style="margin-top:6px;">
+    <tr><th>Step</th><th>Command</th></tr>
+    <tr><td>1. Run style edit with review</td><td><code>/style-edit --project Pub_X --agent gemini --review</code></td></tr>
+    <tr><td>2. Edit review doc</td><td>Open <code>style_review.md</code>, mark <code>[REJECT]</code> on unwanted changes, save</td></tr>
+    <tr><td>3. Apply approved changes</td><td><code>/style-apply path/to/style_review.md</code></td></tr>
+    <tr><td>4. Push to Overleaf</td><td><code>helpi 4 Pub_X</code></td></tr>
+  </table>
 
   <hr>
 
