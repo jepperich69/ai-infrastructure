@@ -5,3 +5,5 @@
 [2026-05-31 08:20] Write: C:\Users\rich\.claude\skills\pipeline\skill.md
 [2026-05-31 08:20] Edit:  C:\Users\rich\.claude\projects\C--Users-rich-OneDrive---Danmarks-Tekniske-Universitet-JR-AI-auto\memory\project_pipeline_skill.md
 [2026-05-31 08:28] Write: C:\Users\rich\.claude\skills\style-edit\skill.md
+[2026-05-31 08:59] Write: C:\Users\rich\OneDrive - Danmarks Tekniske Universitet\JR\Publikationer\Pub_SAA_PMIP_MC\_style_edits\2026-05-31_08-58-56\run_style_edit.ps1
+[2026-05-31 08:59] Edit:  C:\Users\rich\.claude\skills\style-edit\skill.md
