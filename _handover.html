@@ -30,7 +30,7 @@
 <body>
 
 <h1>Handover Document &mdash; AI_auto</h1>
-<div class="meta">Generated: 2026-05-30 21:28 &nbsp;|&nbsp; Source: <code style="display:inline;padding:2px 6px">_ai_log.md</code> &nbsp;|&nbsp; Sidecar: <code style="display:inline;padding:2px 6px">_handover.json</code></div>
+<div class="meta">Generated: 2026-05-31 09:10 &nbsp;|&nbsp; Source: <code style="display:inline;padding:2px 6px">_ai_log.md</code> &nbsp;|&nbsp; Sidecar: <code style="display:inline;padding:2px 6px">_handover.json</code></div>
 
 <!-- ============================================================ -->
 <!-- AGENT INSTRUCTIONS                                            -->
@@ -62,17 +62,18 @@
 <div class="latest-session">
   <div class="session-status ok">Complete</div>
   <h2>Latest Session Snapshot</h2>
-  <p><strong>Session:</strong> 2026-05-30b</p>
+  <p><strong>Session:</strong> 2026-05-31</p>
   <p><strong>Agent:</strong> Claude Sonnet 4.6</p>
-  <p><strong>Goal:</strong> Push v1.0 to GitHub, remove redundant root helpi.ps1 shim, and update infrastructure.html to reflect the v1.0 file structure</p>
-  <p><strong>Outcome:</strong> v1.0 fully pushed to GitHub; documentation updated and regenerated to match the scripts/ restructure.</p>
-  <p><strong>Next steps:</strong> none</p>
+  <p><strong>Goal:</strong> Fix auth bug in /style-edit and /pipeline skills (both used claude --print which fails with OAuth subscription auth); add --agent gemini/codex options to style-edit; explore exemplar-based style editing; run 4-agent quality comparison; launch full Gemini style edit on Pub_SAA_PMIP_MC.</p>
+  <p><strong>Outcome:</strong> Both skills now use subscription auth correctly. 4-agent comparison (Sonnet/Haiku/Gemini/Codex) on Introduction passage completed. Gemini JSON token format confirmed. Reference paper passages extracted for planned exemplar feature. Full Gemini style edit of Pub_SAA_PMIP_MC running.</p>
+  <p><strong>Next steps:</strong> Add --no-exemplars flag to style-edit with reference paper passages embedded in prompt; update Gemini PS1 to use --output-format json for token tracking; check style edit results.</p>
   
   <h3>Files touched</h3>
   <ul>
-  <li>`helpi.ps1` (root) -- deleted; was a backward-compat shim but helpi.cmd already calls scripts\helpi.ps1 directly so it was never used</li>
-  <li>`infrastructure.html` -- version bumped to v1.0 (subtitle, versioning section, footer); all direct script paths updated to include scripts\; installation Scenario B corrected (config.local.ps1 not config.ps1); new sections added: config.local.ps1 machine-specific split, helpi 26 update command</li>
-  <li>`infrastructure_full.pdf` -- regenerated via helpi 16</li>
+  <li>`~/.claude/skills/style-edit/skill.md` -- rebuilt: claude backend uses Agent tool; gemini/codex use PS1+CLI; added --agent flag; fixed Gemini flag conflict</li>
+  <li>`~/.claude/skills/pipeline/skill.md` -- rebuilt: claude rounds handled by background Agent, not claude --print subprocess</li>
+  <li>`~/.claude/projects/.../memory/project_pipeline_skill.md` -- updated with auth fix note</li>
+  <li>`Pub_SAA_PMIP_MC/_style_edits/2026-05-31_08-58-56/run_style_edit.ps1` -- generated and launched (Gemini, full paper, running)</li>
 </ul>
 </div>
 
@@ -87,7 +88,6 @@
 <h2>Compressed sessions</h2>
 <br>
 <ul>
-  <li><strong>2026-05-24h</strong> (Codex): Refine Convergence Forum slides and remove the MiKTeX compile blocker. -&gt; Slide revisions were committed and pushed to Overleaf. MiKTeX was initialized for the n...</li>
   <li><strong>2026-05-24i</strong> (Gemini CLI): Implement SAD (Single-Agent Debate) mode for the FORUM skill and up... -&gt; SAD mode is now fully operational and documented. Slides are ready and verified. Global...</li>
   <li><strong>2026-05-24j</strong> (Codex): Apply requested wording edits to the division meeting slide deck. -&gt; Deck edits applied and verified. `helpi 6 AI_auto -Force` produced a fresh 26-page PDF;...</li>
   <li><strong>2026-05-24k</strong> (Codex): Audit the new `helpi 25` Forum/code-audit command path. -&gt; Audited `helpi.ps1`, `run_forum.ps1`, the new `prompts/code-audit.md` template, and For...</li>
@@ -103,21 +103,8 @@
   <li><strong>2026-05-29</strong> (Claude): Set up a writing style guide from classic reference papers to gover... -&gt; Writing style guide created and wired into global CLAUDE.md; tested on a research parag...</li>
   <li><strong>2026-05-29c</strong> (Claude): Fix `/close` to run without permission prompts -&gt; Root cause identified: subagents spawned via `Agent` tool have an independent permissio...</li>
   <li><strong>2026-05-29d</strong> (Claude): Fix remaining `/close` permission prompts after subagent removal -&gt; Two root causes found and fixed: (1) `**` in the middle of Edit/Write glob patterns doe...</li>
+  <li><strong>2026-05-26b</strong> (Claude): Add `-Stage` parameter to the Convergence Forum to prevent agents f... -&gt; Forum agents now operate in surgical/defect-detection mode when `-Stage revision` or `-...</li>
 </ul>
-<br>
-<hr>
-<br>
-<h2>Session 2026-05-26b</h2>
-<p><strong>Agent:</strong> Claude Sonnet 4.6</p>
-<p><strong>Goal:</strong> Add `-Stage` parameter to the Convergence Forum to prevent agents from over-inventing changes when a paper is in a settled R1/R2 state.</p>
-<p><strong>Files touched:</strong></p>
-<ul>
-  <li>`run_forum.ps1` — added `-Stage` param (draft/revision/final); agent prompt, moderator prompt, and initial blackboard state now reflect stage-specific framing and constraints</li>
-  <li>`helpi.ps1` — added `-Stage` param, interactive stage-selection prompt (numbers 1-3), wired through to `run_forum.ps1`, updated help text and generated command string</li>
-</ul>
-<p><strong>Outcome:</strong> Forum agents now operate in surgical/defect-detection mode when `-Stage revision` or `-Stage final` is passed, preventing scope creep on settled manuscripts.</p>
-<p><strong>Next steps:</strong> none</p>
-<p><strong>Git ref:</strong> c7499a3</p>
 <br>
 <hr>
 <br>
@@ -182,6 +169,22 @@
 </ul>
 <p><strong>Outcome:</strong> v1.0 fully pushed to GitHub; documentation updated and regenerated to match the scripts/ restructure.</p>
 <p><strong>Next steps:</strong> none</p>
+<p><strong>Git ref:</strong></p>
+<br>
+<hr>
+<br>
+<h2>Session 2026-05-31</h2>
+<p><strong>Agent:</strong> Claude Sonnet 4.6</p>
+<p><strong>Goal:</strong> Fix auth bug in /style-edit and /pipeline skills (both used claude --print which fails with OAuth subscription auth); add --agent gemini/codex options to style-edit; explore exemplar-based style editing; run 4-agent quality comparison; launch full Gemini style edit on Pub<em>SAA</em>PMIP_MC.</p>
+<p><strong>Files touched:</strong></p>
+<ul>
+  <li>`~/.claude/skills/style-edit/skill.md` -- rebuilt: claude backend uses Agent tool; gemini/codex use PS1+CLI; added --agent flag; fixed Gemini flag conflict</li>
+  <li>`~/.claude/skills/pipeline/skill.md` -- rebuilt: claude rounds handled by background Agent, not claude --print subprocess</li>
+  <li>`~/.claude/projects/.../memory/project_pipeline_skill.md` -- updated with auth fix note</li>
+  <li>`Pub_SAA_PMIP_MC/_style_edits/2026-05-31_08-58-56/run_style_edit.ps1` -- generated and launched (Gemini, full paper, running)</li>
+</ul>
+<p><strong>Outcome:</strong> Both skills now use subscription auth correctly. 4-agent comparison (Sonnet/Haiku/Gemini/Codex) on Introduction passage completed. Gemini JSON token format confirmed. Reference paper passages extracted for planned exemplar feature. Full Gemini style edit of Pub<em>SAA</em>PMIP_MC running.</p>
+<p><strong>Next steps:</strong> Add --no-exemplars flag to style-edit with reference paper passages embedded in prompt; update Gemini PS1 to use --output-format json for token tracking; check style edit results.</p>
 <p><strong>Git ref:</strong></p>
 <br>
 
@@ -199,7 +202,6 @@
 
 ## Compressed sessions
 
-- **2026-05-24h** (Codex): Refine Convergence Forum slides and remove the MiKTeX compile blocker. -&gt; Slide revisions were committed and pushed to Overleaf. MiKTeX was initialized for the n...
 - **2026-05-24i** (Gemini CLI): Implement SAD (Single-Agent Debate) mode for the FORUM skill and up... -&gt; SAD mode is now fully operational and documented. Slides are ready and verified. Global...
 - **2026-05-24j** (Codex): Apply requested wording edits to the division meeting slide deck. -&gt; Deck edits applied and verified. `helpi 6 AI_auto -Force` produced a fresh 26-page PDF;...
 - **2026-05-24k** (Codex): Audit the new `helpi 25` Forum/code-audit command path. -&gt; Audited `helpi.ps1`, `run_forum.ps1`, the new `prompts/code-audit.md` template, and For...
@@ -215,18 +217,7 @@
 - **2026-05-29** (Claude): Set up a writing style guide from classic reference papers to gover... -&gt; Writing style guide created and wired into global CLAUDE.md; tested on a research parag...
 - **2026-05-29c** (Claude): Fix `/close` to run without permission prompts -&gt; Root cause identified: subagents spawned via `Agent` tool have an independent permissio...
 - **2026-05-29d** (Claude): Fix remaining `/close` permission prompts after subagent removal -&gt; Two root causes found and fixed: (1) `**` in the middle of Edit/Write glob patterns doe...
-
----
-
-## Session 2026-05-26b
-**Agent:** Claude Sonnet 4.6
-**Goal:** Add `-Stage` parameter to the Convergence Forum to prevent agents from over-inventing changes when a paper is in a settled R1/R2 state.
-**Files touched:**
-- `run_forum.ps1` — added `-Stage` param (draft/revision/final); agent prompt, moderator prompt, and initial blackboard state now reflect stage-specific framing and constraints
-- `helpi.ps1` — added `-Stage` param, interactive stage-selection prompt (numbers 1-3), wired through to `run_forum.ps1`, updated help text and generated command string
-**Outcome:** Forum agents now operate in surgical/defect-detection mode when `-Stage revision` or `-Stage final` is passed, preventing scope creep on settled manuscripts.
-**Next steps:** none
-**Git ref:** c7499a3
+- **2026-05-26b** (Claude): Add `-Stage` parameter to the Convergence Forum to prevent agents f... -&gt; Forum agents now operate in surgical/defect-detection mode when `-Stage revision` or `-...
 
 ---
 
@@ -285,6 +276,20 @@
 - `infrastructure_full.pdf` -- regenerated via helpi 16
 **Outcome:** v1.0 fully pushed to GitHub; documentation updated and regenerated to match the scripts/ restructure.
 **Next steps:** none
+**Git ref:**
+
+---
+
+## Session 2026-05-31
+**Agent:** Claude Sonnet 4.6
+**Goal:** Fix auth bug in /style-edit and /pipeline skills (both used claude --print which fails with OAuth subscription auth); add --agent gemini/codex options to style-edit; explore exemplar-based style editing; run 4-agent quality comparison; launch full Gemini style edit on Pub_SAA_PMIP_MC.
+**Files touched:**
+- `~/.claude/skills/style-edit/skill.md` -- rebuilt: claude backend uses Agent tool; gemini/codex use PS1+CLI; added --agent flag; fixed Gemini flag conflict
+- `~/.claude/skills/pipeline/skill.md` -- rebuilt: claude rounds handled by background Agent, not claude --print subprocess
+- `~/.claude/projects/.../memory/project_pipeline_skill.md` -- updated with auth fix note
+- `Pub_SAA_PMIP_MC/_style_edits/2026-05-31_08-58-56/run_style_edit.ps1` -- generated and launched (Gemini, full paper, running)
+**Outcome:** Both skills now use subscription auth correctly. 4-agent comparison (Sonnet/Haiku/Gemini/Codex) on Introduction passage completed. Gemini JSON token format confirmed. Reference paper passages extracted for planned exemplar feature. Full Gemini style edit of Pub_SAA_PMIP_MC running.
+**Next steps:** Add --no-exemplars flag to style-edit with reference paper passages embedded in prompt; update Gemini PS1 to use --output-format json for token tracking; check style edit results.
 **Git ref:**
 </textarea>
 </div>

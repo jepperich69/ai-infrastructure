@@ -1,9 +1,2 @@
-[2026-05-30 21:28] Write: _state\current.md
-[2026-05-30 21:28] Bash:  pwsh -NoProfile -File "C:\Users\rich\OneDrive - Danmarks Tekniske Universitet\JR\AI_auto\scripts\gen...
-[2026-05-30 23:18] Edit:  C:\Users\rich\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1
-[2026-05-31 08:16] Write: C:\Users\rich\.claude\skills\style-edit\skill.md
-[2026-05-31 08:20] Write: C:\Users\rich\.claude\skills\pipeline\skill.md
-[2026-05-31 08:20] Edit:  C:\Users\rich\.claude\projects\C--Users-rich-OneDrive---Danmarks-Tekniske-Universitet-JR-AI-auto\memory\project_pipeline_skill.md
-[2026-05-31 08:28] Write: C:\Users\rich\.claude\skills\style-edit\skill.md
-[2026-05-31 08:59] Write: C:\Users\rich\OneDrive - Danmarks Tekniske Universitet\JR\Publikationer\Pub_SAA_PMIP_MC\_style_edits\2026-05-31_08-58-56\run_style_edit.ps1
-[2026-05-31 08:59] Edit:  C:\Users\rich\.claude\skills\style-edit\skill.md
+[2026-05-31 09:10] Write: _state\current.md
+[2026-05-31 09:10] Bash:  pwsh -NoProfile -File "C:\Users\rich\OneDrive - Danmarks Tekniske Universitet\JR\AI_auto\scripts\gen...

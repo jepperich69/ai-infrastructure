@@ -1,18 +1,19 @@
 {
   "project": "AI_auto",
-  "generated": "2026-05-30 21:28",
+  "generated": "2026-05-31 09:10",
   "source": "_ai_log.md",
   "latest_session": {
-    "title": "2026-05-30b",
+    "title": "2026-05-31",
     "agent": "Claude Sonnet 4.6",
-    "goal": "Push v1.0 to GitHub, remove redundant root helpi.ps1 shim, and update infrastructure.html to reflect the v1.0 file structure",
-    "outcome": "v1.0 fully pushed to GitHub; documentation updated and regenerated to match the scripts/ restructure.",
-    "next_steps": "none",
+    "goal": "Fix auth bug in /style-edit and /pipeline skills (both used claude --print which fails with OAuth subscription auth); add --agent gemini/codex options to style-edit; explore exemplar-based style editing; run 4-agent quality comparison; launch full Gemini style edit on Pub_SAA_PMIP_MC.",
+    "outcome": "Both skills now use subscription auth correctly. 4-agent comparison (Sonnet/Haiku/Gemini/Codex) on Introduction passage completed. Gemini JSON token format confirmed. Reference paper passages extracted for planned exemplar feature. Full Gemini style edit of Pub_SAA_PMIP_MC running.",
+    "next_steps": "Add --no-exemplars flag to style-edit with reference paper passages embedded in prompt; update Gemini PS1 to use --output-format json for token tracking; check style edit results.",
     "git_ref": "",
     "files_touched": [
-      "`helpi.ps1` (root) -- deleted; was a backward-compat shim but helpi.cmd already calls scripts\\helpi.ps1 directly so it was never used",
-      "`infrastructure.html` -- version bumped to v1.0 (subtitle, versioning section, footer); all direct script paths updated to include scripts\\; installation Scenario B corrected (config.local.ps1 not config.ps1); new sections added: config.local.ps1 machine-specific split, helpi 26 update command",
-      "`infrastructure_full.pdf` -- regenerated via helpi 16"
+      "`~/.claude/skills/style-edit/skill.md` -- rebuilt: claude backend uses Agent tool; gemini/codex use PS1+CLI; added --agent flag; fixed Gemini flag conflict",
+      "`~/.claude/skills/pipeline/skill.md` -- rebuilt: claude rounds handled by background Agent, not claude --print subprocess",
+      "`~/.claude/projects/.../memory/project_pipeline_skill.md` -- updated with auth fix note",
+      "`Pub_SAA_PMIP_MC/_style_edits/2026-05-31_08-58-56/run_style_edit.ps1` -- generated and launched (Gemini, full paper, running)"
     ]
   },
   "latest_session_complete": true,
