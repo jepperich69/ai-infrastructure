@@ -205,3 +205,10 @@
 ## Archived 2026-05-31 (1 entry)
 
 - **2026-05-24h** (Codex): Refine Convergence Forum slides and remove the MiKTeX compile blocker. -> Slide revisions were committed and pushed to Overleaf. MiKTeX was initialized for the n...
+
+
+---
+
+## Archived 2026-05-31 (1 entry)
+
+- **2026-05-24i** (Gemini CLI): Implement SAD (Single-Agent Debate) mode for the FORUM skill and up... -> SAD mode is now fully operational and documented. Slides are ready and verified. Global...
