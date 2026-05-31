@@ -22,8 +22,15 @@ $root    = Resolve-ProjectRoot $Project
 $codeDir = Join-Path $root "code"
 
 if (!(Test-Path $codeDir)) {
-    Write-Host "ERR | No code/ directory found at: $codeDir" -ForegroundColor Red
-    exit 1
+    # Fall back to project root if it is itself a git repo (e.g. AI_auto)
+    $rootIsGit = git -C $root rev-parse --git-dir 2>&1
+    if ($LASTEXITCODE -eq 0) {
+        Write-Host "  No code/ directory - using project root as repo." -ForegroundColor DarkGray
+        $codeDir = $root
+    } else {
+        Write-Host "ERR | No code/ directory found at: $codeDir" -ForegroundColor Red
+        exit 1
+    }
 }
 
 $gitDir = git -C $codeDir rev-parse --git-dir 2>&1

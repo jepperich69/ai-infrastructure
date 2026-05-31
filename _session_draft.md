@@ -1,3 +1,6 @@
 [2026-05-31 11:19] Write: _state\current.md
 [2026-05-31 11:19] Bash:  pwsh -NoProfile -File "C:\Users\rich\OneDrive - Danmarks Tekniske Universitet\JR\AI_auto\scripts\gen...
 [2026-05-31 11:19] Edit:  C:\Users\rich\.claude\projects\C--Users-rich-OneDrive---Danmarks-Tekniske-Universitet-JR-AI-auto\memory\project_style_edit_skill.md
+[2026-05-31 11:21] Bash:  git -C "C:\Users\rich\OneDrive - Danmarks Tekniske Universitet\JR\AI_auto" remote -v 2>&1
+[2026-05-31 11:22] Edit:  scripts\push_to_github.ps1
+[2026-05-31 11:22] Bash:  git -C "C:\Users\rich\OneDrive - Danmarks Tekniske Universitet\JR\AI_auto" log --oneline -10 -- scri...
