@@ -4,7 +4,6 @@
 
 ## Compressed sessions
 
-- **2026-05-24j** (Codex): Apply requested wording edits to the division meeting slide deck. -> Deck edits applied and verified. `helpi 6 AI_auto -Force` produced a fresh 26-page PDF;...
 - **2026-05-24k** (Codex): Audit the new `helpi 25` Forum/code-audit command path. -> Audited `helpi.ps1`, `run_forum.ps1`, the new `prompts/code-audit.md` template, and For...
 - **2026-05-24l** (Codex): Patch the `helpi 25` Forum/code-audit issues found in audit. -> The direct `helpi 25 code-audit` shortcut now maps to the current/last project, forum r...
 - **2026-05-24m** (Codex): Prepare Claude's final validation instruction for the patched `help... -> Claude now has a focused validation prompt for the last review stage of the Forum/code-...
@@ -20,36 +19,7 @@
 - **2026-05-29d** (Claude): Fix remaining `/close` permission prompts after subagent removal -> Two root causes found and fixed: (1) `**` in the middle of Edit/Write glob patterns doe...
 - **2026-05-26b** (Claude): Add `-Stage` parameter to the Convergence Forum to prevent agents f... -> Forum agents now operate in surgical/defect-detection mode when `-Stage revision` or `-...
 - **2026-05-29b** (Claude): Extend infrastructure with Haiku-delegated /close, fix permission g... -> /close now delegates mechanical operations to a Haiku subagent; permission patterns ext...
-
----
-
-## Session 2026-05-30
-**Agent:** Claude Sonnet 4.6
-**Goal:** Add `/style-edit` skill for background LaTeX prose editing, then restructure the AI_auto repo for multi-user distribution (professional `scripts/` layout, clean `git pull` for users).
-**Files touched:**
-- `~/.claude/skills/style-edit/skill.md` -- new skill: background LaTeX style editor, section-by-section, prose only, outputs `_restyled.tex` + diff
-- `~/.claude/projects/.../memory/MEMORY.md` -- added style-edit skill and code-folder-restructure completion entries
-- `~/.claude/projects/.../memory/project_style_edit_skill.md` -- new memory file for skill
-- `~/.claude/projects/.../memory/project_code_folder_restructure.md` -- updated: marked completed
-- `scripts/` (new folder) -- all 34 PS1 scripts moved here via `git mv` (history preserved)
-- `scripts/config.ps1` -- refactored: `$aiRoot = Split-Path $PSScriptRoot -Parent`; removed hardcoded user paths; loads `config.local.ps1`
-- `scripts/config.local.ps1` -- new gitignored file: machine-specific paths for this install
-- `scripts/config.local.example.ps1` -- new template for new users
-- `scripts/helpi.ps1` -- all `$aiRoot\X.ps1` script calls changed to `$PSScriptRoot\X.ps1`; command 26 added
-- `scripts/setup.ps1` -- writes `config.local.ps1` instead of `config.ps1`; profile entry updated to `scripts\helpi.ps1`
-- `scripts/restore.ps1` -- `sync_claude_config.ps1` and scheduled task paths updated
-- `scripts/new_project.ps1` -- `auto_handover.ps1` ref updated to `$PSScriptRoot\`
-- `scripts/auto_handover.ps1` -- scheduled task and `generate_handover.ps1` paths updated
-- `scripts/update.ps1` -- new: `helpi 26`; runs `git pull`, reports version delta, auto-fixes hook paths in `settings.json`
-- `helpi.ps1` (root) -- new backward-compat shim delegating to `scripts\helpi.ps1`
-- `helpi.cmd` -- updated to call `scripts\helpi.ps1`
-- `.gitignore` -- hardened: added `config.local.ps1`, user data, generated files, pipeline/forum outputs
-- `~/.claude/settings.json` -- hook paths updated from `AI_auto\X.ps1` to `AI_auto\scripts\X.ps1`
-- `CHANGELOG.md` -- v1.0 entry added
-- `VERSION` -- bumped to v1.0
-**Outcome:** `/style-edit` skill added for autonomous background prose-style editing of LaTeX manuscripts. Repo restructured to v1.0: scripts in `scripts/`, `config.local.ps1` pattern ensures `git pull` never conflicts for any user, `helpi 26` provides a one-command update path. Smoke tested: helpi menu loads cleanly with all 26 commands.
-**Next steps:** Push v1.0 to GitHub so users can pull it.
-**Git ref:** 25cc6b0
+- **2026-05-30** (Claude): Add `/style-edit` skill for background LaTeX prose editing, then re... -> `/style-edit` skill added for autonomous background prose-style editing of LaTeX manusc...
 
 ---
 
@@ -93,3 +63,14 @@
 **Outcome:** /style-edit now runs reliably as parallel Gemini jobs with token tracking, bibliography protection, latexdiff PDF, and auto-copy to Overleaf_source. Full style edit of Pub_SAA_PMIP_MC completed (245 changes, 333k tokens, ~10 min). /style-apply skill created for selective change approval workflow.
 **Next steps:** Review style_edit1_diff.pdf and apply approved changes via /style-apply; consider --exemplars flag for future runs.
 **Git ref:**
+
+---
+
+## Session 2026-05-31c
+**Agent:** Claude Sonnet 4.6
+**Goal:** Fix `helpi 23` (push_to_github.ps1) failing for AI_auto due to missing `code/` subdirectory.
+**Files touched:**
+- `scripts/push_to_github.ps1` -- added fallback: if no `code/` dir exists but project root is a git repo, use root as push target
+**Outcome:** `helpi 23 AI_auto` now works — falls back to project root, found existing GitHub remote, pushed successfully.
+**Next steps:** none
+**Git ref:** be22447

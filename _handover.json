@@ -1,22 +1,15 @@
 {
   "project": "AI_auto",
-  "generated": "2026-05-31 11:19",
+  "generated": "2026-05-31 11:24",
   "source": "_ai_log.md",
   "latest_session": {
-    "title": "2026-05-31b",
+    "title": "2026-05-31c",
     "agent": "Claude Sonnet 4.6",
-    "goal": "Harden and complete the /style-edit skill: parallel chunked processing, bibliography protection, token tracking, --review flag, /style-apply skill, latexdiff PDF generation, auto-copy to Overleaf_source. Run a successful full Gemini style edit of Pub_SAA_PMIP_MC.",
-    "outcome": "/style-edit now runs reliably as parallel Gemini jobs with token tracking, bibliography protection, latexdiff PDF, and auto-copy to Overleaf_source. Full style edit of Pub_SAA_PMIP_MC completed (245 changes, 333k tokens, ~10 min). /style-apply skill created for selective change approval workflow.",
-    "next_steps": "Review style_edit1_diff.pdf and apply approved changes via /style-apply; consider --exemplars flag for future runs.",
-    "git_ref": "",
-    "files_touched": [
-      "`~/.claude/skills/style-edit/skill.md` -- major rebuild: parallel chunked jobs (Start-Job), bibliography verbatim passthrough, token tracking via --output-format json, --review flag generating style_review.md, latexdiff PDF generation, auto-copy to Overleaf_source as {BaseName}_style_editN.tex/_diff.pdf; fixed $k: parse bug, 2>$null stderr fix, correct Gemini JSON paths (.response, .stats.models)",
-      "`~/.claude/skills/style-apply/skill.md` -- new skill: reads style_review.md [KEEP]/[REJECT] decisions, reverts rejected changes in restyled file, writes _approved.tex + approved.diff",
-      "`infrastructure.html` -- added /style-edit and /style-apply section (A2) with flag reference and workflow table; updated TOC; regenerated PDF via helpi 16",
-      "`Pub_SAA_PMIP_MC/_style_edits/2026-05-31_10-03-51/run_style_edit.ps1` -- generated, debugged, and successfully run: 22 sections, 6 parallel Gemini jobs, 10 min, 333k tokens, 245 changes",
-      "`Pub_SAA_PMIP_MC/Overleaf_source/Pub_Logsum_Solver_v5_style_edit1.tex` -- restyled manuscript copied here",
-      "`Pub_SAA_PMIP_MC/Overleaf_source/Pub_Logsum_Solver_v5_style_edit1_diff.pdf` -- latexdiff PDF copied here; pushed to Overleaf"
-    ]
+    "goal": "Fix `helpi 23` (push_to_github.ps1) failing for AI_auto due to missing `code/` subdirectory.",
+    "outcome": "`helpi 23 AI_auto` now works — falls back to project root, found existing GitHub remote, pushed successfully.",
+    "next_steps": "none",
+    "git_ref": "be22447",
+    "files_touched": "`scripts/push_to_github.ps1` -- added fallback: if no `code/` dir exists but project root is a git repo, use root as push target"
   },
   "latest_session_complete": true,
   "latest_session_missing": null,
