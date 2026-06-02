@@ -283,7 +283,6 @@ function Invoke-CodexAgent {
     $psi.RedirectStandardOutput = $true
     $psi.RedirectStandardError = $true
     $psi.CreateNoWindow = $true
-    $psi.StandardInputEncoding = [System.Text.Encoding]::UTF8
     $psi.StandardOutputEncoding = [System.Text.Encoding]::UTF8
     $psi.StandardErrorEncoding = [System.Text.Encoding]::UTF8
 
@@ -293,7 +292,9 @@ function Invoke-CodexAgent {
 
     $stdoutTask = $proc.StandardOutput.ReadToEndAsync()
     $stderrTask = $proc.StandardError.ReadToEndAsync()
-    $proc.StandardInput.Write($PromptText)
+    $utf8Bytes = [System.Text.Encoding]::UTF8.GetBytes($PromptText)
+    $proc.StandardInput.BaseStream.Write($utf8Bytes, 0, $utf8Bytes.Length)
+    $proc.StandardInput.BaseStream.Flush()
     $proc.StandardInput.Close()
 
     if (-not $proc.WaitForExit($TimeoutSeconds * 1000)) {
