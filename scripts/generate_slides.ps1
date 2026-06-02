@@ -10,7 +10,8 @@
 #
 param(
     [string]$Project = "",
-    [string]$Preset  = ""
+    [string]$Preset  = "",
+    [string]$TexFile = ""
 )
 
 . "$PSScriptRoot\config.ps1"
@@ -42,6 +43,8 @@ $mainTex = ""
 if ($texFiles.Count -eq 0) {
     Write-Host "ERR | No .tex files found in $overleafDir" -ForegroundColor Red
     return
+} elseif ($TexFile -ne "") {
+    $mainTex = $TexFile
 } elseif ($texFiles.Count -eq 1) {
     $mainTex = $texFiles[0].Name
 } else {

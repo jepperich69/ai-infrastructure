@@ -283,6 +283,7 @@ function Invoke-CodexAgent {
     $psi.RedirectStandardOutput = $true
     $psi.RedirectStandardError = $true
     $psi.CreateNoWindow = $true
+    $psi.StandardInputEncoding = [System.Text.Encoding]::UTF8
     $psi.StandardOutputEncoding = [System.Text.Encoding]::UTF8
     $psi.StandardErrorEncoding = [System.Text.Encoding]::UTF8
 
