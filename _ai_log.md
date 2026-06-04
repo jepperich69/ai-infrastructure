@@ -4,7 +4,6 @@
 
 ## Compressed sessions
 
-- **2026-05-24k** (Codex): Audit the new `helpi 25` Forum/code-audit command path. -> Audited `helpi.ps1`, `run_forum.ps1`, the new `prompts/code-audit.md` template, and For...
 - **2026-05-24l** (Codex): Patch the `helpi 25` Forum/code-audit issues found in audit. -> The direct `helpi 25 code-audit` shortcut now maps to the current/last project, forum r...
 - **2026-05-24m** (Codex): Prepare Claude's final validation instruction for the patched `help... -> Claude now has a focused validation prompt for the last review stage of the Forum/code-...
 - **2026-05-24n** (Codex): Close the AI_auto session after patching and handoff preparation. -> Session closed with the `helpi 25` code-audit patch and Claude final-validation prompt ...
@@ -20,19 +19,7 @@
 - **2026-05-26b** (Claude): Add `-Stage` parameter to the Convergence Forum to prevent agents f... -> Forum agents now operate in surgical/defect-detection mode when `-Stage revision` or `-...
 - **2026-05-29b** (Claude): Extend infrastructure with Haiku-delegated /close, fix permission g... -> /close now delegates mechanical operations to a Haiku subagent; permission patterns ext...
 - **2026-05-30** (Claude): Add `/style-edit` skill for background LaTeX prose editing, then re... -> `/style-edit` skill added for autonomous background prose-style editing of LaTeX manusc...
-
----
-
-## Session 2026-05-30b
-**Agent:** Claude Sonnet 4.6
-**Goal:** Push v1.0 to GitHub, remove redundant root helpi.ps1 shim, and update infrastructure.html to reflect the v1.0 file structure
-**Files touched:**
-- `helpi.ps1` (root) -- deleted; was a backward-compat shim but helpi.cmd already calls scripts\helpi.ps1 directly so it was never used
-- `infrastructure.html` -- version bumped to v1.0 (subtitle, versioning section, footer); all direct script paths updated to include scripts\; installation Scenario B corrected (config.local.ps1 not config.ps1); new sections added: config.local.ps1 machine-specific split, helpi 26 update command
-- `infrastructure_full.pdf` -- regenerated via helpi 16
-**Outcome:** v1.0 fully pushed to GitHub; documentation updated and regenerated to match the scripts/ restructure.
-**Next steps:** none
-**Git ref:**
+- **2026-05-30b** (Claude): Push v1.0 to GitHub, remove redundant root helpi.ps1 shim, and upda... -> v1.0 fully pushed to GitHub; documentation updated and regenerated to match the scripts...
 
 ---
 
@@ -74,3 +61,47 @@
 **Outcome:** `helpi 23 AI_auto` now works — falls back to project root, found existing GitHub remote, pushed successfully.
 **Next steps:** none
 **Git ref:** be22447
+
+---
+
+## Session 2026-06-03
+**Agent:** Gemini CLI (gemini-2.0-pro-exp-02-05)
+**Goal:** Fix \/style-edit\ skill discovery and naming convention for Gemini CLI
+**Files touched:**
+- \C:\Users\rich\.agents\skills\style-edit\ -- created junction to allow discovery
+- \C:\Users\rich\.agents\skills\style-apply\ -- created junction to allow discovery
+- \C:\Users\rich\.agents\skills\pipeline\ -- created junction to allow discovery
+- \C:\Users\rich\.claude\skills\style-edit\SKILL.md\ -- renamed from skill.md and updated naming to \_style_edited.tex\
+- \C:\Users\rich\.claude\skills\style-apply\SKILL.md\ -- renamed from skill.md and updated naming to \_style_edited.tex\
+- \C:\Users\rich\.claude\skills\pipeline\SKILL.md\ -- renamed from skill.md
+**Outcome:** \/style-edit\ and \/style-apply\ are now discoverable by Gemini CLI with the requested \_style_edited.tex\ naming.
+**Next steps:** none
+**Git ref:** 0858d9e
+
+---
+
+## Session 2026-06-03b
+**Agent:** Codex GPT-5.5
+**Goal:** Fix Codex skill discovery warning for `/pipeline`.
+**Files touched:**
+- `C:\Users\rich\.claude\skills\pipeline\SKILL.md` -- quoted the YAML `description` value and rewrote without BOM so Codex can parse the front matter.
+- `known_issues.md` -- marked catch-up issue #23 fixed after confirming `scripts\run_forum.ps1` already contains the documented `--skip-trust` Gemini invocation.
+- `_ai_log.md` -- recorded this session.
+**Outcome:** Codex should no longer skip the `/pipeline` skill for invalid YAML.
+**Next steps:** Restart `codex` to confirm the warning is gone.
+**Git ref:** 0858d9e
+
+---
+
+## Session 2026-06-03c
+**Agent:** Codex GPT-5.5
+**Goal:** Fix `/style-edit` not being recognised after the custom skill rename.
+**Files touched:**
+- `C:\Users\rich\.claude\skills\style-edit\SKILL.md` -- added explicit `name: style-edit` front matter.
+- `C:\Users\rich\.claude\skills\style-apply\SKILL.md` -- added explicit `name: style-apply` front matter.
+- `C:\Users\rich\.claude\skills\pipeline\SKILL.md` -- added explicit `name: pipeline` front matter.
+- `known_issues.md` -- documented that custom skills need explicit `name:` in front matter.
+- `_ai_log.md` -- recorded this session.
+**Outcome:** Gemini now lists `style-edit`, `style-apply`, and `pipeline` as enabled skills; the `.agents` junctions reflect the same corrected files.
+**Next steps:** Restart any already-open Claude/Codex/Gemini session so it reloads the skill table.
+**Git ref:** 0858d9e

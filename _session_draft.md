@@ -1,4 +1,0 @@
-[2026-05-31 11:24] Write: _state\current.md
-[2026-05-31 11:24] Bash:  pwsh -NoProfile -File "C:\Users\rich\OneDrive - Danmarks Tekniske Universitet\JR\AI_auto\scripts\gen...
-[2026-06-02 22:46] Edit:  scripts\run_forum.ps1
-[2026-06-02 22:48] Edit:  scripts\run_forum.ps1

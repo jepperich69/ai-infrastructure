@@ -219,3 +219,10 @@
 ## Archived 2026-05-31 (1 entry)
 
 - **2026-05-24j** (Codex): Apply requested wording edits to the division meeting slide deck. -> Deck edits applied and verified. `helpi 6 AI_auto -Force` produced a fresh 26-page PDF;...
+
+
+---
+
+## Archived 2026-06-03 (1 entry)
+
+- **2026-05-24k** (Codex): Audit the new `helpi 25` Forum/code-audit command path. -> Audited `helpi.ps1`, `run_forum.ps1`, the new `prompts/code-audit.md` template, and For...

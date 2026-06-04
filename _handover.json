@@ -1,17 +1,23 @@
 {
   "project": "AI_auto",
-  "generated": "2026-05-31 11:24",
+  "generated": "2026-06-03 16:29",
   "source": "_ai_log.md",
   "latest_session": {
-    "title": "2026-05-31c",
-    "agent": "Claude Sonnet 4.6",
-    "goal": "Fix `helpi 23` (push_to_github.ps1) failing for AI_auto due to missing `code/` subdirectory.",
-    "outcome": "`helpi 23 AI_auto` now works — falls back to project root, found existing GitHub remote, pushed successfully.",
-    "next_steps": "none",
-    "git_ref": "be22447",
-    "files_touched": "`scripts/push_to_github.ps1` -- added fallback: if no `code/` dir exists but project root is a git repo, use root as push target"
+    "title": "2026-06-03c",
+    "agent": "Codex GPT-5.5",
+    "goal": "Fix `/style-edit` not being recognised after the custom skill rename.",
+    "outcome": "Gemini now lists `style-edit`, `style-apply`, and `pipeline` as enabled skills; the `.agents` junctions reflect the same corrected files.",
+    "next_steps": "Restart any already-open Claude/Codex/Gemini session so it reloads the skill table.",
+    "git_ref": "0858d9e",
+    "files_touched": [
+      "`C:\\Users\\rich\\.claude\\skills\\style-edit\\SKILL.md` -- added explicit `name: style-edit` front matter.",
+      "`C:\\Users\\rich\\.claude\\skills\\style-apply\\SKILL.md` -- added explicit `name: style-apply` front matter.",
+      "`C:\\Users\\rich\\.claude\\skills\\pipeline\\SKILL.md` -- added explicit `name: pipeline` front matter.",
+      "`known_issues.md` -- documented that custom skills need explicit `name:` in front matter.",
+      "`_ai_log.md` -- recorded this session."
+    ]
   },
   "latest_session_complete": true,
   "latest_session_missing": null,
-  "session_count": 4
+  "session_count": 6
 }

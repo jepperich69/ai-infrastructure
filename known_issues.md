@@ -304,7 +304,7 @@ Symptom: Forum finishes in seconds with Status: failed. output_r1_*.md files con
 
 
 ### 23. Convergence Forum stalls during agent turn
-**Status:** open
+**Status:** fixed (2026-06-03)
 **Affects:** `AI_auto/run_forum.ps1`
 **Fix:** Add `--skip-trust` to the `gemini` invocation in `Invoke-Agent`. While the CLI tool might already have it, ensuring it is passed explicitly prevents potential trust-blocking prompts in non-interactive sessions. Additionally, investigate why `output_r1_critic.md` shows `read_file` failing on `Overleaf_source` files due to ignore patterns.
 
@@ -374,3 +374,23 @@ Symptom: Codex SAD roles complete successfully and produce valid `=== DIGEST ===
 When `helpi` runs from a Codex sandboxed session, the requested operation may complete successfully but the wrapper can still emit `Access to the path ... AI_auto\_state\last_project.txt is denied` when it tries to remember the last active project. Treat this state-write failure as non-fatal if the requested helper action reports success. If the last-project shortcut is needed, run the same `helpi` command from a normal PowerShell window or with escalated permissions.
 
 Symptom: `helpi 22 Pub_StopGeometry_TBA -Force` reported successful log compression, then failed at `Set-Content -Path $helpiStateFile -Value $proj -Encoding UTF8` for `AI_auto\_state\last_project.txt`.
+
+---
+
+### 31. Gemini CLI skill discovery requires SKILL.md (uppercase) and junctions
+**Status:** platform-fact
+**Affects:** \~/.agents/skills/*\
+**Discovery:** 
+1. The Gemini CLI binary only discovers skills if the definition file is named \SKILL.md\ (case-sensitive). If named \skill.md\, it is ignored.
+2. Creating symbolic links for skills requires Administrator privileges on this machine. Directory Junctions (\New-Item -ItemType Junction\) can be created without escalation and work correctly for skill discovery.
+
+**Rule for agents:** When creating or linking skills for Gemini CLI, always use \SKILL.md\ and prefer Junctions over Symbolic Links.
+
+---
+
+### 32. Custom skill front matter needs explicit name
+**Status:** fixed (2026-06-03)
+**Affects:** `~/.claude/skills/style-edit/SKILL.md`, `~/.claude/skills/style-apply/SKILL.md`, `~/.claude/skills/pipeline/SKILL.md`
+**Fix:** Add an explicit `name:` field to the YAML front matter of each custom skill, matching the directory name. Keep `SKILL.md` uppercase, ensure the first bytes are literal `---` with no UTF-8 BOM, and verify through the junctioned `.agents` paths with `gemini skills list --all`.
+
+Symptom: one agent could infer the skill name from the directory while another reported `/style-edit` or related custom skills as not recognised after the `skill.md` to `SKILL.md` rename.
