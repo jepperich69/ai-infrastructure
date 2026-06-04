@@ -1,23 +1,21 @@
 {
   "project": "AI_auto",
-  "generated": "2026-06-03 16:29",
+  "generated": "2026-06-04 13:03",
   "source": "_ai_log.md",
   "latest_session": {
-    "title": "2026-06-03c",
-    "agent": "Codex GPT-5.5",
-    "goal": "Fix `/style-edit` not being recognised after the custom skill rename.",
-    "outcome": "Gemini now lists `style-edit`, `style-apply`, and `pipeline` as enabled skills; the `.agents` junctions reflect the same corrected files.",
-    "next_steps": "Restart any already-open Claude/Codex/Gemini session so it reloads the skill table.",
-    "git_ref": "0858d9e",
+    "title": "2026-06-04",
+    "agent": "Claude Sonnet 4.6",
+    "goal": "Add em-dash style rule to global writing guidelines and memory.",
+    "outcome": "Em-dash clause-connector rule is now enforced globally in all research writing sessions via CLAUDE.md and persisted in memory.",
+    "next_steps": "none",
+    "git_ref": "--",
     "files_touched": [
-      "`C:\\Users\\rich\\.claude\\skills\\style-edit\\SKILL.md` -- added explicit `name: style-edit` front matter.",
-      "`C:\\Users\\rich\\.claude\\skills\\style-apply\\SKILL.md` -- added explicit `name: style-apply` front matter.",
-      "`C:\\Users\\rich\\.claude\\skills\\pipeline\\SKILL.md` -- added explicit `name: pipeline` front matter.",
-      "`known_issues.md` -- documented that custom skills need explicit `name:` in front matter.",
-      "`_ai_log.md` -- recorded this session."
+      "`~/.claude/CLAUDE.md` -- added em-dash rule to \"Cut immediately\" list under Research writing style",
+      "`~/.claude/projects/.../memory/feedback_emdash_style.md` -- new memory file with rule, rationale, and application guidance",
+      "`~/.claude/projects/.../memory/MEMORY.md` -- added pointer to new memory file"
     ]
   },
   "latest_session_complete": true,
   "latest_session_missing": null,
-  "session_count": 6
+  "session_count": 4
 }
