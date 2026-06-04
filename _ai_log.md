@@ -4,9 +4,6 @@
 
 ## Compressed sessions
 
-- **2026-05-24l** (Codex): Patch the `helpi 25` Forum/code-audit issues found in audit. -> The direct `helpi 25 code-audit` shortcut now maps to the current/last project, forum r...
-- **2026-05-24m** (Codex): Prepare Claude's final validation instruction for the patched `help... -> Claude now has a focused validation prompt for the last review stage of the Forum/code-...
-- **2026-05-24n** (Codex): Close the AI_auto session after patching and handoff preparation. -> Session closed with the `helpi 25` code-audit patch and Claude final-validation prompt ...
 - **2026-05-24o** (Claude): Claude final validation of patched `helpi 25` command; live smoke t... -> Validation verdict READY; smoke test revealed the role-file `=== DIGEST ===` placeholde...
 - **2026-05-25c** (Gemini CLI (gemini-2.5-flash)): Create refined 'V2' leadergroup slides; simplify language and add l... -> --
 - **2026-05-25d** (Codex): Diagnose and patch Codex-only SAD failures in `helpi 25`. -> Codex-only SAD now works end to end from normal PowerShell. Final smoke test `verify if...
@@ -20,47 +17,22 @@
 - **2026-05-29b** (Claude): Extend infrastructure with Haiku-delegated /close, fix permission g... -> /close now delegates mechanical operations to a Haiku subagent; permission patterns ext...
 - **2026-05-30** (Claude): Add `/style-edit` skill for background LaTeX prose editing, then re... -> `/style-edit` skill added for autonomous background prose-style editing of LaTeX manusc...
 - **2026-05-30b** (Claude): Push v1.0 to GitHub, remove redundant root helpi.ps1 shim, and upda... -> v1.0 fully pushed to GitHub; documentation updated and regenerated to match the scripts...
+- **2026-05-31** (Claude): Fix auth bug in /style-edit and /pipeline skills (both used claude ... -> Both skills now use subscription auth correctly. 4-agent comparison (Sonnet/Haiku/Gemin...
+- **2026-05-31b** (Claude): Harden and complete the /style-edit skill: parallel chunked process... -> /style-edit now runs reliably as parallel Gemini jobs with token tracking, bibliography...
+- **2026-05-31c** (Claude): Fix `helpi 23` (push_to_github.ps1) failing for AI_auto due to miss... -> `helpi 23 AI_auto` now works — falls back to project root, found existing GitHub remote...
 
 ---
 
-## Session 2026-05-31
+## Session 2026-06-04
 **Agent:** Claude Sonnet 4.6
-**Goal:** Fix auth bug in /style-edit and /pipeline skills (both used claude --print which fails with OAuth subscription auth); add --agent gemini/codex options to style-edit; explore exemplar-based style editing; run 4-agent quality comparison; launch full Gemini style edit on Pub_SAA_PMIP_MC.
+**Goal:** Add em-dash style rule to global writing guidelines and memory.
 **Files touched:**
-- `~/.claude/skills/style-edit/skill.md` -- rebuilt: claude backend uses Agent tool; gemini/codex use PS1+CLI; added --agent flag; fixed Gemini flag conflict
-- `~/.claude/skills/pipeline/skill.md` -- rebuilt: claude rounds handled by background Agent, not claude --print subprocess
-- `~/.claude/projects/.../memory/project_pipeline_skill.md` -- updated with auth fix note
-- `Pub_SAA_PMIP_MC/_style_edits/2026-05-31_08-58-56/run_style_edit.ps1` -- generated and launched (Gemini, full paper, running)
-**Outcome:** Both skills now use subscription auth correctly. 4-agent comparison (Sonnet/Haiku/Gemini/Codex) on Introduction passage completed. Gemini JSON token format confirmed. Reference paper passages extracted for planned exemplar feature. Full Gemini style edit of Pub_SAA_PMIP_MC running.
-**Next steps:** Add --no-exemplars flag to style-edit with reference paper passages embedded in prompt; update Gemini PS1 to use --output-format json for token tracking; check style edit results.
-**Git ref:**
-
----
-
-## Session 2026-05-31b
-**Agent:** Claude Sonnet 4.6
-**Goal:** Harden and complete the /style-edit skill: parallel chunked processing, bibliography protection, token tracking, --review flag, /style-apply skill, latexdiff PDF generation, auto-copy to Overleaf_source. Run a successful full Gemini style edit of Pub_SAA_PMIP_MC.
-**Files touched:**
-- `~/.claude/skills/style-edit/skill.md` -- major rebuild: parallel chunked jobs (Start-Job), bibliography verbatim passthrough, token tracking via --output-format json, --review flag generating style_review.md, latexdiff PDF generation, auto-copy to Overleaf_source as {BaseName}_style_editN.tex/_diff.pdf; fixed $k: parse bug, 2>$null stderr fix, correct Gemini JSON paths (.response, .stats.models)
-- `~/.claude/skills/style-apply/skill.md` -- new skill: reads style_review.md [KEEP]/[REJECT] decisions, reverts rejected changes in restyled file, writes _approved.tex + approved.diff
-- `infrastructure.html` -- added /style-edit and /style-apply section (A2) with flag reference and workflow table; updated TOC; regenerated PDF via helpi 16
-- `Pub_SAA_PMIP_MC/_style_edits/2026-05-31_10-03-51/run_style_edit.ps1` -- generated, debugged, and successfully run: 22 sections, 6 parallel Gemini jobs, 10 min, 333k tokens, 245 changes
-- `Pub_SAA_PMIP_MC/Overleaf_source/Pub_Logsum_Solver_v5_style_edit1.tex` -- restyled manuscript copied here
-- `Pub_SAA_PMIP_MC/Overleaf_source/Pub_Logsum_Solver_v5_style_edit1_diff.pdf` -- latexdiff PDF copied here; pushed to Overleaf
-**Outcome:** /style-edit now runs reliably as parallel Gemini jobs with token tracking, bibliography protection, latexdiff PDF, and auto-copy to Overleaf_source. Full style edit of Pub_SAA_PMIP_MC completed (245 changes, 333k tokens, ~10 min). /style-apply skill created for selective change approval workflow.
-**Next steps:** Review style_edit1_diff.pdf and apply approved changes via /style-apply; consider --exemplars flag for future runs.
-**Git ref:**
-
----
-
-## Session 2026-05-31c
-**Agent:** Claude Sonnet 4.6
-**Goal:** Fix `helpi 23` (push_to_github.ps1) failing for AI_auto due to missing `code/` subdirectory.
-**Files touched:**
-- `scripts/push_to_github.ps1` -- added fallback: if no `code/` dir exists but project root is a git repo, use root as push target
-**Outcome:** `helpi 23 AI_auto` now works — falls back to project root, found existing GitHub remote, pushed successfully.
+- `~/.claude/CLAUDE.md` -- added em-dash rule to "Cut immediately" list under Research writing style
+- `~/.claude/projects/.../memory/feedback_emdash_style.md` -- new memory file with rule, rationale, and application guidance
+- `~/.claude/projects/.../memory/MEMORY.md` -- added pointer to new memory file
+**Outcome:** Em-dash clause-connector rule is now enforced globally in all research writing sessions via CLAUDE.md and persisted in memory.
 **Next steps:** none
-**Git ref:** be22447
+**Git ref:** --
 
 ---
 
