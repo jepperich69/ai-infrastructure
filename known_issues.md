@@ -413,3 +413,12 @@ For handover generation, use:
 ```
 
 Symptom: PowerShell reports that the old root-level script paths are not recognized even though the scripts exist under `AI_auto\scripts`.
+
+---
+
+### 34. `---` in blackboard state causes `error: unknown option '---'` in claude CLI
+**Status:** fixed (2026-06-08)
+**Affects:** `AI_auto/scripts/run_forum.ps1`
+**Fix:** In `Invoke-Agent` and the AutoClose block, stop passing `$promptText` as a CLI argument (`-p $promptText`). Instead pipe it via stdin (`$promptText | & claude ... -p`), matching the existing Gemini pattern. This prevents the Claude CLI argument parser from ever seeing `---` as a flag-like token.
+
+Symptom: Forum succeeds in Round 1, then all Round 2 agent turns fail immediately with `error: unknown option '---'`. The blackboard state after Round 1 contains `---` (markdown horizontal rules) injected by agent output; when that state is embedded in the Round 2 prompt string and passed as a CLI argument, the claude binary's argument parser interprets the `---` as an unknown option flag.
