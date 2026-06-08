@@ -30,7 +30,7 @@
 <body>
 
 <h1>Handover Document &mdash; AI_auto</h1>
-<div class="meta">Generated: 2026-06-04 13:03 &nbsp;|&nbsp; Source: <code style="display:inline;padding:2px 6px">_ai_log.md</code> &nbsp;|&nbsp; Sidecar: <code style="display:inline;padding:2px 6px">_handover.json</code></div>
+<div class="meta">Generated: 2026-06-08 10:52 &nbsp;|&nbsp; Source: <code style="display:inline;padding:2px 6px">_ai_log.md</code> &nbsp;|&nbsp; Sidecar: <code style="display:inline;padding:2px 6px">_handover.json</code></div>
 
 <!-- ============================================================ -->
 <!-- AGENT INSTRUCTIONS                                            -->
@@ -62,17 +62,16 @@
 <div class="latest-session">
   <div class="session-status ok">Complete</div>
   <h2>Latest Session Snapshot</h2>
-  <p><strong>Session:</strong> 2026-06-04</p>
+  <p><strong>Session:</strong> 2026-06-08</p>
   <p><strong>Agent:</strong> Claude Sonnet 4.6</p>
-  <p><strong>Goal:</strong> Add em-dash style rule to global writing guidelines and memory.</p>
-  <p><strong>Outcome:</strong> Em-dash clause-connector rule is now enforced globally in all research writing sessions via CLAUDE.md and persisted in memory.</p>
-  <p><strong>Next steps:</strong> none</p>
-  <p><strong>Git ref:</strong> --</p>
+  <p><strong>Goal:</strong> Fix `run_forum.ps1` failing in Round 2 with `error: unknown option &#39;---&#39;`.</p>
+  <p><strong>Outcome:</strong> Forum claude calls now pipe prompts via stdin; `---` in blackboard state can no longer be misinterpreted as a CLI flag by the argument parser. Both agent turns and moderator calls are fixed.</p>
+  <p><strong>Next steps:</strong> Rerun the forum for Pub_WTP_BEV_PartA (`helpi 25 Pub_WTP_BEV_PartA`)</p>
+  <p><strong>Git ref:</strong> a219c3d</p>
   <h3>Files touched</h3>
   <ul>
-  <li>`~/.claude/CLAUDE.md` -- added em-dash rule to &quot;Cut immediately&quot; list under Research writing style</li>
-  <li>`~/.claude/projects/.../memory/feedback_emdash_style.md` -- new memory file with rule, rationale, and application guidance</li>
-  <li>`~/.claude/projects/.../memory/MEMORY.md` -- added pointer to new memory file</li>
+  <li>`scripts/run_forum.ps1` -- switched claude invocations in `Invoke-Agent` and AutoClose block from `-p $promptText` argument to stdin piping (`$promptText | &amp; claude ... -p`), matching the existing Gemini pattern</li>
+  <li>`known_issues.md` -- added issue #34 documenting the root cause and fix</li>
 </ul>
 </div>
 
@@ -87,7 +86,6 @@
 <h2>Compressed sessions</h2>
 <br>
 <ul>
-  <li><strong>2026-05-24o</strong> (Claude): Claude final validation of patched `helpi 25` command; live smoke t... -&gt; Validation verdict READY; smoke test revealed the role-file `=== DIGEST ===` placeholde...</li>
   <li><strong>2026-05-25c</strong> (Gemini CLI (gemini-2.5-flash)): Create refined &#39;V2&#39; leadergroup slides; simplify language and add l... -&gt; --</li>
   <li><strong>2026-05-25d</strong> (Codex): Diagnose and patch Codex-only SAD failures in `helpi 25`. -&gt; Codex-only SAD now works end to end from normal PowerShell. Final smoke test `verify if...</li>
   <li><strong>2026-05-26</strong> (Claude): Generate survey visualizations from questionnaire Excel data and wi... -&gt; Six clean survey result slides added to the division meeting Beamer deck and successful...</li>
@@ -103,22 +101,8 @@
   <li><strong>2026-05-31</strong> (Claude): Fix auth bug in /style-edit and /pipeline skills (both used claude ... -&gt; Both skills now use subscription auth correctly. 4-agent comparison (Sonnet/Haiku/Gemin...</li>
   <li><strong>2026-05-31b</strong> (Claude): Harden and complete the /style-edit skill: parallel chunked process... -&gt; /style-edit now runs reliably as parallel Gemini jobs with token tracking, bibliography...</li>
   <li><strong>2026-05-31c</strong> (Claude): Fix `helpi 23` (push_to_github.ps1) failing for AI_auto due to miss... -&gt; `helpi 23 AI_auto` now works — falls back to project root, found existing GitHub remote...</li>
+  <li><strong>2026-06-04</strong> (Claude): Add em-dash style rule to global writing guidelines and memory. -&gt; Em-dash clause-connector rule is now enforced globally in all research writing sessions...</li>
 </ul>
-<br>
-<hr>
-<br>
-<h2>Session 2026-06-04</h2>
-<p><strong>Agent:</strong> Claude Sonnet 4.6</p>
-<p><strong>Goal:</strong> Add em-dash style rule to global writing guidelines and memory.</p>
-<p><strong>Files touched:</strong></p>
-<ul>
-  <li>`~/.claude/CLAUDE.md` -- added em-dash rule to &quot;Cut immediately&quot; list under Research writing style</li>
-  <li>`~/.claude/projects/.../memory/feedback_emdash_style.md` -- new memory file with rule, rationale, and application guidance</li>
-  <li>`~/.claude/projects/.../memory/MEMORY.md` -- added pointer to new memory file</li>
-</ul>
-<p><strong>Outcome:</strong> Em-dash clause-connector rule is now enforced globally in all research writing sessions via CLAUDE.md and persisted in memory.</p>
-<p><strong>Next steps:</strong> none</p>
-<p><strong>Git ref:</strong> --</p>
 <br>
 <hr>
 <br>
@@ -170,6 +154,20 @@
 <p><strong>Next steps:</strong> Restart any already-open Claude/Codex/Gemini session so it reloads the skill table.</p>
 <p><strong>Git ref:</strong> 0858d9e</p>
 <br>
+<hr>
+<br>
+<h2>Session 2026-06-08</h2>
+<p><strong>Agent:</strong> Claude Sonnet 4.6</p>
+<p><strong>Goal:</strong> Fix `run_forum.ps1` failing in Round 2 with `error: unknown option &#39;---&#39;`.</p>
+<p><strong>Files touched:</strong></p>
+<ul>
+  <li>`scripts/run_forum.ps1` -- switched claude invocations in `Invoke-Agent` and AutoClose block from `-p $promptText` argument to stdin piping (`$promptText | &amp; claude ... -p`), matching the existing Gemini pattern</li>
+  <li>`known_issues.md` -- added issue #34 documenting the root cause and fix</li>
+</ul>
+<p><strong>Outcome:</strong> Forum claude calls now pipe prompts via stdin; `---` in blackboard state can no longer be misinterpreted as a CLI flag by the argument parser. Both agent turns and moderator calls are fixed.</p>
+<p><strong>Next steps:</strong> Rerun the forum for Pub<em>WTP</em>BEV<em>PartA (`helpi 25 Pub</em>WTP<em>BEV</em>PartA`)</p>
+<p><strong>Git ref:</strong> a219c3d</p>
+<br>
 
 </div>
 
@@ -185,7 +183,6 @@
 
 ## Compressed sessions
 
-- **2026-05-24o** (Claude): Claude final validation of patched `helpi 25` command; live smoke t... -&gt; Validation verdict READY; smoke test revealed the role-file `=== DIGEST ===` placeholde...
 - **2026-05-25c** (Gemini CLI (gemini-2.5-flash)): Create refined 'V2' leadergroup slides; simplify language and add l... -&gt; --
 - **2026-05-25d** (Codex): Diagnose and patch Codex-only SAD failures in `helpi 25`. -&gt; Codex-only SAD now works end to end from normal PowerShell. Final smoke test `verify if...
 - **2026-05-26** (Claude): Generate survey visualizations from questionnaire Excel data and wi... -&gt; Six clean survey result slides added to the division meeting Beamer deck and successful...
@@ -201,19 +198,7 @@
 - **2026-05-31** (Claude): Fix auth bug in /style-edit and /pipeline skills (both used claude ... -&gt; Both skills now use subscription auth correctly. 4-agent comparison (Sonnet/Haiku/Gemin...
 - **2026-05-31b** (Claude): Harden and complete the /style-edit skill: parallel chunked process... -&gt; /style-edit now runs reliably as parallel Gemini jobs with token tracking, bibliography...
 - **2026-05-31c** (Claude): Fix `helpi 23` (push_to_github.ps1) failing for AI_auto due to miss... -&gt; `helpi 23 AI_auto` now works — falls back to project root, found existing GitHub remote...
-
----
-
-## Session 2026-06-04
-**Agent:** Claude Sonnet 4.6
-**Goal:** Add em-dash style rule to global writing guidelines and memory.
-**Files touched:**
-- `~/.claude/CLAUDE.md` -- added em-dash rule to "Cut immediately" list under Research writing style
-- `~/.claude/projects/.../memory/feedback_emdash_style.md` -- new memory file with rule, rationale, and application guidance
-- `~/.claude/projects/.../memory/MEMORY.md` -- added pointer to new memory file
-**Outcome:** Em-dash clause-connector rule is now enforced globally in all research writing sessions via CLAUDE.md and persisted in memory.
-**Next steps:** none
-**Git ref:** --
+- **2026-06-04** (Claude): Add em-dash style rule to global writing guidelines and memory. -&gt; Em-dash clause-connector rule is now enforced globally in all research writing sessions...
 
 ---
 
@@ -258,6 +243,18 @@
 **Outcome:** Gemini now lists `style-edit`, `style-apply`, and `pipeline` as enabled skills; the `.agents` junctions reflect the same corrected files.
 **Next steps:** Restart any already-open Claude/Codex/Gemini session so it reloads the skill table.
 **Git ref:** 0858d9e
+
+---
+
+## Session 2026-06-08
+**Agent:** Claude Sonnet 4.6
+**Goal:** Fix `run_forum.ps1` failing in Round 2 with `error: unknown option '---'`.
+**Files touched:**
+- `scripts/run_forum.ps1` -- switched claude invocations in `Invoke-Agent` and AutoClose block from `-p $promptText` argument to stdin piping (`$promptText | & claude ... -p`), matching the existing Gemini pattern
+- `known_issues.md` -- added issue #34 documenting the root cause and fix
+**Outcome:** Forum claude calls now pipe prompts via stdin; `---` in blackboard state can no longer be misinterpreted as a CLI flag by the argument parser. Both agent turns and moderator calls are fixed.
+**Next steps:** Rerun the forum for Pub_WTP_BEV_PartA (`helpi 25 Pub_WTP_BEV_PartA`)
+**Git ref:** a219c3d
 </textarea>
 </div>
 
