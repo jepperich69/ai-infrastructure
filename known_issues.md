@@ -394,3 +394,22 @@ Symptom: `helpi 22 Pub_StopGeometry_TBA -Force` reported successful log compress
 **Fix:** Add an explicit `name:` field to the YAML front matter of each custom skill, matching the directory name. Keep `SKILL.md` uppercase, ensure the first bytes are literal `---` with no UTF-8 BOM, and verify through the junctioned `.agents` paths with `gemini skills list --all`.
 
 Symptom: one agent could infer the skill name from the directory while another reported `/style-edit` or related custom skills as not recognised after the `skill.md` to `SKILL.md` rename.
+
+---
+
+### 33. Infrastructure scripts moved into `AI_auto\scripts`
+**Status:** platform-fact
+
+The old absolute paths `AI_auto\helpi.ps1` and `AI_auto\generate_handover.ps1` no longer exist. Use either the `helpi` command on PATH or:
+
+```powershell
+& "C:\Users\rich\OneDrive - Danmarks Tekniske Universitet\JR\AI_auto\scripts\helpi.ps1" <arguments>
+```
+
+For handover generation, use:
+
+```powershell
+& "C:\Users\rich\OneDrive - Danmarks Tekniske Universitet\JR\AI_auto\scripts\generate_handover.ps1" -Project <project>
+```
+
+Symptom: PowerShell reports that the old root-level script paths are not recognized even though the scripts exist under `AI_auto\scripts`.
