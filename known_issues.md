@@ -422,3 +422,12 @@ Symptom: PowerShell reports that the old root-level script paths are not recogni
 **Fix:** In `Invoke-Agent` and the AutoClose block, stop passing `$promptText` as a CLI argument (`-p $promptText`). Instead pipe it via stdin (`$promptText | & claude ... -p`), matching the existing Gemini pattern. This prevents the Claude CLI argument parser from ever seeing `---` as a flag-like token.
 
 Symptom: Forum succeeds in Round 1, then all Round 2 agent turns fail immediately with `error: unknown option '---'`. The blackboard state after Round 1 contains `---` (markdown horizontal rules) injected by agent output; when that state is embedded in the Round 2 prompt string and passed as a CLI argument, the claude binary's argument parser interprets the `---` as an unknown option flag.
+
+---
+
+### 35. Overleaf remote default branch can disagree with its accepted push branch
+**Status:** open
+**Affects:** `AI_auto/scripts/push_to_overleaf.ps1`
+**Fix:** Resolve the accepted Overleaf branch from the project configuration or existing tracked branch before pull/rebase/push. Do not rely on `origin/HEAD`. If `origin/HEAD` points to `master` but the server rejects pushes with `wrong branch` and requests `main`, switch the local upstream to `origin/main` and avoid replaying parallel `master` and `main` histories.
+
+Symptom: `helpi 4` reports the repository branch as `master`, rebases local commits onto `origin/master`, and repeatedly conflicts on `main.tex`. A direct push to `master` is then rejected by Overleaf with `wrong branch` and `Please use the main branch`, while `origin/main` contains a separate project history.
