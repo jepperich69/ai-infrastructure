@@ -1,6 +1,6 @@
-# State -- 2026-06-08
+# State -- 2026-06-16
 **Phase:** Active development -- v1.0 released; /style-edit fully operational
-**Last session:** Fixed run_forum.ps1 Round 2 failure (`---` CLI parse bug); claude prompts now piped via stdin.
-**Next:** Rerun forum for Pub_WTP_BEV_PartA (`helpi 25 Pub_WTP_BEV_PartA`)
-**Git ref:** a219c3d
+**Last session:** Fixed run_forum.ps1 project path resolution; now supports projects outside Publikationer/ via Resolve-ProjectRoot.
+**Next:** none
+**Git ref:** d627315
 **Agent:** Claude Sonnet 4.6

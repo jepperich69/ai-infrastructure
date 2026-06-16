@@ -4,7 +4,6 @@
 
 ## Compressed sessions
 
-- **2026-05-25c** (Gemini CLI (gemini-2.5-flash)): Create refined 'V2' leadergroup slides; simplify language and add l... -> --
 - **2026-05-25d** (Codex): Diagnose and patch Codex-only SAD failures in `helpi 25`. -> Codex-only SAD now works end to end from normal PowerShell. Final smoke test `verify if...
 - **2026-05-26** (Claude): Generate survey visualizations from questionnaire Excel data and wi... -> Six clean survey result slides added to the division meeting Beamer deck and successful...
 - **2026-05-27** (Claude): Document helpi 25, fix /close permission prompts, and harden the Co... -> helpi 25 is documented, /close now runs without permission prompts, and forum agents ca...
@@ -20,22 +19,7 @@
 - **2026-05-31b** (Claude): Harden and complete the /style-edit skill: parallel chunked process... -> /style-edit now runs reliably as parallel Gemini jobs with token tracking, bibliography...
 - **2026-05-31c** (Claude): Fix `helpi 23` (push_to_github.ps1) failing for AI_auto due to miss... -> `helpi 23 AI_auto` now works — falls back to project root, found existing GitHub remote...
 - **2026-06-04** (Claude): Add em-dash style rule to global writing guidelines and memory. -> Em-dash clause-connector rule is now enforced globally in all research writing sessions...
-
----
-
-## Session 2026-06-03
-**Agent:** Gemini CLI (gemini-2.0-pro-exp-02-05)
-**Goal:** Fix \/style-edit\ skill discovery and naming convention for Gemini CLI
-**Files touched:**
-- \C:\Users\rich\.agents\skills\style-edit\ -- created junction to allow discovery
-- \C:\Users\rich\.agents\skills\style-apply\ -- created junction to allow discovery
-- \C:\Users\rich\.agents\skills\pipeline\ -- created junction to allow discovery
-- \C:\Users\rich\.claude\skills\style-edit\SKILL.md\ -- renamed from skill.md and updated naming to \_style_edited.tex\
-- \C:\Users\rich\.claude\skills\style-apply\SKILL.md\ -- renamed from skill.md and updated naming to \_style_edited.tex\
-- \C:\Users\rich\.claude\skills\pipeline\SKILL.md\ -- renamed from skill.md
-**Outcome:** \/style-edit\ and \/style-apply\ are now discoverable by Gemini CLI with the requested \_style_edited.tex\ naming.
-**Next steps:** none
-**Git ref:** 0858d9e
+- **2026-06-03** (Gemini CLI (gemini-2.0-pro-exp-02-05)): Fix \/style-edit\ skill discovery and naming convention for Gemini CLI -> \/style-edit\ and \/style-apply\ are now discoverable by Gemini CLI with the requested ...
 
 ---
 
@@ -76,3 +60,14 @@
 **Outcome:** Forum claude calls now pipe prompts via stdin; `---` in blackboard state can no longer be misinterpreted as a CLI flag by the argument parser. Both agent turns and moderator calls are fixed.
 **Next steps:** Rerun the forum for Pub_WTP_BEV_PartA (`helpi 25 Pub_WTP_BEV_PartA`)
 **Git ref:** a219c3d
+
+---
+
+## Session 2026-06-16
+**Agent:** Claude Sonnet 4.6
+**Goal:** Fix `run_forum.ps1` failing for projects outside the `Publikationer` folder (e.g. `NoteTaker` in `JR/`).
+**Files touched:**
+- `scripts/run_forum.ps1` -- replaced hardcoded `$PubRoot` with `. "$PSScriptRoot\config.ps1"` and switched path resolution to `Resolve-ProjectRoot`, matching all other scripts
+**Outcome:** Forum (helpi 25) now resolves projects in any subfolder under `JR/`, not only `Publikationer/`.
+**Next steps:** none
+**Git ref:** d627315

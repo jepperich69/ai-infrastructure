@@ -242,3 +242,10 @@
 ## Archived 2026-06-08 (1 entry)
 
 - **2026-05-24o** (Claude): Claude final validation of patched `helpi 25` command; live smoke t... -> Validation verdict READY; smoke test revealed the role-file `=== DIGEST ===` placeholde...
+
+
+---
+
+## Archived 2026-06-16 (1 entry)
+
+- **2026-05-25c** (Gemini CLI (gemini-2.5-flash)): Create refined 'V2' leadergroup slides; simplify language and add l... -> --

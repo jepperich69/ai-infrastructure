@@ -1,18 +1,15 @@
 {
   "project": "AI_auto",
-  "generated": "2026-06-08 10:52",
+  "generated": "2026-06-16 22:26",
   "source": "_ai_log.md",
   "latest_session": {
-    "title": "2026-06-08",
+    "title": "2026-06-16",
     "agent": "Claude Sonnet 4.6",
-    "goal": "Fix `run_forum.ps1` failing in Round 2 with `error: unknown option '---'`.",
-    "outcome": "Forum claude calls now pipe prompts via stdin; `---` in blackboard state can no longer be misinterpreted as a CLI flag by the argument parser. Both agent turns and moderator calls are fixed.",
-    "next_steps": "Rerun the forum for Pub_WTP_BEV_PartA (`helpi 25 Pub_WTP_BEV_PartA`)",
-    "git_ref": "a219c3d",
-    "files_touched": [
-      "`scripts/run_forum.ps1` -- switched claude invocations in `Invoke-Agent` and AutoClose block from `-p $promptText` argument to stdin piping (`$promptText | & claude ... -p`), matching the existing Gemini pattern",
-      "`known_issues.md` -- added issue #34 documenting the root cause and fix"
-    ]
+    "goal": "Fix `run_forum.ps1` failing for projects outside the `Publikationer` folder (e.g. `NoteTaker` in `JR/`).",
+    "outcome": "Forum (helpi 25) now resolves projects in any subfolder under `JR/`, not only `Publikationer/`.",
+    "next_steps": "none",
+    "git_ref": "d627315",
+    "files_touched": "`scripts/run_forum.ps1` -- replaced hardcoded `$PubRoot` with `. \"$PSScriptRoot\\config.ps1\"` and switched path resolution to `Resolve-ProjectRoot`, matching all other scripts"
   },
   "latest_session_complete": true,
   "latest_session_missing": null,
