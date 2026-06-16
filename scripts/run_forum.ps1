@@ -126,7 +126,7 @@ if ($TaskFile) {
 }
 
 $AiRoot = $PSScriptRoot
-$PubRoot = "C:\Users\rich\OneDrive - Danmarks Tekniske Universitet\JR\Publikationer"
+. "$PSScriptRoot\config.ps1"
 
 # Resolve templates
 if ($Task -and $Task -match '^[a-zA-Z0-9_-]+$' -and $Task.Length -lt 100 -and (Test-Path (Join-Path $AiRoot "prompts\$($Task).md"))) {
@@ -364,7 +364,7 @@ if ($ProjectName) {
     if ($ProjectName -eq "AI_auto") {
         $ProjectPath = $AiRoot
     } else {
-        $ProjectPath = Join-Path $PubRoot $ProjectName
+        $ProjectPath = Resolve-ProjectRoot $ProjectName
     }
     if (-not (Test-Path -LiteralPath $ProjectPath)) {
         Write-Error "Project path not found: $ProjectPath"
