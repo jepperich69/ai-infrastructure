@@ -22,19 +22,28 @@ param(
 $ForumTemplateNames = @("lit-review", "math-verify", "repro-audit", "final-pass", "code-audit")
 
 # ── Auto-detect project from current working directory ─────────────
+# Marker-based: walk up from cwd to the nearest ancestor folder that
+# directly contains _ai_log.md. That folder is "the project" -- works for
+# Pub_/Pro_/PhD_ papers, AI_auto, and any generic project folder anywhere
+# under JR that has been initialized (helpi 1 or helpi 27).
 function Get-ProjectFromCwd {
-    $cwd = (Get-Location).Path
-
-    $pubPrefix = "$pubRoot\"
-    if ($cwd.StartsWith($pubPrefix, [System.StringComparison]::OrdinalIgnoreCase)) {
-        $relative = $cwd.Substring($pubPrefix.Length)
-        $project  = ($relative -split '[\\/]')[0]
-        if ($project -match '^(Pub_|Pro_|PhD_)') { return $project }
+    $dir   = (Get-Location).Path
+    $depth = 0
+    while ($dir -and $depth -lt 20) {
+        if (Test-Path (Join-Path $dir "_ai_log.md")) {
+            return Split-Path $dir -Leaf
+        }
+        if ($jrRoot -and $dir.Equals($jrRoot, [System.StringComparison]::OrdinalIgnoreCase)) { break }
+        $parent = Split-Path $dir -Parent
+        if (!$parent -or $parent -eq $dir) { break }
+        $dir = $parent
+        $depth++
     }
 
-    $segments = $cwd -split '[\\/]'
+    # Fallback for folders not yet initialized with _ai_log.md
+    $segments = (Get-Location).Path -split '[\\/]'
     $match = $segments | Where-Object {
-        $_ -match '^(Pub_|Pro_|PhD_|AI_auto|CV|CHARGO|42180|DFF|Reagent|BeamerPres|hEART|IATBR|Cycling|Discrete|EV|Paulsen|Presentation|Aalborg|Bicycle|Slides)'
+        $_ -match '^(Pub_|Pro_|PhD_|AI_auto)'
     } | Select-Object -First 1
     if ($match) { return $match } else { return "" }
 }
@@ -116,7 +125,9 @@ $commands = @(
     [PSCustomObject]@{ N=25; NeedsProject=$true;  Tag="MANUAL";  Name="Convergence Forum (Multi-agent/Single-agent debate)";
        Example="run_forum.ps1 -Project XXX -Task '...' [-Mode SAD]" },
     [PSCustomObject]@{ N=26; NeedsProject=$false; Tag="MANUAL";  Name="Update infrastructure from GitHub";
-         Example="update.ps1" }
+         Example="update.ps1" },
+    [PSCustomObject]@{ N=27; NeedsProject=$false; Tag="ONCE";    Name="Create generic project (non-paper)";
+         Example="new_generic_project.ps1 -Project XXX" }
     )
 
 # ── Contextual help for a single command ──────────────────────────
@@ -475,6 +486,26 @@ function Show-CommandHelp {
             "Example:",
             "  helpi 26"
         )}
+        27 { @(
+            "Create generic project (non-paper)",
+            "Lightweight init for any folder under JR that isn't a paper: creates",
+            "_ai_log.md, .claude/settings.json (proxy-sandbox), and .claude/CLAUDE.md",
+            "(generic template -- no Overleaf/co-author/venue fields). Skips the",
+            "code/, Literature/, Overleaf_source/ scaffolding that helpi 1 creates.",
+            "",
+            "Once initialized, the folder behaves exactly like a paper project:",
+            "/work, /close, helpi 7 (log+handover), helpi 13/14 (dashboard/network),",
+            "and helpi 22 (compress log) all work the same way.",
+            "",
+            "When to use: you created a folder anywhere under JR, moved files into",
+            "it, and want the same session logging/handover/compression as papers",
+            "get, without the LaTeX/Overleaf structure.",
+            "",
+            "Example:",
+            "  helpi 27                      # initializes the current directory",
+            "  helpi 27 MyFolder              # creates/initializes JR\MyFolder",
+            "  helpi 27 'Interne projekter\Foo'"
+        )}
         default { @("No help available for command $n.") }
     }
 
@@ -564,6 +595,7 @@ function Get-CommandPreview {
              "run_forum.ps1 -ProjectName $proj$taskText$agentText$modeText$stageText"
            }
         26 { "update.ps1" }
+        27 { if ($proj) { "new_generic_project.ps1 -Project $proj" } else { "new_generic_project.ps1  (current directory)" } }
     }
 }
 
@@ -823,6 +855,8 @@ function Invoke-Command-N {
              & "$PSScriptRoot\run_forum.ps1" @forumParams
            }
         26 { & "$PSScriptRoot\update.ps1" }
+        27 { if ($proj) { & "$PSScriptRoot\new_generic_project.ps1" -Project $proj }
+             else        { & "$PSScriptRoot\new_generic_project.ps1" } }
     }
 }
 

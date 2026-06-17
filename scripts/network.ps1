@@ -7,6 +7,15 @@ $outFile = Join-Path $aiRoot "network.html"
 
 $projData = Get-Content "$aiRoot\projects.json" | ConvertFrom-Json
 
+# Generic (non-paper) projects aren't registered in projects.json -- pick
+# them up by scanning for _ai_log.md directly under JR, then union with
+# the registered (Overleaf) projects below.
+$registeredNames = @($projData | ForEach-Object { $_.name })
+$genericNames    = Get-ChildItem $jrRoot -Directory -ErrorAction SilentlyContinue |
+    Where-Object { $_.FullName -ne $pubRoot -and (Test-Path (Join-Path $_.FullName "_ai_log.md")) -and ($registeredNames -notcontains $_.Name) } |
+    ForEach-Object { $_.Name }
+foreach ($n in $genericNames) { $projData += [PSCustomObject]@{ name = $n } }
+
 # â”€â”€ Helper: skip entries with path-illegal characters â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function Test-ValidName([string]$n) {
     return $n -and $n -notmatch '[<>:"|?*\x00-\x1f]'
@@ -16,7 +25,7 @@ function Test-ValidName([string]$n) {
 $lastSessions = @{}
 foreach ($proj in $projData) {
     if (-not (Test-ValidName $proj.name)) { continue }
-    $logPath = Join-Path $pubRoot "$($proj.name)\_ai_log.md"
+    $logPath = Join-Path (Resolve-ProjectRoot $proj.name) "_ai_log.md"
     try {
         if (Test-Path -LiteralPath $logPath) {
             $m = Select-String -LiteralPath $logPath -Pattern '^## Session (\d{4}-\d{2}-\d{2})' |
@@ -32,7 +41,7 @@ $involved = [System.Collections.Generic.HashSet[string]]::new()
 
 foreach ($proj in $projData) {
     if (-not (Test-ValidName $proj.name)) { continue }
-    $feedersFile = Join-Path $pubRoot "$($proj.name)\_feeders.json"
+    $feedersFile = Join-Path (Resolve-ProjectRoot $proj.name) "_feeders.json"
     try { $exists = Test-Path -LiteralPath $feedersFile } catch { continue }
     if (-not $exists) { continue }
 

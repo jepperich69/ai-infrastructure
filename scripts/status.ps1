@@ -10,7 +10,13 @@ param([switch]$All)
 
 . "$PSScriptRoot\config.ps1"
 
-$projects = Get-ChildItem $pubRoot -Directory | Sort-Object Name
+# Paper projects (Pub_/Pro_/PhD_) live under Publikationer/; generic
+# (non-paper) projects live directly under JR and are recognized by the
+# presence of _ai_log.md, created via helpi 27.
+$pubProjects     = Get-ChildItem $pubRoot -Directory -ErrorAction SilentlyContinue
+$genericProjects = Get-ChildItem $jrRoot -Directory -ErrorAction SilentlyContinue |
+    Where-Object { $_.FullName -ne $pubRoot }
+$projects = @($pubProjects) + @($genericProjects) | Sort-Object Name
 
 $rows = @()
 

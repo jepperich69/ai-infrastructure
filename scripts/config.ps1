@@ -59,7 +59,10 @@ function Resolve-ProjectRoot([string]$proj) {
 $_localConfig = Join-Path $PSScriptRoot "config.local.ps1"
 if (Test-Path $_localConfig) {
     . $_localConfig
-    # Re-derive jrRoot after pubRoot may have been set
 } else {
     Write-Warning "config.local.ps1 not found. Run 'helpi 21' to set up your local configuration."
 }
+
+# $jrRoot is the JR folder (parent of Publikationer/) -- used to detect and
+# scan generic (non-paper) project folders anywhere under JR.
+$jrRoot = if ($pubRoot) { Split-Path $pubRoot -Parent } else { "" }
