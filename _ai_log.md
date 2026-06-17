@@ -4,7 +4,6 @@
 
 ## Compressed sessions
 
-- **2026-05-25d** (Codex): Diagnose and patch Codex-only SAD failures in `helpi 25`. -> Codex-only SAD now works end to end from normal PowerShell. Final smoke test `verify if...
 - **2026-05-26** (Claude): Generate survey visualizations from questionnaire Excel data and wi... -> Six clean survey result slides added to the division meeting Beamer deck and successful...
 - **2026-05-27** (Claude): Document helpi 25, fix /close permission prompts, and harden the Co... -> helpi 25 is documented, /close now runs without permission prompts, and forum agents ca...
 - **2026-05-27b** (Claude): Add automatic backup and restore of `~/.claude/` so the AI infrastr... -> `~/.claude/` is now backed up to `_claude_backup/` (OneDrive + GitHub) on every session...
@@ -20,19 +19,7 @@
 - **2026-05-31c** (Claude): Fix `helpi 23` (push_to_github.ps1) failing for AI_auto due to miss... -> `helpi 23 AI_auto` now works — falls back to project root, found existing GitHub remote...
 - **2026-06-04** (Claude): Add em-dash style rule to global writing guidelines and memory. -> Em-dash clause-connector rule is now enforced globally in all research writing sessions...
 - **2026-06-03** (Gemini CLI (gemini-2.0-pro-exp-02-05)): Fix \/style-edit\ skill discovery and naming convention for Gemini CLI -> \/style-edit\ and \/style-apply\ are now discoverable by Gemini CLI with the requested ...
-
----
-
-## Session 2026-06-03b
-**Agent:** Codex GPT-5.5
-**Goal:** Fix Codex skill discovery warning for `/pipeline`.
-**Files touched:**
-- `C:\Users\rich\.claude\skills\pipeline\SKILL.md` -- quoted the YAML `description` value and rewrote without BOM so Codex can parse the front matter.
-- `known_issues.md` -- marked catch-up issue #23 fixed after confirming `scripts\run_forum.ps1` already contains the documented `--skip-trust` Gemini invocation.
-- `_ai_log.md` -- recorded this session.
-**Outcome:** Codex should no longer skip the `/pipeline` skill for invalid YAML.
-**Next steps:** Restart `codex` to confirm the warning is gone.
-**Git ref:** 0858d9e
+- **2026-06-03b** (Codex GPT-5.5): Fix Codex skill discovery warning for `/pipeline`. -> Codex should no longer skip the `/pipeline` skill for invalid YAML.
 
 ---
 
@@ -70,4 +57,23 @@
 - `scripts/run_forum.ps1` -- replaced hardcoded `$PubRoot` with `. "$PSScriptRoot\config.ps1"` and switched path resolution to `Resolve-ProjectRoot`, matching all other scripts
 **Outcome:** Forum (helpi 25) now resolves projects in any subfolder under `JR/`, not only `Publikationer/`.
 **Next steps:** none
+
+---
+
+## Session 2026-06-17
+**Agent:** Claude Sonnet 4.6
+**Goal:** Extend the AI infrastructure so any non-paper folder under `JR\` gets the same session logging, compression, and helpi functionality that `Pub_`/`Pro_`/`PhD_` paper projects already have.
+**Files touched:**
+- `scripts/config.ps1` -- exposed a shared `$jrRoot` variable (parent of `$pubRoot`) for use by other scripts
+- `scripts/helpi.ps1` -- switched `Get-ProjectFromCwd` from a hardcoded name-pattern match to marker-based detection (walks up to the nearest folder containing `_ai_log.md`); added command 27, "Create generic project (non-paper)"
+- `scripts/new_generic_project.ps1` -- new script (helpi 27): lightweight init for a non-paper project folder anywhere under `JR\` -- creates `_ai_log.md`, `.claude/CLAUDE.md` (generic template), `.claude/settings.json`, skipping the Overleaf/code/Literature scaffolding `helpi 1` creates for papers
+- `scripts/status.ps1` -- dashboard (`helpi 13`) now scans all of `JR\` for `_ai_log.md`, not just `Publikationer\`
+- `scripts/network.ps1` -- network graph (`helpi 14`) now includes generic projects (as standalone nodes) alongside Overleaf-registered papers
+- `~/.claude/commands/work.md`, `~/.claude/commands/close.md` -- updated project-root resolution to the same marker-based rule; fixed a stale path in `close.md` step G (`generate_handover.ps1` is under `scripts/`, not `AI_auto\` root)
+- `~/.claude/CLAUDE.md` -- documented the new generic-project workflow, updated "Research project detection" and "Project root convention", backfilled missing helpi 25-26 rows and added 27 to the command table
+
+Note: the `~/.claude/commands/*.md` and `~/.claude/CLAUDE.md` files live outside this repo (in the user's home `.claude/` folder) and are not part of any AI_auto commit.
+**Outcome:** Verified end-to-end with a throwaway test folder (`JR\_test_generic_project_DELETE_ME`, since deleted): `helpi 27` initializes correctly, `Get-ProjectFromCwd` detects it from inside the folder, `helpi 13`/`helpi 22`/`generate_handover.ps1` all work against it unmodified. Testing also surfaced and fixed a path-resolution bug in the new init script (it initially misused `Resolve-ProjectRoot`, which defaults to `Publikationer\` for not-yet-existing folders, misplacing new generic projects). Confirmed two folders the user had already informally set up this way (`CV`, `NoteTaker`) now show up correctly in `helpi 13`/`helpi 14` via the marker-based scan.
+**Next steps:** none required; optionally update `infrastructure.html`'s hand-maintained command-reference tables (already stale before this session -- missing rows 25/26) via `helpi 16`; optionally register generic projects in `projects.json` if feeder-link relationships are ever wanted for them in the network graph.
+**Git ref:** 9e335d6
 **Git ref:** d627315

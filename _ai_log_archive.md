@@ -249,3 +249,10 @@
 ## Archived 2026-06-16 (1 entry)
 
 - **2026-05-25c** (Gemini CLI (gemini-2.5-flash)): Create refined 'V2' leadergroup slides; simplify language and add l... -> --
+
+
+---
+
+## Archived 2026-06-17 (1 entry)
+
+- **2026-05-25d** (Codex): Diagnose and patch Codex-only SAD failures in `helpi 25`. -> Codex-only SAD now works end to end from normal PowerShell. Final smoke test `verify if...

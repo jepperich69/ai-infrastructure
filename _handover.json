@@ -1,15 +1,23 @@
 {
   "project": "AI_auto",
-  "generated": "2026-06-16 22:26",
+  "generated": "2026-06-17 16:25",
   "source": "_ai_log.md",
   "latest_session": {
-    "title": "2026-06-16",
+    "title": "2026-06-17",
     "agent": "Claude Sonnet 4.6",
-    "goal": "Fix `run_forum.ps1` failing for projects outside the `Publikationer` folder (e.g. `NoteTaker` in `JR/`).",
-    "outcome": "Forum (helpi 25) now resolves projects in any subfolder under `JR/`, not only `Publikationer/`.",
-    "next_steps": "none",
+    "goal": "Extend the AI infrastructure so any non-paper folder under `JR\\` gets the same session logging, compression, and helpi functionality that `Pub_`/`Pro_`/`PhD_` paper projects already have.",
+    "outcome": "Verified end-to-end with a throwaway test folder (`JR\\_test_generic_project_DELETE_ME`, since deleted): `helpi 27` initializes correctly, `Get-ProjectFromCwd` detects it from inside the folder, `helpi 13`/`helpi 22`/`generate_handover.ps1` all work against it unmodified. Testing also surfaced and fixed a path-resolution bug in the new init script (it initially misused `Resolve-ProjectRoot`, which defaults to `Publikationer\\` for not-yet-existing folders, misplacing new generic projects). Confirmed two folders the user had already informally set up this way (`CV`, `NoteTaker`) now show up correctly in `helpi 13`/`helpi 14` via the marker-based scan.",
+    "next_steps": "none required; optionally update `infrastructure.html`'s hand-maintained command-reference tables (already stale before this session -- missing rows 25/26) via `helpi 16`; optionally register generic projects in `projects.json` if feeder-link relationships are ever wanted for them in the network graph.",
     "git_ref": "d627315",
-    "files_touched": "`scripts/run_forum.ps1` -- replaced hardcoded `$PubRoot` with `. \"$PSScriptRoot\\config.ps1\"` and switched path resolution to `Resolve-ProjectRoot`, matching all other scripts"
+    "files_touched": [
+      "`scripts/config.ps1` -- exposed a shared `$jrRoot` variable (parent of `$pubRoot`) for use by other scripts",
+      "`scripts/helpi.ps1` -- switched `Get-ProjectFromCwd` from a hardcoded name-pattern match to marker-based detection (walks up to the nearest folder containing `_ai_log.md`); added command 27, \"Create generic project (non-paper)\"",
+      "`scripts/new_generic_project.ps1` -- new script (helpi 27): lightweight init for a non-paper project folder anywhere under `JR\\` -- creates `_ai_log.md`, `.claude/CLAUDE.md` (generic template), `.claude/settings.json`, skipping the Overleaf/code/Literature scaffolding `helpi 1` creates for papers",
+      "`scripts/status.ps1` -- dashboard (`helpi 13`) now scans all of `JR\\` for `_ai_log.md`, not just `Publikationer\\`",
+      "`scripts/network.ps1` -- network graph (`helpi 14`) now includes generic projects (as standalone nodes) alongside Overleaf-registered papers",
+      "`~/.claude/commands/work.md`, `~/.claude/commands/close.md` -- updated project-root resolution to the same marker-based rule; fixed a stale path in `close.md` step G (`generate_handover.ps1` is under `scripts/`, not `AI_auto\\` root)",
+      "`~/.claude/CLAUDE.md` -- documented the new generic-project workflow, updated \"Research project detection\" and \"Project root convention\", backfilled missing helpi 25-26 rows and added 27 to the command table"
+    ]
   },
   "latest_session_complete": true,
   "latest_session_missing": null,
