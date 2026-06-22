@@ -285,8 +285,8 @@
     "branch": "master"
   },
   {
-    "name": "DTU Management Master Thesis � Structured Guidance Template",
-    "path": "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Kurser\\DTU Management Master Thesis � Structured Guidance Template",
+    "name": "DTU Management Master Thesis \u00ef\u00bf\u00bd Structured Guidance Template",
+    "path": "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Kurser\\DTU Management Master Thesis \u00ef\u00bf\u00bd Structured Guidance Template",
     "branch": "master"
   },
   {
@@ -306,22 +306,22 @@
   },
   {
     "name": "Carlsberg_Postdoc_application_Dimitrios",
-    "path": "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Ansøgninger\\Carlsberg_Postdoc_application_Dimitrios",
+    "path": "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Ans\u00c3\u00b8gninger\\Carlsberg_Postdoc_application_Dimitrios",
     "branch": "master"
   },
   {
     "name": "NNF_Postdoc_application_Dimitrios",
-    "path": "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Ansøgninger\\NNF_Postdoc_application_Dimitrios",
+    "path": "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Ans\u00c3\u00b8gninger\\NNF_Postdoc_application_Dimitrios",
     "branch": "master"
   },
   {
     "name": "DFF_TRUST",
-    "path": "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Ansøgninger\\DFF_TRUST",
+    "path": "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Ans\u00c3\u00b8gninger\\DFF_TRUST",
     "branch": "master"
   },
   {
     "name": "DFF Green 2021 bicycle network design",
-    "path": "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Ansøgninger\\DFF Green 2021 bicycle network design",
+    "path": "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Ans\u00c3\u00b8gninger\\DFF Green 2021 bicycle network design",
     "branch": "master"
   },
   {
@@ -512,6 +512,11 @@
   {
     "name": "CykelInfrastruktur",
     "path": "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Slides\\CykelInfrastruktur",
+    "branch": "main"
+  },
+  {
+    "name": "Pub_Riskadversion_MS",
+    "path": "C:/Users/rich/OneDrive - Danmarks Tekniske Universitet/JR/Publikationer/Pub_Riskadversion_MS/Overleaf_source",
     "branch": "main"
   }
 ]

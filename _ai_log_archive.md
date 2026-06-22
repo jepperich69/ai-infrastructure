@@ -256,3 +256,17 @@
 ## Archived 2026-06-17 (1 entry)
 
 - **2026-05-25d** (Codex): Diagnose and patch Codex-only SAD failures in `helpi 25`. -> Codex-only SAD now works end to end from normal PowerShell. Final smoke test `verify if...
+
+
+---
+
+## Archived 2026-06-19 (1 entry)
+
+- **2026-05-26** (Claude): Generate survey visualizations from questionnaire Excel data and wi... -> Six clean survey result slides added to the division meeting Beamer deck and successful...
+
+
+---
+
+## Archived 2026-06-22 (1 entry)
+
+- **2026-05-27** (Claude): Document helpi 25, fix /close permission prompts, and harden the Co... -> helpi 25 is documented, /close now runs without permission prompts, and forum agents ca...

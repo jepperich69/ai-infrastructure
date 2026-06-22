@@ -348,7 +348,7 @@ function Invoke-Agent {
             return $promptText | & claude --permission-mode plan -p 2>&1
         }
         "gemini" {
-            return $promptText | & gemini --approval-mode plan --skip-trust --output-format text 2>&1
+            return $promptText | & gemini --model gemini-2.5-flash --approval-mode plan --skip-trust --output-format text 2>&1
         }
         "codex" {
             return Invoke-CodexAgent -PromptText $promptText -ProjectPath $ProjectPath -TimeoutSeconds $AgentTimeoutSeconds
@@ -678,7 +678,7 @@ DO EXACTLY THIS:
     if (-not $closed) {
         try {
             Write-Host "Attempting automated session close via Gemini..." -ForegroundColor Gray
-            $closePromptText | & gemini --approval-mode yolo --skip-trust  --output-format text 2>&1
+            $closePromptText | & gemini --model gemini-2.5-flash --approval-mode yolo --skip-trust --output-format text 2>&1
             $closed = $true
         } catch {
             Add-Content -LiteralPath $RunLogFile -Encoding UTF8 -Value "Auto-close failed (all models): $($_.Exception.Message)" 

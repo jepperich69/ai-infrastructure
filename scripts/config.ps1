@@ -52,6 +52,14 @@ function Resolve-ProjectRoot([string]$proj) {
     if (Test-Path $candidate) { return $candidate }
     $fallback  = Join-Path $jrRoot $proj
     if (Test-Path $fallback)  { return $fallback }
+    # Generic (non-paper) projects can live in a subfolder under JR
+    # (e.g. JR\Studerende\Foo) rather than directly under JR. Search
+    # recursively for a same-named, already-initialized folder
+    # (_ai_log.md present) before giving up.
+    $deep = Get-ChildItem -Path $jrRoot -Recurse -Directory -Filter $proj -ErrorAction SilentlyContinue |
+            Where-Object { Test-Path (Join-Path $_.FullName "_ai_log.md") } |
+            Select-Object -First 1
+    if ($deep) { return $deep.FullName }
     return $candidate
 }
 
