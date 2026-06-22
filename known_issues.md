@@ -469,7 +469,24 @@ Set-ItemProperty "$env:LOCALAPPDATA\agy\bin\agy.exe" IsReadOnly $false
 Copy-Item <path-to-1.0.8 antigravity.exe> "$env:LOCALAPPDATA\agy\bin\agy.exe" -Force
 Set-ItemProperty "$env:LOCALAPPDATA\agy\bin\agy.exe" IsReadOnly $true
 ```
-Verified `agy --version` -> `1.0.8` and the read-only flag does not block launch. Version fingerprints: **v1.0.8 = 151,180,952 bytes; v1.0.10 = 153,648,792 bytes** (quick check: `(Get-Item "$env:LOCALAPPDATA\agy\bin\agy.exe").Length`). The clean 1.0.8 binary is also kept locally as `agy.exe.1782111695774488500.old` and re-downloadable from the GitHub 1.0.8 release (URL above). If a future launch still shows 1.0.10, the read-only pin was cleared (e.g. by a forced reinstall) — re-apply the swap+read-only block.
+Version fingerprints: **v1.0.8 = 151,180,952 bytes; v1.0.10 = 153,648,792 bytes** (quick check: `(Get-Item "$env:LOCALAPPDATA\agy\bin\agy.exe").Length`). The clean 1.0.8 binary is also kept locally as `agy.exe.1782111695774488500.old` and re-downloadable from the GitHub 1.0.8 release (URL above).
+
+**Update (2026-06-22, even later): read-only was NOT enough — the updater clears the read-only attribute then delete-and-replaces the file, reverting to 1.0.10 on the next launch.** There is no config file, env var, or CLI flag to disable auto-update (the install is literally just `%LOCALAPPDATA%\agy\bin\agy.exe`, nothing else). **The working pin is an ACL deny** for the current user (the identity the updater runs as) on both the file and its parent `bin` folder, blocking the three update vectors (in-place overwrite, delete, create-new). Verified all three raise `UnauthorizedAccessException` afterwards while the binary stays 1.0.8:
+```powershell
+$bin = "$env:LOCALAPPDATA\agy\bin\agy.exe"; $dir = "$env:LOCALAPPDATA\agy\bin"
+Stop-Process -Name agy -Force -ErrorAction SilentlyContinue; Start-Sleep -Milliseconds 800
+Set-ItemProperty $bin IsReadOnly $false -ErrorAction SilentlyContinue
+Copy-Item <path-to-1.0.8 antigravity.exe> $bin -Force
+$me = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
+$a = Get-Acl $bin; $a.AddAccessRule((New-Object System.Security.AccessControl.FileSystemAccessRule($me,"Write,Delete","None","None","Deny"))); Set-Acl $bin $a
+$d = Get-Acl $dir; $d.AddAccessRule((New-Object System.Security.AccessControl.FileSystemAccessRule($me,"CreateFiles,DeleteSubdirectoriesAndFiles,Delete","None","None","Deny"))); Set-Acl $dir $d
+```
+The deny ACEs leave ownership + WriteDAC intact, so to **unlock for a legitimate future upgrade** (once Google fixes the 1.0.9+ regression), remove the deny rules then swap:
+```powershell
+$bin = "$env:LOCALAPPDATA\agy\bin\agy.exe"; $dir = "$env:LOCALAPPDATA\agy\bin"
+foreach ($p in $bin,$dir) { $x = Get-Acl $p; $x.Access | ? AccessControlType -eq Deny | % { $x.RemoveAccessRule($_) | Out-Null }; Set-Acl $p $x }
+```
+If a launch ever shows 1.0.10 again, the deny ACEs were removed/reset — re-apply the lock block above.
 **Two-track model convention (now enforced):**
 - *Interactive / manual* Gemini use -> `agy` (Antigravity, Google AI Pro subscription, free 3.5 Flash). Not usable in automation (this issue's hang).
 - *Automation* (Convergence Forum `run_forum.ps1`, `/pipeline` skill) -> classic `gemini` (`@google/gemini-cli`) hard-pinned to `--model gemini-2.5-flash` on the free-tier `GEMINI_API_KEY`. Both `run_forum.ps1` calls already pin it; `/pipeline` SKILL.md's gemini round was missing the flag and was fixed on 2026-06-22 (it could otherwise drift onto 3.x and exhaust the tiny free quota mid-run). See issue #36 for the API-key/quota background.
