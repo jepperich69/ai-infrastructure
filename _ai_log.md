@@ -4,7 +4,6 @@
 
 ## Compressed sessions
 
-- **2026-05-27b** (Claude): Add automatic backup and restore of `~/.claude/` so the AI infrastr... -> `~/.claude/` is now backed up to `_claude_backup/` (OneDrive + GitHub) on every session...
 - **2026-05-29** (Claude): Set up a writing style guide from classic reference papers to gover... -> Writing style guide created and wired into global CLAUDE.md; tested on a research parag...
 - **2026-05-29c** (Claude): Fix `/close` to run without permission prompts -> Root cause identified: subagents spawned via `Agent` tool have an independent permissio...
 - **2026-05-29d** (Claude): Fix remaining `/close` permission prompts after subagent removal -> Two root causes found and fixed: (1) `**` in the middle of Edit/Write glob patterns doe...
@@ -20,16 +19,7 @@
 - **2026-06-03b** (Codex GPT-5.5): Fix Codex skill discovery warning for `/pipeline`. -> Codex should no longer skip the `/pipeline` skill for invalid YAML.
 - **2026-06-03c** (Codex GPT-5.5): Fix `/style-edit` not being recognised after the custom skill rename. -> Gemini now lists `style-edit`, `style-apply`, and `pipeline` as enabled skills; the `.a...
 - **2026-06-08** (Claude): Fix `run_forum.ps1` failing in Round 2 with `error: unknown option ... -> Forum claude calls now pipe prompts via stdin; `---` in blackboard state can no longer ...
-
----
-
-## Session 2026-06-16
-**Agent:** Claude Sonnet 4.6
-**Goal:** Fix `run_forum.ps1` failing for projects outside the `Publikationer` folder (e.g. `NoteTaker` in `JR/`).
-**Files touched:**
-- `scripts/run_forum.ps1` -- replaced hardcoded `$PubRoot` with `. "$PSScriptRoot\config.ps1"` and switched path resolution to `Resolve-ProjectRoot`, matching all other scripts
-**Outcome:** Forum (helpi 25) now resolves projects in any subfolder under `JR/`, not only `Publikationer/`.
-**Next steps:** none
+- **2026-06-16** (Claude): Fix `run_forum.ps1` failing for projects outside the `Publikationer... -> Forum (helpi 25) now resolves projects in any subfolder under `JR/`, not only `Publikat...
 
 ---
 
@@ -78,4 +68,18 @@ Note: the `~/.claude/commands/*.md` and `~/.claude/CLAUDE.md` files live outside
 - `~/.claude/CLAUDE.md` -- added global platform fact: pin `agy` to v1.0.8, never update, interactive-only; automation uses classic `gemini --model gemini-2.5-flash`
 **Outcome:** Root cause was a Google regression in agy v1.0.9/1.0.10 (OAuth token exchange fails with `read tcp ... connection reset`), NOT a firewall/account/subscription issue (proved endpoint reachable via direct REST 400 + working API key). Downgrading to v1.0.8 restored interactive login (now caches silently as `jeppe.rich@gmail.com`, Google AI Pro, Gemini 3.5 Flash). Two-track split now enforced and documented: interactive = `agy` (3.5 Flash, subscription); automation (Forum + pipeline) = classic `gemini` hard-pinned to 2.5-flash on the free API key.
 **Next steps:** none. Watch for agy silently auto-updating back to 1.0.10 (re-swap 1.0.8 if login breaks again). Optionally enable billing on the API key if 3.x is ever wanted inside automation.
+**Git ref:**
+
+---
+
+## Session 2026-06-22b
+**Agent:** Claude Opus 4.8
+**Goal:** agy had silently auto-updated back to the broken v1.0.10 (eligibility check failing), defeating the previous session's downgrade. Make the v1.0.8 pin durable, clarify the interactive-vs-automation command split, and wire AGENTS.md context into agy.
+**Files touched:**
+- `known_issues.md` -- extended #37: read-only proved insufficient (updater clears the attribute then delete-replaces); documented the ACL-deny pin (deny Write/Delete on `agy.exe` + its `bin` folder for the current user, with unlock procedure), the proper `AGY_CLI_DISABLE_AUTO_UPDATE` env-var kill-switch, version fingerprints (1.0.8 = 151,180,952 B; 1.0.10 = 153,648,792 B), and the agy AGENTS.md wiring (shares `~/.gemini`, auto-discovers AGENTS.md with cwd parent-traversal)
+- `C:\Users\rich\AppData\Local\agy\bin\agy.exe` (outside repo) -- re-swapped to v1.0.8 from the GitHub 1.0.8 release; applied ACL deny ACEs on the file and `bin` folder to block self-update (verified overwrite/delete/create all raise UnauthorizedAccessException)
+- `AGY_CLI_DISABLE_AUTO_UPDATE=1` user env var (outside repo) -- agy's own updater kill-switch; ACL lock kept as backstop
+- `~/.gemini/antigravity-cli/AGENTS.md` (outside repo) -- hard-linked to `~/.gemini/AGENTS.md` so the global context file loads in agy's data root and never drifts from the canonical copy
+**Outcome:** agy is pinned to v1.0.8 two ways (env-var kill-switch + ACL deny backstop) so it can no longer self-revert to the broken 1.0.10; AGENTS.md context is wired (project context via cwd parent-traversal of helpi-generated AGENTS.md, global context via the hard-linked file in both candidate roots). Discovered agy shares the classic gemini `~/.gemini` dir and auto-discovers AGENTS.md, so most wiring was already implicit.
+**Next steps:** User to verify interactively in a fresh terminal (so the new env var loads): run `agy` in a project dir, confirm it shows v1.0.8, signs in clean (no eligibility error), and lists the project + global AGENTS.md when asked which context files it loaded. If Developer Mode is ever enabled, convert the global AGENTS.md hard link to a real symlink (more robust against atomic-save editors).
 **Git ref:**

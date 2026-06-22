@@ -1,6 +1,6 @@
 # State -- 2026-06-22
 **Phase:** Active development -- v1.0 released; generic (non-paper) project support added
-**Last session:** Fixed broken interactive Gemini/Antigravity access -- root cause was a Google OAuth regression in agy v1.0.9/1.0.10 (not firewall/account); downgraded agy to v1.0.8 (login works, caches as Google AI Pro / 3.5 Flash). Formalized the two-track model convention: interactive = agy (3.5 Flash, subscription), automation (Forum + pipeline) = classic gemini hard-pinned to 2.5-flash on the free API key. Fixed the unpinned gemini round in the /pipeline skill; documented everything in known_issues.md #36/#37 and global CLAUDE.md.
-**Next:** none. Watch for agy auto-updating back to 1.0.10 (re-swap 1.0.8 if login breaks). Optionally enable billing on the API key if 3.x is ever wanted inside automation.
+**Last session:** Made the agy v1.0.8 pin durable after it auto-reverted to the broken v1.0.10 -- set `AGY_CLI_DISABLE_AUTO_UPDATE=1` plus an ACL-deny backstop on the binary/folder. Wired AGENTS.md context into agy (it shares `~/.gemini`, auto-discovers AGENTS.md with cwd parent-traversal; global file hard-linked into agy's data root). Documented all in known_issues.md #37.
+**Next:** User to verify interactively in a fresh terminal -- run `agy` in a project dir, confirm v1.0.8 + clean login + AGENTS.md loaded. If Developer Mode is enabled later, convert the global AGENTS.md hard link to a symlink.
 **Git ref:** --
 **Agent:** Claude Opus 4.8

@@ -1,20 +1,19 @@
 {
   "project": "AI_auto",
-  "generated": "2026-06-22 09:12",
+  "generated": "2026-06-22 09:39",
   "source": "_ai_log.md",
   "latest_session": {
-    "title": "2026-06-22",
+    "title": "2026-06-22b",
     "agent": "Claude Opus 4.8",
-    "goal": "Diagnose why interactive `gemini`/`agy` were failing with API/usage-limit errors after the June model changes, restore working interactive Gemini access, and formalize a two-track model convention (interactive vs automation).",
-    "outcome": "Root cause was a Google regression in agy v1.0.9/1.0.10 (OAuth token exchange fails with `read tcp ... connection reset`), NOT a firewall/account/subscription issue (proved endpoint reachable via direct REST 400 + working API key). Downgrading to v1.0.8 restored interactive login (now caches silently as `jeppe.rich@gmail.com`, Google AI Pro, Gemini 3.5 Flash). Two-track split now enforced and documented: interactive = `agy` (3.5 Flash, subscription); automation (Forum + pipeline) = classic `gemini` hard-pinned to 2.5-flash on the free API key.",
-    "next_steps": "none. Watch for agy silently auto-updating back to 1.0.10 (re-swap 1.0.8 if login breaks again). Optionally enable billing on the API key if 3.x is ever wanted inside automation.",
+    "goal": "agy had silently auto-updated back to the broken v1.0.10 (eligibility check failing), defeating the previous session's downgrade. Make the v1.0.8 pin durable, clarify the interactive-vs-automation command split, and wire AGENTS.md context into agy.",
+    "outcome": "agy is pinned to v1.0.8 two ways (env-var kill-switch + ACL deny backstop) so it can no longer self-revert to the broken 1.0.10; AGENTS.md context is wired (project context via cwd parent-traversal of helpi-generated AGENTS.md, global context via the hard-linked file in both candidate roots). Discovered agy shares the classic gemini `~/.gemini` dir and auto-discovers AGENTS.md, so most wiring was already implicit.",
+    "next_steps": "User to verify interactively in a fresh terminal (so the new env var loads): run `agy` in a project dir, confirm it shows v1.0.8, signs in clean (no eligibility error), and lists the project + global AGENTS.md when asked which context files it loaded. If Developer Mode is ever enabled, convert the global AGENTS.md hard link to a real symlink (more robust against atomic-save editors).",
     "git_ref": "",
     "files_touched": [
-      "`C:\\Users\\rich\\.gemini\\settings.json` -- pinned `model.name = gemini-2.5-flash` (belt-and-suspenders alongside the `GEMINI_MODEL` env var; note CLI bug #5373/#2205 can ignore settings.json model on Windows)",
-      "`C:\\Users\\rich\\AppData\\Local\\agy\\bin\\agy.exe` -- downgraded from broken v1.0.9/1.0.10 to known-good v1.0.8 (backup at `agy.exe.bak_20260622_085759`)",
-      "`~/.claude/skills/pipeline/SKILL.md` -- pinned the gemini round to `--model gemini-2.5-flash` (was unpinned, could drift onto 3.x and exhaust free quota mid-run) and documented the two-track convention in Notes",
-      "`known_issues.md` -- extended #36 (interactive 3.5-flash quota trap) and #37 (agy v1.0.9/1.0.10 OAuth `token exchange failed` regression, 1.0.8 downgrade procedure, do-not-update warning, two-track convention)",
-      "`~/.claude/CLAUDE.md` -- added global platform fact: pin `agy` to v1.0.8, never update, interactive-only; automation uses classic `gemini --model gemini-2.5-flash`"
+      "`known_issues.md` -- extended #37: read-only proved insufficient (updater clears the attribute then delete-replaces); documented the ACL-deny pin (deny Write/Delete on `agy.exe` + its `bin` folder for the current user, with unlock procedure), the proper `AGY_CLI_DISABLE_AUTO_UPDATE` env-var kill-switch, version fingerprints (1.0.8 = 151,180,952 B; 1.0.10 = 153,648,792 B), and the agy AGENTS.md wiring (shares `~/.gemini`, auto-discovers AGENTS.md with cwd parent-traversal)",
+      "`C:\\Users\\rich\\AppData\\Local\\agy\\bin\\agy.exe` (outside repo) -- re-swapped to v1.0.8 from the GitHub 1.0.8 release; applied ACL deny ACEs on the file and `bin` folder to block self-update (verified overwrite/delete/create all raise UnauthorizedAccessException)",
+      "`AGY_CLI_DISABLE_AUTO_UPDATE=1` user env var (outside repo) -- agy's own updater kill-switch; ACL lock kept as backstop",
+      "`~/.gemini/antigravity-cli/AGENTS.md` (outside repo) -- hard-linked to `~/.gemini/AGENTS.md` so the global context file loads in agy's data root and never drifts from the canonical copy"
     ]
   },
   "latest_session_complete": true,

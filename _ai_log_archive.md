@@ -270,3 +270,10 @@
 ## Archived 2026-06-22 (1 entry)
 
 - **2026-05-27** (Claude): Document helpi 25, fix /close permission prompts, and harden the Co... -> helpi 25 is documented, /close now runs without permission prompts, and forum agents ca...
+
+
+---
+
+## Archived 2026-06-22 (1 entry)
+
+- **2026-05-27b** (Claude): Add automatic backup and restore of `~/.claude/` so the AI infrastr... -> `~/.claude/` is now backed up to `_claude_backup/` (OneDrive + GitHub) on every session...
