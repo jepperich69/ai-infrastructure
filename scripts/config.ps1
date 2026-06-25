@@ -25,6 +25,17 @@
 $aiRoot           = Split-Path $PSScriptRoot -Parent
 $claudeProjectKey = ($aiRoot -replace '[^a-zA-Z0-9]', '-')
 
+# ── Non-interactive git (prevents headless hangs) ────────────────────
+# When an infra script (helpi 2/3/4 etc.) runs from a headless agent
+# (agy, Codex sandbox, scheduled task) with no TTY, any git prompt for
+# credentials would block forever on stdin. This was seen as helpi 4
+# hanging when Overleaf was ahead, because the extra fetch/rebase/push
+# round-trip can trigger a credential prompt. Forcing non-interactive
+# mode turns a silent hang into a fast, actionable error instead.
+$env:GIT_TERMINAL_PROMPT = "0"      # never prompt for username/password
+$env:GCM_INTERACTIVE     = "Never"  # Git Credential Manager: no GUI/prompt
+$env:GIT_PAGER           = "cat"    # never invoke a blocking pager
+
 # ── Defaults (correct for most Windows installs) ─────────────────────
 $pubRoot         = ""          # set in config.local.ps1
 $gitUser         = ""          # set in config.local.ps1
