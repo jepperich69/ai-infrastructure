@@ -1,6 +1,6 @@
-# State -- 2026-06-22
-**Phase:** Active development -- v1.0 released; generic (non-paper) project support added
-**Last session:** Made the agy v1.0.8 pin durable after it auto-reverted to the broken v1.0.10 -- set `AGY_CLI_DISABLE_AUTO_UPDATE=1` plus an ACL-deny backstop on the binary/folder. Wired AGENTS.md context into agy (it shares `~/.gemini`, auto-discovers AGENTS.md with cwd parent-traversal; global file hard-linked into agy's data root). Documented all in known_issues.md #37.
-**Next:** User to verify interactively in a fresh terminal -- run `agy` in a project dir, confirm v1.0.8 + clean login + AGENTS.md loaded. If Developer Mode is enabled later, convert the global AGENTS.md hard link to a symlink.
-**Git ref:** --
+# State -- 2026-06-25
+**Phase:** Active development -- v1.0 released; onboarding docs added
+**Last session:** Added a Supabase keep-alive to the NoteTaker watcher (stops free-tier auto-pause after 7 days idle); fixed the `helpi 4` headless hang by forcing non-interactive git in config.ps1; wrote INSTALL.md (accounts/licenses + agent-executable setup runbook). All committed and pushed (AI_auto b400112, NoteTaker 43340dc).
+**Next:** none open. Optional: log the `helpi 4` headless-hang fix in known_issues.md for /catch-up. Real-world test of the fix occurs next time `helpi 4` runs from agy with Overleaf ahead.
+**Git ref:** b400112
 **Agent:** Claude Opus 4.8
