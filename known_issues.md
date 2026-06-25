@@ -494,3 +494,20 @@ If a launch ever shows 1.0.10 again, the deny ACEs were removed/reset — re-app
 **Two-track model convention (now enforced):**
 - *Interactive / manual* Gemini use -> `agy` (Antigravity, Google AI Pro subscription, free 3.5 Flash). Not usable in automation (this issue's hang).
 - *Automation* (Convergence Forum `run_forum.ps1`, `/pipeline` skill) -> classic `gemini` (`@google/gemini-cli`) hard-pinned to `--model gemini-2.5-flash` on the free-tier `GEMINI_API_KEY`. Both `run_forum.ps1` calls already pin it; `/pipeline` SKILL.md's gemini round was missing the flag and was fixed on 2026-06-22 (it could otherwise drift onto 3.x and exhaust the tiny free quota mid-run). See issue #36 for the API-key/quota background.
+
+---
+
+### 38. `helpi 4` (and other network git ops) hang in headless agents when the remote is ahead
+**Status:** fixed (2026-06-25)
+**Affects:** `AI_auto/scripts/config.ps1` (the fix); symptom seen in `push_to_overleaf.ps1` (helpi 4), also latent in `sync_one.ps1`/`sync_all.ps1` (helpi 2/3)
+**Fix:** Force non-interactive git for all infra scripts. `config.ps1` is dot-sourced by every script, so set there:
+```powershell
+$env:GIT_TERMINAL_PROMPT = "0"      # never prompt for username/password
+$env:GCM_INTERACTIVE     = "Never"  # Git Credential Manager: no GUI/prompt
+$env:GIT_PAGER           = "cat"    # never invoke a blocking pager
+```
+This converts a silent infinite hang into a fast, actionable error (e.g. push fails with a clear message) so the script exits instead of blocking forever.
+
+**Symptom:** Running `helpi 4` from a headless agent (agy / Codex sandbox / scheduled task — anything with no attached TTY) hung indefinitely with no output when the Overleaf remote was ahead of local. When the remote was *not* ahead the push usually went straight through on cached credentials, so the hang looked branch-state-specific; in reality the extra `fetch -> rebase -> push` round-trip taken on the "remote ahead" path is more likely to require a credential refresh, and any git credential / Git Credential Manager prompt blocks forever on a stdin that never arrives in a headless context.
+
+**Note:** With the guard in place, a genuinely missing/expired credential now makes `fetch`/`push` *fail fast* rather than hang — the correct behavior for automation. On this machine credentials are normally served non-interactively by Windows Credential Manager once stored, so interactive sessions are unaffected. Distinct from issue #35 (Overleaf branch disagreement), which is about *which* branch is pushed, not about hanging.
