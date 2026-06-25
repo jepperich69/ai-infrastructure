@@ -98,3 +98,14 @@ Note: the `~/.claude/commands/*.md` and `~/.claude/CLAUDE.md` files live outside
 **Next steps:** none.
 **Git ref:** c6f7888
 
+---
+
+## Session 2026-06-25 (second session)
+**Agent:** Gemini 3.5 Flash (Medium)
+**Goal:** Address NoteTaker watcher failures on the 20-minute test recording, prevent OneDrive from downloading all project folders during active project syncs, and generate Markdown, LaTeX, and compiled PDF summary outputs.
+**Files touched:**
+- `NoteTaker/code/notetaker_watcher.ps1` -- Integrated the Gemini File API (raw upload, generateContent with file_uri, and DELETE cleanup) for audio files > 4MB to prevent 503 errors and size limit issues; optimized `Sync-Projects` to sort project folders using parent folder `LastWriteTimeUtc` directly instead of checking `_ai_log.md` inside every folder (stops OneDrive from downloading inactive projects); and cached downloaded assets locally to avoid redownloads during watcher retries.
+**Outcome:** Handled the 18 MB test recording (transcript, Markdown, and LaTeX summaries written, PDF compiled successfully, and GitHub spool asset deleted). Replaced the old watcher processes with the updated script under the supervisor loop in hidden mode.
+**Next steps:** none.
+**Git ref:** -
+
