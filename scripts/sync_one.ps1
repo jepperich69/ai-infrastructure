@@ -1,4 +1,4 @@
-﻿# sync_one.ps1
+# sync_one.ps1
 # Pull the latest from Overleaf for a single project.
 #
 # Usage:
@@ -21,11 +21,24 @@ if (!$match) {
 }
 
 $path   = $match.path
-$branch = $match.branch
 
 if (!(Test-Path $path)) {
     Write-Host "ERR  | Path not found: $path"
     exit 1
+}
+
+# Try to resolve branch from local git first, update projects.json if mismatched, fallback to match.branch
+$localBranch = git -C $path rev-parse --abbrev-ref HEAD 2>$null
+if ($LASTEXITCODE -eq 0 -and -not [string]::IsNullOrEmpty($localBranch)) {
+    $branch = $localBranch.Trim()
+    if ($match.branch -ne $branch) {
+        Write-Host "INFO | Local branch is '$branch' but projects.json says '$($match.branch)'."
+        Write-Host "       Updating projects.json..."
+        $match.branch = $branch
+        $projects | ConvertTo-Json -Depth 5 | Set-Content $jsonPath
+    }
+} else {
+    $branch = $match.branch
 }
 
 Write-Host "Syncing: $Project"

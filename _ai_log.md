@@ -68,7 +68,7 @@ Note: the `~/.claude/commands/*.md` and `~/.claude/CLAUDE.md` files live outside
 - `~/.claude/CLAUDE.md` -- added global platform fact: pin `agy` to v1.0.8, never update, interactive-only; automation uses classic `gemini --model gemini-2.5-flash`
 **Outcome:** Root cause was a Google regression in agy v1.0.9/1.0.10 (OAuth token exchange fails with `read tcp ... connection reset`), NOT a firewall/account/subscription issue (proved endpoint reachable via direct REST 400 + working API key). Downgrading to v1.0.8 restored interactive login (now caches silently as `jeppe.rich@gmail.com`, Google AI Pro, Gemini 3.5 Flash). Two-track split now enforced and documented: interactive = `agy` (3.5 Flash, subscription); automation (Forum + pipeline) = classic `gemini` hard-pinned to 2.5-flash on the free API key.
 **Next steps:** none. Watch for agy silently auto-updating back to 1.0.10 (re-swap 1.0.8 if login breaks again). Optionally enable billing on the API key if 3.x is ever wanted inside automation.
-**Git ref:**
+**Git ref:** 
 
 ---
 
@@ -82,4 +82,19 @@ Note: the `~/.claude/commands/*.md` and `~/.claude/CLAUDE.md` files live outside
 - `~/.gemini/antigravity-cli/AGENTS.md` (outside repo) -- hard-linked to `~/.gemini/AGENTS.md` so the global context file loads in agy's data root and never drifts from the canonical copy
 **Outcome:** agy is pinned to v1.0.8 two ways (env-var kill-switch + ACL deny backstop) so it can no longer self-revert to the broken 1.0.10; AGENTS.md context is wired (project context via cwd parent-traversal of helpi-generated AGENTS.md, global context via the hard-linked file in both candidate roots). Discovered agy shares the classic gemini `~/.gemini` dir and auto-discovers AGENTS.md, so most wiring was already implicit.
 **Next steps:** User to verify interactively in a fresh terminal (so the new env var loads): run `agy` in a project dir, confirm it shows v1.0.8, signs in clean (no eligibility error), and lists the project + global AGENTS.md when asked which context files it loaded. If Developer Mode is ever enabled, convert the global AGENTS.md hard link to a real symlink (more robust against atomic-save editors).
-**Git ref:**
+**Git ref:** 45b1a36
+
+---
+
+## Session 2026-06-25
+**Agent:** Gemini 3.5 Flash (Medium)
+**Goal:** Fix the "src refspec master does not match any" error that occurs during push/sync operations on repositories using the `main` branch instead of `master`.
+**Files touched:**
+- `scripts/push_to_overleaf.ps1` -- updated project branch resolution to dynamically detect the local checked-out branch using git, falling back to `projects.json` only if detection fails, and updating `projects.json` to match if they differ.
+- `scripts/sync_one.ps1` -- updated project branch resolution to dynamically detect the local checked-out branch using git, falling back to `projects.json` only if detection fails, and updating `projects.json` to match if they differ.
+- `scripts/sync_all.ps1` -- inside the parallel sync script block, dynamically resolve the branch from the local git repository first, falling back to the registered branch in `projects.json`.
+- `scripts/setup_project.ps1` -- defaulted the `-Branch` parameter to `$null` to auto-detect the default checked-out branch after git clone (falling back to `"master"` if detection fails), instead of forcing `"master"`.
+**Outcome:** Fixed the push error for `Pub_FlowPaperSP2_TRD` (which is tracked on `main`), updated `projects.json` automatically, and pushed the pending changes successfully to Overleaf. The sync/push infrastructure now handles any git branch dynamically instead of failing on non-master branches.
+**Next steps:** none.
+**Git ref:** c6f7888
+

@@ -1,4 +1,4 @@
-﻿# setup_project.ps1
+# setup_project.ps1
 # Links an Overleaf project to a local publication folder and adds it to projects.json
 #
 # Usage:
@@ -14,7 +14,7 @@ param(
 
     [string]$SubFolder = "Overleaf_source",  # Subfolder name to clone into (default: Overleaf_source)
 
-    [string]$Branch = "master"  # Branch name (master or main)
+    [string]$Branch = $null  # Branch name (master or main)
 )
 
 . "$PSScriptRoot\config.ps1"
@@ -43,6 +43,16 @@ if (Test-Path (Join-Path $clonePath ".git")) {
     if ($LASTEXITCODE -ne 0) {
         Write-Host "ERROR: git clone failed." -ForegroundColor Red
         exit 1
+    }
+}
+
+# --- Resolve or detect branch ---
+if ([string]::IsNullOrEmpty($Branch)) {
+    $detectedBranch = git -C $clonePath rev-parse --abbrev-ref HEAD 2>$null
+    if ($LASTEXITCODE -eq 0 -and -not [string]::IsNullOrEmpty($detectedBranch)) {
+        $Branch = $detectedBranch.Trim()
+    } else {
+        $Branch = "master" # fallback
     }
 }
 

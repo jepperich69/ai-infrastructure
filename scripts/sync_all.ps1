@@ -1,4 +1,4 @@
-﻿. "$PSScriptRoot\config.ps1"
+. "$PSScriptRoot\config.ps1"
 $jsonPath = "$aiRoot\projects.json"
 $csvPath  = "$aiRoot\papers.csv"
 $logDir   = "$aiRoot\logs"
@@ -82,7 +82,14 @@ $syncScript = {
     }
 
     try {
-        # Pre-check: compare remote HEAD SHA to local â€” skip pull if identical
+        # Resolve branch from local git first, fallback to $project.branch
+        $branch = $project.branch
+        $localBranch = git -C $project.path rev-parse --abbrev-ref HEAD 2>$null
+        if ($LASTEXITCODE -eq 0 -and -not [string]::IsNullOrEmpty($localBranch)) {
+            $branch = $localBranch.Trim()
+        }
+
+        # Pre-check: compare remote HEAD SHA to local — skip pull if identical
         $remoteRef = git -C $project.path ls-remote origin HEAD 2>$null
         if ($remoteRef) {
             $remoteSHA = ($remoteRef -split '\s+')[0].Trim()
@@ -102,8 +109,8 @@ $syncScript = {
             }
         }
 
-        # Remote has new commits â€” pull
-        git -C $project.path pull --quiet origin $project.branch 2>&1 | Out-Null
+        # Remote has new commits — pull
+        git -C $project.path pull --quiet origin $branch 2>&1 | Out-Null
         if ($LASTEXITCODE -ne 0) {
             $logBag.Add("$(& $ts) - ERR  | $($project.name) - pull failed")
             return
