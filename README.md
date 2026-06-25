@@ -27,6 +27,13 @@ AI_auto adds a file-based backbone:
 
 It is intentionally local-first. The system does not replace Overleaf, GitHub, or the AI agent. It coordinates them.
 
+## Installing
+
+New machine or new colleague? See [`INSTALL.md`](INSTALL.md) for the full setup:
+the accounts and licenses you must bring (which are paid), the software to
+install, and a step-by-step runbook an AI agent can execute, pausing only at the
+human-only steps (account creation, payment, OAuth logins, key generation).
+
 ## Quick Start
 
 Run commands from PowerShell. The wrapper is:
@@ -170,8 +177,10 @@ This repository is built for Windows and PowerShell. It assumes:
 - PowerShell
 - Git
 - GitHub CLI (`gh`) for GitHub publication
+- Node.js for the `gemini` / `codex` / `supabase` CLIs
 - MiKTeX/LaTeX for manuscript compilation
-- Overleaf git access for manuscript sync
-- Claude Code and/or Codex for AI-assisted research sessions
+- Overleaf git access (a paid Overleaf feature) for manuscript sync
+- Claude Code (required) and optionally Gemini / Codex for AI-assisted sessions
 
+Accounts, paid plans, and API keys are listed in full in [`INSTALL.md`](INSTALL.md).
 See [`known_issues.md`](known_issues.md) for the current machine-specific environment map.
