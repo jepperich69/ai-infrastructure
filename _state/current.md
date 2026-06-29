@@ -1,6 +1,6 @@
-# State -- 2026-06-25
-**Phase:** Active development -- v1.0 released; onboarding docs added
-**Last session:** Added a Supabase keep-alive to the NoteTaker watcher (stops free-tier auto-pause after 7 days idle); fixed the `helpi 4` headless hang by forcing non-interactive git in config.ps1; wrote INSTALL.md (accounts/licenses + agent-executable setup runbook). All committed and pushed (AI_auto b400112, NoteTaker 43340dc).
-**Next:** none open. Optional: log the `helpi 4` headless-hang fix in known_issues.md for /catch-up. Real-world test of the fix occurs next time `helpi 4` runs from agy with Overleaf ahead.
-**Git ref:** b400112
+# State -- 2026-06-30
+**Phase:** Active development -- v1.0 released; skills + verification tooling growing
+**Last session:** Built `/verify-math` skill (SymPy-backed LaTeX math checker: PASS/FAIL/NOT-CHECKABLE per equation label, background by default, `--inline` for small files). Installed SymPy 1.14.0 in miniconda base. Live-validated against Pub_OptimismBias_PartA Math_Verification.tex (all checks passed). Z3 considered but SymPy was the right fit.
+**Next:** none open. Optional: full end-to-end `/verify-math --project Pub_OptimismBias_PartA` run (offered, not run). Future: forum (helpi 25) verification pre-pass injecting a "Verified facts" block while keeping forum agents read-only.
+**Git ref:** f4c87c7
 **Agent:** Claude Opus 4.8

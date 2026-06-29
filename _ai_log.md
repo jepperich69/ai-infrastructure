@@ -4,7 +4,6 @@
 
 ## Compressed sessions
 
-- **2026-05-26b** (Claude): Add `-Stage` parameter to the Convergence Forum to prevent agents f... -> Forum agents now operate in surgical/defect-detection mode when `-Stage revision` or `-...
 - **2026-05-29b** (Claude): Extend infrastructure with Haiku-delegated /close, fix permission g... -> /close now delegates mechanical operations to a Haiku subagent; permission patterns ext...
 - **2026-05-30** (Claude): Add `/style-edit` skill for background LaTeX prose editing, then re... -> `/style-edit` skill added for autonomous background prose-style editing of LaTeX manusc...
 - **2026-05-30b** (Claude): Push v1.0 to GitHub, remove redundant root helpi.ps1 shim, and upda... -> v1.0 fully pushed to GitHub; documentation updated and regenerated to match the scripts...
@@ -20,20 +19,7 @@
 - **2026-06-17** (Claude): Extend the AI infrastructure so any non-paper folder under `JR\` ge... -> Verified end-to-end with a throwaway test folder (`JR\_test_generic_project_DELETE_ME`,...
 - **2026-06-19** (Claude): Fix Gemini CLI auth (broken by Google's OAuth deprecation for indiv... -> `gemini` is fully working again, both interactively and from `run_forum.ps1`, on the fl...
 - **2026-06-22** (Claude): Diagnose why interactive `gemini`/`agy` were failing with API/usage... -> Root cause was a Google regression in agy v1.0.9/1.0.10 (OAuth token exchange fails wit...
-
----
-
-## Session 2026-06-22b
-**Agent:** Claude Opus 4.8
-**Goal:** agy had silently auto-updated back to the broken v1.0.10 (eligibility check failing), defeating the previous session's downgrade. Make the v1.0.8 pin durable, clarify the interactive-vs-automation command split, and wire AGENTS.md context into agy.
-**Files touched:**
-- `known_issues.md` -- extended #37: read-only proved insufficient (updater clears the attribute then delete-replaces); documented the ACL-deny pin (deny Write/Delete on `agy.exe` + its `bin` folder for the current user, with unlock procedure), the proper `AGY_CLI_DISABLE_AUTO_UPDATE` env-var kill-switch, version fingerprints (1.0.8 = 151,180,952 B; 1.0.10 = 153,648,792 B), and the agy AGENTS.md wiring (shares `~/.gemini`, auto-discovers AGENTS.md with cwd parent-traversal)
-- `C:\Users\rich\AppData\Local\agy\bin\agy.exe` (outside repo) -- re-swapped to v1.0.8 from the GitHub 1.0.8 release; applied ACL deny ACEs on the file and `bin` folder to block self-update (verified overwrite/delete/create all raise UnauthorizedAccessException)
-- `AGY_CLI_DISABLE_AUTO_UPDATE=1` user env var (outside repo) -- agy's own updater kill-switch; ACL lock kept as backstop
-- `~/.gemini/antigravity-cli/AGENTS.md` (outside repo) -- hard-linked to `~/.gemini/AGENTS.md` so the global context file loads in agy's data root and never drifts from the canonical copy
-**Outcome:** agy is pinned to v1.0.8 two ways (env-var kill-switch + ACL deny backstop) so it can no longer self-revert to the broken 1.0.10; AGENTS.md context is wired (project context via cwd parent-traversal of helpi-generated AGENTS.md, global context via the hard-linked file in both candidate roots). Discovered agy shares the classic gemini `~/.gemini` dir and auto-discovers AGENTS.md, so most wiring was already implicit.
-**Next steps:** User to verify interactively in a fresh terminal (so the new env var loads): run `agy` in a project dir, confirm it shows v1.0.8, signs in clean (no eligibility error), and lists the project + global AGENTS.md when asked which context files it loaded. If Developer Mode is ever enabled, convert the global AGENTS.md hard link to a real symlink (more robust against atomic-save editors).
-**Git ref:** 45b1a36
+- **2026-06-22b** (Claude): agy had silently auto-updated back to the broken v1.0.10 (eligibili... -> agy is pinned to v1.0.8 two ways (env-var kill-switch + ACL deny backstop) so it can no...
 
 ---
 
@@ -74,3 +60,18 @@
 **Outcome:** All three done, validated, committed and pushed. NoteTaker keep-alive is live (watcher restarted under supervisor; OPTIONS ping returns 200, inactivity clock reset today). config.ps1 guard validated (parses clean, env vars apply on source). AI_auto pushed to `ai-infrastructure` (b400112); NoteTaker keep-alive pushed to `notetaker-inbox` (43340dc, rebased over the watcher's auto-sync commits).
 **Next steps:** none open. Optional: record the `helpi 4` headless-hang fix in `known_issues.md` for `/catch-up` (offered; user did not request). Real-world test of the fix happens next time `helpi 4` runs from agy with Overleaf ahead.
 **Git ref:** b400112
+
+---
+
+## Session 2026-06-30
+**Agent:** Claude Opus 4.8
+**Goal:** User asked whether CLI LLMs integrate with a symbolic math engine (they don't) and how hard it would be to add one (Z3 mentioned) for proof/math verification. Scope it, then build it.
+**Files touched:**
+- `~/.claude/skills/verify-math/SKILL.md` (new) -- `/verify-math` skill: reads a `.tex`, extracts every labelled equation + numeric claim, translates each to SymPy, runs it via base-env Python, and writes `math_check_report.md` (PASS/FAIL/NOT-CHECKABLE per `\label{}`) + a re-runnable `verify.py` to `{project}\_math_checks\<timestamp>\`. Background Claude agent by default; `--inline` for small files. Checks algebra/series/solve-inversions/distributional-moments/numeric; flags limit-theorem reasoning (CLT/SLLN/Slutsky/Jensen) as out of scope rather than passing it. No gemini/codex backend (checking is execution, not generation). Translation shown per row so formalization errors stay visible.
+- `~/.claude/projects/.../memory/reference_sympy_installed.md` (new) -- SymPy 1.14.0 installed in miniconda base env (NOT on PATH, NOT in pyopt); use over in-head arithmetic.
+- `~/.claude/projects/.../memory/project_verify_math_skill.md` (new) -- skill record + next idea (forum verification pre-pass).
+- `~/.claude/projects/.../memory/MEMORY.md` -- indexed the two new memories.
+- miniconda base env -- installed `sympy` 1.14.0 via pip.
+**Outcome:** Established SymPy (not Z3) is the right fit for the actual need; Z3 considered but not installed. Live-validated SymPy against `Pub_OptimismBias_PartA\Overleaf_source\Math_Verification.tex` -- Eq.6 aggregation, Eq.12 Mercator series, lognormal moments, calibration inversion, and the Flyvbjerg(2002) Rail table row all passed with zero discrepancies. Built and registered `/verify-math`.
+**Next steps:** Optional end-to-end run of `/verify-math --project Pub_OptimismBias_PartA` over the whole file (offered, not yet run). Future: forum (helpi 25) verification pre-pass reusing the translate-and-check logic to inject a "Verified facts" block while keeping forum agents read-only.
+**Git ref:** f4c87c7 (root repo; no code/ repo)
