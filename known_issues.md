@@ -511,3 +511,14 @@ This converts a silent infinite hang into a fast, actionable error (e.g. push fa
 **Symptom:** Running `helpi 4` from a headless agent (agy / Codex sandbox / scheduled task — anything with no attached TTY) hung indefinitely with no output when the Overleaf remote was ahead of local. When the remote was *not* ahead the push usually went straight through on cached credentials, so the hang looked branch-state-specific; in reality the extra `fetch -> rebase -> push` round-trip taken on the "remote ahead" path is more likely to require a credential refresh, and any git credential / Git Credential Manager prompt blocks forever on a stdin that never arrives in a headless context.
 
 **Note:** With the guard in place, a genuinely missing/expired credential now makes `fetch`/`push` *fail fast* rather than hang — the correct behavior for automation. On this machine credentials are normally served non-interactively by Windows Credential Manager once stored, so interactive sessions are unaffected. Distinct from issue #35 (Overleaf branch disagreement), which is about *which* branch is pushed, not about hanging.
+
+### 39. Persist retrieved literature: seed `Literature/_retrieved_sources.md` in scaffolds + document
+**Status:** open
+**Affects:** `AI_auto/scripts/setup_project.ps1` (helpi 1 paper scaffold), the generic scaffold (helpi 27), the per-project `.claude/CLAUDE.md` template(s), and `infrastructure.html`.
+**Context:** A global rule now lives in `~/.claude/CLAUDE.md` ("Persisting retrieved literature"): whenever a fetched web source (paper, book, standard, dataset doc) backs a claim that lands in the work, the agent saves the source file into the project `Literature/` folder and logs it in `Literature/_retrieved_sources.md` (citation, bib key, URL, retrieval date, where used, verified facts/section anchors). First applied 2026-06-27 in `Pub_SAA_PMIP_MC` (Shapiro et al. 2009 -> entropic risk measure anchor). The rule works from memory today; this entry makes it self-supporting in the scaffolds.
+**Fix (to apply in an AI_auto session via `/catch-up`):**
+1. `helpi 1` paper scaffold: create `Literature/_retrieved_sources.md` with the standard header + one commented format template (citation / bib key / source URL / retrieved date / used in / verified facts).
+2. `helpi 27` generic scaffold: currently skips `Literature/`. Create an empty `Literature/` plus the same `_retrieved_sources.md` stub, so paper and generic projects stay symmetric.
+3. Per-project `.claude/CLAUDE.md` template(s): add a one-line pointer — "Retrieved web sources are saved to `Literature/` and logged in `Literature/_retrieved_sources.md`."
+4. `infrastructure.html`: document the retrieved-sources convention alongside the `Literature/` folder description, and regenerate docs with `helpi 16`.
+**Reference stub** (the working version created by hand in `Pub_SAA_PMIP_MC/Literature/_retrieved_sources.md`) can be copied as the template.

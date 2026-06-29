@@ -518,5 +518,20 @@
     "name": "Pub_Riskadversion_MS",
     "path": "C:/Users/rich/OneDrive - Danmarks Tekniske Universitet/JR/Publikationer/Pub_Riskadversion_MS/Overleaf_source",
     "branch": "main"
+  },
+  {
+    "name": "DFF_Uncertainty",
+    "path": "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Ansøgninger\\DFF_Uncertainty\\Overleaf_source",
+    "branch": "main"
+  },
+  {
+    "name": "Pub_CBA_Is_Lognormal_TBA",
+    "path": "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Publikationer\\Pub_CBA_Is_Lognormal_TBA\\Overleaf_source",
+    "branch": "main"
+  },
+  {
+    "name": "Pub_DP_Logsum_TBA",
+    "path": "C:\\Users\\rich\\OneDrive - Danmarks Tekniske Universitet\\JR\\Publikationer\\Pub_DP_Logsum_TBA\\Overleaf_source",
+    "branch": "main"
   }
 ]

@@ -460,6 +460,7 @@ if ($OriginalTexFile -ne "SKIP") {
     $diffTexSrc  = Join-Path $sourceDir "_diff_tmp.tex"    # compiled here for dependency access
     $diffTexOut  = Join-Path $outDir    "Diff_${prefix}.tex"
     $diffNoteOut = Join-Path $outDir    "Diff_${prefix}_NOTES.txt"
+    $diffBlindSrc = Join-Path $sourceDir "_diff_blind_tmp.tex"   # blind diff temp (declared here so finally is null-safe)
     $latexdiffErr = Join-Path $buildDir "_diff_tmp_latexdiff.err"
     $latexdiffArgs = @(
         '--encoding=utf8',
@@ -467,6 +468,7 @@ if ($OriginalTexFile -ne "SKIP") {
         '--graphics-markup=none',
         '--disable-citation-markup',
         '--floattype=FLOATSAFE',
+        '--math-markup=off',
         $origNorm,
         $revisedNorm
     )
@@ -547,15 +549,39 @@ if ($OriginalTexFile -ne "SKIP") {
         } else {
             WARN "Diff PDF compile failed -- Diff_${prefix}.tex is in the folder; compile in Overleaf"
         }
+
+        # Blind diff: reuse the sighted diff source so the marked-up body is
+        # identical, then strip author-identifying blocks (\author, \institute,
+        # acknowledgements, ...) with the same Make-BlindTex helper used in step 5.
+        $blindDiffContent = Make-BlindTex -tex $diffContent
+        $diffBlindOut     = Join-Path $outDir "Diff_${blindPrefix}.tex"
+        Set-Content -Path $diffBlindSrc -Value $blindDiffContent -Encoding UTF8
+        Set-Content -Path $diffBlindOut -Value $blindDiffContent -Encoding UTF8
+        if (Test-Path $latexmk) {
+            $fwd = $pdflatex -replace '\\', '/'
+            & $latexmk -pdf -g -f -cd "-pdflatex=$fwd" -interaction=nonstopmode -outdir="$buildDir" "$diffBlindSrc" *>$null
+        } else {
+            & $pdflatex -interaction=nonstopmode -output-directory="$buildDir" "$diffBlindSrc" *>$null
+            & $pdflatex -interaction=nonstopmode -output-directory="$buildDir" "$diffBlindSrc" *>$null
+        }
+        $diffBlindPdf = Join-Path $buildDir "_diff_blind_tmp.pdf"
+        if (Test-Path $diffBlindPdf) {
+            Copy-Item $diffBlindPdf (Join-Path $outDir "Diff_${blindPrefix}.pdf") -Force
+            OK "Diff_${blindPrefix}.pdf  (blind, vs $OriginalTexFile)"
+        } else {
+            WARN "Blind diff PDF compile failed -- Diff_${blindPrefix}.tex is in the folder; compile manually"
+        }
     } catch {
         WARN "latexdiff failed: $_"
     } finally {
-        foreach ($tmp in @($diffTexSrc, $origNorm, $revisedNorm, $origNormBbl, $revisedNormBbl, $latexdiffErr)) {
+        foreach ($tmp in @($diffTexSrc, $diffBlindSrc, $origNorm, $revisedNorm, $origNormBbl, $revisedNormBbl, $latexdiffErr)) {
             if (Test-Path $tmp) { Remove-Item $tmp -Force }
         }
         @(".aux",".log",".out",".fls",".fdb_latexmk",".bbl",".blg") | ForEach-Object {
             $f = Join-Path $buildDir "_diff_tmp$_"
             if (Test-Path $f) { Remove-Item $f -Force }
+            $fb = Join-Path $buildDir "_diff_blind_tmp$_"
+            if (Test-Path $fb) { Remove-Item $fb -Force }
         }
     }
 } else {
