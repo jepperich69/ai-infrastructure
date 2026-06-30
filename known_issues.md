@@ -522,3 +522,15 @@ This converts a silent infinite hang into a fast, actionable error (e.g. push fa
 3. Per-project `.claude/CLAUDE.md` template(s): add a one-line pointer — "Retrieved web sources are saved to `Literature/` and logged in `Literature/_retrieved_sources.md`."
 4. `infrastructure.html`: document the retrieved-sources convention alongside the `Literature/` folder description, and regenerate docs with `helpi 16`.
 **Reference stub** (the working version created by hand in `Pub_SAA_PMIP_MC/Literature/_retrieved_sources.md`) can be copied as the template.
+
+---
+
+### 40. Codex sandbox cannot execute miniconda Python under AppData
+**Status:** platform-fact
+**Affects:** Codex/math-verification sessions that call `C:\Users\rich\AppData\Local\miniconda3\python.exe` from a project sandbox.
+
+The managed Codex workspace sandbox can read/write inside the active project but may not execute the miniconda interpreter under `AppData`. Symptom: the exact full-path preflight
+```powershell
+& "C:\Users\rich\AppData\Local\miniconda3\python.exe" -c "import sympy; print(sympy.__version__)"
+```
+fails inside the sandbox with "The term ... python.exe is not recognized" even though the interpreter exists and works outside the sandbox. For math-verification tasks, do not spend a failed first attempt proving this again. Run the required SymPy preflight with `sandbox_permissions: "require_escalated"` immediately, using prefix rule `["C:\\Users\\rich\\AppData\\Local\\miniconda3\\python.exe"]`. Once approved, execute generated verification scripts the same way, preferably with absolute script paths because escalated process resolution may not honor the tool workdir.

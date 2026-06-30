@@ -305,6 +305,7 @@
       <div style="font-weight:bold; text-transform:uppercase; letter-spacing:0.05em; color:#4a4a9a; font-size:0.82em; margin-bottom:4px;">AI Layer &mdash; Claude Code &amp; Codex</div>
       <div><a href="#secA" style="color:inherit;">A &mdash; Claude Code Commands</a></div>
       <div><a href="#secA-style" style="color:inherit;">A2 &mdash; /style-edit &amp; /style-apply</a></div>
+      <div><a href="#secA-verify" style="color:inherit;">A3 &mdash; /verify-math &mdash; SymPy math check</a></div>
       <div><a href="#secB" style="color:inherit;">B &mdash; /submit &mdash; Submission package</a></div>
       <div><a href="#secC" style="color:inherit;">C &mdash; /respond &mdash; Reviewer response loop</a></div>
       <div><a href="#secD" style="color:inherit;">D &mdash; Cross-Project Memory &amp; Feeders</a></div>
@@ -1253,6 +1254,128 @@ git checkout snapshot-v2                     # restore everything</pre>
     <tr><td>3. Apply approved changes</td><td><code>/style-apply path/to/style_review.md</code></td></tr>
     <tr><td>4. Push to Overleaf</td><td><code>helpi 4 Pub_X</code></td></tr>
   </table>
+
+  <hr>
+
+  <h3 id="secA-verify">/verify-math &mdash; Machine-verifying the mathematics with SymPy <span class="tag ai">AI</span></h3>
+  <p>
+    <code>/verify-math</code> answers a question every author has but rarely checks rigorously:
+    <em>is the algebra in this paper actually correct?</em> An LLM (or a tired human) drops a term,
+    flips a sign, mis-inverts a moment, or rounds a calibration the wrong way &mdash; silently, with
+    full confidence. This skill does not <em>ask the model whether the math is right</em>; it
+    <strong>compiles each equation into an executable SymPy program and runs it</strong>. The verdict
+    comes from a computer algebra system, not from the model's own arithmetic. That distinction is the
+    whole design.
+  </p>
+
+  <h4>The core idea: don't trust the LLM's arithmetic &mdash; make it write a program a CAS can run</h4>
+  <p>
+    LLMs are unreliable calculators. They are, however, excellent <em>translators</em> &mdash; turning a
+    typeset equation into the equivalent <code>SymPy</code> expression is a language task, which is exactly
+    what they are good at. The architecture exploits this split of labour: the model is used only to
+    <em>read and translate</em>; all <em>judgement of truth</em> is delegated to SymPy's symbolic engine.
+    The model never declares an equation correct. It writes code that, when executed, either reduces
+    <code>LHS &minus; RHS</code> to <code>0</code> or it does not. The author reads the machine's answer.
+  </p>
+
+  <h4>The four-stage pipeline: LaTeX &rarr; SymPy program &rarr; execution &rarr; interpretation</h4>
+  <div class="flow">
+    <div class="box gold"><strong>1. Read &amp; classify</strong><br><small>LLM parses the .tex,<br>extracts every labelled<br>equation &amp; numeric claim,<br>sorts into 6 buckets</small></div>
+    <div class="arr">&rarr;</div>
+    <div class="box purple"><strong>2. Translate</strong><br><small>LLM emits one<br>self-contained<br><code>verify.py</code><br>(SymPy assertions)</small></div>
+    <div class="arr">&rarr;</div>
+    <div class="box green"><strong>3. Execute</strong><br><small>miniconda Python<br>runs the script;<br>SymPy decides<br>PASS / FAIL</small></div>
+    <div class="arr">&rarr;</div>
+    <div class="box"><strong>4. Interpret</strong><br><small>LLM reads stdout,<br>writes the report,<br>diagnoses each FAIL</small></div>
+  </div>
+
+  <p><strong>Stage 1 &mdash; Read &amp; classify.</strong> The agent reads the source <code>.tex</code> in full
+  and identifies every numbered/labelled equation (<code>equation</code>, <code>align</code>, <code>\[...\]</code>)
+  and every explicit numeric claim in prose or tables. Each claim is keyed to its own <code>\label{}</code>
+  (or an anchor like <code>Eq-near-"&lt;quote&gt;"</code>) so the final report speaks the author's own
+  reference scheme. Each claim is then sorted into exactly one bucket:</p>
+  <table class="cmd-table" style="margin-top:8px;">
+    <tr><th>Bucket</th><th>What it is</th><th>How SymPy checks it</th></tr>
+    <tr><td><code>IDENTITY</code></td><td>An equation asserting LHS = RHS</td><td><code>simplify(expand(LHS - RHS)) == 0</code></td></tr>
+    <tr><td><code>SERIES</code></td><td>A Taylor / Laurent / Mercator expansion</td><td><code>series(expr, x, x0, n)</code>, compare coefficients</td></tr>
+    <tr><td><code>SOLVE</code></td><td>Inverting/solving for a variable (e.g. recovering &sigma;&sup2; from CV)</td><td><code>solve(Eq(...), var)</code>, compare to claimed closed form</td></tr>
+    <tr><td><code>MOMENT</code></td><td>A distributional moment (mean/variance/skewness/MGF)</td><td><code>sympy.stats</code> or a verified closed form</td></tr>
+    <tr><td><code>NUMERIC</code></td><td>A concrete number computed from inputs (table cells, worked examples)</td><td>evaluate &amp; compare to stated value, respecting rounding</td></tr>
+    <tr><td><code>NOT-CHECKABLE</code></td><td>Limit theorems (CLT, SLLN, Slutsky), existence/uniqueness, definitions, pure reasoning</td><td>&mdash; flagged with a one-line reason, never &quot;proved&quot;</td></tr>
+  </table>
+
+  <p><strong>Stage 2 &mdash; Translate to an executable program.</strong> The agent writes a single,
+  self-contained <code>verify.py</code> covering every claim in the first five buckets. The translation
+  is where the real engineering lives:</p>
+  <ul>
+    <li><strong>Assumptions are declared, not assumed.</strong> Symbols are created with
+    <code>positive=True</code>, <code>real=True</code> where the paper says so &mdash; these assumptions
+    are exactly what let <code>simplify</code> close an identity that would otherwise stay unsimplified.</li>
+    <li><strong>Symbolic-length sums are instantiated.</strong> When an identity involves a sum to a
+    symbolic upper limit (<code>J</code>, <code>N</code>, <code>K</code>) that will not simplify in general,
+    the script evaluates it at concrete sizes (e.g. 2, 3, 4) and passes only if every instance gives
+    <code>0</code> &mdash; and prints which sizes were used, so the scope of the check is explicit.</li>
+    <li><strong>Every check is isolated.</strong> Each assertion is wrapped in try/except, so one bad
+    translation reports as <code>ERROR</code> rather than aborting the whole run.</li>
+    <li><strong>Every check prints its own evidence:</strong> one line per claim &mdash;
+    <code>LABEL | BUCKET | PASS/FAIL | checked: &lt;sympy expr&gt; | got: &lt;result&gt; vs stated: &lt;claim&gt;</code>.</li>
+  </ul>
+
+  <p><strong>Stage 3 &mdash; Execute.</strong> The script is run with the miniconda Python interpreter where
+  SymPy lives (<code>C:\Users\rich\AppData\Local\miniconda3\python.exe</code> &mdash; <em>not</em> on PATH,
+  <em>not</em> the <code>pyopt</code> env). SymPy's symbolic engine, not the model, returns the verdict for
+  each claim. If the script errors out wholesale, the agent fixes it and re-runs (a few attempts) before
+  reporting &mdash; a script that won't run is a bug in the translation, not a result.</p>
+
+  <p><strong>Stage 4 &mdash; Interpret.</strong> The agent reads the captured stdout and writes
+  <code>math_check_report.md</code>: header totals (<em>N checked: X passed, Y failed, Z errored; W
+  not-checkable</em>), a results table keyed to the paper's labels, a <em>Failures</em> section that, for
+  each FAIL, shows the equation as written, its SymPy translation, the discrepancy, and the most likely
+  cause (dropped term, sign error, wrong assumption, rounding, or a genuine translation ambiguity), and a
+  <em>Not machine-checkable</em> section so the boundary of the audit is explicit.</p>
+
+  <h4>Why the SymPy translation is shown for every check</h4>
+  <p>
+    The verification is only ever as good as the LaTeX&rarr;SymPy translation. A wrong formalization could
+    pass a wrong equation. The skill defends against this by <strong>printing the exact SymPy expression it
+    checked alongside every verdict</strong>. A green PASS that rests on a mis-translation is therefore
+    <em>visible</em> &mdash; the author can read the &quot;What was checked&quot; column and catch a bad
+    formalization, rather than having it hidden behind the result. The report carries an explicit caveat to
+    that effect.
+  </p>
+
+  <h4>What it deliberately refuses to do</h4>
+  <p>
+    Convergence and limit-theorem arguments (CLT, SLLN, Slutsky, Jensen-as-applied), existence/uniqueness
+    claims, and any step that is <em>mathematical reasoning rather than computation</em> are never marked
+    PASS. They are listed as <code>NOT-CHECKABLE</code> with a one-line reason. The tool states precisely
+    what it did <em>not</em> cover, so a clean run is never mistaken for a full proof check.
+  </p>
+
+  <table class="cmd-table" style="margin-top:10px;">
+    <tr><th>Flag</th><th>Default</th><th>Effect</th></tr>
+    <tr><td><code>path/to/file.tex</code></td><td>&mdash;</td><td>The LaTeX file to check (optional if <code>--project</code> is given)</td></tr>
+    <tr><td><code>--project Pub_Name</code></td><td>&mdash;</td><td>Resolves the project path and auto-detects the main <code>.tex</code> (prefers a file whose name contains <code>verif</code>)</td></tr>
+    <tr><td><code>--out path</code></td><td><code>{project}\_math_checks\YYYY-MM-DD_HH-MM-SS\</code></td><td>Override output directory</td></tr>
+    <tr><td><code>--inline</code></td><td>off (background agent)</td><td>Run directly in this session for a small file when you want the result immediately</td></tr>
+  </table>
+
+  <p style="margin-top:10px;"><strong>Output</strong> (both open automatically when done):
+  <code>math_check_report.md</code> &mdash; the audit, keyed to your equation labels &mdash; and
+  <code>verify.py</code> &mdash; the self-contained, re-runnable SymPy script. A background run sends a
+  <code>PushNotification</code> on completion with the pass/fail totals.</p>
+
+  <p><strong>Typical usage:</strong></p>
+  <pre>/verify-math --project Pub_OptimismBias_PartA
+/verify-math "C:\path\to\Math_Verification.tex"
+/verify-math --project Pub_MyPaper --inline</pre>
+
+  <p style="margin-top:8px;">
+    <strong>Relationship to the Forum (helpi 25):</strong> this skill is the standalone counterpart to the
+    Forum's verification pre-pass &mdash; the same translate-and-check logic can feed a &quot;Verified
+    facts&quot; block into <code>helpi 25</code>, so multi-agent debate argues from machine-checked ground
+    truth while staying read-only. The skill itself never edits the source manuscript; it only checks.
+  </p>
 
   <hr>
 
@@ -2222,7 +2345,14 @@ cd AI_auto
     <tr><td>MiKTeX</td><td><code>miktex.org/download</code></td></tr>
     <tr><td>VS Code</td><td><code>code.visualstudio.com</code></td></tr>
     <tr><td>Strawberry Perl</td><td><code>strawberryperl.com</code> &mdash; needed for <code>latexdiff</code> in <code>submit.ps1</code></td></tr>
+    <tr><td>SymPy (Python)</td><td><code>&amp; &quot;C:\Users\rich\AppData\Local\miniconda3\python.exe&quot; -m pip install sympy</code> &mdash; required for <code>/verify-math</code> (machine math verification). Without it the skill stops and asks you to install it.</td></tr>
   </table>
+  <div class="note">
+    <strong>Optional capability:</strong> SymPy is not needed for the core write/sync/compile workflow,
+    but <code>/verify-math</code> will not run without it. Install it once into the miniconda
+    <code>base</code> env to unlock machine-checked algebra, series, solve-inversions, moments, and numeric
+    calibrations. See <a href="#secA-verify">A3 &mdash; /verify-math</a>.
+  </div>
 </div>
 
 <div class="section rose" id="secI">
@@ -2353,7 +2483,9 @@ Goal: Add robustness checks to results
     <tr><td>Stata</td><td>&mdash;</td><td>&mdash;</td><td>Not installed</td></tr>
     <tr><td>Julia</td><td>&mdash;</td><td>&mdash;</td><td>Not installed</td></tr>
   </table>
-  <p>Conda environments: <code>base</code> (default), <code>pyopt</code>.</p>
+  <p>Conda environments: <code>base</code> (default), <code>pyopt</code>.
+  SymPy 1.14.0 is installed in <code>base</code> &mdash; required by <code>/verify-math</code>;
+  install with <code>&amp; "C:\Users\rich\AppData\Local\miniconda3\python.exe" -m pip install sympy</code>.</p>
 
   <h3>Key platform rules</h3>
   <ul>
