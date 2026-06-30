@@ -1,19 +1,18 @@
 {
   "project": "AI_auto",
-  "generated": "2026-06-30 10:22",
+  "generated": "2026-06-30 10:29",
   "source": "_ai_log.md",
   "latest_session": {
-    "title": "2026-06-30 (second session)",
+    "title": "2026-06-30 (third session)",
     "agent": "Claude Opus 4.8",
-    "goal": "Document the new `/verify-math` (SymPy) skill in the infrastructure docs with an architecture write-up of the LLM -> SymPy-program -> execute -> interpret pipeline; flag SymPy as a required install; then (follow-up) default the skill to Sonnet 4.6 to save tokens, and push everything to GitHub.",
-    "outcome": "`/verify-math` is fully documented with an architecture report; SymPy flagged as an install for full functionality; the skill now defaults to Sonnet 4.6 with an opus override. All committed and pushed to `ai-infrastructure` (master, through a01b57a).",
-    "next_steps": "Optional -- patch `scripts/generate_docs.ps1` to always pass a throwaway `--user-data-dir` to Edge so a running browser can't produce a stale-but-fresh-timestamped PDF, and log it in `known_issues.md` (offered; user did not request).",
-    "git_ref": "748cb37",
+    "goal": "Fix the stale-PDF bug in `generate_docs.ps1` (helpi 16) surfaced last session, and log it in `known_issues.md`.",
+    "outcome": "Fix validated with Edge open (the exact failure condition) -- the output PDF now contains the new content instead of a stale render. Committed and pushed to `ai-infrastructure` (b2298ad).",
+    "next_steps": "none open.",
+    "git_ref": "b2298ad",
     "files_touched": [
-      "`infrastructure.html` -- added section A3 (`/verify-math`): the four-stage pipeline (read & classify / translate / execute / interpret) rendered as a flow diagram, the six classification buckets with their SymPy mechanism, why the SymPy translation is shown per check, and what is deliberately NOT-CHECKABLE; added a TOC entry; flagged SymPy as a required install in the Prerequisites and desk-reference software tables; added the `--model sonnet|opus` flag row + a \"Why Sonnet is the default\" note.",
-      "`~/.claude/skills/verify-math/SKILL.md` -- background agent now launches with `model: sonnet` by default; added `--model sonnet|opus` flag (opus for heavy-theory papers); `--inline` keeps the session model; documented the reasoning (model only translates/reports, SymPy judges, translations are printed so mis-translations surface as FAILs).",
-      "`infrastructure_full.pdf` -- regenerated (tracked artifact). First regen was a stale Edge cache render; re-rendered with an isolated `--user-data-dir` and verified the new content is present.",
-      "`infrastructure_summary.html`, `infrastructure_full.html`, `infrastructure_summary.pdf` -- regenerated locally (gitignored)."
+      "`scripts/generate_docs.ps1` -- `Make-Pdf` now launches Edge with a throwaway `--user-data-dir` (temp profile, removed after) so a running browser can't intercept the headless `--print-to-pdf` call and serve a stale cached render; also deletes any prior PDF before rendering (a failed render can't masquerade as fresh) and polls up to 30s for the output instead of a fixed 4s sleep. ASCII-clean additions.",
+      "`known_issues.md` -- added issue #41 (status `fixed (2026-06-30)`): symptom (fresh timestamp, stale content), root cause (running Edge intercepting the headless call), and the fix.",
+      "`infrastructure_full.pdf` -- regenerated as the validation run."
     ]
   },
   "latest_session_complete": true,

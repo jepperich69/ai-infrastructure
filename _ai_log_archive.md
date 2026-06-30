@@ -300,3 +300,10 @@
 ## Archived 2026-06-30 (1 entry)
 
 - **2026-05-29b** (Claude): Extend infrastructure with Haiku-delegated /close, fix permission g... -> /close now delegates mechanical operations to a Haiku subagent; permission patterns ext...
+
+
+---
+
+## Archived 2026-06-30 (1 entry)
+
+- **2026-05-30** (Claude): Add `/style-edit` skill for background LaTeX prose editing, then re... -> `/style-edit` skill added for autonomous background prose-style editing of LaTeX manusc...

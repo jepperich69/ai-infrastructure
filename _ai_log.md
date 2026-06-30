@@ -4,7 +4,6 @@
 
 ## Compressed sessions
 
-- **2026-05-30** (Claude): Add `/style-edit` skill for background LaTeX prose editing, then re... -> `/style-edit` skill added for autonomous background prose-style editing of LaTeX manusc...
 - **2026-05-30b** (Claude): Push v1.0 to GitHub, remove redundant root helpi.ps1 shim, and upda... -> v1.0 fully pushed to GitHub; documentation updated and regenerated to match the scripts...
 - **2026-05-31** (Claude): Fix auth bug in /style-edit and /pipeline skills (both used claude ... -> Both skills now use subscription auth correctly. 4-agent comparison (Sonnet/Haiku/Gemin...
 - **2026-05-31b** (Claude): Harden and complete the /style-edit skill: parallel chunked process... -> /style-edit now runs reliably as parallel Gemini jobs with token tracking, bibliography...
@@ -20,17 +19,7 @@
 - **2026-06-22** (Claude): Diagnose why interactive `gemini`/`agy` were failing with API/usage... -> Root cause was a Google regression in agy v1.0.9/1.0.10 (OAuth token exchange fails wit...
 - **2026-06-22b** (Claude): agy had silently auto-updated back to the broken v1.0.10 (eligibili... -> agy is pinned to v1.0.8 two ways (env-var kill-switch + ACL deny backstop) so it can no...
 - **2026-06-25** (Gemini 3.5 Flash (Medium)): Fix the "src refspec master does not match any" error that occurs d... -> Fixed the push error for `Pub_FlowPaperSP2_TRD` (which is tracked on `main`), updated `...
-
----
-
-## Session 2026-06-25 (second session)
-**Agent:** Gemini 3.5 Flash (Medium)
-**Goal:** Address NoteTaker watcher failures on the 20-minute test recording, prevent OneDrive from downloading all project folders during active project syncs, and generate Markdown, LaTeX, and compiled PDF summary outputs.
-**Files touched:**
-- `NoteTaker/code/notetaker_watcher.ps1` -- Integrated the Gemini File API (raw upload, generateContent with file_uri, and DELETE cleanup) for audio files > 4MB to prevent 503 errors and size limit issues; optimized `Sync-Projects` to sort project folders using parent folder `LastWriteTimeUtc` directly instead of checking `_ai_log.md` inside every folder (stops OneDrive from downloading inactive projects); and cached downloaded assets locally to avoid redownloads during watcher retries.
-**Outcome:** Handled the 18 MB test recording (transcript, Markdown, and LaTeX summaries written, PDF compiled successfully, and GitHub spool asset deleted). Replaced the old watcher processes with the updated script under the supervisor loop in hidden mode.
-**Next steps:** none.
-**Git ref:**
+- **2026-06-25 (second session)** (Gemini 3.5 Flash (Medium)): Address NoteTaker watcher failures on the 20-minute test recording,... -> Handled the 18 MB test recording (transcript, Markdown, and LaTeX summaries written, PD...
 
 ---
 
@@ -75,3 +64,16 @@
 **Outcome:** `/verify-math` is fully documented with an architecture report; SymPy flagged as an install for full functionality; the skill now defaults to Sonnet 4.6 with an opus override. All committed and pushed to `ai-infrastructure` (master, through a01b57a).
 **Next steps:** Optional -- patch `scripts/generate_docs.ps1` to always pass a throwaway `--user-data-dir` to Edge so a running browser can't produce a stale-but-fresh-timestamped PDF, and log it in `known_issues.md` (offered; user did not request).
 **Git ref:** 748cb37
+
+---
+
+## Session 2026-06-30 (third session)
+**Agent:** Claude Opus 4.8
+**Goal:** Fix the stale-PDF bug in `generate_docs.ps1` (helpi 16) surfaced last session, and log it in `known_issues.md`.
+**Files touched:**
+- `scripts/generate_docs.ps1` -- `Make-Pdf` now launches Edge with a throwaway `--user-data-dir` (temp profile, removed after) so a running browser can't intercept the headless `--print-to-pdf` call and serve a stale cached render; also deletes any prior PDF before rendering (a failed render can't masquerade as fresh) and polls up to 30s for the output instead of a fixed 4s sleep. ASCII-clean additions.
+- `known_issues.md` -- added issue #41 (status `fixed (2026-06-30)`): symptom (fresh timestamp, stale content), root cause (running Edge intercepting the headless call), and the fix.
+- `infrastructure_full.pdf` -- regenerated as the validation run.
+**Outcome:** Fix validated with Edge open (the exact failure condition) -- the output PDF now contains the new content instead of a stale render. Committed and pushed to `ai-infrastructure` (b2298ad).
+**Next steps:** none open.
+**Git ref:** b2298ad
