@@ -1358,7 +1358,17 @@ git checkout snapshot-v2                     # restore everything</pre>
     <tr><td><code>--project Pub_Name</code></td><td>&mdash;</td><td>Resolves the project path and auto-detects the main <code>.tex</code> (prefers a file whose name contains <code>verif</code>)</td></tr>
     <tr><td><code>--out path</code></td><td><code>{project}\_math_checks\YYYY-MM-DD_HH-MM-SS\</code></td><td>Override output directory</td></tr>
     <tr><td><code>--inline</code></td><td>off (background agent)</td><td>Run directly in this session for a small file when you want the result immediately</td></tr>
+    <tr><td><code>--model sonnet|opus</code></td><td><code>sonnet</code></td><td>Backend model for the background agent. Sonnet 4.6 is the default &mdash; the model only reads, translates, and reports; SymPy judges every claim. Use <code>opus</code> for heavy-theory papers with subtle translations. Ignored with <code>--inline</code>.</td></tr>
   </table>
+  <div class="note">
+    <strong>Why Sonnet is the default:</strong> the model never decides whether the math is true &mdash;
+    SymPy does. The model's job is the language task of translating LaTeX to SymPy plus writing the report,
+    and because every translation is printed beside its verdict, a mis-translation surfaces as a FAIL or a
+    visibly-wrong &quot;checked&quot; column rather than a silent pass. That safety margin makes the cheaper
+    model the right default and saves tokens on routine algebra, series, and numeric checks. Reach for
+    <code>--model opus</code> when the translations themselves are hard (intricate distributional moments,
+    multi-step inversions, fine NOT-CHECKABLE boundaries).
+  </div>
 
   <p style="margin-top:10px;"><strong>Output</strong> (both open automatically when done):
   <code>math_check_report.md</code> &mdash; the audit, keyed to your equation labels &mdash; and
