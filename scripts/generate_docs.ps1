@@ -93,12 +93,30 @@ if (-not $SkipPdf) {
     if (-not $edge) {
         Write-Host "  WARN | Microsoft Edge not found; skipping PDF generation." -ForegroundColor Yellow
     } else {
+        # Isolated, throwaway Edge profile. Without --user-data-dir, a normal Edge
+        # window already open on the machine intercepts the headless --print-to-pdf
+        # call and serves a STALE cached render: the .pdf gets a fresh timestamp but
+        # old content (looks regenerated, silently is not). A dedicated profile spawns
+        # an independent instance that cannot share the running browser's cache, and
+        # does not disturb the user's open windows. See known_issues.md #41.
+        $edgeProfile = Join-Path $env:TEMP ("edgepdf_" + [guid]::NewGuid().ToString("N"))
+
         function Make-Pdf {
-            param([string]$htmlPath, [string]$pdfPath)
+            param([string]$htmlPath, [string]$pdfPath, [string]$profileDir, [string]$edgeExe)
             $fileUri = "file:///" + ($htmlPath -replace '\\', '/')
             Write-Host "  Generating: $([System.IO.Path]::GetFileName($pdfPath)) ..." -ForegroundColor DarkGray
-            & $edge --headless --disable-gpu "--print-to-pdf=$pdfPath" $fileUri 2>$null
-            Start-Sleep -Seconds 4  # give Edge time to write the file
+            # Delete any prior PDF first so a failed render can never masquerade as fresh.
+            if (Test-Path $pdfPath) { Remove-Item -LiteralPath $pdfPath -Force }
+            $edgeArgs = @(
+                "--headless", "--disable-gpu", "--no-first-run", "--disable-extensions",
+                "--user-data-dir=$profileDir", "--print-to-pdf=$pdfPath", $fileUri
+            )
+            & $edgeExe @edgeArgs 2>$null
+            # The isolated profile's first run is slower; poll up to 30s for the file.
+            $waited = 0
+            while (-not (Test-Path $pdfPath) -and $waited -lt 30) {
+                Start-Sleep -Seconds 1; $waited++
+            }
             if (Test-Path $pdfPath) {
                 Write-Host "  Written: $([System.IO.Path]::GetFileName($pdfPath))" -ForegroundColor Green
             } else {
@@ -106,8 +124,13 @@ if (-not $SkipPdf) {
             }
         }
 
-        Make-Pdf -htmlPath $summaryHtml -pdfPath (Join-Path $aiRoot "infrastructure_summary.pdf")
-        Make-Pdf -htmlPath $fullHtml    -pdfPath (Join-Path $aiRoot "infrastructure_full.pdf")
+        Make-Pdf -htmlPath $summaryHtml -pdfPath (Join-Path $aiRoot "infrastructure_summary.pdf") -profileDir $edgeProfile -edgeExe $edge
+        Make-Pdf -htmlPath $fullHtml    -pdfPath (Join-Path $aiRoot "infrastructure_full.pdf")    -profileDir $edgeProfile -edgeExe $edge
+
+        # Clean up the throwaway profile.
+        if (Test-Path -LiteralPath $edgeProfile) {
+            Remove-Item -LiteralPath $edgeProfile -Recurse -Force -ErrorAction SilentlyContinue
+        }
     }
 }
 
