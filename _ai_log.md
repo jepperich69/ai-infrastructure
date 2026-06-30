@@ -4,7 +4,6 @@
 
 ## Compressed sessions
 
-- **2026-05-29b** (Claude): Extend infrastructure with Haiku-delegated /close, fix permission g... -> /close now delegates mechanical operations to a Haiku subagent; permission patterns ext...
 - **2026-05-30** (Claude): Add `/style-edit` skill for background LaTeX prose editing, then re... -> `/style-edit` skill added for autonomous background prose-style editing of LaTeX manusc...
 - **2026-05-30b** (Claude): Push v1.0 to GitHub, remove redundant root helpi.ps1 shim, and upda... -> v1.0 fully pushed to GitHub; documentation updated and regenerated to match the scripts...
 - **2026-05-31** (Claude): Fix auth bug in /style-edit and /pipeline skills (both used claude ... -> Both skills now use subscription auth correctly. 4-agent comparison (Sonnet/Haiku/Gemin...
@@ -20,20 +19,7 @@
 - **2026-06-19** (Claude): Fix Gemini CLI auth (broken by Google's OAuth deprecation for indiv... -> `gemini` is fully working again, both interactively and from `run_forum.ps1`, on the fl...
 - **2026-06-22** (Claude): Diagnose why interactive `gemini`/`agy` were failing with API/usage... -> Root cause was a Google regression in agy v1.0.9/1.0.10 (OAuth token exchange fails wit...
 - **2026-06-22b** (Claude): agy had silently auto-updated back to the broken v1.0.10 (eligibili... -> agy is pinned to v1.0.8 two ways (env-var kill-switch + ACL deny backstop) so it can no...
-
----
-
-## Session 2026-06-25
-**Agent:** Gemini 3.5 Flash (Medium)
-**Goal:** Fix the "src refspec master does not match any" error that occurs during push/sync operations on repositories using the `main` branch instead of `master`.
-**Files touched:**
-- `scripts/push_to_overleaf.ps1` -- updated project branch resolution to dynamically detect the local checked-out branch using git, falling back to `projects.json` only if detection fails, and updating `projects.json` to match if they differ.
-- `scripts/sync_one.ps1` -- updated project branch resolution to dynamically detect the local checked-out branch using git, falling back to `projects.json` only if detection fails, and updating `projects.json` to match if they differ.
-- `scripts/sync_all.ps1` -- inside the parallel sync script block, dynamically resolve the branch from the local git repository first, falling back to the registered branch in `projects.json`.
-- `scripts/setup_project.ps1` -- defaulted the `-Branch` parameter to `$null` to auto-detect the default checked-out branch after git clone (falling back to `"master"` if detection fails), instead of forcing `"master"`.
-**Outcome:** Fixed the push error for `Pub_FlowPaperSP2_TRD` (which is tracked on `main`), updated `projects.json` automatically, and pushed the pending changes successfully to Overleaf. The sync/push infrastructure now handles any git branch dynamically instead of failing on non-master branches.
-**Next steps:** none.
-**Git ref:** c6f7888
+- **2026-06-25** (Gemini 3.5 Flash (Medium)): Fix the "src refspec master does not match any" error that occurs d... -> Fixed the push error for `Pub_FlowPaperSP2_TRD` (which is tracked on `main`), updated `...
 
 ---
 
@@ -75,3 +61,17 @@
 **Outcome:** Established SymPy (not Z3) is the right fit for the actual need; Z3 considered but not installed. Live-validated SymPy against `Pub_OptimismBias_PartA\Overleaf_source\Math_Verification.tex` -- Eq.6 aggregation, Eq.12 Mercator series, lognormal moments, calibration inversion, and the Flyvbjerg(2002) Rail table row all passed with zero discrepancies. Built and registered `/verify-math`.
 **Next steps:** Optional end-to-end run of `/verify-math --project Pub_OptimismBias_PartA` over the whole file (offered, not yet run). Future: forum (helpi 25) verification pre-pass reusing the translate-and-check logic to inject a "Verified facts" block while keeping forum agents read-only.
 **Git ref:** f4c87c7 (root repo; no code/ repo)
+
+---
+
+## Session 2026-06-30 (second session)
+**Agent:** Claude Opus 4.8
+**Goal:** Document the new `/verify-math` (SymPy) skill in the infrastructure docs with an architecture write-up of the LLM -> SymPy-program -> execute -> interpret pipeline; flag SymPy as a required install; then (follow-up) default the skill to Sonnet 4.6 to save tokens, and push everything to GitHub.
+**Files touched:**
+- `infrastructure.html` -- added section A3 (`/verify-math`): the four-stage pipeline (read & classify / translate / execute / interpret) rendered as a flow diagram, the six classification buckets with their SymPy mechanism, why the SymPy translation is shown per check, and what is deliberately NOT-CHECKABLE; added a TOC entry; flagged SymPy as a required install in the Prerequisites and desk-reference software tables; added the `--model sonnet|opus` flag row + a "Why Sonnet is the default" note.
+- `~/.claude/skills/verify-math/SKILL.md` -- background agent now launches with `model: sonnet` by default; added `--model sonnet|opus` flag (opus for heavy-theory papers); `--inline` keeps the session model; documented the reasoning (model only translates/reports, SymPy judges, translations are printed so mis-translations surface as FAILs).
+- `infrastructure_full.pdf` -- regenerated (tracked artifact). First regen was a stale Edge cache render; re-rendered with an isolated `--user-data-dir` and verified the new content is present.
+- `infrastructure_summary.html`, `infrastructure_full.html`, `infrastructure_summary.pdf` -- regenerated locally (gitignored).
+**Outcome:** `/verify-math` is fully documented with an architecture report; SymPy flagged as an install for full functionality; the skill now defaults to Sonnet 4.6 with an opus override. All committed and pushed to `ai-infrastructure` (master, through a01b57a).
+**Next steps:** Optional -- patch `scripts/generate_docs.ps1` to always pass a throwaway `--user-data-dir` to Edge so a running browser can't produce a stale-but-fresh-timestamped PDF, and log it in `known_issues.md` (offered; user did not request).
+**Git ref:** 748cb37

@@ -1,20 +1,19 @@
 {
   "project": "AI_auto",
-  "generated": "2026-06-30 00:14",
+  "generated": "2026-06-30 10:22",
   "source": "_ai_log.md",
   "latest_session": {
-    "title": "2026-06-30",
+    "title": "2026-06-30 (second session)",
     "agent": "Claude Opus 4.8",
-    "goal": "User asked whether CLI LLMs integrate with a symbolic math engine (they don't) and how hard it would be to add one (Z3 mentioned) for proof/math verification. Scope it, then build it.",
-    "outcome": "Established SymPy (not Z3) is the right fit for the actual need; Z3 considered but not installed. Live-validated SymPy against `Pub_OptimismBias_PartA\\Overleaf_source\\Math_Verification.tex` -- Eq.6 aggregation, Eq.12 Mercator series, lognormal moments, calibration inversion, and the Flyvbjerg(2002) Rail table row all passed with zero discrepancies. Built and registered `/verify-math`.",
-    "next_steps": "Optional end-to-end run of `/verify-math --project Pub_OptimismBias_PartA` over the whole file (offered, not yet run). Future: forum (helpi 25) verification pre-pass reusing the translate-and-check logic to inject a \"Verified facts\" block while keeping forum agents read-only.",
-    "git_ref": "f4c87c7 (root repo; no code/ repo)",
+    "goal": "Document the new `/verify-math` (SymPy) skill in the infrastructure docs with an architecture write-up of the LLM -> SymPy-program -> execute -> interpret pipeline; flag SymPy as a required install; then (follow-up) default the skill to Sonnet 4.6 to save tokens, and push everything to GitHub.",
+    "outcome": "`/verify-math` is fully documented with an architecture report; SymPy flagged as an install for full functionality; the skill now defaults to Sonnet 4.6 with an opus override. All committed and pushed to `ai-infrastructure` (master, through a01b57a).",
+    "next_steps": "Optional -- patch `scripts/generate_docs.ps1` to always pass a throwaway `--user-data-dir` to Edge so a running browser can't produce a stale-but-fresh-timestamped PDF, and log it in `known_issues.md` (offered; user did not request).",
+    "git_ref": "748cb37",
     "files_touched": [
-      "`~/.claude/skills/verify-math/SKILL.md` (new) -- `/verify-math` skill: reads a `.tex`, extracts every labelled equation + numeric claim, translates each to SymPy, runs it via base-env Python, and writes `math_check_report.md` (PASS/FAIL/NOT-CHECKABLE per `\\label{}`) + a re-runnable `verify.py` to `{project}\\_math_checks\\<timestamp>\\`. Background Claude agent by default; `--inline` for small files. Checks algebra/series/solve-inversions/distributional-moments/numeric; flags limit-theorem reasoning (CLT/SLLN/Slutsky/Jensen) as out of scope rather than passing it. No gemini/codex backend (checking is execution, not generation). Translation shown per row so formalization errors stay visible.",
-      "`~/.claude/projects/.../memory/reference_sympy_installed.md` (new) -- SymPy 1.14.0 installed in miniconda base env (NOT on PATH, NOT in pyopt); use over in-head arithmetic.",
-      "`~/.claude/projects/.../memory/project_verify_math_skill.md` (new) -- skill record + next idea (forum verification pre-pass).",
-      "`~/.claude/projects/.../memory/MEMORY.md` -- indexed the two new memories.",
-      "miniconda base env -- installed `sympy` 1.14.0 via pip."
+      "`infrastructure.html` -- added section A3 (`/verify-math`): the four-stage pipeline (read & classify / translate / execute / interpret) rendered as a flow diagram, the six classification buckets with their SymPy mechanism, why the SymPy translation is shown per check, and what is deliberately NOT-CHECKABLE; added a TOC entry; flagged SymPy as a required install in the Prerequisites and desk-reference software tables; added the `--model sonnet|opus` flag row + a \"Why Sonnet is the default\" note.",
+      "`~/.claude/skills/verify-math/SKILL.md` -- background agent now launches with `model: sonnet` by default; added `--model sonnet|opus` flag (opus for heavy-theory papers); `--inline` keeps the session model; documented the reasoning (model only translates/reports, SymPy judges, translations are printed so mis-translations surface as FAILs).",
+      "`infrastructure_full.pdf` -- regenerated (tracked artifact). First regen was a stale Edge cache render; re-rendered with an isolated `--user-data-dir` and verified the new content is present.",
+      "`infrastructure_summary.html`, `infrastructure_full.html`, `infrastructure_summary.pdf` -- regenerated locally (gitignored)."
     ]
   },
   "latest_session_complete": true,

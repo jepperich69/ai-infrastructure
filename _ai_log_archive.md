@@ -293,3 +293,10 @@
 ## Archived 2026-06-30 (1 entry)
 
 - **2026-05-26b** (Claude): Add `-Stage` parameter to the Convergence Forum to prevent agents f... -> Forum agents now operate in surgical/defect-detection mode when `-Stage revision` or `-...
+
+
+---
+
+## Archived 2026-06-30 (1 entry)
+
+- **2026-05-29b** (Claude): Extend infrastructure with Haiku-delegated /close, fix permission g... -> /close now delegates mechanical operations to a Haiku subagent; permission patterns ext...
