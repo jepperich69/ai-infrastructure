@@ -1,4 +1,4 @@
-﻿# Environment map â€” this machine
+# Environment map â€” this machine
 
 Reference document. The compact version of this lives inline in `~/.claude/CLAUDE.md`
 and `~/.codex/config.toml`. Update both when new facts are confirmed.
@@ -544,3 +544,11 @@ fails inside the sandbox with "The term ... python.exe is not recognized" even t
 When a normal Microsoft Edge window was already running, the script's headless `msedge --print-to-pdf` call was intercepted by the running instance and served a **stale cached render**: the `.pdf` got a fresh modification timestamp but old content. The result looked regenerated and silently was not, so a doc update could be committed with a PDF that omitted the new content (caught this session when the `/verify-math --model` section was missing from the committed PDF despite a successful-looking regen).
 
 **Fix applied:** `Make-Pdf` now launches Edge with a throwaway `--user-data-dir` (a temp profile under `$env:TEMP`, removed afterward) so it spawns an independent instance that cannot share the running browser's cache and does not disturb the user's open windows. It also deletes any prior PDF before rendering (so a failed render can never masquerade as fresh) and polls up to 30s for the output instead of a fixed 4s sleep (the isolated profile's first run is slower). Validated by regenerating with Edge open: the new content is present in the output PDF.
+
+---
+
+### 42. PowerShell decodes external command stdout using legacy console encoding, corrupting UTF-8
+**Status:** fixed (2026-06-30)
+**Affects:** `AI_auto/scripts/submit.ps1`
+**Fix:** Set `[Console]::OutputEncoding = [System.Text.Encoding]::UTF8` in scripts that capture the text output of external tools (like `latexdiff` run via Strawberry Perl). This forces PowerShell to decode the external process's stdout bytes as UTF-8 rather than using the legacy console code page (such as Danish CP850), avoiding encoding artifacts like `Ç¿` for curly quotes and `é¼` for the Euro symbol `€`.
+

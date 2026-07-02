@@ -38,6 +38,7 @@ param(
 )
 
 . "$PSScriptRoot\config.ps1"
+[Console]::OutputEncoding = [System.Text.Encoding]::UTF8
 $sourceDir       = Join-Path $pubRoot "$Project\Overleaf_source"
 $projRoot        = Join-Path $pubRoot $Project
 
