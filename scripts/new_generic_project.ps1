@@ -40,6 +40,34 @@ if (Test-Path (Join-Path $projectRoot "_ai_log.md")) {
 Write-Host "Initializing generic project: $projectName"
 Write-Host "  $projectRoot"
 
+# -- Literature source log ---------------------------------------------
+$literatureDir = Join-Path $projectRoot "Literature"
+New-Item -ItemType Directory -Path $literatureDir -Force | Out-Null
+$retrievedSources = @"
+# Retrieved sources (AI-fetched literature)
+
+Index of full-text sources pulled from the web while answering questions about
+the project. Each entry records the citation, the local file, where it is used,
+and the specific fact it supports, so claims that lean on the literature can be
+re-checked without re-downloading.
+
+---
+
+<!--
+## Author(s) (Year), *Title*
+- **File:** `Local_file_name.pdf`
+- **Bib key:** `bibkey`
+- **Source:** official full text, https://...
+- **Retrieved:** YYYY-MM-DD
+- **Used in project:** path/to/file -- section/equation/paragraph
+- **What it supports / verified facts:**
+  - Fact 1, with page/section/anchor when available.
+  - Fact 2, with page/section/anchor when available.
+-->
+"@
+Set-Content -Path (Join-Path $literatureDir "_retrieved_sources.md") -Value $retrievedSources
+Write-Host "OK   | Literature/_retrieved_sources.md created"
+
 # -- Session log --------------------------------------------------------
 $logContent = @"
 # AI Session Log - $projectName
@@ -78,6 +106,9 @@ $claudeMd = @"
 ## What this project is about
 <!-- 2-4 sentences: what is this folder for, what are you trying to accomplish. -->
 
+
+## Key files
+- **Retrieved web sources:** ``Literature/_retrieved_sources.md``
 
 ## Standing constraints
 <!-- Conventions or constraints that are always true for this project. -->

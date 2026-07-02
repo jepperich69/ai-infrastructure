@@ -426,7 +426,7 @@ Symptom: Forum succeeds in Round 1, then all Round 2 agent turns fail immediatel
 ---
 
 ### 35. Overleaf remote default branch can disagree with its accepted push branch
-**Status:** open
+**Status:** fixed (2026-07-02)
 **Affects:** `AI_auto/scripts/push_to_overleaf.ps1`
 **Fix:** Resolve the accepted Overleaf branch from the project configuration or existing tracked branch before pull/rebase/push. Do not rely on `origin/HEAD`. If `origin/HEAD` points to `master` but the server rejects pushes with `wrong branch` and requests `main`, switch the local upstream to `origin/main` and avoid replaying parallel `master` and `main` histories.
 
@@ -513,7 +513,7 @@ This converts a silent infinite hang into a fast, actionable error (e.g. push fa
 **Note:** With the guard in place, a genuinely missing/expired credential now makes `fetch`/`push` *fail fast* rather than hang — the correct behavior for automation. On this machine credentials are normally served non-interactively by Windows Credential Manager once stored, so interactive sessions are unaffected. Distinct from issue #35 (Overleaf branch disagreement), which is about *which* branch is pushed, not about hanging.
 
 ### 39. Persist retrieved literature: seed `Literature/_retrieved_sources.md` in scaffolds + document
-**Status:** open
+**Status:** fixed (2026-07-02)
 **Affects:** `AI_auto/scripts/setup_project.ps1` (helpi 1 paper scaffold), the generic scaffold (helpi 27), the per-project `.claude/CLAUDE.md` template(s), and `infrastructure.html`.
 **Context:** A global rule now lives in `~/.claude/CLAUDE.md` ("Persisting retrieved literature"): whenever a fetched web source (paper, book, standard, dataset doc) backs a claim that lands in the work, the agent saves the source file into the project `Literature/` folder and logs it in `Literature/_retrieved_sources.md` (citation, bib key, URL, retrieval date, where used, verified facts/section anchors). First applied 2026-06-27 in `Pub_SAA_PMIP_MC` (Shapiro et al. 2009 -> entropic risk measure anchor). The rule works from memory today; this entry makes it self-supporting in the scaffolds.
 **Fix (to apply in an AI_auto session via `/catch-up`):**

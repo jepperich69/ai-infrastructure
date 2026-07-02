@@ -13,6 +13,66 @@ param(
 . "$PSScriptRoot\config.ps1"
 $jsonPath = "$aiRoot\projects.json"
 
+function Resolve-OverleafBranch {
+    param(
+        [Parameter(Mandatory=$true)]
+        [string]$RepoPath,
+
+        [string]$ConfiguredBranch = ""
+    )
+
+    $localBranch = git -C $RepoPath rev-parse --abbrev-ref HEAD 2>$null
+    if ($LASTEXITCODE -ne 0 -or [string]::IsNullOrEmpty($localBranch)) {
+        Write-Host "ERR  | Not inside a git repository: $RepoPath"
+        exit 1
+    }
+    $localBranch = $localBranch.Trim()
+
+    $upstream = git -C $RepoPath rev-parse --abbrev-ref --symbolic-full-name "@{u}" 2>$null
+    $trackedBranch = ""
+    if ($LASTEXITCODE -eq 0 -and $upstream -match '^origin/(.+)$') {
+        $trackedBranch = $Matches[1]
+    }
+
+    $acceptedBranch = if (![string]::IsNullOrWhiteSpace($ConfiguredBranch)) {
+        $ConfiguredBranch.Trim()
+    } elseif (![string]::IsNullOrWhiteSpace($trackedBranch)) {
+        $trackedBranch.Trim()
+    } else {
+        $localBranch
+    }
+
+    if ($localBranch -ne $acceptedBranch) {
+        Write-Host "INFO | Local branch is '$localBranch'; accepted Overleaf branch is '$acceptedBranch'."
+        git -C $RepoPath fetch origin $acceptedBranch 2>&1 | Out-Null
+        if ($LASTEXITCODE -ne 0) {
+            Write-Host "ERR  | Could not fetch origin/$acceptedBranch"
+            exit 1
+        }
+
+        $dirty = git -C $RepoPath status --porcelain
+        if ($dirty) {
+            Write-Host "ERR  | Working tree has uncommitted changes on the wrong branch."
+            Write-Host "       Commit/stash them or switch to '$acceptedBranch' manually, then rerun."
+            exit 1
+        }
+
+        git -C $RepoPath show-ref --verify --quiet "refs/heads/$acceptedBranch"
+        if ($LASTEXITCODE -eq 0) {
+            git -C $RepoPath checkout $acceptedBranch 2>&1 | Out-Null
+        } else {
+            git -C $RepoPath checkout -B $acceptedBranch "origin/$acceptedBranch" 2>&1 | Out-Null
+        }
+        if ($LASTEXITCODE -ne 0) {
+            Write-Host "ERR  | Could not switch to accepted branch '$acceptedBranch'"
+            exit 1
+        }
+    }
+
+    git -C $RepoPath branch --set-upstream-to="origin/$acceptedBranch" $acceptedBranch 2>&1 | Out-Null
+    return $acceptedBranch
+}
+
 # ---------------------------------------------------------------
 # Resolve repo path and branch
 # ---------------------------------------------------------------
@@ -26,20 +86,7 @@ if ($Project) {
         exit 1
     }
     $repoPath = $match.path
-    
-    # Try to resolve branch from local git first, update projects.json if mismatched, fallback to match.branch
-    $localBranch = git -C $repoPath rev-parse --abbrev-ref HEAD 2>$null
-    if ($LASTEXITCODE -eq 0 -and -not [string]::IsNullOrEmpty($localBranch)) {
-        $branch = $localBranch.Trim()
-        if ($match.branch -ne $branch) {
-            Write-Host "INFO | Local branch is '$branch' but projects.json says '$($match.branch)'."
-            Write-Host "       Updating projects.json..."
-            $match.branch = $branch
-            $projects | ConvertTo-Json -Depth 5 | Set-Content $jsonPath
-        }
-    } else {
-        $branch = $match.branch
-    }
+    $branch = Resolve-OverleafBranch -RepoPath $repoPath -ConfiguredBranch $match.branch
 } else {
     $cwd = (Get-Location).Path
 
@@ -56,7 +103,10 @@ if ($Project) {
         $overleafDir = Join-Path $projectRoot 'Overleaf_source'
         if (Test-Path (Join-Path $overleafDir '.git')) {
             $repoPath = $overleafDir
-            $branch   = git -C $repoPath rev-parse --abbrev-ref HEAD 2>$null
+            $projects = Get-Content $jsonPath | ConvertFrom-Json
+            $match    = $projects | Where-Object { $_.name -eq $projectName } | Select-Object -First 1
+            $configuredBranch = if ($match) { $match.branch } else { "" }
+            $branch = Resolve-OverleafBranch -RepoPath $repoPath -ConfiguredBranch $configuredBranch
         } else {
             Write-Host "ERR  | Overleaf_source git repo not found for project: $projectName"
             Write-Host "       Expected: $overleafDir"
@@ -64,10 +114,10 @@ if ($Project) {
         }
     } else {
         $repoPath = $cwd
-        $branch   = git -C $repoPath rev-parse --abbrev-ref HEAD 2>$null
+        $branch   = Resolve-OverleafBranch -RepoPath $repoPath
     }
 
-    if (-not $branch -or $LASTEXITCODE -ne 0) {
+    if (-not $branch) {
         Write-Host "ERR  | Not inside a git repository or project root: $cwd"
         exit 1
     }

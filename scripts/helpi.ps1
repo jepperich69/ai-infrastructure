@@ -489,9 +489,10 @@ function Show-CommandHelp {
         27 { @(
             "Create generic project (non-paper)",
             "Lightweight init for any folder under JR that isn't a paper: creates",
-            "_ai_log.md, .claude/settings.json (proxy-sandbox), and .claude/CLAUDE.md",
-            "(generic template -- no Overleaf/co-author/venue fields). Skips the",
-            "code/, Literature/, Overleaf_source/ scaffolding that helpi 1 creates.",
+            "_ai_log.md, Literature/_retrieved_sources.md, .claude/settings.json",
+            "(proxy-sandbox), and .claude/CLAUDE.md (generic template -- no",
+            "Overleaf/co-author/venue fields). Skips the code/ and Overleaf_source/",
+            "scaffolding that helpi 1 creates.",
             "",
             "Once initialized, the folder behaves exactly like a paper project:",
             "/work, /close, helpi 7 (log+handover), helpi 13/14 (dashboard/network),",

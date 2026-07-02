@@ -580,7 +580,7 @@
     <li><code>Overleaf_source/</code> &mdash; LaTeX manuscript, git-cloned from Overleaf</li>
     <li><code>code/</code> &mdash; Python research code, git-tracked locally</li>
     <li><code>code/data/</code> &mdash; Raw and processed data</li>
-    <li><code>Literature/</code> &mdash; PDFs and references</li>
+    <li><code>Literature/</code> &mdash; PDFs and references; AI-fetched sources are saved here and logged in <code>Literature/_retrieved_sources.md</code></li>
     <li><code>_ai_log.md</code> &mdash; AI session log (read and written by both layers)</li>
     <li><code>_handover.html</code> &mdash; Generated handover document for agent hand-off</li>
     <li><code>.claude/settings.json</code> &mdash; Per-project Claude permissions (proxy-sandbox, see &sect;7b)</li>
@@ -617,6 +617,7 @@ helpi 1 Pub_MyNewPaper_TBA -GitUrl https://git.overleaf.com/&lt;project-id&gt;</
     data/                   # anonymised data goes here
     .gitignore
   Literature/               # PDFs and references
+    _retrieved_sources.md   # AI-fetched source index
   _ai_log.md                # blank session log — first entry on /work
   .claude/
     CLAUDE.md               # project brief — auto-filled by Claude on first /work

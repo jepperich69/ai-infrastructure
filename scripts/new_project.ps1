@@ -28,6 +28,31 @@ foreach ($sub in @("code", "code\data", "Literature")) {
 }
 Write-Host "OK   | Folders created (code/, code/data/, Literature/)"
 
+$retrievedSources = @"
+# Retrieved sources (AI-fetched literature)
+
+Index of full-text sources pulled from the web while answering questions about
+the manuscript. Each entry records the citation, the local file, where it is
+used in the paper, and the specific fact it supports, so claims that lean on
+the literature can be re-checked without re-downloading.
+
+---
+
+<!--
+## Author(s) (Year), *Title*
+- **File:** `Local_file_name.pdf`
+- **Bib key:** `bibkey`
+- **Source:** official full text, https://...
+- **Retrieved:** YYYY-MM-DD
+- **Used in manuscript:** `Overleaf_source/main.tex` -- section/equation/paragraph
+- **What it supports / verified facts:**
+  - Fact 1, with page/section/anchor when available.
+  - Fact 2, with page/section/anchor when available.
+-->
+"@
+Set-Content -Path (Join-Path $projectRoot "Literature\_retrieved_sources.md") -Value $retrievedSources
+Write-Host "OK   | Literature/_retrieved_sources.md created"
+
 # -- Overleaf_source --------------------------------------------------
 $overleafDir = Join-Path $projectRoot "Overleaf_source"
 if ($GitUrl) {
@@ -130,6 +155,7 @@ $claudeMd = @"
 ## Key files
 - **Main manuscript:** ``Overleaf_source/main.tex``
 - **Main code:** ``code/[primary script]``
+- **Retrieved web sources:** ``Literature/_retrieved_sources.md``
 
 ## Standing constraints
 <!-- Notation conventions, frozen sections, reviewer mandates -- things always true for this paper. -->
