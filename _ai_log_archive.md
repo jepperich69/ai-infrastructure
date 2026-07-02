@@ -307,3 +307,10 @@
 ## Archived 2026-06-30 (1 entry)
 
 - **2026-05-30** (Claude): Add `/style-edit` skill for background LaTeX prose editing, then re... -> `/style-edit` skill added for autonomous background prose-style editing of LaTeX manusc...
+
+
+---
+
+## Archived 2026-07-02 (1 entry)
+
+- **2026-05-30b** (Claude): Push v1.0 to GitHub, remove redundant root helpi.ps1 shim, and upda... -> v1.0 fully pushed to GitHub; documentation updated and regenerated to match the scripts...

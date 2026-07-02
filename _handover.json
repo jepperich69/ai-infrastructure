@@ -1,18 +1,17 @@
 {
   "project": "AI_auto",
-  "generated": "2026-06-30 10:29",
+  "generated": "2026-07-02 12:05",
   "source": "_ai_log.md",
   "latest_session": {
-    "title": "2026-06-30 (third session)",
+    "title": "2026-07-02",
     "agent": "Claude Opus 4.8",
-    "goal": "Fix the stale-PDF bug in `generate_docs.ps1` (helpi 16) surfaced last session, and log it in `known_issues.md`.",
-    "outcome": "Fix validated with Edge open (the exact failure condition) -- the output PDF now contains the new content instead of a stale render. Committed and pushed to `ai-infrastructure` (b2298ad).",
-    "next_steps": "none open.",
-    "git_ref": "b2298ad",
+    "goal": "Design (not yet build) a general code-robustness system for Jeppe's research code, baked into the AI_auto infrastructure. Started with an ad-hoc check: confirmed the Overleaf git server (git.overleaf.com) is down (DNS resolves, TCP 443 refused) -- an outage, not a local problem; GitHub remote works fine.",
+    "outcome": "Design phase complete and agreed. No infrastructure code written yet -- this was a scoping/architecture conversation. Explored the paper codebases (Pub_MIPEntropy_MPC, Pub_PMIP_AOR, and the SAA/VSP family) to ground the design in what Jeppe actually runs (set-cover + transport/assignment; Gurobi/OR-Tools/CBC + IPF/Sinkhorn/rounding/MH). Confirmed his own code already contains the oracles it needs (exact solver beside heuristics; BestBound/gap already computed; seeded instance generators; a live public-benchmark folder).",
+    "next_steps": "Build session (fresh chat). (1) Decide where `jr_optlib` lives (own project under JR\\, init via helpi 27) + index schema; (2) pilot-extract `ipf_2d` as the first vetted function with a scipy/POT + marginal-invariant oracle; (3) stand up the oracle bank with rail582 wired to one check to prove the harness end-to-end. Later: migrate papers one at a time using library-vs-old-copy comparison as the verification. Open: delivery form (/verify-model skill vs helpi command vs both).",
+    "git_ref": "701c36a",
     "files_touched": [
-      "`scripts/generate_docs.ps1` -- `Make-Pdf` now launches Edge with a throwaway `--user-data-dir` (temp profile, removed after) so a running browser can't intercept the headless `--print-to-pdf` call and serve a stale cached render; also deletes any prior PDF before rendering (a failed render can't masquerade as fresh) and polls up to 30s for the output instead of a fixed 4s sleep. ASCII-clean additions.",
-      "`known_issues.md` -- added issue #41 (status `fixed (2026-06-30)`): symptom (fresh timestamp, stale content), root cause (running Edge intercepting the headless call), and the fix.",
-      "`infrastructure_full.pdf` -- regenerated as the validation run."
+      "`~/.claude/projects/.../memory/project_robustness_system.md` (new) -- full design record: optimization-oriented oracle taxonomy (feasibility+objective recompute, duality/relaxation certificates, exact-vs-heuristic differential test, planted/seeded instances, small-exhaustive, benchmark libs + reference impls, monotonicity); the `mip_hybrid` 6x-duplication correctness hazard found in the codebase; agreed `jr_optlib` shared-library architecture reconciled with per-paper reproducibility via version-pin + submission-freeze; three-registry index (vetted fns / known-answer instances / reference impls); OR oracle bank; forward-first-then-migrate sequencing.",
+      "`~/.claude/projects/.../memory/MEMORY.md` -- indexed the new memory."
     ]
   },
   "latest_session_complete": true,

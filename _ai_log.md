@@ -4,7 +4,6 @@
 
 ## Compressed sessions
 
-- **2026-05-30b** (Claude): Push v1.0 to GitHub, remove redundant root helpi.ps1 shim, and upda... -> v1.0 fully pushed to GitHub; documentation updated and regenerated to match the scripts...
 - **2026-05-31** (Claude): Fix auth bug in /style-edit and /pipeline skills (both used claude ... -> Both skills now use subscription auth correctly. 4-agent comparison (Sonnet/Haiku/Gemin...
 - **2026-05-31b** (Claude): Harden and complete the /style-edit skill: parallel chunked process... -> /style-edit now runs reliably as parallel Gemini jobs with token tracking, bibliography...
 - **2026-05-31c** (Claude): Fix `helpi 23` (push_to_github.ps1) failing for AI_auto due to miss... -> `helpi 23 AI_auto` now works — falls back to project root, found existing GitHub remote...
@@ -20,21 +19,7 @@
 - **2026-06-22b** (Claude): agy had silently auto-updated back to the broken v1.0.10 (eligibili... -> agy is pinned to v1.0.8 two ways (env-var kill-switch + ACL deny backstop) so it can no...
 - **2026-06-25** (Gemini 3.5 Flash (Medium)): Fix the "src refspec master does not match any" error that occurs d... -> Fixed the push error for `Pub_FlowPaperSP2_TRD` (which is tracked on `main`), updated `...
 - **2026-06-25 (second session)** (Gemini 3.5 Flash (Medium)): Address NoteTaker watcher failures on the 20-minute test recording,... -> Handled the 18 MB test recording (transcript, Markdown, and LaTeX summaries written, PD...
-
----
-
-## Session 2026-06-25 (third session)
-**Agent:** Claude Opus 4.8
-**Goal:** Three infrastructure tasks: (1) stop NoteTaker's free-tier Supabase project from auto-pausing after 7 days idle, (2) fix the `helpi 4` hang when Overleaf is ahead during headless agent runs, (3) document install prerequisites so the infrastructure can be handed to a colleague.
-**Files touched:**
-- `NoteTaker/code/notetaker_watcher.ps1` -- added `Send-SupabaseKeepAlive` (a CORS OPTIONS ping the Edge Function answers 200 before any auth, no secret/audio) fired on watcher startup and every 12h, so the project never crosses Supabase's 7-day inactivity pause threshold.
-- `NoteTaker/RECOVERY_GUIDE.md` -- documented the keep-alive as section 2b (automatic guard, manual "any recording counts" fallback, long-holiday risk, REST-call backup).
-- `scripts/config.ps1` -- set `GIT_TERMINAL_PROMPT=0`, `GCM_INTERACTIVE=Never`, `GIT_PAGER=cat` (dot-sourced by every infra script) so headless git ops fail fast instead of hanging on a credential prompt; this was the root cause of `helpi 4` hanging when Overleaf was ahead.
-- `INSTALL.md` (new) -- single onboarding doc: accounts/licenses table (paid ones flagged), software + npm CLIs, and an agent-executable runbook with HUMAN STEP markers at the account/payment/OAuth/key-generation points. Clarifies AI_auto core needs no API-key env vars; GEMINI_API_KEY/GITHUB_WRITE_PAT are NoteTaker-only.
-- `README.md` -- added an "Installing" pointer to INSTALL.md; Requirements now lists Node.js and flags Overleaf git access as paid.
-**Outcome:** All three done, validated, committed and pushed. NoteTaker keep-alive is live (watcher restarted under supervisor; OPTIONS ping returns 200, inactivity clock reset today). config.ps1 guard validated (parses clean, env vars apply on source). AI_auto pushed to `ai-infrastructure` (b400112); NoteTaker keep-alive pushed to `notetaker-inbox` (43340dc, rebased over the watcher's auto-sync commits).
-**Next steps:** none open. Optional: record the `helpi 4` headless-hang fix in `known_issues.md` for `/catch-up` (offered; user did not request). Real-world test of the fix happens next time `helpi 4` runs from agy with Overleaf ahead.
-**Git ref:** b400112
+- **2026-06-25 (third session)** (Claude): Three infrastructure tasks: (1) stop NoteTaker's free-tier Supabase... -> All three done, validated, committed and pushed. NoteTaker keep-alive is live (watcher ...
 
 ---
 
@@ -77,3 +62,15 @@
 **Outcome:** Fix validated with Edge open (the exact failure condition) -- the output PDF now contains the new content instead of a stale render. Committed and pushed to `ai-infrastructure` (b2298ad).
 **Next steps:** none open.
 **Git ref:** b2298ad
+
+---
+
+## Session 2026-07-02
+**Agent:** Claude Opus 4.8
+**Goal:** Design (not yet build) a general code-robustness system for Jeppe's research code, baked into the AI_auto infrastructure. Started with an ad-hoc check: confirmed the Overleaf git server (git.overleaf.com) is down (DNS resolves, TCP 443 refused) -- an outage, not a local problem; GitHub remote works fine.
+**Files touched:**
+- `~/.claude/projects/.../memory/project_robustness_system.md` (new) -- full design record: optimization-oriented oracle taxonomy (feasibility+objective recompute, duality/relaxation certificates, exact-vs-heuristic differential test, planted/seeded instances, small-exhaustive, benchmark libs + reference impls, monotonicity); the `mip_hybrid` 6x-duplication correctness hazard found in the codebase; agreed `jr_optlib` shared-library architecture reconciled with per-paper reproducibility via version-pin + submission-freeze; three-registry index (vetted fns / known-answer instances / reference impls); OR oracle bank; forward-first-then-migrate sequencing.
+- `~/.claude/projects/.../memory/MEMORY.md` -- indexed the new memory.
+**Outcome:** Design phase complete and agreed. No infrastructure code written yet -- this was a scoping/architecture conversation. Explored the paper codebases (Pub_MIPEntropy_MPC, Pub_PMIP_AOR, and the SAA/VSP family) to ground the design in what Jeppe actually runs (set-cover + transport/assignment; Gurobi/OR-Tools/CBC + IPF/Sinkhorn/rounding/MH). Confirmed his own code already contains the oracles it needs (exact solver beside heuristics; BestBound/gap already computed; seeded instance generators; a live public-benchmark folder).
+**Next steps:** Build session (fresh chat). (1) Decide where `jr_optlib` lives (own project under JR\, init via helpi 27) + index schema; (2) pilot-extract `ipf_2d` as the first vetted function with a scipy/POT + marginal-invariant oracle; (3) stand up the oracle bank with rail582 wired to one check to prove the harness end-to-end. Later: migrate papers one at a time using library-vs-old-copy comparison as the verification. Open: delivery form (/verify-model skill vs helpi command vs both).
+**Git ref:** 701c36a
