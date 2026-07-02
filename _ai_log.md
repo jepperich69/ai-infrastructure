@@ -106,3 +106,16 @@
 **Outcome:** The optimization library jr_optlib is now fully operational, tested, and pushed to GitHub (main). It now safely hosts IPF, Simulated Annealing, Ladder Burn-in, and Dual Ascent primitives.
 **Next steps:** Begin adopting jr_optlib directly in Pub_PopInt_PartB or the upcoming Paper 3 (RL/residual).
 **Git ref:** 8f76d99 (jr_optlib)
+
+## Session 2026-07-02 (fourth session)
+**Agent:** Gemini CLI
+**Goal:** Extract Napsti block-coordinate NLP primitive and the Dijkstra + SUE route-choice bundle into jr_optlib, then review and migrate Pub_ML_Entropy's MH implementation.
+**Files touched:**
+- jr_optlib/src/jr_optlib/optimization/nlp.py -- built generic bilinear solve_coord_wise.
+- jr_optlib/src/jr_optlib/oracles/nlp.py -- built Gurobi-based verification oracle erify_with_gurobi.
+- jr_optlib/src/jr_optlib/optimization/routing.py -- extracted dijkstra_manhattan and compute_route_choice_shares (SUE).
+- jr_optlib/registry/functions.yaml -- registered the three new primitives.
+- Pub_ML_Entropy/code/rulelist/benchmark_rulelist_entropy_mh.py -- replaced custom mh_polish loop with jr_optlib.sampling.mcmc.simulated_annealing.
+**Outcome:** The NLP fixed-point solver and routing (Dijkstra+SUE) were successfully extracted to the shared library. The custom Metropolis-Hastings code for rule-lists in ML_Entropy was reviewed and refactored to use the generic jr_optlib MCMC primitive, which was proven to maintain optimization performance. Pushed jr_optlib to GitHub.
+**Next steps:** Begin adopting jr_optlib directly in Pub_NapstiGranularity_TBA, Pub_CongestionPMIP_TBA, and Pub_PopInt_PartB.
+**Git ref:** 0c2f9d7
