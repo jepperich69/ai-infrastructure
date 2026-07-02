@@ -30,7 +30,7 @@
 <body>
 
 <h1>Handover Document &mdash; AI_auto</h1>
-<div class="meta">Generated: 2026-07-02 15:42 &nbsp;|&nbsp; Source: <code style="display:inline;padding:2px 6px">_ai_log.md</code> &nbsp;|&nbsp; Sidecar: <code style="display:inline;padding:2px 6px">_handover.json</code></div>
+<div class="meta">Generated: 2026-07-02 17:43 &nbsp;|&nbsp; Source: <code style="display:inline;padding:2px 6px">_ai_log.md</code> &nbsp;|&nbsp; Sidecar: <code style="display:inline;padding:2px 6px">_handover.json</code></div>
 
 <!-- ============================================================ -->
 <!-- AGENT INSTRUCTIONS                                            -->
@@ -189,6 +189,24 @@
 <p><strong>Next steps:</strong> Migrate the heuristic VSP (Vehicle Scheduling) chains from Pub<em>PMIP</em>VSP into jr_optlib and write a heuristic monotonicity oracle for them.</p>
 <p><strong>Git ref:</strong> -</p>
 <br>
+<hr>
+<br>
+<h2>Session 2026-07-02 (Gemini CLI close)</h2>
+<p><strong>Agent:</strong> Gemini CLI</p>
+<p><strong>Goal:</strong> Extract and verify legacy heuristics (VSP SA, Set-Cover Ladder Burn-in, and Lagrangian Dual Ascent) into a fully generic jr_optlib repository, then push it to GitHub.</p>
+<p><strong>Files touched:</strong></p>
+<ul>
+  <li>jr_optlib/src/jr_optlib/sampling/mcmc.py -- built simulated_annealing and ladder_burn_in generic primitives.</li>
+  <li>jr_optlib/src/jr_optlib/sampling/setcover_mcmc.py -- integrated ladder_burn_in seamlessly into the exact Set-Cover sampler.</li>
+  <li>jr_optlib/src/jr_optlib/optimization/lagrangian.py -- extracted subgradient_dual_ascent generic loop from Pub_SAA_PMIP_MC.</li>
+  <li>jr_optlib/tests/test_*.py -- added differential tests proving exact parity with legacy paper logic.</li>
+  <li>jr_optlib/registry/functions.yaml and INDEX.md -- registered new functions.</li>
+  <li>jr_optlib/.git -- initialized git, committed, and pushed to GitHub.</li>
+</ul>
+<p><strong>Outcome:</strong> The optimization library jr_optlib is now fully operational, tested, and pushed to GitHub (main). It now safely hosts IPF, Simulated Annealing, Ladder Burn-in, and Dual Ascent primitives.</p>
+<p><strong>Next steps:</strong> Begin adopting jr<em>optlib directly in Pub</em>PopInt_PartB or the upcoming Paper 3 (RL/residual).</p>
+<p><strong>Git ref:</strong> 8f76d99 (jr_optlib)</p>
+<br>
 
 </div>
 
@@ -290,6 +308,22 @@
 **Outcome:** Proved via exact LP that exact integer repair for PopInt is mathematically impossible under the given anchor/margin targets. Updated verify_model.py which now passes with explicit tolerance bounds. Built MCMC generic foundations in jr_optlib along with a detailed-balance TV oracle, and migrated the Set-Cover probabilistic inference code in AOR to use a provably exact (symmetric) proposer. Tested and verified convergence.
 **Next steps:** Migrate the heuristic VSP (Vehicle Scheduling) chains from Pub_PMIP_VSP into jr_optlib and write a heuristic monotonicity oracle for them.
 **Git ref:** -
+
+---
+
+## Session 2026-07-02 (Gemini CLI close)
+**Agent:** Gemini CLI
+**Goal:** Extract and verify legacy heuristics (VSP SA, Set-Cover Ladder Burn-in, and Lagrangian Dual Ascent) into a fully generic jr_optlib repository, then push it to GitHub.
+**Files touched:**
+- jr_optlib/src/jr_optlib/sampling/mcmc.py -- built simulated_annealing and ladder_burn_in generic primitives.
+- jr_optlib/src/jr_optlib/sampling/setcover_mcmc.py -- integrated ladder_burn_in seamlessly into the exact Set-Cover sampler.
+- jr_optlib/src/jr_optlib/optimization/lagrangian.py -- extracted subgradient_dual_ascent generic loop from Pub_SAA_PMIP_MC.
+- jr_optlib/tests/test_*.py -- added differential tests proving exact parity with legacy paper logic.
+- jr_optlib/registry/functions.yaml and INDEX.md -- registered new functions.
+- jr_optlib/.git -- initialized git, committed, and pushed to GitHub.
+**Outcome:** The optimization library jr_optlib is now fully operational, tested, and pushed to GitHub (main). It now safely hosts IPF, Simulated Annealing, Ladder Burn-in, and Dual Ascent primitives.
+**Next steps:** Begin adopting jr_optlib directly in Pub_PopInt_PartB or the upcoming Paper 3 (RL/residual).
+**Git ref:** 8f76d99 (jr_optlib)
 </textarea>
 </div>
 
