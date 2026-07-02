@@ -30,7 +30,7 @@
 <body>
 
 <h1>Handover Document &mdash; AI_auto</h1>
-<div class="meta">Generated: 2026-07-02 12:05 &nbsp;|&nbsp; Source: <code style="display:inline;padding:2px 6px">_ai_log.md</code> &nbsp;|&nbsp; Sidecar: <code style="display:inline;padding:2px 6px">_handover.json</code></div>
+<div class="meta">Generated: 2026-07-02 13:04 &nbsp;|&nbsp; Source: <code style="display:inline;padding:2px 6px">_ai_log.md</code> &nbsp;|&nbsp; Sidecar: <code style="display:inline;padding:2px 6px">_handover.json</code></div>
 
 <!-- ============================================================ -->
 <!-- AGENT INSTRUCTIONS                                            -->
@@ -62,16 +62,18 @@
 <div class="latest-session">
   <div class="session-status ok">Complete</div>
   <h2>Latest Session Snapshot</h2>
-  <p><strong>Session:</strong> 2026-07-02</p>
+  <p><strong>Session:</strong> 2026-07-02 (second session)</p>
   <p><strong>Agent:</strong> Claude Opus 4.8</p>
-  <p><strong>Goal:</strong> Design (not yet build) a general code-robustness system for Jeppe&#39;s research code, baked into the AI_auto infrastructure. Started with an ad-hoc check: confirmed the Overleaf git server (git.overleaf.com) is down (DNS resolves, TCP 443 refused) -- an outage, not a local problem; GitHub remote works fine.</p>
-  <p><strong>Outcome:</strong> Design phase complete and agreed. No infrastructure code written yet -- this was a scoping/architecture conversation. Explored the paper codebases (Pub_MIPEntropy_MPC, Pub_PMIP_AOR, and the SAA/VSP family) to ground the design in what Jeppe actually runs (set-cover + transport/assignment; Gurobi/OR-Tools/CBC + IPF/Sinkhorn/rounding/MH). Confirmed his own code already contains the oracles it needs (exact solver beside heuristics; BestBound/gap already computed; seeded instance generators; a live public-benchmark folder).</p>
-  <p><strong>Next steps:</strong> Build session (fresh chat). (1) Decide where `jr_optlib` lives (own project under JR\, init via helpi 27) + index schema; (2) pilot-extract `ipf_2d` as the first vetted function with a scipy/POT + marginal-invariant oracle; (3) stand up the oracle bank with rail582 wired to one check to prove the harness end-to-end. Later: migrate papers one at a time using library-vs-old-copy comparison as the verification. Open: delivery form (/verify-model skill vs helpi command vs both).</p>
-  <p><strong>Git ref:</strong> 701c36a</p>
+  <p><strong>Goal:</strong> Build the first slice of the code-robustness system designed last session. User picked all recommended options: jr_optlib as its own JR project, delivery via a /verify-model skill, and the full first slice (scaffold + index + ipf_2d pilot + oracle bank).</p>
+  <p><strong>Outcome:</strong> First slice complete and validated. `ipf_2d` vetted + CERTIFIED via matching-marginals + diagonal-scaling-form oracle (unique per Sinkhorn; least-squares log-interaction handles structural zeros). 16 tests pass; demo runs end-to-end on real OR-Library scp41 (greedy=CHECKED, injected fault correctly=FAIL). Confirmed the codebase hazards from the design (mip_hybrid 6x-duplication; `round_transport_greedy_push` double-defined at population_transport.py:789 and :882). rail582 raw instance not present locally (only run logs) -- used scp41 as the working proof, registered rail582 as download-on-demand.</p>
+  <p><strong>Next steps:</strong> git init jr_optlib for the commit-SHA pinning mechanism; migrate transport rounding + mip_hybrid one function at a time (library-vs-old-copy differential as the migration test); vendor rail582; add assignment/MCF functions wired to the already-registered scipy/networkx references. All deferred (build session met its scope).</p>
+  <p><strong>Git ref:</strong> (AI_auto: skill only; jr_optlib has no repo yet)</p>
   <h3>Files touched</h3>
   <ul>
-  <li>`~/.claude/projects/.../memory/project_robustness_system.md` (new) -- full design record: optimization-oriented oracle taxonomy (feasibility+objective recompute, duality/relaxation certificates, exact-vs-heuristic differential test, planted/seeded instances, small-exhaustive, benchmark libs + reference impls, monotonicity); the `mip_hybrid` 6x-duplication correctness hazard found in the codebase; agreed `jr_optlib` shared-library architecture reconciled with per-paper reproducibility via version-pin + submission-freeze; three-registry index (vetted fns / known-answer instances / reference impls); OR oracle bank; forward-first-then-migrate sequencing.</li>
-  <li>`~/.claude/projects/.../memory/MEMORY.md` -- indexed the new memory.</li>
+  <li>`JR\jr_optlib\` (new project via helpi 27) -- full src-layout package: `transport/ipf.py` (`ipf_2d` extracted numerics-preserving from Pub_MIPEntropy_MPC), `oracles/{core,transport,setcover}.py`, `harness.py` (CoverageMap: CERTIFIED/CHECKED/FAIL/UNVALIDATED), `registry/` (3 YAMLs + SCHEMA.md + INDEX.md, one schema), `oracle_bank/` (SCP loader, vendored scp41 opt=429, known_optima.yaml, provenance, demo_scp41.py), `tests/test_ipf.py` (16 oracle-backed tests), README, pyproject, filled `.claude/CLAUDE.md`, `.gitignore`, `_ai_log.md`.</li>
+  <li>`~/.claude/skills/verify-model/SKILL.md` (new) -- delivery front-end: locates a paper&#39;s optimization results, matches each to jr_optlib oracles, runs a harness, emits a coverage map + migration hints. Background agent, default model opus; `--inline`/`--model sonnet` overrides. Counterpart to /verify-math.</li>
+  <li>miniconda base env -- installed `pytest` and `pyyaml`.</li>
+  <li>memory `project_robustness_system.md` updated with the build record.</li>
 </ul>
 </div>
 
@@ -86,8 +88,6 @@
 <h2>Compressed sessions</h2>
 <br>
 <ul>
-  <li><strong>2026-05-31</strong> (Claude): Fix auth bug in /style-edit and /pipeline skills (both used claude ... -&gt; Both skills now use subscription auth correctly. 4-agent comparison (Sonnet/Haiku/Gemin...</li>
-  <li><strong>2026-05-31b</strong> (Claude): Harden and complete the /style-edit skill: parallel chunked process... -&gt; /style-edit now runs reliably as parallel Gemini jobs with token tracking, bibliography...</li>
   <li><strong>2026-05-31c</strong> (Claude): Fix `helpi 23` (push_to_github.ps1) failing for AI_auto due to miss... -&gt; `helpi 23 AI_auto` now works — falls back to project root, found existing GitHub remote...</li>
   <li><strong>2026-06-04</strong> (Claude): Add em-dash style rule to global writing guidelines and memory. -&gt; Em-dash clause-connector rule is now enforced globally in all research writing sessions...</li>
   <li><strong>2026-06-03</strong> (Gemini CLI (gemini-2.0-pro-exp-02-05)): Fix \/style-edit\ skill discovery and naming convention for Gemini CLI -&gt; \/style-edit\ and \/style-apply\ are now discoverable by Gemini CLI with the requested ...</li>
@@ -102,40 +102,9 @@
   <li><strong>2026-06-25</strong> (Gemini 3.5 Flash (Medium)): Fix the &quot;src refspec master does not match any&quot; error that occurs d... -&gt; Fixed the push error for `Pub_FlowPaperSP2_TRD` (which is tracked on `main`), updated `...</li>
   <li><strong>2026-06-25 (second session)</strong> (Gemini 3.5 Flash (Medium)): Address NoteTaker watcher failures on the 20-minute test recording,... -&gt; Handled the 18 MB test recording (transcript, Markdown, and LaTeX summaries written, PD...</li>
   <li><strong>2026-06-25 (third session)</strong> (Claude): Three infrastructure tasks: (1) stop NoteTaker&#39;s free-tier Supabase... -&gt; All three done, validated, committed and pushed. NoteTaker keep-alive is live (watcher ...</li>
+  <li><strong>2026-06-30</strong> (Claude): User asked whether CLI LLMs integrate with a symbolic math engine (... -&gt; Established SymPy (not Z3) is the right fit for the actual need; Z3 considered but not ...</li>
+  <li><strong>2026-06-30 (second session)</strong> (Claude): Document the new `/verify-math` (SymPy) skill in the infrastructure... -&gt; `/verify-math` is fully documented with an architecture report; SymPy flagged as an ins...</li>
 </ul>
-<br>
-<hr>
-<br>
-<h2>Session 2026-06-30</h2>
-<p><strong>Agent:</strong> Claude Opus 4.8</p>
-<p><strong>Goal:</strong> User asked whether CLI LLMs integrate with a symbolic math engine (they don&#39;t) and how hard it would be to add one (Z3 mentioned) for proof/math verification. Scope it, then build it.</p>
-<p><strong>Files touched:</strong></p>
-<ul>
-  <li>`~/.claude/skills/verify-math/SKILL.md` (new) -- `/verify-math` skill: reads a `.tex`, extracts every labelled equation + numeric claim, translates each to SymPy, runs it via base-env Python, and writes `math_check_report.md` (PASS/FAIL/NOT-CHECKABLE per `\label{}`) + a re-runnable `verify.py` to `{project}\_math_checks\&lt;timestamp&gt;\`. Background Claude agent by default; `--inline` for small files. Checks algebra/series/solve-inversions/distributional-moments/numeric; flags limit-theorem reasoning (CLT/SLLN/Slutsky/Jensen) as out of scope rather than passing it. No gemini/codex backend (checking is execution, not generation). Translation shown per row so formalization errors stay visible.</li>
-  <li>`~/.claude/projects/.../memory/reference_sympy_installed.md` (new) -- SymPy 1.14.0 installed in miniconda base env (NOT on PATH, NOT in pyopt); use over in-head arithmetic.</li>
-  <li>`~/.claude/projects/.../memory/project_verify_math_skill.md` (new) -- skill record + next idea (forum verification pre-pass).</li>
-  <li>`~/.claude/projects/.../memory/MEMORY.md` -- indexed the two new memories.</li>
-  <li>miniconda base env -- installed `sympy` 1.14.0 via pip.</li>
-</ul>
-<p><strong>Outcome:</strong> Established SymPy (not Z3) is the right fit for the actual need; Z3 considered but not installed. Live-validated SymPy against `Pub<em>OptimismBias</em>PartA\Overleaf<em>source\Math</em>Verification.tex` -- Eq.6 aggregation, Eq.12 Mercator series, lognormal moments, calibration inversion, and the Flyvbjerg(2002) Rail table row all passed with zero discrepancies. Built and registered `/verify-math`.</p>
-<p><strong>Next steps:</strong> Optional end-to-end run of `/verify-math --project Pub<em>OptimismBias</em>PartA` over the whole file (offered, not yet run). Future: forum (helpi 25) verification pre-pass reusing the translate-and-check logic to inject a &quot;Verified facts&quot; block while keeping forum agents read-only.</p>
-<p><strong>Git ref:</strong> f4c87c7 (root repo; no code/ repo)</p>
-<br>
-<hr>
-<br>
-<h2>Session 2026-06-30 (second session)</h2>
-<p><strong>Agent:</strong> Claude Opus 4.8</p>
-<p><strong>Goal:</strong> Document the new `/verify-math` (SymPy) skill in the infrastructure docs with an architecture write-up of the LLM -&gt; SymPy-program -&gt; execute -&gt; interpret pipeline; flag SymPy as a required install; then (follow-up) default the skill to Sonnet 4.6 to save tokens, and push everything to GitHub.</p>
-<p><strong>Files touched:</strong></p>
-<ul>
-  <li>`infrastructure.html` -- added section A3 (`/verify-math`): the four-stage pipeline (read &amp; classify / translate / execute / interpret) rendered as a flow diagram, the six classification buckets with their SymPy mechanism, why the SymPy translation is shown per check, and what is deliberately NOT-CHECKABLE; added a TOC entry; flagged SymPy as a required install in the Prerequisites and desk-reference software tables; added the `--model sonnet|opus` flag row + a &quot;Why Sonnet is the default&quot; note.</li>
-  <li>`~/.claude/skills/verify-math/SKILL.md` -- background agent now launches with `model: sonnet` by default; added `--model sonnet|opus` flag (opus for heavy-theory papers); `--inline` keeps the session model; documented the reasoning (model only translates/reports, SymPy judges, translations are printed so mis-translations surface as FAILs).</li>
-  <li>`infrastructure_full.pdf` -- regenerated (tracked artifact). First regen was a stale Edge cache render; re-rendered with an isolated `--user-data-dir` and verified the new content is present.</li>
-  <li>`infrastructure_summary.html`, `infrastructure_full.html`, `infrastructure_summary.pdf` -- regenerated locally (gitignored).</li>
-</ul>
-<p><strong>Outcome:</strong> `/verify-math` is fully documented with an architecture report; SymPy flagged as an install for full functionality; the skill now defaults to Sonnet 4.6 with an opus override. All committed and pushed to `ai-infrastructure` (master, through a01b57a).</p>
-<p><strong>Next steps:</strong> Optional -- patch `scripts/generate<em>docs.ps1` to always pass a throwaway `--user-data-dir` to Edge so a running browser can&#39;t produce a stale-but-fresh-timestamped PDF, and log it in `known</em>issues.md` (offered; user did not request).</p>
-<p><strong>Git ref:</strong> 748cb37</p>
 <br>
 <hr>
 <br>
@@ -164,7 +133,41 @@
 </ul>
 <p><strong>Outcome:</strong> Design phase complete and agreed. No infrastructure code written yet -- this was a scoping/architecture conversation. Explored the paper codebases (Pub<em>MIPEntropy</em>MPC, Pub<em>PMIP</em>AOR, and the SAA/VSP family) to ground the design in what Jeppe actually runs (set-cover + transport/assignment; Gurobi/OR-Tools/CBC + IPF/Sinkhorn/rounding/MH). Confirmed his own code already contains the oracles it needs (exact solver beside heuristics; BestBound/gap already computed; seeded instance generators; a live public-benchmark folder).</p>
 <p><strong>Next steps:</strong> Build session (fresh chat). (1) Decide where `jr<em>optlib` lives (own project under JR\, init via helpi 27) + index schema; (2) pilot-extract `ipf</em>2d` as the first vetted function with a scipy/POT + marginal-invariant oracle; (3) stand up the oracle bank with rail582 wired to one check to prove the harness end-to-end. Later: migrate papers one at a time using library-vs-old-copy comparison as the verification. Open: delivery form (/verify-model skill vs helpi command vs both).</p>
-<p><strong>Git ref:</strong> 701c36a</p>
+<p><strong>Git ref:</strong> 701c36a</p>
+<br>
+<hr>
+<br>
+<h2>Session 2026-07-02 (close)</h2>
+<p><strong>Agent:</strong> Claude Opus 4.8</p>
+<p><strong>Goal:</strong> Build the jr_optlib robustness system end-to-end, migrate the MIPEntropy transport code into it, ship the /verify-model delivery skill, and run it. (Continues the &quot;(second session)&quot; block below, which covered the first slice + skill.)</p>
+<p><strong>Files touched (this session&#39;s arc):</strong></p>
+<ul>
+  <li>`~/.claude/skills/verify-model/SKILL.md` (new) -- delivery skill: locates a paper&#39;s optimization results, wires jr_optlib oracles, emits a coverage map. Background Opus agent by default.</li>
+  <li>`JR\jr_optlib\` -- whole project built + 3 migrations (detail in its own `_ai_log.md`): first slice (ipf_2d + oracles + harness + registry + oracle bank + scp41), migration 1 sinkhorn (bit-for-bit), migration 2 LP-family (solve_transport_opt/min_cost_lp/greedy_push + double-def fix), migration 3 remaining rounders (mcf/approx + dependent_round_2d family). 91 tests pass. Commits dd09fc6 -&gt; 715914f -&gt; 7532234 -&gt; cbfc4eb (local only).</li>
+  <li>miniconda base env -- installed `pulp` 3.3.2 (CBC) for the LP-family; earlier `pytest`, `pyyaml`.</li>
+  <li>`memory/project_robustness_system.md` -- updated with build record.</li>
+  <li>`memory/project_popint_partb_optlib.md` (new) + `memory/MEMORY.md` -- Pub_PopInt_PartB flagged as the next big jr_optlib target (N-D vectorized IPF `HardIPF` generalizes ipf_2d; swap-repair/PPS integerizers are new vetted candidates).</li>
+  <li>`Pub_MIPEntropy_MPC\_model_checks\2026-07-02_12-56-23\` -- output dir for the running /verify-model check (agent writing coverage_map.md + verify_model.py).</li>
+</ul>
+<p><strong>Outcome:</strong> jr<em>optlib is a working, tested, committed shared library with the transport primitive family fully migrated and oracle-certified; /verify-model built and launched against Pub</em>MIPEntropy_MPC (running in background at close time, writes its report to disk + notifies on completion). Also surfaced: Gurobi WLS license (LicenseID 2711408) still reports expired on re-check -- local `C:\Users\rich\gurobi.lic` likely needs replacing with freshly-issued portal credentials.</p>
+<p><strong>Next steps:</strong> (1) review the MIPEntropy coverage<em>map.md when the background agent finishes; (2) Pub</em>PopInt<em>PartB session -- extract `ipf</em>nd` (HardIPF) + generalize certify<em>ipf to N-D (differential vs ipf</em>2d), add swap<em>repair/anchor integerizers + a population-integerization oracle, then /verify-model it; (3) push jr</em>optlib to GitHub with `helpi 23 jr_optlib` when desired (currently local only); (4) replace the expired gurobi.lic.</p>
+<p><strong>Git ref:</strong> -- (jr<em>optlib @ cbfc4eb local; AI</em>auto root @ e085682; no AI_auto code/ subrepo)</p>
+<br>
+<hr>
+<br>
+<h2>Session 2026-07-02 (second session)</h2>
+<p><strong>Agent:</strong> Claude Opus 4.8</p>
+<p><strong>Goal:</strong> Build the first slice of the code-robustness system designed last session. User picked all recommended options: jr<em>optlib as its own JR project, delivery via a /verify-model skill, and the full first slice (scaffold + index + ipf</em>2d pilot + oracle bank).</p>
+<p><strong>Files touched:</strong></p>
+<ul>
+  <li>`JR\jr_optlib\` (new project via helpi 27) -- full src-layout package: `transport/ipf.py` (`ipf_2d` extracted numerics-preserving from Pub_MIPEntropy_MPC), `oracles/{core,transport,setcover}.py`, `harness.py` (CoverageMap: CERTIFIED/CHECKED/FAIL/UNVALIDATED), `registry/` (3 YAMLs + SCHEMA.md + INDEX.md, one schema), `oracle_bank/` (SCP loader, vendored scp41 opt=429, known_optima.yaml, provenance, demo_scp41.py), `tests/test_ipf.py` (16 oracle-backed tests), README, pyproject, filled `.claude/CLAUDE.md`, `.gitignore`, `_ai_log.md`.</li>
+  <li>`~/.claude/skills/verify-model/SKILL.md` (new) -- delivery front-end: locates a paper&#39;s optimization results, matches each to jr_optlib oracles, runs a harness, emits a coverage map + migration hints. Background agent, default model opus; `--inline`/`--model sonnet` overrides. Counterpart to /verify-math.</li>
+  <li>miniconda base env -- installed `pytest` and `pyyaml`.</li>
+  <li>memory `project_robustness_system.md` updated with the build record.</li>
+</ul>
+<p><strong>Outcome:</strong> First slice complete and validated. `ipf<em>2d` vetted + CERTIFIED via matching-marginals + diagonal-scaling-form oracle (unique per Sinkhorn; least-squares log-interaction handles structural zeros). 16 tests pass; demo runs end-to-end on real OR-Library scp41 (greedy=CHECKED, injected fault correctly=FAIL). Confirmed the codebase hazards from the design (mip</em>hybrid 6x-duplication; `round<em>transport</em>greedy<em>push` double-defined at population</em>transport.py:789 and :882). rail582 raw instance not present locally (only run logs) -- used scp41 as the working proof, registered rail582 as download-on-demand.</p>
+<p><strong>Next steps:</strong> git init jr<em>optlib for the commit-SHA pinning mechanism; migrate transport rounding + mip</em>hybrid one function at a time (library-vs-old-copy differential as the migration test); vendor rail582; add assignment/MCF functions wired to the already-registered scipy/networkx references. All deferred (build session met its scope).</p>
+<p><strong>Git ref:</strong> (AI<em>auto: skill only; jr</em>optlib has no repo yet)</p>
 <br>
 
 </div>
@@ -181,8 +184,6 @@
 
 ## Compressed sessions
 
-- **2026-05-31** (Claude): Fix auth bug in /style-edit and /pipeline skills (both used claude ... -&gt; Both skills now use subscription auth correctly. 4-agent comparison (Sonnet/Haiku/Gemin...
-- **2026-05-31b** (Claude): Harden and complete the /style-edit skill: parallel chunked process... -&gt; /style-edit now runs reliably as parallel Gemini jobs with token tracking, bibliography...
 - **2026-05-31c** (Claude): Fix `helpi 23` (push_to_github.ps1) failing for AI_auto due to miss... -&gt; `helpi 23 AI_auto` now works — falls back to project root, found existing GitHub remote...
 - **2026-06-04** (Claude): Add em-dash style rule to global writing guidelines and memory. -&gt; Em-dash clause-connector rule is now enforced globally in all research writing sessions...
 - **2026-06-03** (Gemini CLI (gemini-2.0-pro-exp-02-05)): Fix \/style-edit\ skill discovery and naming convention for Gemini CLI -&gt; \/style-edit\ and \/style-apply\ are now discoverable by Gemini CLI with the requested ...
@@ -197,35 +198,8 @@
 - **2026-06-25** (Gemini 3.5 Flash (Medium)): Fix the "src refspec master does not match any" error that occurs d... -&gt; Fixed the push error for `Pub_FlowPaperSP2_TRD` (which is tracked on `main`), updated `...
 - **2026-06-25 (second session)** (Gemini 3.5 Flash (Medium)): Address NoteTaker watcher failures on the 20-minute test recording,... -&gt; Handled the 18 MB test recording (transcript, Markdown, and LaTeX summaries written, PD...
 - **2026-06-25 (third session)** (Claude): Three infrastructure tasks: (1) stop NoteTaker's free-tier Supabase... -&gt; All three done, validated, committed and pushed. NoteTaker keep-alive is live (watcher ...
-
----
-
-## Session 2026-06-30
-**Agent:** Claude Opus 4.8
-**Goal:** User asked whether CLI LLMs integrate with a symbolic math engine (they don't) and how hard it would be to add one (Z3 mentioned) for proof/math verification. Scope it, then build it.
-**Files touched:**
-- `~/.claude/skills/verify-math/SKILL.md` (new) -- `/verify-math` skill: reads a `.tex`, extracts every labelled equation + numeric claim, translates each to SymPy, runs it via base-env Python, and writes `math_check_report.md` (PASS/FAIL/NOT-CHECKABLE per `\label{}`) + a re-runnable `verify.py` to `{project}\_math_checks\&lt;timestamp&gt;\`. Background Claude agent by default; `--inline` for small files. Checks algebra/series/solve-inversions/distributional-moments/numeric; flags limit-theorem reasoning (CLT/SLLN/Slutsky/Jensen) as out of scope rather than passing it. No gemini/codex backend (checking is execution, not generation). Translation shown per row so formalization errors stay visible.
-- `~/.claude/projects/.../memory/reference_sympy_installed.md` (new) -- SymPy 1.14.0 installed in miniconda base env (NOT on PATH, NOT in pyopt); use over in-head arithmetic.
-- `~/.claude/projects/.../memory/project_verify_math_skill.md` (new) -- skill record + next idea (forum verification pre-pass).
-- `~/.claude/projects/.../memory/MEMORY.md` -- indexed the two new memories.
-- miniconda base env -- installed `sympy` 1.14.0 via pip.
-**Outcome:** Established SymPy (not Z3) is the right fit for the actual need; Z3 considered but not installed. Live-validated SymPy against `Pub_OptimismBias_PartA\Overleaf_source\Math_Verification.tex` -- Eq.6 aggregation, Eq.12 Mercator series, lognormal moments, calibration inversion, and the Flyvbjerg(2002) Rail table row all passed with zero discrepancies. Built and registered `/verify-math`.
-**Next steps:** Optional end-to-end run of `/verify-math --project Pub_OptimismBias_PartA` over the whole file (offered, not yet run). Future: forum (helpi 25) verification pre-pass reusing the translate-and-check logic to inject a "Verified facts" block while keeping forum agents read-only.
-**Git ref:** f4c87c7 (root repo; no code/ repo)
-
----
-
-## Session 2026-06-30 (second session)
-**Agent:** Claude Opus 4.8
-**Goal:** Document the new `/verify-math` (SymPy) skill in the infrastructure docs with an architecture write-up of the LLM -&gt; SymPy-program -&gt; execute -&gt; interpret pipeline; flag SymPy as a required install; then (follow-up) default the skill to Sonnet 4.6 to save tokens, and push everything to GitHub.
-**Files touched:**
-- `infrastructure.html` -- added section A3 (`/verify-math`): the four-stage pipeline (read & classify / translate / execute / interpret) rendered as a flow diagram, the six classification buckets with their SymPy mechanism, why the SymPy translation is shown per check, and what is deliberately NOT-CHECKABLE; added a TOC entry; flagged SymPy as a required install in the Prerequisites and desk-reference software tables; added the `--model sonnet|opus` flag row + a "Why Sonnet is the default" note.
-- `~/.claude/skills/verify-math/SKILL.md` -- background agent now launches with `model: sonnet` by default; added `--model sonnet|opus` flag (opus for heavy-theory papers); `--inline` keeps the session model; documented the reasoning (model only translates/reports, SymPy judges, translations are printed so mis-translations surface as FAILs).
-- `infrastructure_full.pdf` -- regenerated (tracked artifact). First regen was a stale Edge cache render; re-rendered with an isolated `--user-data-dir` and verified the new content is present.
-- `infrastructure_summary.html`, `infrastructure_full.html`, `infrastructure_summary.pdf` -- regenerated locally (gitignored).
-**Outcome:** `/verify-math` is fully documented with an architecture report; SymPy flagged as an install for full functionality; the skill now defaults to Sonnet 4.6 with an opus override. All committed and pushed to `ai-infrastructure` (master, through a01b57a).
-**Next steps:** Optional -- patch `scripts/generate_docs.ps1` to always pass a throwaway `--user-data-dir` to Edge so a running browser can't produce a stale-but-fresh-timestamped PDF, and log it in `known_issues.md` (offered; user did not request).
-**Git ref:** 748cb37
+- **2026-06-30** (Claude): User asked whether CLI LLMs integrate with a symbolic math engine (... -&gt; Established SymPy (not Z3) is the right fit for the actual need; Z3 considered but not ...
+- **2026-06-30 (second session)** (Claude): Document the new `/verify-math` (SymPy) skill in the infrastructure... -&gt; `/verify-math` is fully documented with an architecture report; SymPy flagged as an ins...
 
 ---
 
@@ -251,6 +225,36 @@
 **Outcome:** Design phase complete and agreed. No infrastructure code written yet -- this was a scoping/architecture conversation. Explored the paper codebases (Pub_MIPEntropy_MPC, Pub_PMIP_AOR, and the SAA/VSP family) to ground the design in what Jeppe actually runs (set-cover + transport/assignment; Gurobi/OR-Tools/CBC + IPF/Sinkhorn/rounding/MH). Confirmed his own code already contains the oracles it needs (exact solver beside heuristics; BestBound/gap already computed; seeded instance generators; a live public-benchmark folder).
 **Next steps:** Build session (fresh chat). (1) Decide where `jr_optlib` lives (own project under JR\, init via helpi 27) + index schema; (2) pilot-extract `ipf_2d` as the first vetted function with a scipy/POT + marginal-invariant oracle; (3) stand up the oracle bank with rail582 wired to one check to prove the harness end-to-end. Later: migrate papers one at a time using library-vs-old-copy comparison as the verification. Open: delivery form (/verify-model skill vs helpi command vs both).
 **Git ref:** 701c36a
+
+---
+
+## Session 2026-07-02 (close)
+**Agent:** Claude Opus 4.8
+**Goal:** Build the jr_optlib robustness system end-to-end, migrate the MIPEntropy transport code into it, ship the /verify-model delivery skill, and run it. (Continues the "(second session)" block below, which covered the first slice + skill.)
+**Files touched (this session's arc):**
+- `~/.claude/skills/verify-model/SKILL.md` (new) -- delivery skill: locates a paper's optimization results, wires jr_optlib oracles, emits a coverage map. Background Opus agent by default.
+- `JR\jr_optlib\` -- whole project built + 3 migrations (detail in its own `_ai_log.md`): first slice (ipf_2d + oracles + harness + registry + oracle bank + scp41), migration 1 sinkhorn (bit-for-bit), migration 2 LP-family (solve_transport_opt/min_cost_lp/greedy_push + double-def fix), migration 3 remaining rounders (mcf/approx + dependent_round_2d family). 91 tests pass. Commits dd09fc6 -&gt; 715914f -&gt; 7532234 -&gt; cbfc4eb (local only).
+- miniconda base env -- installed `pulp` 3.3.2 (CBC) for the LP-family; earlier `pytest`, `pyyaml`.
+- `memory/project_robustness_system.md` -- updated with build record.
+- `memory/project_popint_partb_optlib.md` (new) + `memory/MEMORY.md` -- Pub_PopInt_PartB flagged as the next big jr_optlib target (N-D vectorized IPF `HardIPF` generalizes ipf_2d; swap-repair/PPS integerizers are new vetted candidates).
+- `Pub_MIPEntropy_MPC\_model_checks\2026-07-02_12-56-23\` -- output dir for the running /verify-model check (agent writing coverage_map.md + verify_model.py).
+**Outcome:** jr_optlib is a working, tested, committed shared library with the transport primitive family fully migrated and oracle-certified; /verify-model built and launched against Pub_MIPEntropy_MPC (running in background at close time, writes its report to disk + notifies on completion). Also surfaced: Gurobi WLS license (LicenseID 2711408) still reports expired on re-check -- local `C:\Users\rich\gurobi.lic` likely needs replacing with freshly-issued portal credentials.
+**Next steps:** (1) review the MIPEntropy coverage_map.md when the background agent finishes; (2) Pub_PopInt_PartB session -- extract `ipf_nd` (HardIPF) + generalize certify_ipf to N-D (differential vs ipf_2d), add swap_repair/anchor integerizers + a population-integerization oracle, then /verify-model it; (3) push jr_optlib to GitHub with `helpi 23 jr_optlib` when desired (currently local only); (4) replace the expired gurobi.lic.
+**Git ref:** -- (jr_optlib @ cbfc4eb local; AI_auto root @ e085682; no AI_auto code/ subrepo)
+
+---
+
+## Session 2026-07-02 (second session)
+**Agent:** Claude Opus 4.8
+**Goal:** Build the first slice of the code-robustness system designed last session. User picked all recommended options: jr_optlib as its own JR project, delivery via a /verify-model skill, and the full first slice (scaffold + index + ipf_2d pilot + oracle bank).
+**Files touched:**
+- `JR\jr_optlib\` (new project via helpi 27) -- full src-layout package: `transport/ipf.py` (`ipf_2d` extracted numerics-preserving from Pub_MIPEntropy_MPC), `oracles/{core,transport,setcover}.py`, `harness.py` (CoverageMap: CERTIFIED/CHECKED/FAIL/UNVALIDATED), `registry/` (3 YAMLs + SCHEMA.md + INDEX.md, one schema), `oracle_bank/` (SCP loader, vendored scp41 opt=429, known_optima.yaml, provenance, demo_scp41.py), `tests/test_ipf.py` (16 oracle-backed tests), README, pyproject, filled `.claude/CLAUDE.md`, `.gitignore`, `_ai_log.md`.
+- `~/.claude/skills/verify-model/SKILL.md` (new) -- delivery front-end: locates a paper's optimization results, matches each to jr_optlib oracles, runs a harness, emits a coverage map + migration hints. Background agent, default model opus; `--inline`/`--model sonnet` overrides. Counterpart to /verify-math.
+- miniconda base env -- installed `pytest` and `pyyaml`.
+- memory `project_robustness_system.md` updated with the build record.
+**Outcome:** First slice complete and validated. `ipf_2d` vetted + CERTIFIED via matching-marginals + diagonal-scaling-form oracle (unique per Sinkhorn; least-squares log-interaction handles structural zeros). 16 tests pass; demo runs end-to-end on real OR-Library scp41 (greedy=CHECKED, injected fault correctly=FAIL). Confirmed the codebase hazards from the design (mip_hybrid 6x-duplication; `round_transport_greedy_push` double-defined at population_transport.py:789 and :882). rail582 raw instance not present locally (only run logs) -- used scp41 as the working proof, registered rail582 as download-on-demand.
+**Next steps:** git init jr_optlib for the commit-SHA pinning mechanism; migrate transport rounding + mip_hybrid one function at a time (library-vs-old-copy differential as the migration test); vendor rail582; add assignment/MCF functions wired to the already-registered scipy/networkx references. All deferred (build session met its scope).
+**Git ref:** (AI_auto: skill only; jr_optlib has no repo yet)
 </textarea>
 </div>
 
