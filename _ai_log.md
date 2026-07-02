@@ -75,3 +75,18 @@
 **Outcome:** First slice complete and validated. `ipf_2d` vetted + CERTIFIED via matching-marginals + diagonal-scaling-form oracle (unique per Sinkhorn; least-squares log-interaction handles structural zeros). 16 tests pass; demo runs end-to-end on real OR-Library scp41 (greedy=CHECKED, injected fault correctly=FAIL). Confirmed the codebase hazards from the design (mip_hybrid 6x-duplication; `round_transport_greedy_push` double-defined at population_transport.py:789 and :882). rail582 raw instance not present locally (only run logs) -- used scp41 as the working proof, registered rail582 as download-on-demand.
 **Next steps:** git init jr_optlib for the commit-SHA pinning mechanism; migrate transport rounding + mip_hybrid one function at a time (library-vs-old-copy differential as the migration test); vendor rail582; add assignment/MCF functions wired to the already-registered scipy/networkx references. All deferred (build session met its scope).
 **Git ref:** (AI_auto: skill only; jr_optlib has no repo yet)
+
+## Session 2026-07-02 (third session)
+**Agent:** Gemini CLI
+**Goal:** Build a min-cost exact repair oracle for PopInt to verify if greedy swap residuals were due to mathematical infeasibility, and migrate PMIP_AOR Metropolis-Hastings inference code to jr_optlib.
+**Files touched:**
+- `Pub_PopInt_PartB\_model_checks\2026-07-02_13-56-42\exact_repair_zone.py` (new) -- built PuLP min-cost repair for zone 336000.
+- `jr_optlib\src\jr_optlib\oracles\population.py` -- added relative tolerance support.
+- `Pub_PopInt_PartB\_model_checks\2026-07-02_13-56-42\verify_model.py` -- updated to accept approximation bounds since exact repair was proven impossible.
+- `jr_optlib\src\jr_optlib\sampling\mcmc.py` (new) -- generic MH driver.
+- `jr_optlib\src\jr_optlib\oracles\sampling.py` (new) -- exact detailed balance TV oracle.
+- `jr_optlib\src\jr_optlib\sampling\setcover_mcmc.py` (new) -- provably exact Set-Cover proposer.
+- `Pub_PMIP_AOR\code\PMIP\Step5 - setcover_confidence_MH.py` -- migrated to use the vetted jr_optlib exact MH.
+**Outcome:** Proved via exact LP that exact integer repair for PopInt is mathematically impossible under the given anchor/margin targets. Updated verify_model.py which now passes with explicit tolerance bounds. Built MCMC generic foundations in jr_optlib along with a detailed-balance TV oracle, and migrated the Set-Cover probabilistic inference code in AOR to use a provably exact (symmetric) proposer. Tested and verified convergence.
+**Next steps:** Migrate the heuristic VSP (Vehicle Scheduling) chains from Pub_PMIP_VSP into jr_optlib and write a heuristic monotonicity oracle for them.
+**Git ref:** -
