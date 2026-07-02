@@ -74,3 +74,17 @@
 **Outcome:** Design phase complete and agreed. No infrastructure code written yet -- this was a scoping/architecture conversation. Explored the paper codebases (Pub_MIPEntropy_MPC, Pub_PMIP_AOR, and the SAA/VSP family) to ground the design in what Jeppe actually runs (set-cover + transport/assignment; Gurobi/OR-Tools/CBC + IPF/Sinkhorn/rounding/MH). Confirmed his own code already contains the oracles it needs (exact solver beside heuristics; BestBound/gap already computed; seeded instance generators; a live public-benchmark folder).
 **Next steps:** Build session (fresh chat). (1) Decide where `jr_optlib` lives (own project under JR\, init via helpi 27) + index schema; (2) pilot-extract `ipf_2d` as the first vetted function with a scipy/POT + marginal-invariant oracle; (3) stand up the oracle bank with rail582 wired to one check to prove the harness end-to-end. Later: migrate papers one at a time using library-vs-old-copy comparison as the verification. Open: delivery form (/verify-model skill vs helpi command vs both).
 **Git ref:** 701c36a
+
+---
+
+## Session 2026-07-02 (second session)
+**Agent:** Claude Opus 4.8
+**Goal:** Build the first slice of the code-robustness system designed last session. User picked all recommended options: jr_optlib as its own JR project, delivery via a /verify-model skill, and the full first slice (scaffold + index + ipf_2d pilot + oracle bank).
+**Files touched:**
+- `JR\jr_optlib\` (new project via helpi 27) -- full src-layout package: `transport/ipf.py` (`ipf_2d` extracted numerics-preserving from Pub_MIPEntropy_MPC), `oracles/{core,transport,setcover}.py`, `harness.py` (CoverageMap: CERTIFIED/CHECKED/FAIL/UNVALIDATED), `registry/` (3 YAMLs + SCHEMA.md + INDEX.md, one schema), `oracle_bank/` (SCP loader, vendored scp41 opt=429, known_optima.yaml, provenance, demo_scp41.py), `tests/test_ipf.py` (16 oracle-backed tests), README, pyproject, filled `.claude/CLAUDE.md`, `.gitignore`, `_ai_log.md`.
+- `~/.claude/skills/verify-model/SKILL.md` (new) -- delivery front-end: locates a paper's optimization results, matches each to jr_optlib oracles, runs a harness, emits a coverage map + migration hints. Background agent, default model opus; `--inline`/`--model sonnet` overrides. Counterpart to /verify-math.
+- miniconda base env -- installed `pytest` and `pyyaml`.
+- memory `project_robustness_system.md` updated with the build record.
+**Outcome:** First slice complete and validated. `ipf_2d` vetted + CERTIFIED via matching-marginals + diagonal-scaling-form oracle (unique per Sinkhorn; least-squares log-interaction handles structural zeros). 16 tests pass; demo runs end-to-end on real OR-Library scp41 (greedy=CHECKED, injected fault correctly=FAIL). Confirmed the codebase hazards from the design (mip_hybrid 6x-duplication; `round_transport_greedy_push` double-defined at population_transport.py:789 and :882). rail582 raw instance not present locally (only run logs) -- used scp41 as the working proof, registered rail582 as download-on-demand.
+**Next steps:** git init jr_optlib for the commit-SHA pinning mechanism; migrate transport rounding + mip_hybrid one function at a time (library-vs-old-copy differential as the migration test); vendor rail582; add assignment/MCF functions wired to the already-registered scipy/networkx references. All deferred (build session met its scope).
+**Git ref:** (AI_auto: skill only; jr_optlib has no repo yet)
