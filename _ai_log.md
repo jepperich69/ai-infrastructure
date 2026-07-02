@@ -4,7 +4,6 @@
 
 ## Compressed sessions
 
-- **2026-06-03c** (Codex GPT-5.5): Fix `/style-edit` not being recognised after the custom skill rename. -> Gemini now lists `style-edit`, `style-apply`, and `pipeline` as enabled skills; the `.a...
 - **2026-06-08** (Claude): Fix `run_forum.ps1` failing in Round 2 with `error: unknown option ... -> Forum claude calls now pipe prompts via stdin; `---` in blackboard state can no longer ...
 - **2026-06-16** (Claude): Fix `run_forum.ps1` failing for projects outside the `Publikationer... -> Forum (helpi 25) now resolves projects in any subfolder under `JR/`, not only `Publikat...
 - **2026-06-17** (Claude): Extend the AI infrastructure so any non-paper folder under `JR\` ge... -> Verified end-to-end with a throwaway test folder (`JR\_test_generic_project_DELETE_ME`,...
@@ -20,23 +19,7 @@
 - **2026-07-02** (Claude): Design (not yet build) a general code-robustness system for Jeppe's... -> Design phase complete and agreed. No infrastructure code written yet -- this was a scop...
 - **2026-07-02 (close)** (Claude): Build the jr_optlib robustness system end-to-end, migrate the MIPEn... -> jr_optlib is a working, tested, committed shared library with the transport primitive f...
 - **2026-07-02 (second session)** (Claude): Build the first slice of the code-robustness system designed last s... -> First slice complete and validated. `ipf_2d` vetted + CERTIFIED via matching-marginals ...
-
----
-
-## Session 2026-07-02 (third session)
-**Agent:** Gemini CLI
-**Goal:** Build a min-cost exact repair oracle for PopInt to verify if greedy swap residuals were due to mathematical infeasibility, and migrate PMIP_AOR Metropolis-Hastings inference code to jr_optlib.
-**Files touched:**
-- `Pub_PopInt_PartB\_model_checks\2026-07-02_13-56-42\exact_repair_zone.py` (new) -- built PuLP min-cost repair for zone 336000.
-- `jr_optlib\src\jr_optlib\oracles\population.py` -- added relative tolerance support.
-- `Pub_PopInt_PartB\_model_checks\2026-07-02_13-56-42\verify_model.py` -- updated to accept approximation bounds since exact repair was proven impossible.
-- `jr_optlib\src\jr_optlib\sampling\mcmc.py` (new) -- generic MH driver.
-- `jr_optlib\src\jr_optlib\oracles\sampling.py` (new) -- exact detailed balance TV oracle.
-- `jr_optlib\src\jr_optlib\sampling\setcover_mcmc.py` (new) -- provably exact Set-Cover proposer.
-- `Pub_PMIP_AOR\code\PMIP\Step5 - setcover_confidence_MH.py` -- migrated to use the vetted jr_optlib exact MH.
-**Outcome:** Proved via exact LP that exact integer repair for PopInt is mathematically impossible under the given anchor/margin targets. Updated verify_model.py which now passes with explicit tolerance bounds. Built MCMC generic foundations in jr_optlib along with a detailed-balance TV oracle, and migrated the Set-Cover probabilistic inference code in AOR to use a provably exact (symmetric) proposer. Tested and verified convergence.
-**Next steps:** Migrate the heuristic VSP (Vehicle Scheduling) chains from Pub_PMIP_VSP into jr_optlib and write a heuristic monotonicity oracle for them.
-**Git ref:**
+- **2026-07-02 (third session)** (Gemini CLI): Build a min-cost exact repair oracle for PopInt to verify if greedy... -> Proved via exact LP that exact integer repair for PopInt is mathematically impossible u...
 
 ---
 
@@ -83,3 +66,22 @@
 **Outcome:** Successfully identified three major missing algorithmic families (Finite Horizon DP, Discrete Choice Models, and Q-Learning) and fully extracted them into jr_optlib to complete the library. Tested the imports, committed, and pushed the updates to GitHub.
 **Next steps:** Begin adopting the newly added primitives (dp.py, choice.py, l.py) in their respective source papers.
 **Git ref:** 971875d
+
+---
+
+## Session 2026-07-02 (sixth session)
+**Agent:** Claude Opus 4.8
+**Goal:** Verify the DP/choice/RL primitives Gemini (Agy) added to jr_optlib last session, then reconcile and push every repo touched across the day once the Overleaf git server came back up.
+**Files touched:**
+- `jr_optlib/src/jr_optlib/oracles/choice.py` (new) -- certify_mnl + certify_nested_logit (McFadden theta=1 -> MNL consistency).
+- `jr_optlib/src/jr_optlib/oracles/dp.py` (new) -- certify_transition_contraction + certify_dp_vs_brute_force (backward induction vs exhaustive enumeration).
+- `jr_optlib/src/jr_optlib/oracles/rl.py` (new) -- certify_q_learning_vs_dp (Q-learning converges to exact DP).
+- `jr_optlib/src/jr_optlib/oracles/__init__.py` -- exported the five new oracles.
+- `jr_optlib/tests/{test_optimization_choice,test_optimization_dp,test_sampling_rl}.py` (new) -- 11 tests; suite 117 -> 128 passing.
+- `jr_optlib/registry/functions.yaml` -- rewrote the 6 malformed choice/dp/rl stubs as full oracle-backed vetted entries; downgraded dijkstra_manhattan + compute_route_choice_shares to experimental; fixed a pre-existing YAML parse error.
+- `~/.claude/CLAUDE.md` -- added "Shared optimization library (jr_optlib)" section (registry-first, oracle-on-add, version-pin, honest paper wording).
+- `~/.claude/.../memory/project_jr_optlib_workflow.md` (new) + `MEMORY.md` -- persisted the workflow rule.
+- Pushes (committed work only, no build artifacts): jr_optlib (d565b8c), AI_auto, Pub_PMIP_AOR (Overleaf), Pub_QP_SAA_MC (code + Overleaf), Pub_DP_Logsum_TBA (code + Overleaf), Pub_DP_RL_TBA (code + Overleaf), Pub_NapstiGranularity (Overleaf), Pub_PMIP_VSP (root + code + Overleaf merged), Pub_ML_Entropy (merged remote PDF).
+**Outcome:** Agy's choice/dp/rl code was numerically correct but registered vetted with no oracle/test; now fully oracle-backed + tested (128 pass) and the registry invariant restored. Every touched repo reconciled and pushed; two divergences (ML_Entropy, PMIP_VSP Overleaf) merged non-destructively. Confirmed the migration is extract-and-vet only -- papers still run their own local copies (Pub_QP_SAA_MC/code/solvers.py unchanged); rewiring deferred, done per-paper as each is reopened.
+**Next steps:** (1) rewire papers to import jr_optlib one at a time (differential vs old copy, then delete local copy); (2) add VERIFICATION.md to jr_optlib + reproducibility/verification statement to each paper; (3) intentionally-left uncommitted files remain (handover files, PMIP_VSP/code 32 files, ML_Entropy script).
+**Git ref:** af92321 (AI_auto); jr_optlib d565b8c
