@@ -10,6 +10,7 @@
 #
 #   Manus_Rich_MPC_2026_R1.pdf       compiled manuscript
 #   Frontpage_Rich_MPC_2026_R1.pdf   title page only
+#   Frontpage_Rich_MPC_2026_R1.tex   title page source with author information
 #   Package_Rich_MPC_2026_R1.zip     flat .tex (bbl inlined) + figures
 #   Package_Blind_MPC_2026_R1.zip    same, author info stripped
 #   Manus_Blind_MPC_2026_R1.pdf      compiled blind PDF
@@ -210,6 +211,43 @@ function Find-TitleAbstractPage {
     return 1
 }
 
+function Export-FrontpageTex {
+    param(
+        [string]$tex,
+        [string]$outPath
+    )
+
+    $frontTex = $null
+    $singleline = [System.Text.RegularExpressions.RegexOptions]::Singleline
+    $frontmatter = [regex]::Match($tex, '^(.*?\\begin\{document\}.*?\\end\{frontmatter\})', $singleline)
+    if ($frontmatter.Success) {
+        $frontTex = $frontmatter.Groups[1].Value
+    } else {
+        $docStart = [regex]::Match($tex, '\\begin\{document\}', $singleline)
+        if ($docStart.Success) {
+            $bodyStart = $docStart.Index + $docStart.Length
+            $afterDoc = $tex.Substring($bodyStart)
+            $firstSection = [regex]::Match($afterDoc, '(?m)^\\(?:section|chapter)\*?\{')
+            if ($firstSection.Success) {
+                $frontTex = $tex.Substring(0, $bodyStart + $firstSection.Index)
+            }
+        }
+    }
+
+    if (!$frontTex) {
+        Set-Content -Path $outPath -Value $tex -Encoding UTF8
+        WARN "Could not isolate front-page TeX -- copied full source to $(Split-Path $outPath -Leaf)"
+        return
+    }
+
+    $frontTex = $frontTex.TrimEnd()
+    if ($frontTex -notmatch '\\end\{document\}\s*$') {
+        $frontTex = "$frontTex`r`n`r`n\end{document}"
+    }
+    Set-Content -Path $outPath -Value $frontTex -Encoding UTF8
+    OK "$(Split-Path $outPath -Leaf)"
+}
+
 function Resolve-SubmissionExtras {
     param(
         [string]$tex,
@@ -324,6 +362,8 @@ $frontPage = Find-TitleAbstractPage -pdfPath $manuscriptOut -tex $texForFront -b
 Step 2 "Extracting front page (page $frontPage)"
 $srcPdf    = $manuscriptOut
 $frontOut  = Join-Path $outDir "Frontpage_${prefix}.pdf"
+$frontTexOut = Join-Path $outDir "Frontpage_${prefix}.tex"
+Export-FrontpageTex -tex $texForFront -outPath $frontTexOut
 $extracted = $false
 if (Test-Path $srcPdf) {
     $pdftk = Get-Command pdftk -ErrorAction SilentlyContinue
