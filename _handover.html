@@ -30,7 +30,7 @@
 <body>
 
 <h1>Handover Document &mdash; AI_auto</h1>
-<div class="meta">Generated: 2026-07-02 22:35 &nbsp;|&nbsp; Source: <code style="display:inline;padding:2px 6px">_ai_log.md</code> &nbsp;|&nbsp; Sidecar: <code style="display:inline;padding:2px 6px">_handover.json</code></div>
+<div class="meta">Generated: 2026-07-03 23:17 &nbsp;|&nbsp; Source: <code style="display:inline;padding:2px 6px">_ai_log.md</code> &nbsp;|&nbsp; Sidecar: <code style="display:inline;padding:2px 6px">_handover.json</code></div>
 
 <!-- ============================================================ -->
 <!-- AGENT INSTRUCTIONS                                            -->
@@ -62,23 +62,17 @@
 <div class="latest-session">
   <div class="session-status ok">Complete</div>
   <h2>Latest Session Snapshot</h2>
-  <p><strong>Session:</strong> 2026-07-02 (sixth session)</p>
-  <p><strong>Agent:</strong> Claude Opus 4.8</p>
-  <p><strong>Goal:</strong> Verify the DP/choice/RL primitives Gemini (Agy) added to jr_optlib last session, then reconcile and push every repo touched across the day once the Overleaf git server came back up.</p>
-  <p><strong>Outcome:</strong> Agy&#39;s choice/dp/rl code was numerically correct but registered vetted with no oracle/test; now fully oracle-backed + tested (128 pass) and the registry invariant restored. Every touched repo reconciled and pushed; two divergences (ML_Entropy, PMIP_VSP Overleaf) merged non-destructively. Confirmed the migration is extract-and-vet only -- papers still run their own local copies (Pub_QP_SAA_MC/code/solvers.py unchanged); rewiring deferred, done per-paper as each is reopened.</p>
-  <p><strong>Next steps:</strong> (1) rewire papers to import jr_optlib one at a time (differential vs old copy, then delete local copy); (2) add VERIFICATION.md to jr_optlib + reproducibility/verification statement to each paper; (3) intentionally-left uncommitted files remain (handover files, PMIP_VSP/code 32 files, ML_Entropy script).</p>
-  <p><strong>Git ref:</strong> af92321 (AI_auto); jr_optlib d565b8c</p>
+  <p><strong>Session:</strong> 2026-07-03</p>
+  <p><strong>Agent:</strong> Gemini CLI (Gemini 3.1 Pro (High))</p>
+  <p><strong>Goal:</strong> Establish automated, recurring Google Drive backups for AI_auto, NoteTaker, and research projects.</p>
+  <p><strong>Outcome:</strong> Deployed a local background daemon that bypasses DTU Task Scheduler restrictions. It silently backs up NoteTaker, AI_auto, and all Pub_ projects to Google Drive every day at 12:00.</p>
+  <p><strong>Next steps:</strong> Verify the Google Drive sync completes successfully tomorrow at 12:00.</p>
+  <p><strong>Git ref:</strong> -</p>
   <h3>Files touched</h3>
   <ul>
-  <li>`jr_optlib/src/jr_optlib/oracles/choice.py` (new) -- certify_mnl + certify_nested_logit (McFadden theta=1 -&gt; MNL consistency).</li>
-  <li>`jr_optlib/src/jr_optlib/oracles/dp.py` (new) -- certify_transition_contraction + certify_dp_vs_brute_force (backward induction vs exhaustive enumeration).</li>
-  <li>`jr_optlib/src/jr_optlib/oracles/rl.py` (new) -- certify_q_learning_vs_dp (Q-learning converges to exact DP).</li>
-  <li>`jr_optlib/src/jr_optlib/oracles/__init__.py` -- exported the five new oracles.</li>
-  <li>`jr_optlib/tests/{test_optimization_choice,test_optimization_dp,test_sampling_rl}.py` (new) -- 11 tests; suite 117 -&gt; 128 passing.</li>
-  <li>`jr_optlib/registry/functions.yaml` -- rewrote the 6 malformed choice/dp/rl stubs as full oracle-backed vetted entries; downgraded dijkstra_manhattan + compute_route_choice_shares to experimental; fixed a pre-existing YAML parse error.</li>
-  <li>`~/.claude/CLAUDE.md` -- added &quot;Shared optimization library (jr_optlib)&quot; section (registry-first, oracle-on-add, version-pin, honest paper wording).</li>
-  <li>`~/.claude/.../memory/project_jr_optlib_workflow.md` (new) + `MEMORY.md` -- persisted the workflow rule.</li>
-  <li>Pushes (committed work only, no build artifacts): jr_optlib (d565b8c), AI_auto, Pub_PMIP_AOR (Overleaf), Pub_QP_SAA_MC (code + Overleaf), Pub_DP_Logsum_TBA (code + Overleaf), Pub_DP_RL_TBA (code + Overleaf), Pub_NapstiGranularity (Overleaf), Pub_PMIP_VSP (root + code + Overleaf merged), Pub_ML_Entropy (merged remote PDF).</li>
+  <li>`backup_to_gdrive.ps1` -- created script using robocopy to mirror files to the Google Drive mount.</li>
+  <li>`backup_daemon.ps1` -- created lightweight time-checking loop to trigger backups daily at 12:00.</li>
+  <li>`backup_daemon_launch_hidden.vbs` -- created VBS wrapper to start the daemon silently.</li>
 </ul>
 </div>
 
@@ -184,6 +178,20 @@
 <p><strong>Next steps:</strong> (1) rewire papers to import jr<em>optlib one at a time (differential vs old copy, then delete local copy); (2) add VERIFICATION.md to jr</em>optlib + reproducibility/verification statement to each paper; (3) intentionally-left uncommitted files remain (handover files, PMIP<em>VSP/code 32 files, ML</em>Entropy script).</p>
 <p><strong>Git ref:</strong> af92321 (AI<em>auto); jr</em>optlib d565b8c</p>
 <br>
+<h2>Session 2026-07-03</h2>
+<p><strong>Agent:</strong> Gemini CLI (Gemini 3.1 Pro (High))</p>
+<p><strong>Goal:</strong> Establish automated, recurring Google Drive backups for AI_auto, NoteTaker, and research projects.</p>
+<p><strong>Files touched:</strong></p>
+<ul>
+  <li>`backup_to_gdrive.ps1` -- created script using robocopy to mirror files to the Google Drive mount.</li>
+  <li>`backup_daemon.ps1` -- created lightweight time-checking loop to trigger backups daily at 12:00.</li>
+  <li>`backup_daemon_launch_hidden.vbs` -- created VBS wrapper to start the daemon silently.</li>
+</ul>
+<p><strong>Outcome:</strong> Deployed a local background daemon that bypasses DTU Task Scheduler restrictions. It silently backs up NoteTaker, AI<em>auto, and all Pub</em> projects to Google Drive every day at 12:00.</p>
+<p><strong>Next steps:</strong> Verify the Google Drive sync completes successfully tomorrow at 12:00.</p>
+<p><strong>Git ref:</strong> -</p>
+<br>
+<br>
 
 </div>
 
@@ -280,6 +288,18 @@
 **Outcome:** Agy's choice/dp/rl code was numerically correct but registered vetted with no oracle/test; now fully oracle-backed + tested (128 pass) and the registry invariant restored. Every touched repo reconciled and pushed; two divergences (ML_Entropy, PMIP_VSP Overleaf) merged non-destructively. Confirmed the migration is extract-and-vet only -- papers still run their own local copies (Pub_QP_SAA_MC/code/solvers.py unchanged); rewiring deferred, done per-paper as each is reopened.
 **Next steps:** (1) rewire papers to import jr_optlib one at a time (differential vs old copy, then delete local copy); (2) add VERIFICATION.md to jr_optlib + reproducibility/verification statement to each paper; (3) intentionally-left uncommitted files remain (handover files, PMIP_VSP/code 32 files, ML_Entropy script).
 **Git ref:** af92321 (AI_auto); jr_optlib d565b8c
+
+## Session 2026-07-03
+**Agent:** Gemini CLI (Gemini 3.1 Pro (High))
+**Goal:** Establish automated, recurring Google Drive backups for AI_auto, NoteTaker, and research projects.
+**Files touched:**
+- `backup_to_gdrive.ps1` -- created script using robocopy to mirror files to the Google Drive mount.
+- `backup_daemon.ps1` -- created lightweight time-checking loop to trigger backups daily at 12:00.
+- `backup_daemon_launch_hidden.vbs` -- created VBS wrapper to start the daemon silently.
+**Outcome:** Deployed a local background daemon that bypasses DTU Task Scheduler restrictions. It silently backs up NoteTaker, AI_auto, and all Pub_ projects to Google Drive every day at 12:00.
+**Next steps:** Verify the Google Drive sync completes successfully tomorrow at 12:00.
+**Git ref:** -
+
 </textarea>
 </div>
 

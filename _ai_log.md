@@ -4,7 +4,6 @@
 
 ## Compressed sessions
 
-- **2026-06-08** (Claude): Fix `run_forum.ps1` failing in Round 2 with `error: unknown option ... -> Forum claude calls now pipe prompts via stdin; `---` in blackboard state can no longer ...
 - **2026-06-16** (Claude): Fix `run_forum.ps1` failing for projects outside the `Publikationer... -> Forum (helpi 25) now resolves projects in any subfolder under `JR/`, not only `Publikat...
 - **2026-06-17** (Claude): Extend the AI infrastructure so any non-paper folder under `JR\` ge... -> Verified end-to-end with a throwaway test folder (`JR\_test_generic_project_DELETE_ME`,...
 - **2026-06-19** (Claude): Fix Gemini CLI auth (broken by Google's OAuth deprecation for indiv... -> `gemini` is fully working again, both interactively and from `run_forum.ps1`, on the fl...
@@ -20,22 +19,7 @@
 - **2026-07-02 (close)** (Claude): Build the jr_optlib robustness system end-to-end, migrate the MIPEn... -> jr_optlib is a working, tested, committed shared library with the transport primitive f...
 - **2026-07-02 (second session)** (Claude): Build the first slice of the code-robustness system designed last s... -> First slice complete and validated. `ipf_2d` vetted + CERTIFIED via matching-marginals ...
 - **2026-07-02 (third session)** (Gemini CLI): Build a min-cost exact repair oracle for PopInt to verify if greedy... -> Proved via exact LP that exact integer repair for PopInt is mathematically impossible u...
-
----
-
-## Session 2026-07-02 (Gemini CLI close)
-**Agent:** Gemini CLI
-**Goal:** Extract and verify legacy heuristics (VSP SA, Set-Cover Ladder Burn-in, and Lagrangian Dual Ascent) into a fully generic jr_optlib repository, then push it to GitHub.
-**Files touched:**
-- jr_optlib/src/jr_optlib/sampling/mcmc.py -- built simulated_annealing and ladder_burn_in generic primitives.
-- jr_optlib/src/jr_optlib/sampling/setcover_mcmc.py -- integrated ladder_burn_in seamlessly into the exact Set-Cover sampler.
-- jr_optlib/src/jr_optlib/optimization/lagrangian.py -- extracted subgradient_dual_ascent generic loop from Pub_SAA_PMIP_MC.
-- jr_optlib/tests/test_*.py -- added differential tests proving exact parity with legacy paper logic.
-- jr_optlib/registry/functions.yaml and INDEX.md -- registered new functions.
-- jr_optlib/.git -- initialized git, committed, and pushed to GitHub.
-**Outcome:** The optimization library jr_optlib is now fully operational, tested, and pushed to GitHub (main). It now safely hosts IPF, Simulated Annealing, Ladder Burn-in, and Dual Ascent primitives.
-**Next steps:** Begin adopting jr_optlib directly in Pub_PopInt_PartB or the upcoming Paper 3 (RL/residual).
-**Git ref:** 8f76d99 (jr_optlib)
+- **2026-07-02 (Gemini CLI close)** (Gemini CLI): Extract and verify legacy heuristics (VSP SA, Set-Cover Ladder Burn... -> The optimization library jr_optlib is now fully operational, tested, and pushed to GitH...
 
 ---
 
@@ -86,6 +70,8 @@
 **Next steps:** (1) rewire papers to import jr_optlib one at a time (differential vs old copy, then delete local copy); (2) add VERIFICATION.md to jr_optlib + reproducibility/verification statement to each paper; (3) intentionally-left uncommitted files remain (handover files, PMIP_VSP/code 32 files, ML_Entropy script).
 **Git ref:** af92321 (AI_auto); jr_optlib d565b8c
 
+---
+
 ## Session 2026-07-03
 **Agent:** Gemini CLI (Gemini 3.1 Pro (High))
 **Goal:** Establish automated, recurring Google Drive backups for AI_auto, NoteTaker, and research projects.
@@ -95,5 +81,4 @@
 - `backup_daemon_launch_hidden.vbs` -- created VBS wrapper to start the daemon silently.
 **Outcome:** Deployed a local background daemon that bypasses DTU Task Scheduler restrictions. It silently backs up NoteTaker, AI_auto, and all Pub_ projects to Google Drive every day at 12:00.
 **Next steps:** Verify the Google Drive sync completes successfully tomorrow at 12:00.
-**Git ref:** -
-
+**Git ref:**

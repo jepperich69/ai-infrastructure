@@ -339,3 +339,10 @@
 ## Archived 2026-07-02 (1 entry)
 
 - **2026-06-03c** (Codex GPT-5.5): Fix `/style-edit` not being recognised after the custom skill rename. -> Gemini now lists `style-edit`, `style-apply`, and `pipeline` as enabled skills; the `.a...
+
+
+---
+
+## Archived 2026-07-03 (1 entry)
+
+- **2026-06-08** (Claude): Fix `run_forum.ps1` failing in Round 2 with `error: unknown option ... -> Forum claude calls now pipe prompts via stdin; `---` in blackboard state can no longer ...
