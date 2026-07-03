@@ -346,3 +346,10 @@
 ## Archived 2026-07-03 (1 entry)
 
 - **2026-06-08** (Claude): Fix `run_forum.ps1` failing in Round 2 with `error: unknown option ... -> Forum claude calls now pipe prompts via stdin; `---` in blackboard state can no longer ...
+
+
+---
+
+## Archived 2026-07-03 (1 entry)
+
+- **2026-06-16** (Claude): Fix `run_forum.ps1` failing for projects outside the `Publikationer... -> Forum (helpi 25) now resolves projects in any subfolder under `JR/`, not only `Publikat...

@@ -4,7 +4,6 @@
 
 ## Compressed sessions
 
-- **2026-06-16** (Claude): Fix `run_forum.ps1` failing for projects outside the `Publikationer... -> Forum (helpi 25) now resolves projects in any subfolder under `JR/`, not only `Publikat...
 - **2026-06-17** (Claude): Extend the AI infrastructure so any non-paper folder under `JR\` ge... -> Verified end-to-end with a throwaway test folder (`JR\_test_generic_project_DELETE_ME`,...
 - **2026-06-19** (Claude): Fix Gemini CLI auth (broken by Google's OAuth deprecation for indiv... -> `gemini` is fully working again, both interactively and from `run_forum.ps1`, on the fl...
 - **2026-06-22** (Claude): Diagnose why interactive `gemini`/`agy` were failing with API/usage... -> Root cause was a Google regression in agy v1.0.9/1.0.10 (OAuth token exchange fails wit...
@@ -20,21 +19,7 @@
 - **2026-07-02 (second session)** (Claude): Build the first slice of the code-robustness system designed last s... -> First slice complete and validated. `ipf_2d` vetted + CERTIFIED via matching-marginals ...
 - **2026-07-02 (third session)** (Gemini CLI): Build a min-cost exact repair oracle for PopInt to verify if greedy... -> Proved via exact LP that exact integer repair for PopInt is mathematically impossible u...
 - **2026-07-02 (Gemini CLI close)** (Gemini CLI): Extract and verify legacy heuristics (VSP SA, Set-Cover Ladder Burn... -> The optimization library jr_optlib is now fully operational, tested, and pushed to GitH...
-
----
-
-## Session 2026-07-02 (fourth session)
-**Agent:** Gemini CLI
-**Goal:** Extract Napsti block-coordinate NLP primitive and the Dijkstra + SUE route-choice bundle into jr_optlib, then review and migrate Pub_ML_Entropy's MH implementation.
-**Files touched:**
-- jr_optlib/src/jr_optlib/optimization/nlp.py -- built generic bilinear solve_coord_wise.
-- jr_optlib/src/jr_optlib/oracles/nlp.py -- built Gurobi-based verification oracle erify_with_gurobi.
-- jr_optlib/src/jr_optlib/optimization/routing.py -- extracted dijkstra_manhattan and compute_route_choice_shares (SUE).
-- jr_optlib/registry/functions.yaml -- registered the three new primitives.
-- Pub_ML_Entropy/code/rulelist/benchmark_rulelist_entropy_mh.py -- replaced custom mh_polish loop with jr_optlib.sampling.mcmc.simulated_annealing.
-**Outcome:** The NLP fixed-point solver and routing (Dijkstra+SUE) were successfully extracted to the shared library. The custom Metropolis-Hastings code for rule-lists in ML_Entropy was reviewed and refactored to use the generic jr_optlib MCMC primitive, which was proven to maintain optimization performance. Pushed jr_optlib to GitHub.
-**Next steps:** Begin adopting jr_optlib directly in Pub_NapstiGranularity_TBA, Pub_CongestionPMIP_TBA, and Pub_PopInt_PartB.
-**Git ref:** 0c2f9d7
+- **2026-07-02 (fourth session)** (Gemini CLI): Extract Napsti block-coordinate NLP primitive and the Dijkstra + SU... -> The NLP fixed-point solver and routing (Dijkstra+SUE) were successfully extracted to th...
 
 ---
 
@@ -82,3 +67,14 @@
 **Outcome:** Deployed a local background daemon that bypasses DTU Task Scheduler restrictions. It silently backs up NoteTaker, AI_auto, and all Pub_ projects to Google Drive every day at 12:00.
 **Next steps:** Verify the Google Drive sync completes successfully tomorrow at 12:00.
 **Git ref:**
+
+---
+
+## Session 2026-07-03 (2)
+**Agent:** Claude Fable 5
+**Goal:** Discuss a portfolio "helicopter view" (surface unexploited/dormant papers) and decide the architecture; build the first component: a per-paper journal-status tracker.
+**Files touched:**
+- `Publikationer\Pub_*\_ai_log.md` (24 paper projects) -- inserted a machine-readable `**Status:**` header line (`status | Journal | Since | Next`) into every paper log; all 24 verified one-by-one with the user.
+**Outcome:** Decided the helicopter view is NOT a RAG (36 logs, 278 KB, fits in context) but an agentic sweep over `_ai_log.md` files; designed the status-line convention and completed the full backfill. Verified portfolio state: 9 papers with journals awaiting decision (5 in R2 review -- OptimismBias/TR-A, ActionSpace_TG/JTG, Diffusion_Ebike/TR-C, EbikeAdaptation/TR-C, FlowPaperSP2/ERSS; 2 in R1 -- MIPEntropy/MPC, PopInt/TR-B; 1 first round -- PMIP_AOR since ~April), NatComm R2-minor nearly ready, 6 close-to-submission (Napsti/TR-B, PMIP_VSP, QP_SAA/MathProg, Riskadversion/EconLetters, SAA_PMIP/EJOR, WTP_BEV/TR-A), 6 WIP, AssesTiming accepted at hEART (1 Oct 2026), NonlinearDiffusion published, AI_Research_Book parked. Log-mining guesses were wrong on 8 of 21 papers, confirming the backfill interview was necessary before any automated portfolio review.
+**Next steps:** (1) wire `/close` to update the status line when a session changes journal status; (2) make `helpi 10` (submission) and `helpi 11` (reviewer scaffold) auto-bump the status; (3) add a pipeline view (by status, not last-activity) to `helpi 13`; (4) build the `/portfolio` helicopter-view skill on top of the now-trustworthy status lines.
+**Git ref:** 3460b45
