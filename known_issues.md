@@ -552,3 +552,54 @@ When a normal Microsoft Edge window was already running, the script's headless `
 **Affects:** `AI_auto/scripts/submit.ps1`
 **Fix:** Set `[Console]::OutputEncoding = [System.Text.Encoding]::UTF8` in scripts that capture the text output of external tools (like `latexdiff` run via Strawberry Perl). This forces PowerShell to decode the external process's stdout bytes as UTF-8 rather than using the legacy console code page (such as Danish CP850), avoiding encoding artifacts like `Ç¿` for curly quotes and `é¼` for the Euro symbol `€`.
 
+
+---
+
+### 43. `research-close` skill references stale handover script path
+**Status:** open
+**Affects:** `C:\Users\rich\.agents\skills\research-close\SKILL.md`
+**Symptom:** The close workflow says to run `C:\Users\rich\OneDrive - Danmarks Tekniske Universitet\JR\AI_auto\generate_handover.ps1`, but that path does not exist. The actual script is `C:\Users\rich\OneDrive - Danmarks Tekniske Universitet\JR\AI_auto\scripts\generate_handover.ps1`.
+**Fix:** Update `research-close/SKILL.md` to use the `scripts\generate_handover.ps1` path, or route handover regeneration through the supported `helpi 7 <project>` workflow.
+
+### 44. Root `AI_auto\helpi.ps1` path is stale; use `scripts\helpi.ps1` or `helpi.cmd`
+**Status:** platform-fact
+
+Some generated instructions and compact platform notes still point agents to:
+`C:\Users\rich\OneDrive - Danmarks Tekniske Universitet\JR\AI_auto\helpi.ps1`
+
+That file does not exist on this machine. The actual entrypoints are:
+- `C:\Users\rich\OneDrive - Danmarks Tekniske Universitet\JR\AI_auto\scripts\helpi.ps1`
+- `C:\Users\rich\OneDrive - Danmarks Tekniske Universitet\JR\AI_auto\helpi.cmd`
+
+Symptom: running the documented root `.ps1` path fails with "The term ...\AI_auto\helpi.ps1 is not recognized". Use the script under `scripts\` or the command shim instead. This is distinct from issue #43, which concerns the stale `generate_handover.ps1` path in the close skill.
+
+---
+
+### 45. PyTorch CPU wheel conflicts with the conda `pyopt` Intel OpenMP runtime
+**Status:** platform-fact
+**Affects:** Python experiments that import both the conda numerical stack and a pip-installed PyTorch CPU wheel in `pyopt`.
+
+Installing/importing PyTorch in the existing `pyopt` conda environment can abort with a duplicate `libiomp5md.dll` initialization error. Do not suppress it with `KMP_DUPLICATE_LIB_OK=TRUE`; that can hide an unsafe mixed-runtime process. Use a project-local virtual environment based on the base Python interpreter and install the complete numerical stack there. Confirmed workaround in `Pub_PopInt_Part2_TBA\.venv_vae` with Python 3.13, PyTorch 2.13 CPU, NumPy 2.5.1, pandas 3.0.3, and scikit-learn 1.9.
+
+Reproducibility note: optional library availability must not select a different algorithmic implementation. In this project, installing scikit-learn changed the former optional `k`-means branch and therefore the cluster labels. `code/maxent_cluster_sweep.py` now always uses the deterministic NumPy implementation that produced the original results.
+
+---
+
+### 46. `helpi 1` does not forward the optional Overleaf Git URL
+**Status:** open
+**Affects:** `AI_auto/scripts/helpi.ps1`
+**Symptom:** `helpi 1 Pub_Seed_TBA https://git.overleaf.com/<id>` displays and invokes only `new_project.ps1 -Project Pub_Seed_TBA`. The URL is dropped, so the scaffold creates a placeholder `Overleaf_source/` instead of cloning and registering the supplied repository.
+**Fix:** In the command-1 dispatch, pass the third positional value through as `-GitUrl` when present. Add a regression check covering both `helpi 1 <project>` and `helpi 1 <project> <git-url>`.
+
+### 47. `auto_handover.ps1` has a UTF-8 BOM that breaks PowerShell execution
+**Status:** open
+**Affects:** `AI_auto/scripts/auto_handover.ps1`
+**Symptom:** During `helpi 1`, PowerShell reads the leading BOM as part of the first token (`﻿#`) and then treats the later `param` block as a command. Project creation continues, but scheduled-task registration is not reliable.
+**Fix:** Rewrite `auto_handover.ps1` as UTF-8 without BOM and verify that the `param` block is the first executable construct. Add a BOM check for `.ps1` infrastructure files.
+
+### 48. Same-day sessions were tie-broken alphabetically, so the handover described the wrong session
+**Status:** FIXED 2026-07-30
+**Affects:** `AI_auto/scripts/ai_log_tools.ps1`, `Get-AiLogLatestSession`
+**Symptom:** On any day with more than one session in `_ai_log.md`, the generated handover silently described whichever session's TITLE sorted highest alphabetically, not the newest one. The sort keyed on date descending, then on the title text after the date descending, and only then on `order` (position in the file) -- but the title tiebreak fires first and always decides, because same-day titles differ. In `Pub_PMIP_VSP` on 2026-07-30 there were six blocks; the handover reported block 2, "(the joint dwell, and the automation premium as a breakeven)", while the newest was block 5, "(ladder rung E2, ...)" -- "the j" sorts above "the a" and "(l". The failure is silent: the handover looks well-formed and internally consistent, and its "Next steps" section confidently describes work already finished. Any project doing several sessions a day has been handing over a stale brief.
+**Fix:** APPLIED. The title tiebreak is removed; within one date, position in the file decides. Verified on `Pub_PMIP_VSP` (now returns the E2 block) and cross-checked against five other projects, which resolve unchanged.
+**Related:** the same generator warns `Latest session block is incomplete: Outcome` when a block writes `**Outcome.**` with a period instead of `**Outcome:**` with a colon. The field is then emitted EMPTY rather than the block being rejected, so the handover looks fine apart from one blank line. Several `Pub_PMIP_VSP` blocks used the period form. Worth a tolerant match on `**Outcome**` followed by either punctuation.

@@ -74,14 +74,15 @@ function Get-AiLogLatestSession {
 
     $sessions = Get-AiLogSessions -Path $Path
     if ($sessions.Count -eq 0) { return $null }
+    # Within one date, POSITION IN THE FILE decides, never the title text.
+    # The title used to be the tiebreak, which sorted same-day sessions
+    # alphabetically: on a day with several sessions the handover silently
+    # described whichever title sorted highest rather than the newest one.
     return $sessions |
         Sort-Object `
             @{ Expression = {
                     if ($_.title -match '^(\d{4}-\d{2}-\d{2})') { [datetime]::ParseExact($Matches[1], 'yyyy-MM-dd', $null) }
                     else { [datetime]::MinValue }
-                }; Descending = $true }, `
-            @{ Expression = {
-                    if ($_.title -match '^\d{4}-\d{2}-\d{2}(.*)$') { $Matches[1] } else { '' }
                 }; Descending = $true }, `
             @{ Expression = { $_.order }; Descending = $true } |
         Select-Object -First 1
