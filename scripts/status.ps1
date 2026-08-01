@@ -67,12 +67,21 @@ foreach ($proj in $projects) {
         }
     }
 
+    # Context budget: .claude/CLAUDE.md is loaded into EVERY session, so its
+    # size is a running cost. It bloats when findings are written into it
+    # instead of into a record document. Hard ceiling is 150,000 chars, past
+    # which the file stops loading at all.
+    $claudeChars = 0
+    $claudeMd = Join-Path $proj.FullName ".claude\CLAUDE.md"
+    if (Test-Path $claudeMd) { $claudeChars = (Get-Item $claudeMd).Length }
+
     $rows += [PSCustomObject]@{
         Project        = $proj.Name
         "Last Session" = $lastSession
         "Code"         = $codeStatus
         "Last Commit"  = $lastCommit
         "Overleaf"     = $overleafStatus
+        "ClaudeChars"  = $claudeChars
     }
 }
 
@@ -96,8 +105,28 @@ foreach ($r in $rows) {
     Write-Host $r.Code -ForegroundColor $codeColor
     Write-Host -NoNewline "    Overleaf: "
     Write-Host $r.Overleaf -ForegroundColor $olColor
+    if ($r.ClaudeChars -ge 40000) {
+        $ctxColor = if ($r.ClaudeChars -ge 100000) { "Red" } else { "Yellow" }
+        Write-Host -NoNewline "    Context : "
+        Write-Host ("CLAUDE.md {0:N0} chars" -f $r.ClaudeChars) -ForegroundColor $ctxColor
+    }
     Write-Host ""
 }
 
 Write-Host "  $($rows.Count) active project(s). Use -All to include projects without session logs." -ForegroundColor DarkCyan
+
+$bloated = @($rows | Where-Object { $_.ClaudeChars -ge 100000 })
+$drifting = @($rows | Where-Object { $_.ClaudeChars -ge 40000 -and $_.ClaudeChars -lt 100000 })
+if ($bloated.Count -gt 0) {
+    Write-Host ""
+    Write-Host "  CONTEXT BUDGET: needs splitting (hard ceiling 150,000)" -ForegroundColor Red
+    foreach ($b in $bloated) { Write-Host ("    {0}: {1:N0} chars" -f $b.Project, $b.ClaudeChars) -ForegroundColor Red }
+    Write-Host "    CLAUDE.md holds RULES. Findings belong in a record document." -ForegroundColor DarkGray
+    Write-Host "    Mechanical split: AI_auto\scripts\split_claude_md.ps1" -ForegroundColor DarkGray
+}
+elseif ($drifting.Count -gt 0) {
+    Write-Host ""
+    Write-Host "  CONTEXT BUDGET: drifting, check for findings accumulating in CLAUDE.md" -ForegroundColor Yellow
+    foreach ($d in $drifting) { Write-Host ("    {0}: {1:N0} chars" -f $d.Project, $d.ClaudeChars) -ForegroundColor Yellow }
+}
 Write-Host ""
