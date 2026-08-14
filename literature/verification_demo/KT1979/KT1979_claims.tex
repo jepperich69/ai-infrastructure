@@ -1,0 +1,258 @@
+\documentclass[11pt]{article}
+\usepackage{amsmath,amssymb}
+\title{Kahneman \& Tversky (1979), \emph{Prospect Theory} --- transcribed checkable claims}
+\author{Transcription for machine verification (source: Econometrica 47(2), 263--292)}
+\date{}
+
+% NOTE ON PROVENANCE
+% Every equation below is transcribed verbatim (up to notation) from the published
+% paper, with the page number given. Nothing is added, reformulated, or "fixed".
+% Premises are the paper's own stated modal preferences; conclusions are the
+% paper's own stated consequences. The machine check asks only: does each stated
+% conclusion follow from the stated premise by the algebra claimed?
+
+\begin{document}
+\maketitle
+
+\section{Section 2 --- Critique of expected utility}
+
+\paragraph{Allais pair (Problems 1 and 2, p.~266).}
+Expected values of the four prospects:
+\begin{equation}\label{eq:p1-ev-A}
+\mathbb{E}[A] = 0.33 \cdot 2500 + 0.66 \cdot 2400 + 0.01 \cdot 0 = 2409, \qquad \mathbb{E}[B] = 2400 .
+\end{equation}
+\begin{equation}\label{eq:p2-ev}
+\mathbb{E}[C] = 0.33 \cdot 2500 = 825, \qquad \mathbb{E}[D] = 0.34 \cdot 2400 = 816 .
+\end{equation}
+
+With $u(0)=0$, the preference $B \succ A$ in Problem 1 is stated to imply
+\begin{equation}\label{eq:allais-eu}
+u(2400) > 0.33\,u(2500) + 0.66\,u(2400)
+\quad\Longrightarrow\quad
+0.34\,u(2400) > 0.33\,u(2500).
+\end{equation}
+
+\paragraph{Problems 3 and 4 (p.~266).}
+The choice of $B=(3000)$ over $A=(4000,0.80)$ is stated to imply
+\begin{equation}\label{eq:p3-ratio}
+u(3000) > 0.80\,u(4000)
+\quad\Longrightarrow\quad
+\frac{u(3000)}{u(4000)} > \frac{4}{5},
+\end{equation}
+whereas the choice of $C=(4000,0.20)$ over $D=(3000,0.25)$ implies the reverse:
+\begin{equation}\label{eq:p4-ratio}
+0.20\,u(4000) > 0.25\,u(3000)
+\quad\Longrightarrow\quad
+\frac{u(3000)}{u(4000)} < \frac{4}{5}.
+\end{equation}
+Expected values:
+\begin{equation}\label{eq:p34-ev}
+\mathbb{E}[(4000,0.80)] = 3200, \qquad \mathbb{E}[(4000,0.20)] = 800, \qquad \mathbb{E}[(3000,0.25)] = 750 .
+\end{equation}
+
+\paragraph{Problems 7 and 8 (p.~267).}
+\begin{equation}\label{eq:p78-ev}
+\mathbb{E}[(6000,0.45)] = \mathbb{E}[(3000,0.90)] = 2700,
+\qquad
+\mathbb{E}[(6000,0.001)] = \mathbb{E}[(3000,0.002)] = 6 .
+\end{equation}
+
+\paragraph{Reflection effect, variance argument (p.~269).}
+The text states that $(-3000)$ has both higher expected value and lower variance
+than $(-4000,0.80)$:
+\begin{equation}\label{eq:reflect-var}
+\mathbb{E}[(-4000,0.80)] = -3200 < -3000,
+\qquad
+\operatorname{Var}[(-4000,0.80)] = 0.8\cdot 0.2\cdot 4000^2 = 2\,560\,000 > 0 .
+\end{equation}
+
+\paragraph{Probabilistic insurance, expected-utility proof (p.~270).}
+The paper shows that
+\begin{equation}\label{eq:probins-premise}
+p\,u(w-x) + (1-p)\,u(w) = u(w-y)
+\end{equation}
+implies
+\begin{equation}\label{eq:probins-goal}
+(1-r)p\,u(w-x) + rp\,u(w-y) + (1-p)\,u(w-ry) > u(w-y).
+\end{equation}
+Setting $u(w-x)=0$ and $u(w)=1$ gives $u(w-y)=1-p$, and the claim reduces to
+\begin{equation}\label{eq:probins-reduce}
+rp(1-p) + (1-p)\,u(w-ry) > 1-p
+\quad\Longleftrightarrow\quad
+u(w-ry) > 1 - rp .
+\end{equation}
+
+\paragraph{Isolation effect (Problem 10, p.~271).}
+\begin{equation}\label{eq:p10-compound}
+0.25 \times 0.80 = 0.20, \qquad 0.25 \times 1.00 = 0.25 .
+\end{equation}
+
+\paragraph{Bonus framing (Problems 11 and 12, p.~273).}
+In terms of final states,
+\begin{equation}\label{eq:p1112-identity}
+A = (2000,0.50;\,1000,0.50) = C,
+\qquad
+B = (1500) = D,
+\end{equation}
+where Problem 11 adds a bonus of $1000$ to $(1000,0.50)$ and $(500)$, and Problem 12
+adds a bonus of $2000$ to $(-1000,0.50)$ and $(-500)$.
+
+\section{Section 3 --- Theory}
+
+\paragraph{Equation (2) and its reduction to equation (1) (p.~276).}
+For $p+q=1$ and $x>y>0$ (or $x<y<0$),
+\begin{equation}\label{eq:eq2-form}
+V(x,p;y,q) = v(y) + \pi(p)\,[\,v(x) - v(y)\,]
+= \pi(p)\,v(x) + [\,1-\pi(p)\,]\,v(y),
+\end{equation}
+which coincides with equation (1), $V = \pi(p)v(x) + \pi(q)v(y)$ with $q=1-p$, if and only if
+\begin{equation}\label{eq:eq2-reduces}
+\pi(p) + \pi(1-p) = 1 .
+\end{equation}
+
+\paragraph{Concavity of $v$ for gains (Problem 13, p.~278).}
+Applying equation (1) to the modal preferences yields
+\begin{equation}\label{eq:p13-concave}
+\pi(0.25)\,v(6000) < \pi(0.25)\,[\,v(4000)+v(2000)\,]
+\quad\Longrightarrow\quad
+v(6000) < v(4000)+v(2000),
+\end{equation}
+and, for the reflected problem,
+\begin{equation}\label{eq:p13-convex}
+\pi(0.25)\,v(-6000) > \pi(0.25)\,[\,v(-4000)+v(-2000)\,]
+\quad\Longrightarrow\quad
+v(-6000) > v(-4000)+v(-2000).
+\end{equation}
+
+\paragraph{Loss aversion (p.~279).}
+If $(y,0.50;-y,0.50) \succ (x,0.50;-x,0.50)$ for $x>y\ge 0$, then by equation (1)
+\begin{equation}\label{eq:lossav}
+v(y)+v(-y) > v(x)+v(-x)
+\quad\Longleftrightarrow\quad
+v(-y)-v(-x) > v(x)-v(y).
+\end{equation}
+Setting $y=0$ (with $v(0)=0$) yields
+\begin{equation}\label{eq:lossav-y0}
+v(x) < -v(-x).
+\end{equation}
+
+\paragraph{Subadditivity for small $p$ (Problem 8, p.~281).}
+The preference for $(6000,0.001)$ over $(3000,0.002)$ gives
+\begin{equation}\label{eq:subadd}
+\pi(0.001)\,v(6000) > \pi(0.002)\,v(3000)
+\quad\Longrightarrow\quad
+\frac{\pi(0.001)}{\pi(0.002)} > \frac{v(3000)}{v(6000)} > \frac{1}{2},
+\end{equation}
+the last inequality holding by the concavity of $v$.
+
+\paragraph{Overweighting of low probabilities (Problem 14, p.~281).}
+The preference for $(5000,0.001)$ over $(5)$ implies
+\begin{equation}\label{eq:overweight}
+\pi(0.001)\,v(5000) > v(5)
+\quad\Longrightarrow\quad
+\pi(0.001) > \frac{v(5)}{v(5000)} > 0.001,
+\end{equation}
+assuming $v$ is concave for gains. Note $\mathbb{E}[(5000,0.001)] = 5$.
+
+\paragraph{Subcertainty (Problems 1 and 2, p.~282).}
+Applying equation (1) to the prevalent preferences yields
+\begin{equation}\label{eq:subcert-1}
+v(2400) > \pi(0.66)\,v(2400) + \pi(0.33)\,v(2500)
+\quad\Longrightarrow\quad
+[\,1-\pi(0.66)\,]\,v(2400) > \pi(0.33)\,v(2500),
+\end{equation}
+\begin{equation}\label{eq:subcert-2}
+\pi(0.33)\,v(2500) > \pi(0.34)\,v(2400),
+\end{equation}
+hence
+\begin{equation}\label{eq:subcert-3}
+1-\pi(0.66) > \pi(0.34)
+\quad\Longleftrightarrow\quad
+\pi(0.66) + \pi(0.34) < 1 .
+\end{equation}
+
+\paragraph{Subproportionality (p.~282).}
+If $(x,p) \sim (y,pq)$ then $(x,pr) \preceq (y,pqr)$, so by equation (1)
+\begin{equation}\label{eq:subprop}
+\pi(p)\,v(x) = \pi(pq)\,v(y)
+\ \text{ and }\
+\pi(pr)\,v(x) \le \pi(pqr)\,v(y)
+\quad\Longrightarrow\quad
+\frac{\pi(pq)}{\pi(p)} \le \frac{\pi(pqr)}{\pi(pr)} .
+\end{equation}
+Equivalently, this holds if and only if $\log \pi$ is a convex function of $\log p$.
+
+\paragraph{Dominance and near-linearity of $\pi$ (p.~284).}
+With $x>y>0$, $p>p'$ and $p+q=p'+q'<1$, preference obeying dominance gives
+\begin{equation}\label{eq:dominance}
+\pi(p)v(x) + \pi(q)v(y) > \pi(p')v(x) + \pi(q')v(y)
+\quad\Longrightarrow\quad
+\frac{\pi(p)-\pi(p')}{\pi(q')-\pi(q)} > \frac{v(y)}{v(x)} .
+\end{equation}
+
+\section{Section 4 --- Discussion}
+
+\paragraph{Allais condition (p.~284).}
+The dominant pattern in Problems 1 and 2 follows from the theory if and only if
+\begin{equation}\label{eq:allais-cond}
+\frac{\pi(0.33)}{\pi(0.34)} > \frac{v(2400)}{v(2500)} > \frac{\pi(0.33)}{1-\pi(0.66)} .
+\end{equation}
+This requires
+\begin{equation}\label{eq:allais-subcert}
+\pi(0.34) < 1 - \pi(0.66).
+\end{equation}
+
+\paragraph{Substitution-axiom condition (Problems 7 and 8, p.~285).}
+The observed choices are implied by the theory if and only if
+\begin{equation}\label{eq:subst-cond}
+\frac{\pi(0.001)}{\pi(0.002)} > \frac{v(3000)}{v(6000)} > \frac{\pi(0.45)}{\pi(0.90)} .
+\end{equation}
+
+\paragraph{Probabilistic insurance under prospect theory (p.~285).}
+Define $f(x) = -v(-x)$ for $x \ge 0$; $f$ is concave because $v$ is convex for losses.
+The claim is that $\pi(p)f(x) = f(y)$ implies
+\begin{equation}\label{eq:probins-pt-goal}
+f(y) \;\le\; f(y/2) + \pi(p/2)\,[\,f(y)-f(y/2)\,] + \pi(p/2)\,[\,f(x)-f(y/2)\,]
+= \pi(p/2)f(x) + \pi(p/2)f(y) + [\,1-2\pi(p/2)\,]\,f(y/2).
+\end{equation}
+Substituting for $f(x)$ and using the concavity of $f$, it suffices to show
+\begin{equation}\label{eq:probins-pt-suffices}
+f(y) \;\le\; \frac{\pi(p/2)}{\pi(p)}\,f(y) + \pi(p/2)f(y) + \frac{f(y)}{2} - \pi(p/2)f(y),
+\end{equation}
+or
+\begin{equation}\label{eq:probins-pt-final}
+\frac{\pi(p)}{2} \le \pi(p/2),
+\end{equation}
+which follows from the subadditivity of $\pi$.
+
+\paragraph{Risk seeking for small probabilities (p.~285).}
+For the choice between the gamble $(x,p)$ and its expected value $(px)$ with $x>0$,
+risk seeking holds iff $\pi(p)v(x) > v(px)$, i.e.
+\begin{equation}\label{eq:riskseek}
+\pi(p) > \frac{v(px)}{v(x)},
+\end{equation}
+and the paper states that $v(px)/v(x) > p$ whenever $v$ is concave for gains, so that
+overweighting $\pi(p)>p$ is necessary but not sufficient for risk seeking:
+\begin{equation}\label{eq:riskseek-necessary}
+\frac{v(px)}{v(x)} > p .
+\end{equation}
+
+\section{Claims recorded as not machine-checkable}
+
+The following are recorded so that the boundary of the audit is explicit.
+\begin{itemize}
+\item The empirical response percentages ($N$, bracketed percentages, significance
+      at the $.01$ level) --- data, not derivations.
+\item The editing-phase operations (coding, combination, segregation, cancellation,
+      simplification, dominance detection) --- definitions of a psychological process.
+\item The existence and uniqueness of $\pi$ and a ratio-scale $v$ satisfying
+      equation (1) (Appendix axiomatisation) --- a representation theorem.
+\item ``$\pi$ is not well behaved near the endpoints'' and the quantal-effect
+      discussion --- qualitative modelling assertions.
+\item The shapes in Figures 3 and 4 --- hypothetical illustrations, not claims.
+\item ``It can be shown that if $\pi(p)>p$ and subproportionality holds, then
+      $\pi(rp) > r\pi(p)$'' --- an unproved assertion in the source; no derivation
+      is given to check.
+\end{itemize}
+
+\end{document}

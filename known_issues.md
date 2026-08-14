@@ -603,3 +603,11 @@ Reproducibility note: optional library availability must not select a different 
 **Symptom:** On any day with more than one session in `_ai_log.md`, the generated handover silently described whichever session's TITLE sorted highest alphabetically, not the newest one. The sort keyed on date descending, then on the title text after the date descending, and only then on `order` (position in the file) -- but the title tiebreak fires first and always decides, because same-day titles differ. In `Pub_PMIP_VSP` on 2026-07-30 there were six blocks; the handover reported block 2, "(the joint dwell, and the automation premium as a breakeven)", while the newest was block 5, "(ladder rung E2, ...)" -- "the j" sorts above "the a" and "(l". The failure is silent: the handover looks well-formed and internally consistent, and its "Next steps" section confidently describes work already finished. Any project doing several sessions a day has been handing over a stale brief.
 **Fix:** APPLIED. The title tiebreak is removed; within one date, position in the file decides. Verified on `Pub_PMIP_VSP` (now returns the E2 block) and cross-checked against five other projects, which resolve unchanged.
 **Related:** the same generator warns `Latest session block is incomplete: Outcome` when a block writes `**Outcome.**` with a period instead of `**Outcome:**` with a colon. The field is then emitted EMPTY rather than the block being rejected, so the handover looks fine apart from one blank line. Several `Pub_PMIP_VSP` blocks used the period form. Worth a tolerant match on `**Outcome**` followed by either punctuation.
+
+---
+
+### 49. Infrastructure launcher is `helpi.cmd`, not `helpi.ps1`
+**Status:** platform-fact
+**Affects:** Agent commands that invoke `helpi` by absolute path.
+
+The file `C:\Users\rich\OneDrive - Danmarks Tekniske Universitet\JR\AI_auto\helpi.ps1` no longer exists. The launcher is `C:\Users\rich\OneDrive - Danmarks Tekniske Universitet\JR\AI_auto\helpi.cmd`, while the PowerShell implementation lives under `AI_auto\scripts\helpi.ps1`. Use the absolute `.cmd` launcher for documented `helpi N ...` operations. This supersedes the absolute-path example in issue 19.

@@ -1,0 +1,64 @@
+======================================================================================================================
+Kahneman & Tversky (1979), Prospect Theory -- machine verification of the stated derivations
+======================================================================================================================
+
+--- Section 2: critique of expected utility ---
+eq:p1-ev-A                         | NUMERIC      | PASS | checked: 0.33*2500 + 0.66*2400 + 0.01*0 | got: 2409.000000 vs stated 2409
+eq:p1-ev-A/dominance               | NUMERIC      | PASS | checked: E[A] - E[B] > 0  (the rejected prospect has the higher EV) | got: 1.000000000 vs stated 1
+eq:p2-ev/C                         | NUMERIC      | PASS | checked: 0.33*2500 | got: 825.0000000 vs stated 825
+eq:p2-ev/D                         | NUMERIC      | PASS | checked: 0.34*2400 | got: 816.0000000 vs stated 816
+eq:allais-eu                       | IMPLICATION  | PASS | checked: u2400 - (.33u2500 + .66u2400)  ->  .34u2400 - .33u2500 | got: C - m*P = 0  [m = 1]
+eq:p3-ratio                        | IMPLICATION  | PASS | checked: divide u3000 - .8u4000 > 0 by u4000 > 0 | got: C - m*P = 0  [m = 1/u4000]
+eq:p4-ratio                        | IMPLICATION  | PASS | checked: divide .2u4000 - .25u3000 > 0 by .25*u4000 > 0 | got: C - m*P = 0  [m = 4/u4000]
+eq:p34-ev/A                        | NUMERIC      | PASS | checked: 0.80*4000 | got: 3200.000000 vs stated 3200
+eq:p34-ev/C                        | NUMERIC      | PASS | checked: 0.20*4000 | got: 800.0000000 vs stated 800
+eq:p34-ev/D                        | NUMERIC      | PASS | checked: 0.25*3000 | got: 750.0000000 vs stated 750
+eq:p78-ev/P7                       | NUMERIC      | PASS | checked: E[(6000,.45)] - E[(3000,.90)] | got: 0 vs stated 0 | note: both equal 2700 -- EV cannot explain the choice
+eq:p78-ev/P8                       | NUMERIC      | PASS | checked: E[(6000,.001)] - E[(3000,.002)] | got: 0 vs stated 0 | note: both equal 6
+eq:reflect-var/EV                  | NUMERIC      | PASS | checked: E[(-4000,.80)] | got: -3200.000000 vs stated -3200 | note: -3200 < -3000, so (-3000) has the higher EV as stated
+eq:reflect-var/Var                 | NUMERIC      | PASS | checked: Var[(-4000,.80)] = p(1-p)x^2 | got: 2560000.000 vs stated 2560000 | note: the sure loss has variance 0, so lower as stated
+eq:probins-premise                 | NUMERIC      | PASS | checked: solve p*u(w-x) + (1-p)u(w) = u(w-y) with u(w-x)=0, u(w)=1 | got: 1.0 - p vs stated 1 - p
+eq:probins-reduce                  | IMPLICATION  | PASS | checked: goal residual == (1-p) * [u(w-ry) - (1-rp)];  1-p > 0 | got: C - m*P = 0  [m = 1 - p]
+eq:p10-compound/a                  | NUMERIC      | PASS | checked: 0.25*0.80 | got: 0.2000000000 vs stated 1/5
+eq:p10-compound/b                  | NUMERIC      | PASS | checked: 0.25*1.00 | got: 0.2500000000 vs stated 1/4
+eq:p1112-identity/A-hi             | NUMERIC      | PASS | checked: bonus 1000 + gain 1000 | got: 2000.000000 vs stated 2000
+eq:p1112-identity/A-lo             | NUMERIC      | PASS | checked: bonus 1000 + gain 0 | got: 1000.000000 vs stated 1000
+eq:p1112-identity/C-hi             | NUMERIC      | PASS | checked: bonus 2000 + loss 0 | got: 2000.000000 vs stated 2000
+eq:p1112-identity/C-lo             | NUMERIC      | PASS | checked: bonus 2000 - loss 1000 | got: 1000.000000 vs stated 1000
+eq:p1112-identity/B                | NUMERIC      | PASS | checked: bonus 1000 + sure 500 | got: 1500.000000 vs stated 1500
+eq:p1112-identity/D                | NUMERIC      | PASS | checked: bonus 2000 - sure 500 | got: 1500.000000 vs stated 1500
+
+--- Section 3: theory ---
+eq:eq2-form                        | IDENTITY     | PASS | checked: v(y) + pi(p)[v(x)-v(y)]  ==  pi(p)v(x) + [1-pi(p)]v(y) | got: residual = 0
+eq:eq2-reduces                     | SOLVE        | PASS | checked: solve [1-pi(p)]v(y) - pi(1-p)v(y) = 0 for pi(1-p) | got: pi(1-p) = 1 - pi_p  i.e.  pi(p)+pi(1-p) = 1
+eq:p13-concave                     | IMPLICATION  | PASS | checked: divide by pi(.25) > 0 | got: C - m*P = 0  [m = 1/pi25]
+eq:p13-convex                      | IMPLICATION  | PASS | checked: divide by pi(.25) > 0 | got: C - m*P = 0  [m = 1/pi25]
+eq:lossav                          | IDENTITY     | PASS | checked: v(y)+v(-y) > v(x)+v(-x)  <=>  v(-y)-v(-x) > v(x)-v(y) | got: residual = 0
+eq:lossav-y0                       | IMPLICATION  | PASS | checked: set y=0 with v(0)=0  ->  v(x) < -v(-x) | got: C - m*P = 0  [m = 1]
+eq:subadd/link1                    | IMPLICATION  | PASS | checked: divide by pi(.002)*v(6000) > 0 | got: C - m*P = 0  [m = 1/(pi002*v6000)]
+eq:subadd/link2                    | IMPLICATION  | PASS | checked: concavity chord v(.5*6000) >= .5*v(6000)+.5*v(0), then divide by v(6000) | got: C - m*P = 0  [m = 1/v6000] | note: chord gives >= ; the paper's strict > needs STRICT concavity
+eq:overweight/link1                | IMPLICATION  | PASS | checked: divide by v(5000) > 0 | got: C - m*P = 0  [m = 1/v5000]
+eq:overweight/link2                | IMPLICATION  | PASS | checked: concavity chord v(.001*5000) >= .001*v(5000), then divide by v(5000) | got: C - m*P = 0  [m = 1/v5000] | note: chord gives >= ; the paper's strict > needs STRICT concavity
+eq:overweight/ev                   | NUMERIC      | PASS | checked: E[(5000,.001)] | got: 5.000000000 vs stated 5
+eq:subcert-1                       | IMPLICATION  | PASS | checked: collect v(2400) terms | got: C - m*P = 0  [m = 1]
+eq:subcert-3                       | IMPLICATION  | PASS | checked: add the two positive residuals, divide by v(2400) > 0 | got: C - m*P = 0  [m = 1/v2400] | note: chained: uses both Problem 1 and Problem 2
+eq:subprop                         | IMPLICATION  | PASS | checked: eliminate v(x) via pi(p)v(x)=pi(pq)v(y), divide by v(y)*pi(pr) > 0 | got: C - m*P = 0  [m = 1/(pi_pr*vy)]
+eq:dominance                       | IMPLICATION  | PASS | checked: divide by v(x)*[pi(q')-pi(q)] > 0 | got: C - m*P = 0  [m = 1/(vx*(-pi_q + pi_qp))] | note: positivity of the multiplier needs pi increasing and q' > q
+
+--- Section 4: discussion ---
+eq:allais-cond/upper               | IMPLICATION  | PASS | checked: from Problem 2: divide pi33*v2500 - pi34*v2400 > 0 by pi34*v2500 > 0 | got: C - m*P = 0  [m = 1/(pi34*v2500)]
+eq:allais-cond/lower               | IMPLICATION  | PASS | checked: from Problem 1: divide by v2500*(1-pi66) > 0 | got: C - m*P = 0  [m = 1/(v2500*(1 - pi66))] | note: needs 1 - pi(.66) > 0
+eq:allais-subcert                  | IDENTITY     | PASS | checked: the two-sided condition is non-empty iff pi(.34) < 1 - pi(.66) | got: residual = 0
+eq:subst-cond/lower                | IMPLICATION  | PASS | checked: from Problem 7: divide by pi(.90)*v(6000) > 0 | got: C - m*P = 0  [m = 1/(pi90*v6000)]
+eq:subst-cond/upper                | IMPLICATION  | PASS | checked: same certificate as eq:subadd/link1 | got: reused | note: not re-derived
+eq:probins-pt-goal                 | IDENTITY     | PASS | checked: the two forms of the RHS of the prospect-theory bound agree | got: residual = 0
+eq:probins-pt-suffices             | IDENTITY     | PASS | checked: substitute f(x)=f(y)/pi(p) and f(y/2)=f(y)/2 into the bound | got: residual = 0
+eq:probins-pt-final                | IMPLICATION  | PASS | checked: multiply [RHS - f(y)] by pi(p)/f(y) > 0  ->  pi(p/2) - pi(p)/2 | got: C - m*P = 0  [m = pi_p/f_y]
+eq:probins-pt-suffices/side        | SIDE-COND    | FLAG | checked: RHS(f(y/2)) - RHS(f(y)/2), using concavity f(y/2) >= f(y)/2 | got: gap = (f_y - 2*f_y2)*(pi_h - 1/2) | note: sign of the gap requires 1 - 2*pi(p/2) >= 0, i.e. pi(p/2) <= 1/2 -- an assumption the paper does not state; if pi(p/2) > 1/2 the 'it suffices to show' step reverses
+eq:riskseek                        | IMPLICATION  | PASS | checked: divide pi(p)v(x) > v(px) by v(x) > 0 | got: C - m*P = 0  [m = 1/vx]
+eq:riskseek-necessary              | IMPLICATION  | PASS | checked: concavity chord v(px) >= p*v(x) + (1-p)*v(0), divide by v(x) > 0 | got: C - m*P = 0  [m = 1/vx] | note: chord gives >= ; the paper's strict > needs STRICT concavity
+
+======================================================================================================================
+TOTALS: 49 checks run -- 49 passed, 0 failed, 0 errored; 1 side condition(s) flagged.
+NOT-CHECKABLE (recorded, not run): 6 -- response data; editing-phase definitions; the Appendix representation theorem; endpoint behaviour of pi; Figures 3-4; and the unproved assertion pi(p)>p & subproportionality => pi(rp)>r*pi(p).
+======================================================================================================================
