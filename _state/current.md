@@ -1,6 +1,6 @@
-# State -- 2026-07-03
-**Phase:** Active development -- portfolio status tracker built (status lines in all 24 paper logs, user-verified); /portfolio helicopter-view skill and status automation pending
-**Last session:** Designed the portfolio helicopter view (agentic sweep over _ai_log.md files, not RAG) and built its foundation: a machine-readable **Status:** line (status | Journal | Since | Next) inserted and verified one-by-one in all 24 paper project logs. Portfolio: 9 papers awaiting journal decisions (5 R2, 2 R1, 1 first round), 1 R2-minor nearly out (NatComm), 6 close-to-submission, 6 WIP, 1 published, 1 parked, 1 conference-accepted (hEART 1 Oct 2026).
-**Next:** (1) /close updates status line on status-changing sessions; (2) helpi 10/11 auto-bump status; (3) helpi 13 pipeline view by status; (4) build /portfolio skill. Carried over: rewire papers to jr_optlib; VERIFICATION.md; gurobi.lic.
-**Git ref:** 3460b45
-**Agent:** Claude Fable 5
+# State -- 2026-08-14
+**Phase:** Active development -- verification stack (/verify-math, /verify-model, jr_optlib) now has a presentation and a worked literature demo; portfolio status tracker built earlier, /portfolio skill still pending
+**Last session:** Built a 41-slide Beamer deck on mathematical verification and certification (`presentations\verification\`). Section 5 is a live run: Kahneman & Tversky (1979) checked end to end -- 49/49 derivations pass, one unstated side condition found in the p.285 probabilistic-insurance proof, three strictness gaps. Introduced the positive-multiplier certificate method (`C = m*P`, `m > 0`) for checking implication chains in prose-heavy theory papers.
+**Next:** (1) decide whether to trim ~4 slides for a 25-min slot; (2) reconcile jr_optlib doc counts (functions.yaml: 40 vetted + 2 experimental; README says 41 vetted / 139 tests; INDEX.md lists 45 rows; actual tests 143); (3) run /catch-up for known issues #43, #46, #47. Carried over: /portfolio skill; /close updates status line; helpi 10/11 auto-bump status; helpi 13 pipeline view; rewire papers to jr_optlib; VERIFICATION.md; gurobi.lic.
+**Git ref:** 3193e67
+**Agent:** Claude Opus 5

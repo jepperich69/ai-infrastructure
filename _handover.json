@@ -1,15 +1,23 @@
 {
   "project": "AI_auto",
-  "generated": "2026-07-03 23:54",
+  "generated": "2026-08-14 12:40",
   "source": "_ai_log.md",
   "latest_session": {
-    "title": "2026-07-03 (2)",
-    "agent": "Claude Fable 5",
-    "goal": "Discuss a portfolio \"helicopter view\" (surface unexploited/dormant papers) and decide the architecture; build the first component: a per-paper journal-status tracker.",
-    "outcome": "Decided the helicopter view is NOT a RAG (36 logs, 278 KB, fits in context) but an agentic sweep over `_ai_log.md` files; designed the status-line convention and completed the full backfill. Verified portfolio state: 9 papers with journals awaiting decision (5 in R2 review -- OptimismBias/TR-A, ActionSpace_TG/JTG, Diffusion_Ebike/TR-C, EbikeAdaptation/TR-C, FlowPaperSP2/ERSS; 2 in R1 -- MIPEntropy/MPC, PopInt/TR-B; 1 first round -- PMIP_AOR since ~April), NatComm R2-minor nearly ready, 6 close-to-submission (Napsti/TR-B, PMIP_VSP, QP_SAA/MathProg, Riskadversion/EconLetters, SAA_PMIP/EJOR, WTP_BEV/TR-A), 6 WIP, AssesTiming accepted at hEART (1 Oct 2026), NonlinearDiffusion published, AI_Research_Book parked. Log-mining guesses were wrong on 8 of 21 papers, confirming the backfill interview was necessary before any automated portfolio review.",
-    "next_steps": "(1) wire `/close` to update the status line when a session changes journal status; (2) make `helpi 10` (submission) and `helpi 11` (reviewer scaffold) auto-bump the status; (3) add a pipeline view (by status, not last-activity) to `helpi 13`; (4) build the `/portfolio` helicopter-view skill on top of the now-trustworthy status lines.",
-    "git_ref": "3460b45",
-    "files_touched": "`Publikationer\\Pub_*\\_ai_log.md` (24 paper projects) -- inserted a machine-readable `**Status:**` header line (`status | Journal | Since | Next`) into every paper log; all 24 verified one-by-one with the user."
+    "title": "2026-08-14",
+    "agent": "Claude Opus 5",
+    "goal": "Build a presentation on how we do mathematical verification and certification of the math, in nine sections (idea, tools, numerical/symbolic, example of use, a literature paper, workflow diagram, limitations, install, conclusion).",
+    "outcome": "Deck delivered. Section 5 is a real run, not a mock-up: Kahneman & Tversky (1979) checked end to end, 49/49 derivations pass, plus one unstated side condition found in the p.285 probabilistic-insurance proof and three strictness gaps. See `math_check_report.md` for the findings. Method used for implication-chains (a positive-multiplier certificate, `C = m*P` with `m > 0`) is new and reusable for prose-heavy theory papers.",
+    "next_steps": "(1) decide whether to cut ~4 slides for a 25-min slot (41 slides is dense); (2) reconcile `jr_optlib` doc counts -- `functions.yaml` has 40 vetted + 2 experimental, but `README.md` says 41 vetted / 139 tests and `registry\\INDEX.md` lists 45 rows; actual test count is 143; (3) `/catch-up` backlog still open (known issues #43, #46, #47).",
+    "git_ref": "3193e67",
+    "files_touched": [
+      "`presentations\\verification\\verification_talk.tex` -- new 41-slide Beamer deck (16:9), all nine sections; compiles clean.",
+      "`presentations\\verification\\verification_talk.pdf` -- compiled output.",
+      "`presentations\\verification\\workflow.png` -- mermaid two-lane workflow figure (landscape, 2.28:1).",
+      "`literature\\verification_demo\\KT1979\\KT1979_claims.tex` -- verbatim transcription of every derivation in Kahneman & Tversky (1979) with page numbers.",
+      "`literature\\verification_demo\\KT1979\\verify.py` -- SymPy check of all 49 claims.",
+      "`literature\\verification_demo\\KT1979\\verify_output.txt` -- raw run output.",
+      "`literature\\verification_demo\\KT1979\\math_check_report.md` -- the audit (record document for the K&T run)."
+    ]
   },
   "latest_session_complete": true,
   "latest_session_missing": null,

@@ -353,3 +353,10 @@
 ## Archived 2026-07-03 (1 entry)
 
 - **2026-06-16** (Claude): Fix `run_forum.ps1` failing for projects outside the `Publikationer... -> Forum (helpi 25) now resolves projects in any subfolder under `JR/`, not only `Publikat...
+
+
+---
+
+## Archived 2026-08-14 (1 entry)
+
+- **2026-06-17** (Claude): Extend the AI infrastructure so any non-paper folder under `JR\` ge... -> Verified end-to-end with a throwaway test folder (`JR\_test_generic_project_DELETE_ME`,...
