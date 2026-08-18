@@ -1,4 +1,4 @@
-﻿﻿# auto_handover.ps1
+# auto_handover.ps1
 # Finds the most recently active project (by _ai_log.md modification time)
 # and regenerates its handover + AGENTS.md.
 #

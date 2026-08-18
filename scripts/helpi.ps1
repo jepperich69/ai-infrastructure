@@ -551,7 +551,8 @@ function Show-Menu {
 function Get-CommandPreview {
     param([int]$n, [string]$proj, [string]$texFile = "", [string]$agent = "")
     switch ($n) {
-        1  { "new_project.ps1 -Project $proj" }
+        1  { if ($texFile) { "new_project.ps1 -Project $proj -GitUrl $texFile" }
+             else          { "new_project.ps1 -Project $proj" } }
         2  { "sync_all.ps1" }
         3  { "sync_one.ps1 -Project $proj" }
         4  { "push_to_overleaf.ps1 -Project $proj" }
@@ -663,7 +664,10 @@ function Invoke-Command-N {
     if (!$runNow) { return }
 
     switch ($n) {
-        1  { & "$PSScriptRoot\new_project.ps1" -Project $proj }
+        1  {
+               if ($texFile) { & "$PSScriptRoot\new_project.ps1" -Project $proj -GitUrl $texFile }
+               else          { & "$PSScriptRoot\new_project.ps1" -Project $proj }
+           }
         2  { & "$PSScriptRoot\sync_all.ps1" }
         3  { & "$PSScriptRoot\sync_one.ps1" -Project $proj }
         4  { & "$PSScriptRoot\push_to_overleaf.ps1" -Project $proj }

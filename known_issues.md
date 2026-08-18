@@ -556,7 +556,7 @@ When a normal Microsoft Edge window was already running, the script's headless `
 ---
 
 ### 43. `research-close` skill references stale handover script path
-**Status:** open
+**Status:** fixed (2026-08-18)
 **Affects:** `C:\Users\rich\.agents\skills\research-close\SKILL.md`
 **Symptom:** The close workflow says to run `C:\Users\rich\OneDrive - Danmarks Tekniske Universitet\JR\AI_auto\generate_handover.ps1`, but that path does not exist. The actual script is `C:\Users\rich\OneDrive - Danmarks Tekniske Universitet\JR\AI_auto\scripts\generate_handover.ps1`.
 **Fix:** Update `research-close/SKILL.md` to use the `scripts\generate_handover.ps1` path, or route handover regeneration through the supported `helpi 7 <project>` workflow.
@@ -586,13 +586,13 @@ Reproducibility note: optional library availability must not select a different 
 ---
 
 ### 46. `helpi 1` does not forward the optional Overleaf Git URL
-**Status:** open
+**Status:** fixed (2026-08-18)
 **Affects:** `AI_auto/scripts/helpi.ps1`
 **Symptom:** `helpi 1 Pub_Seed_TBA https://git.overleaf.com/<id>` displays and invokes only `new_project.ps1 -Project Pub_Seed_TBA`. The URL is dropped, so the scaffold creates a placeholder `Overleaf_source/` instead of cloning and registering the supplied repository.
 **Fix:** In the command-1 dispatch, pass the third positional value through as `-GitUrl` when present. Add a regression check covering both `helpi 1 <project>` and `helpi 1 <project> <git-url>`.
 
 ### 47. `auto_handover.ps1` has a UTF-8 BOM that breaks PowerShell execution
-**Status:** open
+**Status:** fixed (2026-08-18)
 **Affects:** `AI_auto/scripts/auto_handover.ps1`
 **Symptom:** During `helpi 1`, PowerShell reads the leading BOM as part of the first token (`﻿#`) and then treats the later `param` block as a command. Project creation continues, but scheduled-task registration is not reliable.
 **Fix:** Rewrite `auto_handover.ps1` as UTF-8 without BOM and verify that the `param` block is the first executable construct. Add a BOM check for `.ps1` infrastructure files.
