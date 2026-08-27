@@ -1,21 +1,24 @@
 {
   "project": "AI_auto",
-  "generated": "2026-08-27 21:21",
+  "generated": "2026-08-27 22:55",
   "source": "_ai_log.md",
   "latest_session": {
-    "title": "2026-08-27",
+    "title": "2026-08-27 (2)",
     "agent": "Claude Opus 5",
-    "goal": "Decide how QGIS should fit the JR structure, and implement it.",
-    "outcome": "QGIS is a per-project tool, not a project type. No standing QGIS folder: `helpi 28` adds the PyQGIS plumbing where a project needs maps and nothing anywhere else. Generated config verified against a scratch folder (9 providers, 747 algorithms, valid memory layer, 85 OGR drivers) and emits valid JSON, unlike the hand-written original. Committed on `feat/helpi-28-pyqgis`, not merged.",
-    "next_steps": "(1) merge and push `feat/helpi-28-pyqgis`; (2) `helpi 16` so command 28 reaches infrastructure.html; (3) record the `gpd.datasets.get_path` deprecation at `Pub_StopGeometry_TBA\\Code\\visualize.py:393` in that project -- fig3 may be silently skipping; (4) `JR\\Reviews\\_voice\\` is absent although last session logged creating it, so voice calibration is still unstarted.",
-    "git_ref": "08aab17",
+    "goal": "Install Biogeme for discrete choice, then make tool tracking survive a machine replacement.",
+    "outcome": "Biogeme 3.3.4 installed outside OneDrive and validated against the published Swissmetro MNL (N=6768, LL -5331.252, all betas within 4e-3). Tool tracking is now generated rather than hand-maintained: three lists had drifted, the known_issues table being stale on four versions and missing ten tools including Gurobi. Profiling stack (scalene, py-spy, viztracer, pydeps, Graphviz) confirmed and made discoverable from global CLAUDE.md, without which a session would reach for cProfile and misattribute native time. Surveyed all 113 projects: found ortools imported at 68 sites but installed nowhere behind a silent PuLP fallback, and three R packages used but missing.",
+    "next_steps": "(1) merge and push the branch, now 3 commits and misnamed `feat/helpi-28-pyqgis`; (2) pin the ortools/PuLP solver backend explicitly in Pub_MIPEntropy_MPC, Pub_PMIP_AOR, Pub_SAA_PMIP_MC -- installing ortools would silently change three papers' solver (same hazard as #45); (3) `install.packages(c(\"minpack.lm\",\"openxlsx\",\"reshape2\"))` for Pub_NonlinearDiffusion_PartB; (4) `helpi 16` so commands 28/29 reach infrastructure.html; (5) consider pandoc for the .docx review workflow; (6) dataflow visualiser prototype, see IDEAS.md #1.",
+    "git_ref": "59176e1",
     "files_touched": [
-      "`AI_auto\\scripts\\add_qgis.ps1` -- new, backs helpi 28. Discovers the QGIS install at run time (handles LTR and regular layouts), writes workspace-scoped `.vscode/settings.json`, `.env` and `qgis_smoketest.py` into a project, backs up existing files unless -Force.",
-      "`AI_auto\\scripts\\helpi.ps1` -- registered command 28 at all four points (command array, contextual help, dry-run, dispatch).",
-      "`AI_auto\\known_issues.md` -- #50: the QGIS-as-a-tool convention plus the three PyQGIS traps.",
-      "`~\\.claude\\CLAUDE.md` -- helpi table row 28 and a QGIS software fact.",
-      "`JR\\QGIS_dev\\` -- deleted once the plumbing was preserved.",
-      "`JR\\Reviews\\2026_JCYMR_Gao\\`, `JR\\Reviews\\_index.md` -- first live /review-paper run (JCYMR-D-26-00038, major revision)."
+      "`scripts/tool_inventory.ps1` -- new, backs helpi 29. Probes 26 tools, rewrites TOOLS.md, read-only.",
+      "`TOOLS.md` -- new, generated. Replaces the hand-maintained table that had drifted.",
+      "`PROFILING.md` -- new. Profiling workflow, tools and traps.",
+      "`IDEAS.md` -- new. Designed-but-unbuilt backlog; first entry is the dataflow visualiser.",
+      "`INSTALL.md` -- Part B rewritten into four tiers with the install traps.",
+      "`known_issues.md` -- #51 (Biogeme); software table replaced by a pointer to TOOLS.md.",
+      "`scripts/helpi.ps1` -- helpi 29 registered at all four points.",
+      "`~\\.claude\\CLAUDE.md` -- Biogeme entry, venvs-outside-OneDrive rule, helpi 29 row, profiling block.",
+      "`C:\\Users\\rich\\venvs\\biogeme313\\` -- new venv (850 MB) plus `biogeme_check.py`."
     ]
   },
   "latest_session_complete": true,

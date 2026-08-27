@@ -381,3 +381,10 @@
 ## Archived 2026-08-27 (1 entry)
 
 - **2026-06-22b** (Claude): agy had silently auto-updated back to the broken v1.0.10 (eligibili... -> agy is pinned to v1.0.8 two ways (env-var kill-switch + ACL deny backstop) so it can no...
+
+
+---
+
+## Archived 2026-08-27 (1 entry)
+
+- **2026-06-25** (Gemini 3.5 Flash (Medium)): Fix the "src refspec master does not match any" error that occurs d... -> Fixed the push error for `Pub_FlowPaperSP2_TRD` (which is tracked on `main`), updated `...
