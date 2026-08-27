@@ -30,7 +30,7 @@
 <body>
 
 <h1>Handover Document &mdash; AI_auto</h1>
-<div class="meta">Generated: 2026-08-27 09:24 &nbsp;|&nbsp; Source: <code style="display:inline;padding:2px 6px">_ai_log.md</code> &nbsp;|&nbsp; Sidecar: <code style="display:inline;padding:2px 6px">_handover.json</code></div>
+<div class="meta">Generated: 2026-08-27 21:21 &nbsp;|&nbsp; Source: <code style="display:inline;padding:2px 6px">_ai_log.md</code> &nbsp;|&nbsp; Sidecar: <code style="display:inline;padding:2px 6px">_handover.json</code></div>
 
 <!-- ============================================================ -->
 <!-- AGENT INSTRUCTIONS                                            -->
@@ -64,19 +64,18 @@
   <h2>Latest Session Snapshot</h2>
   <p><strong>Session:</strong> 2026-08-27</p>
   <p><strong>Agent:</strong> Claude Opus 5</p>
-  <p><strong>Goal:</strong> Design and build an instruction set (skill) for refereeing and editing papers, so review decisions rest on verified findings rather than impression.</p>
-  <p><strong>Outcome:</strong> /review-paper is live. It extends the user&#39;s eight criteria with venue fit, claim-evidence alignment, identification, a complexity budget test (missing naive baseline is a MAJOR finding), uncertainty practice, reproducibility, arithmetic and cross-reference audit, reference integrity, salami-slicing, limitations honesty, and revision-round classification. Mechanical audit runs before judgment; a devil&#39;s-advocate pass precedes scoring; decision rule maps rubric to accept/minor/major/reject. Simple method on strong data is written in as a full contribution.</p>
-  <p><strong>Next steps:</strong> (1) drop 2-3 past review letters into `JR\Reviews\_voice\` for voice calibration; (2) calibrate the rubric by running the skill on a paper already decided and comparing recommendations; (3) add /review-paper to `infrastructure.html` if it should appear in the helpi docs.</p>
-  <p><strong>Git ref:</strong> ae23b09</p>
+  <p><strong>Goal:</strong> Decide how QGIS should fit the JR structure, and implement it.</p>
+  <p><strong>Outcome:</strong> QGIS is a per-project tool, not a project type. No standing QGIS folder: `helpi 28` adds the PyQGIS plumbing where a project needs maps and nothing anywhere else. Generated config verified against a scratch folder (9 providers, 747 algorithms, valid memory layer, 85 OGR drivers) and emits valid JSON, unlike the hand-written original. Committed on `feat/helpi-28-pyqgis`, not merged.</p>
+  <p><strong>Next steps:</strong> (1) merge and push `feat/helpi-28-pyqgis`; (2) `helpi 16` so command 28 reaches infrastructure.html; (3) record the `gpd.datasets.get_path` deprecation at `Pub_StopGeometry_TBA\Code\visualize.py:393` in that project -- fig3 may be silently skipping; (4) `JR\Reviews\_voice\` is absent although last session logged creating it, so voice calibration is still unstarted.</p>
+  <p><strong>Git ref:</strong> 08aab17</p>
   <h3>Files touched</h3>
   <ul>
-  <li>`C:\Users\rich\.agents\skills\review-paper\SKILL.md` -- new /review-paper skill: 9 passes, 2 gates, hard rules (confidentiality, anchoring, defect-vs-preference, confidence markers, expertise boundary).</li>
-  <li>`...\review-paper\references\checklist.md` -- dimensions D1-D12 plus 1-5 rubric anchors for C/R/D/E/P/Rp.</li>
-  <li>`...\review-paper\references\review-paradigms.md` -- PRISMA 2020 / PRISMA-ScR / MOOSE branch for review and survey papers.</li>
-  <li>`...\review-paper\references\voice.md` -- voice rules and calibration protocol for drafting the letter as the user.</li>
-  <li>`...\review-paper\templates\review_to_authors.md`, `review_confidential.md` -- letter, confidential note, editor decision letter, reviewer brief.</li>
-  <li>`JR\Reviews\_index.md`, `JR\Reviews\_voice\README.md` -- review register (rubric row per review) and voice-sample folder.</li>
-  <li>`~\.claude\skills\review-paper` -- junction to the shared .agents copy.</li>
+  <li>`AI_auto\scripts\add_qgis.ps1` -- new, backs helpi 28. Discovers the QGIS install at run time (handles LTR and regular layouts), writes workspace-scoped `.vscode/settings.json`, `.env` and `qgis_smoketest.py` into a project, backs up existing files unless -Force.</li>
+  <li>`AI_auto\scripts\helpi.ps1` -- registered command 28 at all four points (command array, contextual help, dry-run, dispatch).</li>
+  <li>`AI_auto\known_issues.md` -- #50: the QGIS-as-a-tool convention plus the three PyQGIS traps.</li>
+  <li>`~\.claude\CLAUDE.md` -- helpi table row 28 and a QGIS software fact.</li>
+  <li>`JR\QGIS_dev\` -- deleted once the plumbing was preserved.</li>
+  <li>`JR\Reviews\2026_JCYMR_Gao\`, `JR\Reviews\_index.md` -- first live /review-paper run (JCYMR-D-26-00038, major revision).</li>
 </ul>
 </div>
 
@@ -91,7 +90,6 @@
 <h2>Compressed sessions</h2>
 <br>
 <ul>
-  <li><strong>2026-06-22b</strong> (Claude): agy had silently auto-updated back to the broken v1.0.10 (eligibili... -&gt; agy is pinned to v1.0.8 two ways (env-var kill-switch + ACL deny backstop) so it can no...</li>
   <li><strong>2026-06-25</strong> (Gemini 3.5 Flash (Medium)): Fix the &quot;src refspec master does not match any&quot; error that occurs d... -&gt; Fixed the push error for `Pub_FlowPaperSP2_TRD` (which is tracked on `main`), updated `...</li>
   <li><strong>2026-06-25 (second session)</strong> (Gemini 3.5 Flash (Medium)): Address NoteTaker watcher failures on the 20-minute test recording,... -&gt; Handled the 18 MB test recording (transcript, Markdown, and LaTeX summaries written, PD...</li>
   <li><strong>2026-06-25 (third session)</strong> (Claude): Three infrastructure tasks: (1) stop NoteTaker&#39;s free-tier Supabase... -&gt; All three done, validated, committed and pushed. NoteTaker keep-alive is live (watcher ...</li>
@@ -107,20 +105,8 @@
   <li><strong>2026-07-02 (fifth session)</strong> (Gemini CLI): Survey the paper codebases to identify missing algorithmic families... -&gt; Successfully identified three major missing algorithmic families (Finite Horizon DP, Di...</li>
   <li><strong>2026-07-02 (sixth session)</strong> (Claude): Verify the DP/choice/RL primitives Gemini (Agy) added to jr_optlib ... -&gt; Agy&#39;s choice/dp/rl code was numerically correct but registered vetted with no oracle/te...</li>
   <li><strong>2026-07-03</strong> (Gemini CLI (Gemini 3.1 Pro (High))): Establish automated, recurring Google Drive backups for AI_auto, No... -&gt; Deployed a local background daemon that bypasses DTU Task Scheduler restrictions. It si...</li>
+  <li><strong>2026-07-03 (2)</strong> (Claude Fable 5): Discuss a portfolio &quot;helicopter view&quot; (surface unexploited/dormant ... -&gt; Decided the helicopter view is NOT a RAG (36 logs, 278 KB, fits in context) but an agen...</li>
 </ul>
-<br>
-<hr>
-<br>
-<h2>Session 2026-07-03 (2)</h2>
-<p><strong>Agent:</strong> Claude Fable 5</p>
-<p><strong>Goal:</strong> Discuss a portfolio &quot;helicopter view&quot; (surface unexploited/dormant papers) and decide the architecture; build the first component: a per-paper journal-status tracker.</p>
-<p><strong>Files touched:</strong></p>
-<ul>
-  <li>`Publikationer\Pub_*\_ai_log.md` (24 paper projects) -- inserted a machine-readable `<strong>Status:</strong>` header line (`status | Journal | Since | Next`) into every paper log; all 24 verified one-by-one with the user.</li>
-</ul>
-<p><strong>Outcome:</strong> Decided the helicopter view is NOT a RAG (36 logs, 278 KB, fits in context) but an agentic sweep over `<em>ai</em>log.md` files; designed the status-line convention and completed the full backfill. Verified portfolio state: 9 papers with journals awaiting decision (5 in R2 review -- OptimismBias/TR-A, ActionSpace<em>TG/JTG, Diffusion</em>Ebike/TR-C, EbikeAdaptation/TR-C, FlowPaperSP2/ERSS; 2 in R1 -- MIPEntropy/MPC, PopInt/TR-B; 1 first round -- PMIP<em>AOR since ~April), NatComm R2-minor nearly ready, 6 close-to-submission (Napsti/TR-B, PMIP</em>VSP, QP<em>SAA/MathProg, Riskadversion/EconLetters, SAA</em>PMIP/EJOR, WTP<em>BEV/TR-A), 6 WIP, AssesTiming accepted at hEART (1 Oct 2026), NonlinearDiffusion published, AI</em>Research_Book parked. Log-mining guesses were wrong on 8 of 21 papers, confirming the backfill interview was necessary before any automated portfolio review.</p>
-<p><strong>Next steps:</strong> (1) wire `/close` to update the status line when a session changes journal status; (2) make `helpi 10` (submission) and `helpi 11` (reviewer scaffold) auto-bump the status; (3) add a pipeline view (by status, not last-activity) to `helpi 13`; (4) build the `/portfolio` helicopter-view skill on top of the now-trustworthy status lines.</p>
-<p><strong>Git ref:</strong> 3460b45</p>
 <br>
 <hr>
 <br>
@@ -178,7 +164,25 @@
 </ul>
 <p><strong>Outcome:</strong> /review-paper is live. It extends the user&#39;s eight criteria with venue fit, claim-evidence alignment, identification, a complexity budget test (missing naive baseline is a MAJOR finding), uncertainty practice, reproducibility, arithmetic and cross-reference audit, reference integrity, salami-slicing, limitations honesty, and revision-round classification. Mechanical audit runs before judgment; a devil&#39;s-advocate pass precedes scoring; decision rule maps rubric to accept/minor/major/reject. Simple method on strong data is written in as a full contribution.</p>
 <p><strong>Next steps:</strong> (1) drop 2-3 past review letters into `JR\Reviews\_voice\` for voice calibration; (2) calibrate the rubric by running the skill on a paper already decided and comparing recommendations; (3) add /review-paper to `infrastructure.html` if it should appear in the helpi docs.</p>
-<p><strong>Git ref:</strong> ae23b09</p>
+<p><strong>Git ref:</strong> ae23b09</p>
+<br>
+<hr>
+<br>
+<h2>Session 2026-08-27</h2>
+<p><strong>Agent:</strong> Claude Opus 5</p>
+<p><strong>Goal:</strong> Decide how QGIS should fit the JR structure, and implement it.</p>
+<p><strong>Files touched:</strong></p>
+<ul>
+  <li>`AI_auto\scripts\add_qgis.ps1` -- new, backs helpi 28. Discovers the QGIS install at run time (handles LTR and regular layouts), writes workspace-scoped `.vscode/settings.json`, `.env` and `qgis_smoketest.py` into a project, backs up existing files unless -Force.</li>
+  <li>`AI_auto\scripts\helpi.ps1` -- registered command 28 at all four points (command array, contextual help, dry-run, dispatch).</li>
+  <li>`AI_auto\known_issues.md` -- #50: the QGIS-as-a-tool convention plus the three PyQGIS traps.</li>
+  <li>`~\.claude\CLAUDE.md` -- helpi table row 28 and a QGIS software fact.</li>
+  <li>`JR\QGIS_dev\` -- deleted once the plumbing was preserved.</li>
+  <li>`JR\Reviews\2026_JCYMR_Gao\`, `JR\Reviews\_index.md` -- first live /review-paper run (JCYMR-D-26-00038, major revision).</li>
+</ul>
+<p><strong>Outcome:</strong> QGIS is a per-project tool, not a project type. No standing QGIS folder: `helpi 28` adds the PyQGIS plumbing where a project needs maps and nothing anywhere else. Generated config verified against a scratch folder (9 providers, 747 algorithms, valid memory layer, 85 OGR drivers) and emits valid JSON, unlike the hand-written original. Committed on `feat/helpi-28-pyqgis`, not merged.</p>
+<p><strong>Next steps:</strong> (1) merge and push `feat/helpi-28-pyqgis`; (2) `helpi 16` so command 28 reaches infrastructure.html; (3) record the `gpd.datasets.get<em>path` deprecation at `Pub</em>StopGeometry<em>TBA\Code\visualize.py:393` in that project -- fig3 may be silently skipping; (4) `JR\Reviews\</em>voice\` is absent although last session logged creating it, so voice calibration is still unstarted.</p>
+<p><strong>Git ref:</strong> 08aab17</p>
 <br>
 
 </div>
@@ -195,7 +199,6 @@
 
 ## Compressed sessions
 
-- **2026-06-22b** (Claude): agy had silently auto-updated back to the broken v1.0.10 (eligibili... -&gt; agy is pinned to v1.0.8 two ways (env-var kill-switch + ACL deny backstop) so it can no...
 - **2026-06-25** (Gemini 3.5 Flash (Medium)): Fix the "src refspec master does not match any" error that occurs d... -&gt; Fixed the push error for `Pub_FlowPaperSP2_TRD` (which is tracked on `main`), updated `...
 - **2026-06-25 (second session)** (Gemini 3.5 Flash (Medium)): Address NoteTaker watcher failures on the 20-minute test recording,... -&gt; Handled the 18 MB test recording (transcript, Markdown, and LaTeX summaries written, PD...
 - **2026-06-25 (third session)** (Claude): Three infrastructure tasks: (1) stop NoteTaker's free-tier Supabase... -&gt; All three done, validated, committed and pushed. NoteTaker keep-alive is live (watcher ...
@@ -211,17 +214,7 @@
 - **2026-07-02 (fifth session)** (Gemini CLI): Survey the paper codebases to identify missing algorithmic families... -&gt; Successfully identified three major missing algorithmic families (Finite Horizon DP, Di...
 - **2026-07-02 (sixth session)** (Claude): Verify the DP/choice/RL primitives Gemini (Agy) added to jr_optlib ... -&gt; Agy's choice/dp/rl code was numerically correct but registered vetted with no oracle/te...
 - **2026-07-03** (Gemini CLI (Gemini 3.1 Pro (High))): Establish automated, recurring Google Drive backups for AI_auto, No... -&gt; Deployed a local background daemon that bypasses DTU Task Scheduler restrictions. It si...
-
----
-
-## Session 2026-07-03 (2)
-**Agent:** Claude Fable 5
-**Goal:** Discuss a portfolio "helicopter view" (surface unexploited/dormant papers) and decide the architecture; build the first component: a per-paper journal-status tracker.
-**Files touched:**
-- `Publikationer\Pub_*\_ai_log.md` (24 paper projects) -- inserted a machine-readable `**Status:**` header line (`status | Journal | Since | Next`) into every paper log; all 24 verified one-by-one with the user.
-**Outcome:** Decided the helicopter view is NOT a RAG (36 logs, 278 KB, fits in context) but an agentic sweep over `_ai_log.md` files; designed the status-line convention and completed the full backfill. Verified portfolio state: 9 papers with journals awaiting decision (5 in R2 review -- OptimismBias/TR-A, ActionSpace_TG/JTG, Diffusion_Ebike/TR-C, EbikeAdaptation/TR-C, FlowPaperSP2/ERSS; 2 in R1 -- MIPEntropy/MPC, PopInt/TR-B; 1 first round -- PMIP_AOR since ~April), NatComm R2-minor nearly ready, 6 close-to-submission (Napsti/TR-B, PMIP_VSP, QP_SAA/MathProg, Riskadversion/EconLetters, SAA_PMIP/EJOR, WTP_BEV/TR-A), 6 WIP, AssesTiming accepted at hEART (1 Oct 2026), NonlinearDiffusion published, AI_Research_Book parked. Log-mining guesses were wrong on 8 of 21 papers, confirming the backfill interview was necessary before any automated portfolio review.
-**Next steps:** (1) wire `/close` to update the status line when a session changes journal status; (2) make `helpi 10` (submission) and `helpi 11` (reviewer scaffold) auto-bump the status; (3) add a pipeline view (by status, not last-activity) to `helpi 13`; (4) build the `/portfolio` helicopter-view skill on top of the now-trustworthy status lines.
-**Git ref:** 3460b45
+- **2026-07-03 (2)** (Claude Fable 5): Discuss a portfolio "helicopter view" (surface unexploited/dormant ... -&gt; Decided the helicopter view is NOT a RAG (36 logs, 278 KB, fits in context) but an agen...
 
 ---
 
@@ -274,6 +267,22 @@
 **Outcome:** /review-paper is live. It extends the user's eight criteria with venue fit, claim-evidence alignment, identification, a complexity budget test (missing naive baseline is a MAJOR finding), uncertainty practice, reproducibility, arithmetic and cross-reference audit, reference integrity, salami-slicing, limitations honesty, and revision-round classification. Mechanical audit runs before judgment; a devil's-advocate pass precedes scoring; decision rule maps rubric to accept/minor/major/reject. Simple method on strong data is written in as a full contribution.
 **Next steps:** (1) drop 2-3 past review letters into `JR\Reviews\_voice\` for voice calibration; (2) calibrate the rubric by running the skill on a paper already decided and comparing recommendations; (3) add /review-paper to `infrastructure.html` if it should appear in the helpi docs.
 **Git ref:** ae23b09
+
+---
+
+## Session 2026-08-27
+**Agent:** Claude Opus 5
+**Goal:** Decide how QGIS should fit the JR structure, and implement it.
+**Files touched:**
+- `AI_auto\scripts\add_qgis.ps1` -- new, backs helpi 28. Discovers the QGIS install at run time (handles LTR and regular layouts), writes workspace-scoped `.vscode/settings.json`, `.env` and `qgis_smoketest.py` into a project, backs up existing files unless -Force.
+- `AI_auto\scripts\helpi.ps1` -- registered command 28 at all four points (command array, contextual help, dry-run, dispatch).
+- `AI_auto\known_issues.md` -- #50: the QGIS-as-a-tool convention plus the three PyQGIS traps.
+- `~\.claude\CLAUDE.md` -- helpi table row 28 and a QGIS software fact.
+- `JR\QGIS_dev\` -- deleted once the plumbing was preserved.
+- `JR\Reviews\2026_JCYMR_Gao\`, `JR\Reviews\_index.md` -- first live /review-paper run (JCYMR-D-26-00038, major revision).
+**Outcome:** QGIS is a per-project tool, not a project type. No standing QGIS folder: `helpi 28` adds the PyQGIS plumbing where a project needs maps and nothing anywhere else. Generated config verified against a scratch folder (9 providers, 747 algorithms, valid memory layer, 85 OGR drivers) and emits valid JSON, unlike the hand-written original. Committed on `feat/helpi-28-pyqgis`, not merged.
+**Next steps:** (1) merge and push `feat/helpi-28-pyqgis`; (2) `helpi 16` so command 28 reaches infrastructure.html; (3) record the `gpd.datasets.get_path` deprecation at `Pub_StopGeometry_TBA\Code\visualize.py:393` in that project -- fig3 may be silently skipping; (4) `JR\Reviews\_voice\` is absent although last session logged creating it, so voice calibration is still unstarted.
+**Git ref:** 08aab17
 </textarea>
 </div>
 

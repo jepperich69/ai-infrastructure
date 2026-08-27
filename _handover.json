@@ -1,22 +1,21 @@
 {
   "project": "AI_auto",
-  "generated": "2026-08-27 09:24",
+  "generated": "2026-08-27 21:21",
   "source": "_ai_log.md",
   "latest_session": {
     "title": "2026-08-27",
     "agent": "Claude Opus 5",
-    "goal": "Design and build an instruction set (skill) for refereeing and editing papers, so review decisions rest on verified findings rather than impression.",
-    "outcome": "/review-paper is live. It extends the user's eight criteria with venue fit, claim-evidence alignment, identification, a complexity budget test (missing naive baseline is a MAJOR finding), uncertainty practice, reproducibility, arithmetic and cross-reference audit, reference integrity, salami-slicing, limitations honesty, and revision-round classification. Mechanical audit runs before judgment; a devil's-advocate pass precedes scoring; decision rule maps rubric to accept/minor/major/reject. Simple method on strong data is written in as a full contribution.",
-    "next_steps": "(1) drop 2-3 past review letters into `JR\\Reviews\\_voice\\` for voice calibration; (2) calibrate the rubric by running the skill on a paper already decided and comparing recommendations; (3) add /review-paper to `infrastructure.html` if it should appear in the helpi docs.",
-    "git_ref": "ae23b09",
+    "goal": "Decide how QGIS should fit the JR structure, and implement it.",
+    "outcome": "QGIS is a per-project tool, not a project type. No standing QGIS folder: `helpi 28` adds the PyQGIS plumbing where a project needs maps and nothing anywhere else. Generated config verified against a scratch folder (9 providers, 747 algorithms, valid memory layer, 85 OGR drivers) and emits valid JSON, unlike the hand-written original. Committed on `feat/helpi-28-pyqgis`, not merged.",
+    "next_steps": "(1) merge and push `feat/helpi-28-pyqgis`; (2) `helpi 16` so command 28 reaches infrastructure.html; (3) record the `gpd.datasets.get_path` deprecation at `Pub_StopGeometry_TBA\\Code\\visualize.py:393` in that project -- fig3 may be silently skipping; (4) `JR\\Reviews\\_voice\\` is absent although last session logged creating it, so voice calibration is still unstarted.",
+    "git_ref": "08aab17",
     "files_touched": [
-      "`C:\\Users\\rich\\.agents\\skills\\review-paper\\SKILL.md` -- new /review-paper skill: 9 passes, 2 gates, hard rules (confidentiality, anchoring, defect-vs-preference, confidence markers, expertise boundary).",
-      "`...\\review-paper\\references\\checklist.md` -- dimensions D1-D12 plus 1-5 rubric anchors for C/R/D/E/P/Rp.",
-      "`...\\review-paper\\references\\review-paradigms.md` -- PRISMA 2020 / PRISMA-ScR / MOOSE branch for review and survey papers.",
-      "`...\\review-paper\\references\\voice.md` -- voice rules and calibration protocol for drafting the letter as the user.",
-      "`...\\review-paper\\templates\\review_to_authors.md`, `review_confidential.md` -- letter, confidential note, editor decision letter, reviewer brief.",
-      "`JR\\Reviews\\_index.md`, `JR\\Reviews\\_voice\\README.md` -- review register (rubric row per review) and voice-sample folder.",
-      "`~\\.claude\\skills\\review-paper` -- junction to the shared .agents copy."
+      "`AI_auto\\scripts\\add_qgis.ps1` -- new, backs helpi 28. Discovers the QGIS install at run time (handles LTR and regular layouts), writes workspace-scoped `.vscode/settings.json`, `.env` and `qgis_smoketest.py` into a project, backs up existing files unless -Force.",
+      "`AI_auto\\scripts\\helpi.ps1` -- registered command 28 at all four points (command array, contextual help, dry-run, dispatch).",
+      "`AI_auto\\known_issues.md` -- #50: the QGIS-as-a-tool convention plus the three PyQGIS traps.",
+      "`~\\.claude\\CLAUDE.md` -- helpi table row 28 and a QGIS software fact.",
+      "`JR\\QGIS_dev\\` -- deleted once the plumbing was preserved.",
+      "`JR\\Reviews\\2026_JCYMR_Gao\\`, `JR\\Reviews\\_index.md` -- first live /review-paper run (JCYMR-D-26-00038, major revision)."
     ]
   },
   "latest_session_complete": true,
