@@ -7,20 +7,17 @@ and `~/.codex/config.toml`. Update both when new facts are confirmed.
 
 ## Software inventory
 
-| Tool | Version | Path | In PATH? |
-|---|---|---|---|
-| PowerShell | 7.6.1 | `C:\Program Files\PowerShell\7\pwsh.exe` | Yes |
-| R | 4.5.2 | `C:\Users\rich\AppData\Local\Programs\R\R-4.5.2\bin\R.exe` | **No** |
-| Python (miniconda) | 3.13.9 | `C:\Users\rich\AppData\Local\miniconda3\python.exe` | **No** |
-| conda | â€” | `C:\Users\rich\AppData\Local\miniconda3\Scripts\conda.exe` | **No** |
-| pdflatex / latexmk / xelatex | MiKTeX | `C:\Users\rich\AppData\Local\Programs\MiKTeX\miktex\bin\x64\` | Yes |
-| git | 2.54.0 | `C:\Program Files\Git\cmd\git.exe` | Yes |
-| gh (GitHub CLI) | 2.88.1 | `C:\Program Files\GitHub CLI\gh.exe` | Yes |
-| Node.js | v24.15.0 | `C:\Program Files\nodejs\node.exe` | Yes |
-| Stata | â€” | â€” | **Not installed** |
-| Julia | â€” | â€” | **Not installed** |
+**Moved to `TOOLS.md`, which is generated. Run `helpi 29` to refresh it.**
 
-Conda environments: `base` (default), `pyopt`
+The table that used to sit here was hand-maintained and had drifted: by
+2026-08-27 it was stale on four versions (PowerShell, git, gh, Node) and missing
+ten tools that were actually installed, including Gurobi, QGIS, VS Code and
+Strawberry Perl. Three hand-written tool lists existed at that point and none
+agreed. Do not reintroduce one here.
+
+- `TOOLS.md` -- what is on this machine now (generated; never hand-edit)
+- `INSTALL.md` Part B -- what to install on a new machine, in order (the plan)
+- this file -- the trap for each individual tool
 
 ---
 
@@ -633,3 +630,25 @@ QGIS 3.44.12 LTR ("Solothurn") is installed at `C:\Program Files\QGIS 3.44.12`. 
 **Other notes.** Extra packages must go into the QGIS interpreter, not miniconda: `& "C:\Program Files\QGIS 3.44.12\apps\Python312\python.exe" -m pip install <pkg>`. Headless runs outside VS Code use `bin\python-qgis-ltr.bat` (full env) or `bin\qgis_process-qgis-ltr.bat` (geoprocessing). In QGIS Desktop, set Project Properties > General > Save paths to "relative" or the project breaks when the folder moves. OneDrive holds locks on open `.gpkg` files and can produce conflict copies, so close the project before it syncs.
 
 `.vscode/settings.json` is emitted with forward slashes: a single backslash before `P`, `Q` or `a` is not a legal JSON escape, and VS Code accepts forward slashes on Windows.
+
+---
+
+### 51. Biogeme 3.3.4 for discrete choice: venv outside OneDrive, and the 3.2 API break
+**Status:** platform-fact
+**Affects:** Any project estimating discrete choice models (MNL, mixed logit, latent class, path-size logit).
+
+Installed 2026-08-27 at `C:\Users\rich\venvs\biogeme313` (850 MB, 26,076 files), a plain venv on base Python 3.13.9. Interpreter: `C:\Users\rich\venvs\biogeme313\Scripts\python.exe`.
+
+**Deliberately outside OneDrive.** A venv is a build artifact: 26k files that must never sync. The `.venv_vae` precedent from issue #45 sits inside OneDrive at 889 MB and causes needless sync churn; do not repeat that. Put venvs under `C:\Users\rich\venvs\` and point the project's `.vscode/settings.json` at the interpreter. This refines #45, which is right about using a project-local venv and wrong about where to put it.
+
+**Use 3.3.x, not 3.2.x, on this machine.** Biogeme 3.3 moved the likelihood evaluation to JAX, so 3.3.4 ships a pure-Python wheel (`py3-none-any`) and needs no compiler. Version 3.2.14 is sdist-only on PyPI, with no Windows wheel, so it would require MSVC Build Tools to build. The cost is that 3.3 broke the 3.2 API, and most tutorials, course material and Bierlaire's older examples are 3.2 syntax. Expect to port examples rather than run them.
+
+**API changes met so far.** `modelName` is deprecated in favour of `model_name`. `generate_html`, `generate_yaml` and `saveIterations` can no longer be assigned on the model object; set them in the constructor or in `biogeme.toml`, otherwise `BiogemeError: Direct assignment ... is not allowed`. Results expose `final_log_likelihood` and `get_beta_values()`.
+
+**Sample data ships with the package.** `biogeme.data` contains `swissmetro`, `optima` and `mdcev_data`. `from biogeme.data.swissmetro import read_data` returns a `Database`, and the module also exports the pre-built variables including the `_SCALED` ones. No download needed.
+
+**Known-answer check.** `C:\Users\rich\venvs\biogeme313\biogeme_check.py` estimates the canonical Swissmetro MNL and compares against published values. Verified 2026-08-27: N = 6768, final log likelihood -5331.252, ASC_CAR -0.15463, ASC_TRAIN -0.70119, B_COST -1.08379, B_TIME -1.27786. All within 4e-3 of published. Re-run it after any upgrade.
+
+**Scaling trap that check exposed.** `biogeme.data.swissmetro` defines `TRAIN_TT_SCALED = TRAIN_TT / 100` and likewise for the other time and cost variables. Coefficients on the scaled regressors are therefore 100x the per-minute / per-franc values. Both -1.08 / -1.28 and -0.0108 / -0.0128 appear in the literature for this same model; they differ only in regressor units. Check which scaling an example uses before comparing estimates.
+
+**Noise on import.** `pymc` is a hard dependency and pulls `pytensor`, which warns that no g++ is available and falls back to a slower backend. Harmless unless doing Bayesian estimation.
