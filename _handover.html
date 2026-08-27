@@ -30,7 +30,7 @@
 <body>
 
 <h1>Handover Document &mdash; AI_auto</h1>
-<div class="meta">Generated: 2026-08-18 15:49 &nbsp;|&nbsp; Source: <code style="display:inline;padding:2px 6px">_ai_log.md</code> &nbsp;|&nbsp; Sidecar: <code style="display:inline;padding:2px 6px">_handover.json</code></div>
+<div class="meta">Generated: 2026-08-27 09:24 &nbsp;|&nbsp; Source: <code style="display:inline;padding:2px 6px">_ai_log.md</code> &nbsp;|&nbsp; Sidecar: <code style="display:inline;padding:2px 6px">_handover.json</code></div>
 
 <!-- ============================================================ -->
 <!-- AGENT INSTRUCTIONS                                            -->
@@ -62,22 +62,21 @@
 <div class="latest-session">
   <div class="session-status ok">Complete</div>
   <h2>Latest Session Snapshot</h2>
-  <p><strong>Session:</strong> 2026-08-18</p>
-  <p><strong>Agent:</strong> Codex</p>
-  <p><strong>Goal:</strong> Build a shorter, popular mathematical-verification deck with anonymous audits of three randomly supplied top-journal papers.</p>
-  <p><strong>Outcome:</strong> Delivered a 16-slide popular talk. The anonymous sample illustrates three distinct printed-formulation failures: reversed optimization direction; variance/standard-deviation confusion plus a contradictory proof; and disagreement between a stated dynamic objective and its Bellman recursion. A joint table reports correct checks and flags for all four papers without presenting targeted screens as full audits. A new architecture slide separates solver backends from independent verification oracles and explains that Gurobi is optional for selected MIPs, MIQPs, and exact benchmark bounds. Arithmetic spot checks pass, the deck compiles cleanly, and the new slides were visually inspected. Findings are explicitly limited to internal consistency because unavailable source code could silently correct the printed models.</p>
-  <p><strong>Next steps:</strong> Rehearse for timing and decide whether to retain all three anonymous paper slides or move one to backup for a sub-15-minute slot.</p>
-  <p><strong>Git ref:</strong> 7789853</p>
+  <p><strong>Session:</strong> 2026-08-27</p>
+  <p><strong>Agent:</strong> Claude Opus 5</p>
+  <p><strong>Goal:</strong> Design and build an instruction set (skill) for refereeing and editing papers, so review decisions rest on verified findings rather than impression.</p>
+  <p><strong>Outcome:</strong> /review-paper is live. It extends the user&#39;s eight criteria with venue fit, claim-evidence alignment, identification, a complexity budget test (missing naive baseline is a MAJOR finding), uncertainty practice, reproducibility, arithmetic and cross-reference audit, reference integrity, salami-slicing, limitations honesty, and revision-round classification. Mechanical audit runs before judgment; a devil&#39;s-advocate pass precedes scoring; decision rule maps rubric to accept/minor/major/reject. Simple method on strong data is written in as a full contribution.</p>
+  <p><strong>Next steps:</strong> (1) drop 2-3 past review letters into `JR\Reviews\_voice\` for voice calibration; (2) calibrate the rubric by running the skill on a paper already decided and comparing recommendations; (3) add /review-paper to `infrastructure.html` if it should appear in the helpi docs.</p>
+  <p><strong>Git ref:</strong> ae23b09</p>
   <h3>Files touched</h3>
   <ul>
-  <li>`known_issues.md` -- marked infrastructure issues #43, #46, and #47 fixed after applying their documented repairs.</li>
-  <li>`scripts/helpi.ps1` -- forwarded the optional Overleaf Git URL for `helpi 1` in preview and execution.</li>
-  <li>`scripts/auto_handover.ps1` -- removed the leading UTF-8 BOM.</li>
-  <li>`C:\Users\rich\.agents\skills\research-close\SKILL.md` -- corrected the handover-generator path.</li>
-  <li>`presentations\verification\verification_talk_short.tex` -- new 16-slide popular Beamer deck; includes three anonymous paper audits, a joint four-paper audit table, and the optimization-library architecture; retains the original technical deck unchanged.</li>
-  <li>`presentations\verification\verification_talk_short.pdf` -- compiled and visually checked output.</li>
-  <li>`presentations\verification\audit_spotchecks.py` -- independent arithmetic checks for the anonymous audit slides.</li>
-  <li>`presentations\verification\{Transpormetrica_B_test,PartB_test,PartC}.txt` -- text extracted from the three supplied PDFs for the internal audits.</li>
+  <li>`C:\Users\rich\.agents\skills\review-paper\SKILL.md` -- new /review-paper skill: 9 passes, 2 gates, hard rules (confidentiality, anchoring, defect-vs-preference, confidence markers, expertise boundary).</li>
+  <li>`...\review-paper\references\checklist.md` -- dimensions D1-D12 plus 1-5 rubric anchors for C/R/D/E/P/Rp.</li>
+  <li>`...\review-paper\references\review-paradigms.md` -- PRISMA 2020 / PRISMA-ScR / MOOSE branch for review and survey papers.</li>
+  <li>`...\review-paper\references\voice.md` -- voice rules and calibration protocol for drafting the letter as the user.</li>
+  <li>`...\review-paper\templates\review_to_authors.md`, `review_confidential.md` -- letter, confidential note, editor decision letter, reviewer brief.</li>
+  <li>`JR\Reviews\_index.md`, `JR\Reviews\_voice\README.md` -- review register (rubric row per review) and voice-sample folder.</li>
+  <li>`~\.claude\skills\review-paper` -- junction to the shared .agents copy.</li>
 </ul>
 </div>
 
@@ -92,7 +91,6 @@
 <h2>Compressed sessions</h2>
 <br>
 <ul>
-  <li><strong>2026-06-22</strong> (Claude): Diagnose why interactive `gemini`/`agy` were failing with API/usage... -&gt; Root cause was a Google regression in agy v1.0.9/1.0.10 (OAuth token exchange fails wit...</li>
   <li><strong>2026-06-22b</strong> (Claude): agy had silently auto-updated back to the broken v1.0.10 (eligibili... -&gt; agy is pinned to v1.0.8 two ways (env-var kill-switch + ACL deny backstop) so it can no...</li>
   <li><strong>2026-06-25</strong> (Gemini 3.5 Flash (Medium)): Fix the &quot;src refspec master does not match any&quot; error that occurs d... -&gt; Fixed the push error for `Pub_FlowPaperSP2_TRD` (which is tracked on `main`), updated `...</li>
   <li><strong>2026-06-25 (second session)</strong> (Gemini 3.5 Flash (Medium)): Address NoteTaker watcher failures on the 20-minute test recording,... -&gt; Handled the 18 MB test recording (transcript, Markdown, and LaTeX summaries written, PD...</li>
@@ -108,22 +106,8 @@
   <li><strong>2026-07-02 (fourth session)</strong> (Gemini CLI): Extract Napsti block-coordinate NLP primitive and the Dijkstra + SU... -&gt; The NLP fixed-point solver and routing (Dijkstra+SUE) were successfully extracted to th...</li>
   <li><strong>2026-07-02 (fifth session)</strong> (Gemini CLI): Survey the paper codebases to identify missing algorithmic families... -&gt; Successfully identified three major missing algorithmic families (Finite Horizon DP, Di...</li>
   <li><strong>2026-07-02 (sixth session)</strong> (Claude): Verify the DP/choice/RL primitives Gemini (Agy) added to jr_optlib ... -&gt; Agy&#39;s choice/dp/rl code was numerically correct but registered vetted with no oracle/te...</li>
+  <li><strong>2026-07-03</strong> (Gemini CLI (Gemini 3.1 Pro (High))): Establish automated, recurring Google Drive backups for AI_auto, No... -&gt; Deployed a local background daemon that bypasses DTU Task Scheduler restrictions. It si...</li>
 </ul>
-<br>
-<hr>
-<br>
-<h2>Session 2026-07-03</h2>
-<p><strong>Agent:</strong> Gemini CLI (Gemini 3.1 Pro (High))</p>
-<p><strong>Goal:</strong> Establish automated, recurring Google Drive backups for AI_auto, NoteTaker, and research projects.</p>
-<p><strong>Files touched:</strong></p>
-<ul>
-  <li>`backup_to_gdrive.ps1` -- created script using robocopy to mirror files to the Google Drive mount.</li>
-  <li>`backup_daemon.ps1` -- created lightweight time-checking loop to trigger backups daily at 12:00.</li>
-  <li>`backup_daemon_launch_hidden.vbs` -- created VBS wrapper to start the daemon silently.</li>
-</ul>
-<p><strong>Outcome:</strong> Deployed a local background daemon that bypasses DTU Task Scheduler restrictions. It silently backs up NoteTaker, AI<em>auto, and all Pub</em> projects to Google Drive every day at 12:00.</p>
-<p><strong>Next steps:</strong> Verify the Google Drive sync completes successfully tomorrow at 12:00.</p>
-<p><strong>Git ref:</strong></p>
 <br>
 <hr>
 <br>
@@ -175,7 +159,26 @@
 </ul>
 <p><strong>Outcome:</strong> Delivered a 16-slide popular talk. The anonymous sample illustrates three distinct printed-formulation failures: reversed optimization direction; variance/standard-deviation confusion plus a contradictory proof; and disagreement between a stated dynamic objective and its Bellman recursion. A joint table reports correct checks and flags for all four papers without presenting targeted screens as full audits. A new architecture slide separates solver backends from independent verification oracles and explains that Gurobi is optional for selected MIPs, MIQPs, and exact benchmark bounds. Arithmetic spot checks pass, the deck compiles cleanly, and the new slides were visually inspected. Findings are explicitly limited to internal consistency because unavailable source code could silently correct the printed models.</p>
 <p><strong>Next steps:</strong> Rehearse for timing and decide whether to retain all three anonymous paper slides or move one to backup for a sub-15-minute slot.</p>
-<p><strong>Git ref:</strong> 7789853</p>
+<p><strong>Git ref:</strong> 7789853</p>
+<br>
+<hr>
+<br>
+<h2>Session 2026-08-27</h2>
+<p><strong>Agent:</strong> Claude Opus 5</p>
+<p><strong>Goal:</strong> Design and build an instruction set (skill) for refereeing and editing papers, so review decisions rest on verified findings rather than impression.</p>
+<p><strong>Files touched:</strong></p>
+<ul>
+  <li>`C:\Users\rich\.agents\skills\review-paper\SKILL.md` -- new /review-paper skill: 9 passes, 2 gates, hard rules (confidentiality, anchoring, defect-vs-preference, confidence markers, expertise boundary).</li>
+  <li>`...\review-paper\references\checklist.md` -- dimensions D1-D12 plus 1-5 rubric anchors for C/R/D/E/P/Rp.</li>
+  <li>`...\review-paper\references\review-paradigms.md` -- PRISMA 2020 / PRISMA-ScR / MOOSE branch for review and survey papers.</li>
+  <li>`...\review-paper\references\voice.md` -- voice rules and calibration protocol for drafting the letter as the user.</li>
+  <li>`...\review-paper\templates\review_to_authors.md`, `review_confidential.md` -- letter, confidential note, editor decision letter, reviewer brief.</li>
+  <li>`JR\Reviews\_index.md`, `JR\Reviews\_voice\README.md` -- review register (rubric row per review) and voice-sample folder.</li>
+  <li>`~\.claude\skills\review-paper` -- junction to the shared .agents copy.</li>
+</ul>
+<p><strong>Outcome:</strong> /review-paper is live. It extends the user&#39;s eight criteria with venue fit, claim-evidence alignment, identification, a complexity budget test (missing naive baseline is a MAJOR finding), uncertainty practice, reproducibility, arithmetic and cross-reference audit, reference integrity, salami-slicing, limitations honesty, and revision-round classification. Mechanical audit runs before judgment; a devil&#39;s-advocate pass precedes scoring; decision rule maps rubric to accept/minor/major/reject. Simple method on strong data is written in as a full contribution.</p>
+<p><strong>Next steps:</strong> (1) drop 2-3 past review letters into `JR\Reviews\_voice\` for voice calibration; (2) calibrate the rubric by running the skill on a paper already decided and comparing recommendations; (3) add /review-paper to `infrastructure.html` if it should appear in the helpi docs.</p>
+<p><strong>Git ref:</strong> ae23b09</p>
 <br>
 
 </div>
@@ -192,7 +195,6 @@
 
 ## Compressed sessions
 
-- **2026-06-22** (Claude): Diagnose why interactive `gemini`/`agy` were failing with API/usage... -&gt; Root cause was a Google regression in agy v1.0.9/1.0.10 (OAuth token exchange fails wit...
 - **2026-06-22b** (Claude): agy had silently auto-updated back to the broken v1.0.10 (eligibili... -&gt; agy is pinned to v1.0.8 two ways (env-var kill-switch + ACL deny backstop) so it can no...
 - **2026-06-25** (Gemini 3.5 Flash (Medium)): Fix the "src refspec master does not match any" error that occurs d... -&gt; Fixed the push error for `Pub_FlowPaperSP2_TRD` (which is tracked on `main`), updated `...
 - **2026-06-25 (second session)** (Gemini 3.5 Flash (Medium)): Address NoteTaker watcher failures on the 20-minute test recording,... -&gt; Handled the 18 MB test recording (transcript, Markdown, and LaTeX summaries written, PD...
@@ -208,19 +210,7 @@
 - **2026-07-02 (fourth session)** (Gemini CLI): Extract Napsti block-coordinate NLP primitive and the Dijkstra + SU... -&gt; The NLP fixed-point solver and routing (Dijkstra+SUE) were successfully extracted to th...
 - **2026-07-02 (fifth session)** (Gemini CLI): Survey the paper codebases to identify missing algorithmic families... -&gt; Successfully identified three major missing algorithmic families (Finite Horizon DP, Di...
 - **2026-07-02 (sixth session)** (Claude): Verify the DP/choice/RL primitives Gemini (Agy) added to jr_optlib ... -&gt; Agy's choice/dp/rl code was numerically correct but registered vetted with no oracle/te...
-
----
-
-## Session 2026-07-03
-**Agent:** Gemini CLI (Gemini 3.1 Pro (High))
-**Goal:** Establish automated, recurring Google Drive backups for AI_auto, NoteTaker, and research projects.
-**Files touched:**
-- `backup_to_gdrive.ps1` -- created script using robocopy to mirror files to the Google Drive mount.
-- `backup_daemon.ps1` -- created lightweight time-checking loop to trigger backups daily at 12:00.
-- `backup_daemon_launch_hidden.vbs` -- created VBS wrapper to start the daemon silently.
-**Outcome:** Deployed a local background daemon that bypasses DTU Task Scheduler restrictions. It silently backs up NoteTaker, AI_auto, and all Pub_ projects to Google Drive every day at 12:00.
-**Next steps:** Verify the Google Drive sync completes successfully tomorrow at 12:00.
-**Git ref:**
+- **2026-07-03** (Gemini CLI (Gemini 3.1 Pro (High))): Establish automated, recurring Google Drive backups for AI_auto, No... -&gt; Deployed a local background daemon that bypasses DTU Task Scheduler restrictions. It si...
 
 ---
 
@@ -267,6 +257,23 @@
 **Outcome:** Delivered a 16-slide popular talk. The anonymous sample illustrates three distinct printed-formulation failures: reversed optimization direction; variance/standard-deviation confusion plus a contradictory proof; and disagreement between a stated dynamic objective and its Bellman recursion. A joint table reports correct checks and flags for all four papers without presenting targeted screens as full audits. A new architecture slide separates solver backends from independent verification oracles and explains that Gurobi is optional for selected MIPs, MIQPs, and exact benchmark bounds. Arithmetic spot checks pass, the deck compiles cleanly, and the new slides were visually inspected. Findings are explicitly limited to internal consistency because unavailable source code could silently correct the printed models.
 **Next steps:** Rehearse for timing and decide whether to retain all three anonymous paper slides or move one to backup for a sub-15-minute slot.
 **Git ref:** 7789853
+
+---
+
+## Session 2026-08-27
+**Agent:** Claude Opus 5
+**Goal:** Design and build an instruction set (skill) for refereeing and editing papers, so review decisions rest on verified findings rather than impression.
+**Files touched:**
+- `C:\Users\rich\.agents\skills\review-paper\SKILL.md` -- new /review-paper skill: 9 passes, 2 gates, hard rules (confidentiality, anchoring, defect-vs-preference, confidence markers, expertise boundary).
+- `...\review-paper\references\checklist.md` -- dimensions D1-D12 plus 1-5 rubric anchors for C/R/D/E/P/Rp.
+- `...\review-paper\references\review-paradigms.md` -- PRISMA 2020 / PRISMA-ScR / MOOSE branch for review and survey papers.
+- `...\review-paper\references\voice.md` -- voice rules and calibration protocol for drafting the letter as the user.
+- `...\review-paper\templates\review_to_authors.md`, `review_confidential.md` -- letter, confidential note, editor decision letter, reviewer brief.
+- `JR\Reviews\_index.md`, `JR\Reviews\_voice\README.md` -- review register (rubric row per review) and voice-sample folder.
+- `~\.claude\skills\review-paper` -- junction to the shared .agents copy.
+**Outcome:** /review-paper is live. It extends the user's eight criteria with venue fit, claim-evidence alignment, identification, a complexity budget test (missing naive baseline is a MAJOR finding), uncertainty practice, reproducibility, arithmetic and cross-reference audit, reference integrity, salami-slicing, limitations honesty, and revision-round classification. Mechanical audit runs before judgment; a devil's-advocate pass precedes scoring; decision rule maps rubric to accept/minor/major/reject. Simple method on strong data is written in as a full contribution.
+**Next steps:** (1) drop 2-3 past review letters into `JR\Reviews\_voice\` for voice calibration; (2) calibrate the rubric by running the skill on a paper already decided and comparing recommendations; (3) add /review-paper to `infrastructure.html` if it should appear in the helpi docs.
+**Git ref:** ae23b09
 </textarea>
 </div>
 

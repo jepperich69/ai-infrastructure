@@ -367,3 +367,10 @@
 ## Archived 2026-08-18 (1 entry)
 
 - **2026-06-19** (Claude): Fix Gemini CLI auth (broken by Google's OAuth deprecation for indiv... -> `gemini` is fully working again, both interactively and from `run_forum.ps1`, on the fl...
+
+
+---
+
+## Archived 2026-08-27 (1 entry)
+
+- **2026-06-22** (Claude): Diagnose why interactive `gemini`/`agy` were failing with API/usage... -> Root cause was a Google regression in agy v1.0.9/1.0.10 (OAuth token exchange fails wit...

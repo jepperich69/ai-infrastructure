@@ -1,23 +1,22 @@
 {
   "project": "AI_auto",
-  "generated": "2026-08-18 15:49",
+  "generated": "2026-08-27 09:24",
   "source": "_ai_log.md",
   "latest_session": {
-    "title": "2026-08-18",
-    "agent": "Codex",
-    "goal": "Build a shorter, popular mathematical-verification deck with anonymous audits of three randomly supplied top-journal papers.",
-    "outcome": "Delivered a 16-slide popular talk. The anonymous sample illustrates three distinct printed-formulation failures: reversed optimization direction; variance/standard-deviation confusion plus a contradictory proof; and disagreement between a stated dynamic objective and its Bellman recursion. A joint table reports correct checks and flags for all four papers without presenting targeted screens as full audits. A new architecture slide separates solver backends from independent verification oracles and explains that Gurobi is optional for selected MIPs, MIQPs, and exact benchmark bounds. Arithmetic spot checks pass, the deck compiles cleanly, and the new slides were visually inspected. Findings are explicitly limited to internal consistency because unavailable source code could silently correct the printed models.",
-    "next_steps": "Rehearse for timing and decide whether to retain all three anonymous paper slides or move one to backup for a sub-15-minute slot.",
-    "git_ref": "7789853",
+    "title": "2026-08-27",
+    "agent": "Claude Opus 5",
+    "goal": "Design and build an instruction set (skill) for refereeing and editing papers, so review decisions rest on verified findings rather than impression.",
+    "outcome": "/review-paper is live. It extends the user's eight criteria with venue fit, claim-evidence alignment, identification, a complexity budget test (missing naive baseline is a MAJOR finding), uncertainty practice, reproducibility, arithmetic and cross-reference audit, reference integrity, salami-slicing, limitations honesty, and revision-round classification. Mechanical audit runs before judgment; a devil's-advocate pass precedes scoring; decision rule maps rubric to accept/minor/major/reject. Simple method on strong data is written in as a full contribution.",
+    "next_steps": "(1) drop 2-3 past review letters into `JR\\Reviews\\_voice\\` for voice calibration; (2) calibrate the rubric by running the skill on a paper already decided and comparing recommendations; (3) add /review-paper to `infrastructure.html` if it should appear in the helpi docs.",
+    "git_ref": "ae23b09",
     "files_touched": [
-      "`known_issues.md` -- marked infrastructure issues #43, #46, and #47 fixed after applying their documented repairs.",
-      "`scripts/helpi.ps1` -- forwarded the optional Overleaf Git URL for `helpi 1` in preview and execution.",
-      "`scripts/auto_handover.ps1` -- removed the leading UTF-8 BOM.",
-      "`C:\\Users\\rich\\.agents\\skills\\research-close\\SKILL.md` -- corrected the handover-generator path.",
-      "`presentations\\verification\\verification_talk_short.tex` -- new 16-slide popular Beamer deck; includes three anonymous paper audits, a joint four-paper audit table, and the optimization-library architecture; retains the original technical deck unchanged.",
-      "`presentations\\verification\\verification_talk_short.pdf` -- compiled and visually checked output.",
-      "`presentations\\verification\\audit_spotchecks.py` -- independent arithmetic checks for the anonymous audit slides.",
-      "`presentations\\verification\\{Transpormetrica_B_test,PartB_test,PartC}.txt` -- text extracted from the three supplied PDFs for the internal audits."
+      "`C:\\Users\\rich\\.agents\\skills\\review-paper\\SKILL.md` -- new /review-paper skill: 9 passes, 2 gates, hard rules (confidentiality, anchoring, defect-vs-preference, confidence markers, expertise boundary).",
+      "`...\\review-paper\\references\\checklist.md` -- dimensions D1-D12 plus 1-5 rubric anchors for C/R/D/E/P/Rp.",
+      "`...\\review-paper\\references\\review-paradigms.md` -- PRISMA 2020 / PRISMA-ScR / MOOSE branch for review and survey papers.",
+      "`...\\review-paper\\references\\voice.md` -- voice rules and calibration protocol for drafting the letter as the user.",
+      "`...\\review-paper\\templates\\review_to_authors.md`, `review_confidential.md` -- letter, confidential note, editor decision letter, reviewer brief.",
+      "`JR\\Reviews\\_index.md`, `JR\\Reviews\\_voice\\README.md` -- review register (rubric row per review) and voice-sample folder.",
+      "`~\\.claude\\skills\\review-paper` -- junction to the shared .agents copy."
     ]
   },
   "latest_session_complete": true,
