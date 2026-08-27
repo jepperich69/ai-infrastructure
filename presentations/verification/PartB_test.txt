@@ -1,0 +1,1971 @@
+                                                     Transportation Research Part B 213 (2026) 103569
+
+
+
+                                                          Contents lists available at ScienceDirect
+
+
+                                                 Transportation Research Part B
+                                                   journal homepage: www.elsevier.com/locate/trb
+
+
+
+
+Robust ship-to-grid scheduling problem: A contextual joint
+estimation-prediction-optimization paradigm
+Bo Lu         , Zhuoxi Shi, Guowei Zhang∗
+School of Economics and Management, Dalian University of Technology, Dalian, China
+
+
+
+
+a r t i c l e          i n f o                          a b s t r a c t
+
+Keywords:                                               As pollution and climate change intensify, mitigating emissions from the shipping sector has be-
+Contextual optimization                                 come a global priority for protecting public health and biodiversity. All-electric ships (AESs) have
+Joint estimation–prediction–optimization                consequently emerged as a promising low-carbon alternative, supported by increasingly stringent
+framework
+                                                        policy mandates. In parallel, Ship-to-Grid (S2G) technology enables bidirectional energy exchange
+Ship scheduling
+Ship-to-grid
+                                                        between AESs and port power grids, eﬀectively transforming vessels into mobile energy storage
+                                                        units. This dual operational role, however, fundamentally complicates traditional ship schedul-
+                                                        ing problem. In this study, we develop a dynamic AES scheduling model on a spatial-temporal
+                                                        network that jointly determines freight routing, vessel relocation, and coordinated charging/dis-
+                                                        charging decisions. To capture context-dependent uncertainty in freight demand, we propose a
+                                                        contextual joint estimation-prediction-optimization framework that establishes a uniﬁed data-to-
+                                                        decision paradigm by embedding estimation and prediction procedures directly into the uncer-
+                                                        tainty set. By adopting linear decision rules together with a lifted uncertainty set construction,
+                                                        we show that the resulting model admits a tractable reformulation. We validate the model us-
+                                                        ing both simulation studies and real-world instances from the ports in the North Sea region of
+                                                        Europe. Results show that our framework delivers superior out-of-sample performance in both
+                                                        average and risk-averse settings. Moreover, comparative experiments indicate that incorporating
+                                                        S2G operations provides additional revenue improvements, particularly during periods of pro-
+                                                        nounced electricity price ﬂuctuations.
+
+
+
+
+1. Introduction
+
+    Human society is increasingly grappling with the devastating impacts of environmental degradation. Unsustainable industrial
+practices and excessive consumption are fueling air pollution, poisoning our waters, and disrupting ecosystems, all of which threaten
+biodiversity and the well-being of public health. The shipping industry stands as a major contributor in this crisis, heavily relying on
+fossil fuels, and producing nearly 3% of global CO2 emissions, more than the whole emissions of advanced economies like Germany
+or Japan (IMO, 2023). Without decisive action, emissions from this sector could soar by as much as 50% by 2050, highlighting the
+urgent need for low-carbon technologies in maritime transport to ensure a sustainable future.
+    As the maritime sector faces mounting pressure to mitigate its environmental externalities, electriﬁcation has emerged as a pivotal
+path toward decarbonization. By replacing fossil-fuel propulsion, electric vessels eliminate direct emissions of CO2 , NO𝑥 , and SO𝑥 ,
+while also cutting underwater noise pollution by 40–50 dB, an essential improvement for the protection of marine ecosystems (DNV,
+2024). Policy frameworks are accelerating this transformation, with the IMO’s 2023 GHG Strategy mandating that 90% of major
+
+  ∗ Corresponding author.
+
+    E-mail address: grant@dlut.edu.cn (G. Zhang).
+
+https://doi.org/10.1016/j.trb.2026.103569
+Received 17 December 2025; Received in revised form 21 July 2026; Accepted 31 July 2026
+Available online 15 August 2026
+0191-2615/© 2026 Elsevier Ltd. All rights are reserved, including those for text and data mining, AI training, and similar technologies.
+B. Lu et al.                                                                                  Transportation Research Part B 213 (2026) 103569
+
+
+ports will be shore-power compatible by 2030 (IMO, 2023), and the UN-endorsed Clydebank Declaration establishing zero-emission
+corridors to prioritize electric ships across 24 nations (Department for Transport, 2021). As a result, maritime electriﬁcation has
+progressed from experimental pilots to commercially viable deployments, with all-electric ships (AESs) increasingly becoming a
+mainstream solution for reducing the environmental footprint.
+    Building on the growing adoption of AESs in green ports, Ship-to-Grid (S2G) technology oﬀers a compelling opportunity to further
+enhance energy eﬃciency and accelerate the integration of renewable energy. By enabling bidirectional energy ﬂow between berthed
+AESs and the port’s power grid, S2G turns AESs into mobile energy storage units, allowing them to not only draw power when needed
+but also feed surplus energy back into the grid, fostering a dynamic and sustainable energy ecosystem. S2G brings substantial beneﬁts
+to both ports and shipping companies. For ports, it facilitates ﬂexible freighting management, helping stabilize the power grid while
+also providing a reliable backup power source during emergencies. For shipping companies, it opens up new revenue streams by
+enabling the sale of surplus energy back to the grid. As a result, government policy initiatives are accelerating the adoption of S2G,
+with examples such as the EU’s 2030 infrastructure mandate (EU, 2021) and China’s ﬁnancial incentives for retroﬁts (MOT, 2024).
+These initiatives highlight S2G’s potential to strengthen port resilience and contribute to the goal of maritime decarbonization.
+    The integration of S2G technology substantially increases the complexity of the conventional ship scheduling problem. In addition
+to planning freight transportation and vessel relocation, shipping operators must also coordinate AESs’ charging and discharging
+operations to eﬀectively interact with the port’s power grid. For example, during periods of high electricity demand, AESs can
+discharge stored energy back into the grid to stabilize grid performance and enhance economic returns, whereas in oﬀ-peak periods,
+they may prioritize recharging to ensure adequate power for subsequent voyages. Within this framework, AESs assume a dual role, as
+both transportation carriers and mobile energy storage units capable of storing and supplying electricity. This dual role fundamentally
+reshapes the conventional ship scheduling paradigm and highlights the need for more advanced and integrated decision-making
+frameworks.
+    Another critical challenge in AESs scheduling arises from the uncertainty of freight demand. Unlike conventional ships that
+serve broad and relatively stable cargo streams, where freight demand is typically treated as static and stable, AESs concentrate on a
+narrower range of time-sensitive and high-value commodities, such as e-commerce parcels, medical supplies, and perishables (Ivanov,
+2022). Accordingly, freight demand of the AESs scheduling model is heavily inﬂuenced by contextual information such as weather
+conditions, and hinterland characteristics, rendering it inherently context-dependent. For example, ﬂuctuations in weather conditions,
+such as extreme temperatures or storms, can impact the operating conditions and service availability of AESs, thereby aﬀecting freight
+demand. Meanwhile, the characteristics of the hinterland, including industrial structure, regional economic activity, and short-term
+consumption patterns, can also directly inﬂuence demand. Failing to account for such contextual information prevents the model from
+accurately capturing freight demand, which may lead to biased forecasts and suboptimal scheduling outcomes. Therefore, addressing
+the AESs scheduling problem necessitates the integration of contextual information to better predict uncertain freight demand and
+generate more reliable and eﬀective operational decisions.
+    In this study, we introduce a novel dynamic AESs scheduling problem by integrating S2G technology, explicitly considering the
+context-dependent uncertainty in freight demand. To the best of our knowledge, this is the ﬁrst attempt to explore the AESs operations
+within the S2G framework. We focus on the following two research questions: (i) How can we formulate an optimization model for
+the dynamic AESs scheduling problem that simultaneously addresses decision-making for AESs chartering, freighting, relocating,
+and charging/discharging operations? (ii) How can we construct a reliable uncertainty set for context-dependent uncertainty while
+maintaining model tractability and optimality? By solving these research questions, we summarize our contributions as follows.
+
+
+
+(1) Enriching the ship scheduling problem. After constructing spatial-temporal-SoC network, we propose a dynamic AESs schedul-
+    ing model for shipping company to produce operational scheduling scheme, which introduces the following new aspects:
+     • We incorporate S2G operations into the dynamic AESs scheduling problem, meaning that beyond freight routing and AESs
+
+       relocation, the model must also coordinate AESs’ charging and discharging activities to interact eﬀectively with the port’s
+       power grid.
+     • We explicitly account for context-dependent uncertainty in AES freight demand, whose variation can be partially explained
+
+       by observable contextual information such as weather conditions and port throughput.
+(2) Extending the existing methodology. We propose a contextual joint estimation-prediction-optimization (JEPO) framework,
+    which advances the methodology in the following aspects:
+     • Beyond the classical norm-based metric, we propose a contextual disparity metric that embeds a deviation matrix, thereby
+
+       allowing deviations to be evaluated in a more principled manner that reﬂects dimensional heterogeneity.
+     • In contrast to the sequential process of estimation, prediction, and optimization, the proposed JEPO framework oﬀers a uniﬁed
+
+       data-to-decision paradigm by embedding the estimation and prediction procedures directly into the uncertainty set of the
+       optimization model.
+     • We propose a data-driven calibration approach for the JEPO uncertainty set by identifying the minimum volume conﬁdence
+
+       ball without compromising the conﬁdence level, thereby mitigating the conservatism of the robust solutions.
+     • Using a linear decision rule approximation and a lifted uncertainty set construction, we demonstrate that the contextual JEPO
+
+       model admits a tractable second-order cone program (SOCP) formulation.
+(3) Demonstrating superior performance in numerical experiments. We validate the practical eﬀectiveness of our approach using
+    both simulation studies and real-world instances from the ports in the North Sea region of Europe. Compared with two benchmarks,
+    our framework delivers superior out-of-sample performance in both average and risk-averse settings, achieving revenue gains of
+
+                                                                  2
+B. Lu et al.                                                                                       Transportation Research Part B 213 (2026) 103569
+
+
+    12.69% and 17.78%, respectively. Additionally, comparative experiments indicate that incorporating S2G operations provides
+    additional revenue improvements, particularly during periods of pronounced electricity price ﬂuctuations.
+
+    The remainder of this paper is organized as follows. Section 2 reviews the related literature. Section 3 develops a mathematical
+model for the dynamic AESs scheduling problem. Section 4 handles the context-dependent uncertainty and construct a JEPO uncer-
+tainty set. Section 5 focuses on the tractability of the model. In Section 6, we validate the eﬀectiveness of our methodology through
+a numerical experiment. Finally, a brief conclusion and managerial insights are provided in Section 7.
+    Notation. We use boldface uppercase and lowercase letters to denote matrices, e.g., 𝐇, and vectors, e.g., 𝒙, respectively. The
+                                                                2
+inverse of matrix 𝐇 is denoted by 𝐇−1 . We denote by ℝ𝐼 𝑇 the 𝐼 2 𝑇 -dimensional Euclidean space. For a positive integer 𝐼, we use
+                                                                                       2                                             2    2
+[𝐼] ∶= {1, 2, … , 𝐼} to denote the corresponding index set. We further denote by 𝕊𝐼++𝑇 the set of all positive deﬁnite matrices in ℝ𝐼 𝑇 ×𝐼 𝑇 ,
+             2𝑇              2 𝑇 ×𝐼 2 𝑇
+namely, 𝕊  𝐼    ∶= {𝐇 ∈ ℝ  𝐼                                                                             ̃
+                                        ∣ 𝐇 ≻ 0}. Random variables are denoted by a tilde; for example, 𝒅 ∼ ℙ, where ℙ ∈ 0 (), and 0 ()
+               ++
+                                                                          2
+denotes the set of all probability distributions supported on  ⊆ ℝ𝐼 𝑇 . We use 𝔼ℙ [⋅] to denote expectation under distribution ℙ.
+Finally, for any scalar 𝑎, we deﬁne its nonnegative part as [𝑎]+ ∶= max{𝑎, 0}.
+
+2. Literature review
+
+   In this section, we review the related literature. Speciﬁcally, Sections 2.1 and 2.2 examine the literature on the standard ship
+scheduling problem and maritime electriﬁcation, respectively, while Section 2.3 provides an overview of methodological studies on
+optimization under uncertainty.
+
+2.1. Standard ship scheduling problem
+
+    In maritime logistics, ship scheduling plays an indispensable and pivotal role, involving the optimization of ﬂeet deployment and
+freight routing under multiple sources of uncertainty. Early works, such as Christiansen et al. (2004), provide a systematic review of
+ship routing and scheduling problems across strategic, tactical, and operational levels. They separately discuss two types of shipping
+operations: tramp and liner shipping, which exhibit distinct diﬀerences in their scheduling strategies. Speciﬁcally, tramp shipping is
+characterized by high operational ﬂexibility. Vessels are deployed according to cargo availability rather than ﬁxed routes or schedules,
+allowing shipping companies to maximize proﬁts by dynamically optimizing scheduling decisions. In contrast, liner shipping follows
+ﬁxed routes and schedules and its operations focusing on strategic network design, ﬂeet sizing, and ﬂeet deployment.
+    Tramp shipping scheduling primarily aims to optimize routing and bunkering decisions to maximize proﬁts under uncertain
+conditions. Vilhelmsen et al. (2014) examine the integration of bunkering decisions with routing, suggesting that incorporating
+bunkering considerations during the routing phase enhances cargo allocation and eﬃciency, particularly in the face of ﬂuctuating fuel
+prices. Building on this, Omholt-Jensen et al. (2025) model the tramp ship routing and scheduling problem with bunker optimization
+as a two-stage stochastic programming problem. They propose that integrating bunkering decisions with routing can increase proﬁts
+by adapting to uncertainties in demand and fuel costs. Additionally, Norstad et al. (2011) explore speed optimization, arguing that
+treating speed as a decision variable rather than a ﬁxed parameter which improves operational eﬃciency by more eﬀectively managing
+fuel consumption. Wen et al. (2016) extend this concept by jointly optimizing routing and speed, suggesting that this combined
+approach enhances ﬂeet proﬁtability and overall operational performance.
+    Liner shipping scheduling is fundamental to ensuring service quality and operational eﬃciency. Early research primarily employs
+deterministic models with ﬁxed sailing speeds, port times, and demand, aiming to optimize costs or proﬁts (Meng et al., 2010; Qi
+et al., 2012). However, such models often neglect operational uncertainties, including port congestion, handling delays, and adverse
+weather conditions. More recent studies incorporate stochastic elements into scheduling frameworks by applying fuzzy logic, chance-
+constrained programming, and simulation-based optimization methods (Chuang et al., 2010; Wang et al., 2012). To enhance schedule
+reliability in the face of disruptions, researchers increasingly examine recovery strategies such as speed adjustments, port skipping,
+and container diversion (Song et al., 2015; Gürel et al., 2019).
+    While existing tramp and liner scheduling studies focus on conventional fuel-powered ships, the scheduling of AESs remains
+underexplored. The distinct operational features of AESs, particularly the need to coordinate charging/discharging operations with
+cargo freighting and ship relocating, call for specialized AESs scheduling strategies. To bridge this gap, we conceptualize a dynamic
+AESs scheduling model in the context of S2G, which explicitly accounts for the context-dependent uncertainty in freight demand.
+
+2.2. Maritime electriﬁcation
+
+   This study is also related to maritime electriﬁcation, which plays a vital role in reducing emissions and enhancing energy eﬃciency
+within the shipping industry. The adoption of S2G technology has transformed the energy management of conventional vessels,
+thereby inﬂuencing the optimization and scheduling of AESs. To lay the foundation for addressing the AES scheduling problem, this
+section focuses on AESs and S2G, which are essential components in advancing maritime electriﬁcation.
+   Eﬃcient voyage scheduling becomes a crucial factor in optimizing the operations of AESs. Early research by Kanellos et al. (2014)
+focuses on coordinating voyage scheduling with power dispatch in hybrid power systems. They develop a dynamic programming
+model that simultaneously optimizes AES speed and onboard power generation to reduce overall energy consumption. Recognizing
+that speed optimization alone may limit operational ﬂexibility, Wen et al. (2020) extend this work by introducing a joint optimization
+approach that integrates voyage planning with the sizing of onboard energy storage systems, aiming to enhance both economic
+
+                                                                      3
+B. Lu et al.                                                                                    Transportation Research Part B 213 (2026) 103569
+
+
+eﬃciency and renewable energy utilization. As scheduling objectives become increasingly complex, Shang et al. (2016) propose a
+bi-objective model that considers both operational costs and greenhouse gas emissions, solved using NSGA-II to derive Pareto-optimal
+scheduling strategies. Building on these advances, Hein et al. (2021) develop a multi-objective framework for voyage planning and
+energy management in AESs equipped with hybrid energy storage systems, striving to balance environmental sustainability and cost
+eﬃciency under practical maritime operational constraints. However, existing scheduling literature on AESs primarily emphasizes
+energy-related aspects, often overlooking the scheduling challenges that arise in shipping networks under uncertain freight demand.
+    Simultaneously, the integration of S2G technology has attracted growing attention in the context of AESs. This technology enables
+AESs to not only draw power from the grid but also feed power back when required. Although research on S2G is still in its early stages
+and existing studies primarily focus on technical aspects (Reed et al., 2012; Vlachokostas et al., 2019; Badakhshan et al., 2022), related
+research on Vehicle-to-Grid (V2G) operation management provides valuable insights for our work. Peterson et al. (2010) examine the
+economic implications of using electric vehicle batteries for grid electricity storage, ﬁnding that while battery degradation impacts
+proﬁtability, the potential for energy arbitrage remains signiﬁcant. Zhang et al. (2021) further explore V2G integration in electric
+vehicle sharing systems, demonstrating that V2G increases proﬁtability and service quality.
+    Although S2G and V2G both rely on bidirectional charging technology, they diﬀer substantially in their operational settings.
+In V2G systems, vehicle mobility is determined by individual users, who decide when and where their EVs travel. As a result, the
+operator plays a largely passive role and can only predict vehicle availability based on travel behavior and participation patterns.
+Accordingly, V2G typically operates in a decentralized manner, where the timing and location of charging and discharging cannot
+be directly controlled by the operator. Instead, the operator usually relies on incentive mechanisms, such as ﬁnancial compensa-
+tion, to encourage EV owners to participate in charging or discharging activities at desired times. By contrast, S2G systems are
+centrally managed by the shipping company, which directly determines the operations of AESs. This centralized structure allows
+the operator to actively coordinate freight transportation as well as charging and discharging decisions. In particular, the operator
+can jointly optimize routing, freight scheduling, and energy transactions in response to variations in freight demand and electricity
+prices. Therefore, unlike V2G, S2G does not rely on voluntary participation through incentives, but instead is implemented through
+centralized operational decisions made by the company. However, research on S2G operation management strategies remains limited.
+To address this gap, our study proposes a scheduling framework for AESs that integrates S2G technology. The framework aims to
+enhance operational eﬃciency and optimize revenue generation, particularly in the context of uncertainties associated with freight
+demand.
+
+2.3. Optimization under uncertainty
+
+    Conventionally, uncertainty in optimization problems has been addressed primarily through stochastic programming (SP) and
+robust optimization (RO). While both have formed the foundation of uncertainty modeling, they suﬀer from critical limitations.
+Speciﬁcally, SP relies on the precise characterization of the probability distribution associated with uncertain parameters–an assump-
+tion that is often unrealistic in many practical scenarios. On the other hand, RO completely excludes probabilistic information and
+instead focuses on worst-case outcomes, which tends to produce overly cautious decisions. To mitigate these shortcomings, distri-
+butionally robust optimization (DRO) has emerged as a compelling alternative (Wang et al., 2020). Despite their theoretical appeal,
+constructing such sets using empirical data and domain-speciﬁc knowledge remains a substantial challenge. In response, Long et al.
+(2023) introduce the robust satisﬁcing framework, which eliminates the need for specifying a distributional set altogether. More
+recently, Sim et al. (2024) further advance this framework by incorporating predictive models and decision-making mechanisms,
+enhancing its practicality across diverse uncertain environments.
+    Contextual robust optimization has recently attracted signiﬁcant attention for its ability to incorporate covariate information
+into decision-making under uncertainty (Mišić and Perakis, 2020). Within this paradigm, three major frameworks have emerged for
+learning decision policies from data. The decision rule framework, ﬁrst introduced to operations research by Liyanage and Shanthiku-
+mar (2005) and later popularized by Ban and Rudin (2019), directly parameterizes decision policies and optimizes their parameters
+through empirical risk minimization. The sequential learning and optimization (SLO) framework, formalized by Bertsimas and Kallus
+(2020), follows a two-step procedure: it ﬁrst estimates the conditional distribution of uncertain parameters given covariates, and
+then solves the resulting stochastic optimization problem. Acknowledging the potential mismatch between predictive accuracy and
+decision quality in SLO, the integrated learning and optimization (ILO) framework jointly trains the predictive model and decision
+policy by directly minimizing the downstream decision loss–an idea originating in Bengio (1997) and later revitalized under the
+paradigms of decision-focused learning and smart predict-then-optimize (Donti et al., 2017; Elmachtoub and Grigas, 2022).
+    While these above research focus on learning decision policies, a critical yet often overlooked aspect is how to construct the
+uncertainty set that eﬀectively reﬂect the data distribution. Traditional methods typically assume that uncertainty set parame-
+ters are known or set through empirical means and covariance. However, they usually lack a systematic way to estimate these
+parameters based on the data distribution and the chosen norm, which can lead to inaccurate uncertainty sets, resulting in so-
+lutions that may be overly conservative or insuﬃciently stable. One common approach uses asymptotic behavior, such as the
+central limit theorem (Bandi and Bertsimas, 2012), which works well with large sample sizes but can be overly conservative in
+small samples sizes, especially with skewed or heavy-tailed distributions. To reduce this conservatism, methods like divergence
+functionals (Ben-Tal et al., 2013) and hypothesis testing (Bertsimas et al., 2018) have been incorporated. Hong et al. (2021)
+propose a statistical framework that learns uncertainty sets using geometric shapes and data-splitting validation. However, these
+methods typically require large, high-quality datasets for reliable performance. To address this challenge, Lou et al. (2024) fo-
+cus on developing an estimation method when only a limited number of samples are available. Speciﬁcally, they construct norm-
+
+                                                                    4
+B. Lu et al.                                                                                               Transportation Research Part B 213 (2026) 103569
+
+
+speciﬁc uncertainty sets without relying on restrictive distributional assumptions, while ensuring stable performance in small-sample
+scenarios.
+   In this study, we develop a uniﬁed contextual JEPO framework that joint parameter estimation, demand prediction, and decision
+optimization by integrating contextual information. The framework aims to identify optimal decisions that satisfy speciﬁc operational
+revenue target, while explicitly balancing robustness and conservatism.
+
+3. Dynamic AESs scheduling problem
+
+   In this section, we focus on the dynamic AESs scheduling problem integrated with S2G charging and discharging operations.
+Section 3.1 introduces the problem description, followed by Section 3.2, which constructs the time–space–SoC network for dynamic
+AESs scheduling. Finally, Section 3.3 presents the corresponding mathematical formulation.
+
+3.1. Problem description
+
+    In the context of maritime electriﬁcation, we consider a shipping company operating a ﬂeet of AESs that provide freight services
+across a set of ports denoted by [𝐼] = {1, … , 𝐼}. The planning horizon is divided into 𝑇 discrete time periods, represented by [𝑇 ] =
+{1, … , 𝑇 }. At the beginning of the planning horizon, the company determines a strategic decision 𝑥𝑖 ∈ ℝ+ , indicating the number of
+AESs to be chartered at port 𝑖 ∈ [𝐼], subject to the overall budget constraint 𝑀.
+    In contrast to conventional fuel-powered vessels, the feasible sailing range of AESs depends on their remaining battery capacity,
+quantiﬁed by the State of Charge (SoC), which is discretized into 𝐵 levels denoted by [𝐵] = {1, … , 𝐵}. Without loss of generality,
+we assume that newly chartered AESs begin the planning horizon fully charged, i.e., with an SoC level of 𝐵 in the ﬁrst period.
+Additionally, in the dynamic scheduling of AESs, we focus on the integration of S2G operations, including both battery charging and
+discharging. Because electricity prices vary across periods, the shipping company can proﬁt by charging during low-price periods and
+discharging during high-price periods. Formally, we denote the unit electricity prices for charging and discharging at period 𝑡 ∈ [𝑇 ]
+by 𝑝𝑐𝑡 and 𝑝𝑠𝑡 , respectively.
+    Within this problem context, the chartered AESs are used to fulﬁll the uncertain freight demand across the planning horizon.
+Speciﬁcally, freight demand typically varies across ports and time periods due to factors such as seasonality and hinterland economic
+indicators, rendering it contextual-based uncertain as illustrated in Fig. C.1. Let 𝑑̃𝑖,𝑗,𝑡 denote the uncertain freight demand transported
+from port 𝑖 ∈ [𝐼] to port 𝑗 ∈ [𝐼] at period 𝑡 ∈ [𝑇 ]. We deﬁne 𝒅̃ = (𝑑̃𝑖,𝑗,𝑡 )𝑖,𝑗∈[𝐼], 𝑡∈[𝑇 ] as the random vector of freight demands, whose
+                         2
+support set is  ⊆ ℝ𝐼 𝑇 . In practice, although the true freight demand 𝒅̃ is unknown at the time of decision making, certain con-
+textual information that aﬀects demand is observable. We denote this information by a vector 𝒗 ∈ ℝ𝐾 , which may include factors
+such as weather conditions and port throughput. Ignoring such contextual information and relying only on unconditional demand
+distributions may lead to systematic prediction bias and, consequently, suboptimal scheduling decisions. In the AESs scheduling set-
+ting, a context-agnostic model cannot distinguish high-demand scenarios associated with favorable weather or strong port throughput
+from low-demand scenarios induced by adverse operating conditions. As a result, it may either over-charter AESs, thereby incurring
+unnecessary idle and charging costs, or under-charter AESs, thereby causing unmet freight demand and lost revenue.
+    Nevertheless, freight demand across ports is typically unbalanced. Some ports are primarily exporters with large outbound cargo
+but little inbound cargo, while others are mainly importers. Consequently, AESs may need to relocate after completing the previous
+cargo transportation to meet new freight demand.
+    In the context of uncertain freight demand, shipping company operators face the challenge of determining when and where to
+transport cargo, charge or discharge batteries of AESs, and relocate to meet new freight demand, with the overall objective of mini-
+mizing the total net cost. Unlike conventional ship scheduling problems, on the one hand, our study incorporates additional charging
+and discharging decisions; on the other hand, the revenue of the AESs scheduling problem derives from two components which
+include cargo transportation revenue and discharging revenue. Due to the complexity of AESs scheduling problem, which involves
+three dimensions, time period, port, and SoC level, it requires implementation on a spatial-temporal-SoC network, as introduced in
+Section 3.2.
+
+3.2. The spatial-temporal-SoC network
+
+   In this subsection, we construct a spatial-temporal-SoC network for the proposed dynamic AESs scheduling problem. Formally,
+the network is deﬁned as  = ( , ), where  and  denote the sets of nodes and arcs, respectively. Each node 𝑛𝑖,𝑡,𝑏 ∈  represents
+the system state of an AES identiﬁed by the triplet (𝑖, 𝑡, 𝑏), indicating its location at port 𝑖 ∈ [𝐼], time period 𝑡 ∈ [𝑇 ], and State-of-
+Charge (SoC) level 𝑏 ∈ [𝐵]. Arcs are introduced between node pairs to represent all feasible transitions of AESs across these states.
+The network includes ﬁve types of arcs, each capturing a speciﬁc class of AES movements. Fig. 1 illustrates an example of the ﬁve
+arc types, which we describe in detail below.
+
+1. Freighting arcs: The freighting arcs represent the transitions of AESs transporting cargo from an origin port 𝑖 ∈ [𝐼] to a destination
+   port 𝑗 ∈ [𝐼]. The sailing time between ports 𝑖 and 𝑗 is 𝑙𝑖,𝑗 periods, and the corresponding SoC consumption is 𝑒𝐹 𝑙𝑖,𝑗 , where 𝑒𝐹 denotes
+   the per-period SoC consumption. Let frgt ⊆  denote the set of freighting arcs. Then, an arc (𝑛𝑖,𝑡,𝑏 , 𝑛𝑗,𝑡+𝑙𝑖,𝑗 , 𝑏−𝑒𝐹 𝑙𝑖,𝑗 ) belongs to frgt if
+                                                                                     frgt
+    𝑡 + 𝑙𝑖,𝑗 ∈ [𝑇 ] and 𝑏 − 𝑒𝐹 𝑙𝑖,𝑗 ∈ [𝐵]. For convenience, we further deﬁne 𝑖,𝑗,𝑡 = {(𝑛𝑖,𝑡,𝑏 , 𝑛𝑗,𝑡+𝑙𝑖𝑗 ,𝑏−𝑒𝐹 𝑙𝑖,𝑗 ) ∈ frgt ∶ 𝑏 − 𝑒𝐹 𝑙𝑖,𝑗 ∈ [𝐵]}, which
+    represents the set of freighting arcs that depart from port 𝑖 ∈ [𝐼] to port 𝑗 ∈ [𝐼] at period 𝑡 ∈ [𝑇 ].
+
+                                                                            5
+B. Lu et al.                                                                                             Transportation Research Part B 213 (2026) 103569
+
+
+
+
+                                             Fig. 1. An example of the spatial-temporal-SoC shipping network.
+
+
+2. Relocating arcs: Because freight demand is often imbalanced across ports, AESs may need to be relocated among the 𝐼 ports. We
+   denote by relo ⊆  the set of relocating arcs, where each arc (𝑛𝑖,𝑡,𝑏 , 𝑛𝑗,𝑡+𝑙𝑖,𝑗 , 𝑏−𝑒𝑅 𝑙𝑖,𝑗 ) ∈ relo is deﬁned whenever 𝑡 + 𝑙𝑖,𝑗 ∈ [𝑇 ] and
+   𝑏 − 𝑒𝑅 𝑙𝑖,𝑗 ∈ [𝐵]. Here, 𝑐𝑖,𝑗
+                             relo denotes the relocating cost per unit ﬂow per time period.
+
+3. Charging arcs: Upon arriving at port 𝑖 ∈ [𝐼], AESs may charge the batteries, gaining 𝑒𝐶 SoC levels per period. We denote the set
+   of charging arcs as chrg ⊆  where each arc (𝑛𝑖,𝑡,𝑏 , 𝑛𝑖,𝑡+1,𝑏+𝑒𝐶 ) ∈ chrg is deﬁned whenever 𝑡 + 1 ∈ [𝑇 ] and 𝑏 + 𝑒𝐶 ∈ [𝐵], with a
+   charging cost of 𝑝𝑐𝑡 + 𝑐 deg per unit ﬂow, where 𝑐 deg represents the degradation cost per SoC.
+4. Discharging arcs: During high-price periods, AESs may discharge surplus energy back to the power grid, releasing 𝑒𝐷 SoC levels
+   per period. We denote the set of discharging arcs as dsch ⊆  where each arc (𝑛𝑖,𝑡,𝑏 , 𝑛𝑖,𝑡+1,𝑏−𝑒𝐷 ) ∈ dsch is deﬁned whenever
+   𝑡 + 1 ∈ [𝑇 ] and 𝑏 − 𝑒𝐷 ∈ [𝐵], with a discharging revenue of 𝑝𝑠𝑡 − 𝑐 deg per unit ﬂow.
+5. Idle arcs: Under certain cases, AESs may stay docked at port 𝑖 ∈ [𝐼] without charging or discharging, either awaiting upcoming
+   tasks or undergoing maintenance. We denote the set of idle arcs as idle ⊆  where each arc (𝑛𝑖,𝑡,𝑏 , 𝑛𝑖,𝑡+1,𝑏 ) ∈ idle is deﬁned
+   whenever 𝑡 + 1 ∈ [𝑇 ], with a idle cost of 𝑐𝑖idle per unit ﬂow, where 𝑐𝑖idle represents the cost of an AES idling at port 𝑖 ∈ [𝐼] per time
+   period.
+
+    For simplicity, we denote else ∶= relo ∪ idle ∪ chrg ∪ dsch . To represent the number of AESs on each type of arc, we deﬁne
+                              frgt
+the ﬂow decision variables 𝑦𝑎 ; 𝑎 ∈ frgt and 𝑦else 𝑎 ;𝑎 ∈ 
+                                                               else corresponding to the ﬂows on freighting arcs, relocating arcs, idle arcs,
+
+charging arcs, and discharging arcs, respectively. Fig. 1 illustrates an example of the spatial–temporal–SoC network with two ports,
+i.e. A and B, three time periods, i.e. [𝑇 ] = {1, 2, 3}, and three SoC levels, i.e. [𝐵] = {1, 2, 3}. The numbers alongside diﬀerent types of
+arcs the represent the solution for freighting, relocating, idle, charging, and discharging across various ports and time periods.
+
+3.3. Dynamic AESs scheduling model
+
+   In this subsection, we introduce a scheduling model for AESs that integrates both charging and discharging mechanisms. Based on
+the notation summary provided in Table A.1, the model aims to minimize the net cost within a dynamic system represented by the
+spatial-temporal-SoC network . Furthermore, we consider the inﬂuence of uncertainty in freight demand on the multi-stage problem.
+   Net cost objective. The net cost objective is a key goal for the shipping company, focusing on minimizing the total net cost.
+This net cost represents the diﬀerence between operating costs and operating revenue. Consequently, the net cost objective can be
+expressed as minimizing the following function:
+                                                    ⎛                           ⎞
+                            ∑ ∑ ∑                   ⎜               ∑ frgt ⎟        ∑
+                  ̃
+         𝑔(𝒙, 𝒚, 𝒅(𝒗)) =−                      𝑟𝑖,𝑗 ⎜𝑑̃𝑖,𝑗,𝑡 (𝒗) ∧          𝑦𝑎 𝐿⎟ +       𝑐𝑎 𝑦𝑎 .                                                    (1)
+                            𝑖∈[𝐼] 𝑗∈[𝐼] 𝑡∈[𝑇 ]      ⎜                 frgt      ⎟ 𝑎∈else
+                                                    ⎝              𝑎∈𝑖,𝑗,𝑡     ⎠
+    Objective function (1) partitions the arcs into two categories. The ﬁrst category consists of the freighting arcs, denoted by frgt .
+For these arcs, the associated revenue is determined by the unit shipping revenue and the actual freight volume transported, i.e.,
+∑              ̃           ∑         frgt           ∑         frgt
+  𝑖,𝑗,𝑡 𝑟𝑖,𝑗 (𝑑𝑖,𝑗,𝑡 (𝒗) ∧     frgt 𝑦
+                            𝑎∈𝑖,𝑗,𝑡 𝑎
+                                          𝐿). Here,     frgt 𝑦
+                                                     𝑎∈𝑖,𝑗,𝑡 𝑎
+                                                                   𝐿 represents the total freight-carrying capacity assigned to the freighting arcs for
+                                                           ∑            frgt
+origin–destination pair (𝑖, 𝑗) in period 𝑡, where                 frgt 𝑦𝑎    is the number of AESs assigned to these arcs and 𝐿 is the capacity of each
+                                                             𝑎∈𝑖,𝑗,𝑡
+AES. If this total capacity is smaller than the realized freight demand 𝑑̃𝑖,𝑗,𝑡 (𝒗), which depends on the contextual information 𝒗, then
+part of the demand cannot be fulﬁlled; if it exceeds the realized demand, then some AES capacity remains underutilized. Therefore,
+                                                    ∑        frgt
+the actual freight volume is given by 𝑑̃𝑖,𝑗,𝑡 (𝒗) ∧    frgt 𝑦𝑎 𝐿. The second category includes the remaining four types of arcs, namely
+                                                              𝑎∈𝑖,𝑗,𝑡
+
+                                                                                    6
+B. Lu et al.                                                                                                                         Transportation Research Part B 213 (2026) 103569
+
+
+                                                         Table 1
+                                                         Types of arcs in else and their cost per unit ﬂow.
+                                                            Types of arc 𝑎 ∈ else                            Cost per unit ﬂow 𝑐𝑎
+                                                                                                                relo
+                                                            Relocation arc (𝑛𝑖,𝑡,𝑏 , 𝑛𝑗,𝑡+𝑙𝑖,𝑗 ,𝑏−𝑒𝑅 𝑙𝑖,𝑗 )   𝑐𝑖,𝑗   𝑙𝑖,𝑗
+                                                            Idle arc (𝑛𝑖,𝑡,𝑏 , 𝑛𝑖,𝑡+1,𝑏 )                     𝑐𝑖idle
+                                                            Charging arc (𝑛𝑖,𝑡,𝑏 , 𝑛𝑖,𝑡+1,𝑏+𝑒𝐶 )              𝑝𝑐𝑡 + 𝑐 deg
+                                                            Discharging arc (𝑛𝑖,𝑡,𝑏 , 𝑛𝑖,𝑡+1,𝑏−𝑒𝐷 )           −(𝑝𝑠𝑡 − 𝑐 deg )
+
+
+
+relocating arcs, charging arcs, discharging arcs, and idle arcs, which are collectively denoted by else ∶= relo ∪ idle ∪ chrg ∪ dsch .
+The costs associated with these arcs are determined directly by their corresponding per-unit ﬂow cost or revenue and the associated
+arc ﬂows, and the unit ﬂow costs of all four arc types in else are summarized in Table 1.
+    Operational constraints. We proceed to develop a dynamic AESs scheduling model that embeds the shipping company operator’s
+operational constraints. The model explicitly accounts for the budget available for chartering AESs, the proper initialization of AESs
+deployment, and the ﬂow balance of AESs throughout the spatial-temporal-SoC network.
+
+1. Budget. In practice, the shipping company operates under limited ﬁnancial resources when chartering AESs. To represent this
+   operational reality, we impose a budget constraint that restricts the total chartering for AESs can be expressed as follows:
+          ∑
+              𝑐𝑖 𝑥𝑖 ≤ 𝑀.                                                                                                        (2)
+               𝑖∈[𝐼]
+
+2. Initial period. At the beginning of the planning horizon, all AESs at the ports are assumed to be fully charged. Meanwhile, let
+   𝛿 + (𝑛𝑖,𝑡,𝑏 ) and 𝛿 − (𝑛𝑖,𝑡,𝑏 ) denote the sets of arcs for which 𝑛𝑖,𝑡,𝑏 is the origin and destination node respectively. To ensure consistency
+   between the initial AESs availability and the movement decisions, the number of AESs moving from each port in the ﬁrst period
+   must equal the number of AESs initially assigned to that port. It is worth noting that, as shown in Section 3.2, AESs idling at the
+   port also be regarded as a class of movements. This relationship is enforced through the following constraint:
+                  ∑       (              )
+                               frgt
+                            𝑦𝑎 + 𝑦else𝑎     = 𝑥𝑖 , ∀𝑖 ∈ [𝐼].                                                                                   (3)
+               𝑎∈𝛿 + (𝑛𝑖,1,𝐵 )
+
+3. Flow balance. To maintain the consistency of AESs movements across the network , our model enforces ﬂow balance at each
+   node. For every intermediate time period, the number of AESs departing from a node must equal the number of AESs arriving at
+   that node resulting in the following ﬂow balance constraint:
+             ∑ ( frgt           )     ∑ ( frgt         )
+                     𝑦𝑎 + 𝑦else
+                            𝑎     −         𝑦𝑎 + 𝑦else
+                                                    𝑎    = 0, ∀𝑖 ∈ [𝐼], 𝑡 ∈ [𝑇 ]∖{1, 𝑇 }, 𝑏 ∈ [𝐵].                          (4)
+               𝑎∈𝛿 + (𝑛𝑖,𝑡,𝑏 )                𝑎∈𝛿 − (𝑛𝑖,𝑡,𝑏 )
+
+4. Domain. To ensure feasibility and interpretability, we impose domain restrictions on the decision variables. In principle, the char-
+   tering variables 𝑥𝑖 and arc-ﬂow variables 𝑦𝑎 should be restricted to nonnegative integers. To preserve computational tractability,
+   however, we relax these integrality requirements and allow both 𝑥𝑖 and 𝑦𝑎 to take nonnegative continuous values. In practice,
+   integer solutions can be approximately recovered from the resulting continuous solutions through a ﬂoor-rounding procedure
+   (Nemhauser and Wolsey, 1988). Accordingly, we impose the following domain constraints:
+                frgt
+               𝑦𝑎      ≥ 0, ∀𝑎 ∈ frgt ; 𝑦else
+                                          𝑎    ≥ 0, ∀𝑎 ∈ else                                                                                                                   (5)
+               𝑥𝑖 ≥ 0, ∀𝑖 ∈ [𝐼].                                                                                                                                                 (6)
+
+    In summary, we present a decision-making model for shipping company operators to optimize the dynamic AES scheduling
+problem, taking into account the uncertainty in freight demand. The model incorporates net cost objective while considering budget,
+initial period, and ﬂow balance constraints. For conciseness, we present the dynamic AESs scheduling model as follows:
+                      ̃
+         min 𝑔(𝒙, 𝒚, 𝒅(𝒗))
+          s.t. (2) − (6).                                                                                                                                                        (7)
+   However, the dynamic AESs scheduling model presents signiﬁcant computational challenges for two main reasons: (i) it involves
+                                                                                 ̃
+uncertain freight demand 𝑑̃𝑖,𝑗,𝑡 (𝒗) that aﬀects the objective function 𝑔(𝒙, 𝒚, 𝒅(𝒗)), although correlated contextual information 𝒗 can
+                                                                              ̃
+be exploited; (ii) the non-convex nature of the objective function 𝑔(𝒙, 𝒚, 𝒅(𝒗))   complicates the reformulation. The ﬁrst challenge is
+addressed by constructing a contextual JEPO framework, as detailed in Section 4. To tackle the second challenge, we propose a linear
+decision rule approximation that reformulates the non-convex constraint as a linear problem, as discussed in Section 5.
+
+4. Contextual joint estimation-prediction-optimization framework
+
+    This section emphasizes the inherent uncertainty that exists on the freight demand. Based on the modeling conﬁguration outlined
+in Section 3, the value of the uncertain demand 𝒅̃ is not precisely known, as decisions are made before the realization of uncertainty.
+However, we have access to a collection of historical data that can be used to predict the demand. We denote the dataset as  =
+                                                                                               2
+{(𝒅̂𝑠 , 𝒗̂ 𝑠 )}𝑠∈[𝑆] , which comprises 𝑆 samples. The data is represented as (𝒅̂𝑠 , 𝒗̂ 𝑠 ) ∈ ℝ𝐼 𝑇 × ℝ𝐾 for 𝑠 ∈ [𝑆], where 𝒅̂𝑠 denotes the historical
+
+                                                                                                    7
+B. Lu et al.                                                                                                           Transportation Research Part B 213 (2026) 103569
+
+
+freight demand and 𝒗̂ 𝑠 denotes the contextual information associated with 𝒅̂𝑠 , including factors such as weather conditions and port
+throughput. Accordingly, the joint empirical distribution of demand and contextual information can be constructed as (Kannan et al.,
+2024):
+           ̃ 𝒗)
+        ̂ 𝒅,     1 ∑
+       ℙ(    ̃ =        𝛿 ̂          ,
+                 𝑆 𝑠∈[𝑆] (𝒅𝑠 ,𝒗̂ 𝑠 )
+
+                                                                          ̃ = (𝒅̂𝑠 , 𝒗̂ 𝑠 ).
+                                                                        ̃ 𝒗)
+where 𝛿(𝒅̂ ,𝒗̂ ) is the Dirac distribution concentrating unit mass at (𝒅,
+           𝑠 𝑠
+    A central challenge in robust optimization is how to choose an appropriate size of the uncertainty set. To address this issue, we
+adopt a target-oriented approach inspired by Brown and Sim (2009) and Long et al. (2023). Instead of specifying the uncertainty-set
+size a priori, we introduce a target value 𝜏, which represents the maximum allowable net cost relative to the deterministic benchmark.
+We then seek scheduling decisions that remain feasible and attain a net cost no greater than 𝜏 over the largest possible uncertainty
+set. Under this formulation, the model maximizes the robustness of the scheduling decisions against demand uncertainty while
+ensuring that the total net cost remains within an acceptable level. At the decision-making stage, although the realized freight demand
+              2
+𝒅̃ ∈  ⊆ ℝ𝐼 𝑇 is unknown, the contextual information 𝒗 ∈ ℝ𝐾 , including factors such as weather conditions and port throughput, is
+observable. Accordingly, we propose the contextual joint estimation-prediction-optimization (JEPO) model of the dynamic AESs
+scheduling problem as follows:
+         Π = max      𝛾                                                                                                                                          (8a)
+               𝛾≥0
+
+               s.t.   (2) − (6)
+                                                                                                          +
+                                                               ⎛                ⎡                           ⎤ ⎞
+                          ∑             ∑ ∑ ∑                  ⎜ ∑              ⎢ ∑                         ⎥ ⎟
+                               𝑐𝑎 𝑦𝑎 −                    𝑟𝑖,𝑗 ⎜         𝑦𝑎 𝐿 − ⎢         𝑦𝑎 𝐿 − 𝑑̃𝑖,𝑗,𝑡 (𝒗)⎥ ⎟ ≤ 𝜏,
+                      𝑎∈ else         𝑖∈[𝐼] 𝑗∈[𝐼] 𝑡∈[𝑇 ]      ⎜   frgt         ⎢   frgt                    ⎥ ⎟
+                                                               ⎝𝑎∈𝑖,𝑗,𝑡        ⎣𝑎∈𝑖,𝑗,𝑡                   ⎦ ⎠
+                        ̃ ∈ (𝛾, 𝒗).
+                      ∀𝒅(𝒗)                                                                                                                                      (8b)
+Constraint (8b) ensures that, for a given target value 𝜏, the net cost does not exceed 𝜏, where [⋅]+ ∶= max{⋅, 0}. In particular, the term
+                 [                           ]+
+∑                  ∑                ̃                                                                                                ∑          frgt
+     frgt 𝑦𝑎 𝐿 −       frgt 𝑦𝑎 𝐿 − 𝑑𝑖,𝑗,𝑡 (𝒗)   represents the actual freight volume transported, and is equivalent to 𝑑̃𝑖,𝑗,𝑡 (𝒗) ∧      frgt 𝑦     𝐿
+  𝑎∈𝑖,𝑗,𝑡          𝑎∈𝑖,𝑗,𝑡                                                                                                           𝑎∈𝑖,𝑗,𝑡 𝑎
+in the net cost objective function (1), where ∧ denotes the minimum operator.
+    In the above model, (𝛾, 𝒗) is the JEPO uncertainty set proposed in this paper, which is deﬁned in detail in Section 4.2, where
+𝛾 denotes the deviation tolerance which governs the size of the uncertainty set and 𝒗 represents the contextual information at the
+moment of decision-making. The above model maximizes 𝛾 under the target 𝜏, where 𝜏 is the objective value of the deterministic
+model.
+    The construction of the uncertainty set determines the trade-oﬀ between robustness and conservatism, and consequently aﬀects the
+reliability and eﬀectiveness of the solutions. The conventional uncertainty set is usually expressed as  (𝛾) = {𝒅̃ ∈  ∣ ‖(𝒅̃ − 𝒅)‖
+                                                                                                                                  ̂ 𝑝 ≤ 𝛾}
+using a classical norm-based metric ‖ ⋅ ‖𝑝 , where 𝒅̂ denotes the demand predicted from empirical data. The rest of this section is
+organized as follows, Section 4.1 introduces a novel contextual disparity metric to calculate the deviation between predicted demand
+and real demand. In Section 4.2, we construct the JEPO uncertainty set. Finally, in Section 4.3, we present a data-driven calibration
+of JEPO uncertainty set.
+
+4.1. Contextual disparity metric
+
+   In this subsection, we focus on the construction of a contextual disparity metric, thereby allowing deviations to be evaluated in
+                                                                                                                             2
+a more principled manner that reﬂects dimensional heterogeneity. In our problem, the value of freight demand 𝒅̃ ∈ ℝ𝐼 𝑇 remains
+unknown, but the associated contextual information 𝒗 ∈ ℝ𝐾 is observed. To incorporate this contextual information, we adopt an
+                                                                                        2                                            2
+aﬃne prediction map that links the contextual features to the predicted demand 𝒅̂† ∈ ℝ𝐼 𝑇 , given by 𝒅̂† ∶= 𝒅0 + 𝐃𝒗, where 𝒅0 ∈ ℝ𝐼 𝑇
+            2
+and 𝐃 ∈ ℝ𝐼 𝑇 ×𝐾 are parameters estimated from the dataset.
+   Since the predicted demand may be deviated from the real demand 𝒅,    ̃ we introduce a disparity metric 𝜌𝐇 (𝒅,̃ 𝒅̂† ) which measures
+the deviation between 𝒅 and 𝒅 . Conventionally, ‖𝒅 − 𝒅 ‖𝑝 is employed to measure the deviation between 𝒅 and 𝒅̂† , which solely
+                        ̃      ̂†                   ̃   ̂†                                                     ̃
+depends on the ﬁxed predicted output without considering contextual information. To better reﬂect the inﬂuence of contextual factors
+on the demand deviation, we introduce a contextual disparity metric, detailed in Deﬁnition 1.
+                                                                                                                                   2        2
+Deﬁnition 1. (Contextual disparity metric) Given the 𝐿𝑝 norm, the contextual disparity metric 𝜌 ∶ ℝ𝐼 𝑇 × ℝ𝐼 𝑇 → [0, ∞] is deﬁned
+as follows:
+              ̃ 𝒅̂† ) ∶= ‖𝐇−1 (𝒅̃ − 𝒅0 − 𝐃𝒗)‖𝑝 ,
+         𝜌𝐇 (𝒅,
+where 𝒗 ∈ ℝ𝐾 represents the contextual information and 𝐇 represents the deviation matrix which is both symmetric and positive
+                      2
+deﬁnite, i.e., 𝐇 ∈ 𝕊𝐼++𝑇 .
+Remark 1. The deviation matrix 𝐇 generalizes two special cases. When 𝐇 = 𝐈, the contextual disparity metric reduces to the stan-
+dard 𝐿𝑝 norm ‖𝒅̃ − 𝒅̂† ‖𝑝 , treating all demand components equally regardless of their variability. This corresponds to the classical
+uncertainty set in robust optimization. When 𝐇 = 𝚲, where 𝚲 is a diagonal matrix with entries 𝚲𝑖𝑖 given by the standard deviation
+
+                                                                                      8
+B. Lu et al.                                                                                         Transportation Research Part B 213 (2026) 103569
+
+
+of 𝑑̂𝑖(𝑠) across 𝑠 ∈ [𝑆], the metric performs component-wise standardization, which is a common preprocessing technique in machine
+learning.
+    The deviation matrix 𝐇 rescales the deviation vector before applying the 𝐿𝑝 norm. When 𝐇 is a diagonal matrix, 𝐇−1 𝒅̃ eﬀectively
+normalizes the component-wise of 𝒅,    ̃ a technique commonly used in machine learning. In our study, we allow 𝐇 to be a dense matrix to
+adjust the weighting of deviations across ports and time periods, ensuring that infrequent but large variability in certain components is
+given relatively small weight, preventing it from dominating the overall deviation. Conversely, more stable components are assigned
+relatively higher weight. In this manner, the deviation matrix 𝐇, estimated from the dataset, incorporates the heterogeneity of
+deviations into 𝜌𝐇 (⋅, ⋅), resulting in a more equitable and balanced measure of overall deviation. The following provides a speciﬁc
+example to illustrate the role of the deviation matrix 𝐇.
+Example 1. Consider two ports, denoted by A and B, over two time periods, denoted by 𝑡1 and 𝑡2 . The real demand
+is assumed to be 𝒅̃ = [𝑑𝐴,𝐵,𝑡1 , 𝑑𝐴,𝐵,𝑡2 , 𝑑𝐵,𝐴,𝑡1 , 𝑑𝐵,𝐴,𝑡2 ] = [100, 50, 70, 40], and the corresponding predicted demand vector is 𝒅̂† =
+[𝑑 †   , 𝑑†
+  𝐴,𝐵,𝑡1
+            , 𝑑†  , 𝑑†
+               𝐴,𝐵,𝑡2
+                          ] = [90, 60, 65, 45]. Accordingly, the demand deviation is 𝒅̃ − 𝒅̂† = [10, −10, 5, −5]. Suppose that period 𝑡1
+                        𝐵,𝐴,𝑡1       𝐵,𝐴,𝑡2
+is associated with high demand variability, with variance 4, whereas period 𝑡2 is relatively stable, with variance 1. The resulting
+deviation matrix 𝐇 obtained from the optimization model is given by
+             ⎡4          0       0       0⎤                  ⎡0.25   0    0      0⎤
+             ⎢                            ⎥                  ⎢                    ⎥
+              0          1       0       0⎥                     0    1     0     0⎥
+           𝐇=⎢                             ,       𝐇   −1
+                                                            =⎢                     .
+             ⎢0          0       4       0⎥                  ⎢ 0     0   0.25    0⎥
+             ⎢0          0       0        ⎥
+                                         1⎦                  ⎢ 0     0     0      ⎥
+                                                                                 1⎦
+             ⎣                                               ⎣
+Here, 𝐇−1 assigns smaller penalties to deviations in high-variance periods and larger penalties to deviations in relatively stable periods.
+Accordingly, the weighted deviation is given by
+                         ⎡0.25                 0         0      0⎤⎡ 10 ⎤ ⎡ 2.5 ⎤
+                         ⎢                                       ⎥⎢    ⎥ ⎢     ⎥
+                            0                  1          0     0⎥⎢−10⎥ ⎢ −10 ⎥
+           𝐇 (𝒅̃ − 𝒅 ) = ⎢
+               −1       ̂†                                               =       .
+                         ⎢ 0                   0        0.25    0⎥⎢ 5 ⎥ ⎢1.25⎥
+                         ⎢ 0                   0          0      ⎥⎢    ⎥   ⎢
+                                                                1⎦⎣ −5 ⎦ ⎣ −5 ⎦⎥
+                         ⎣
+Therefore, under the 𝐿2 -norm, the contextual disparity metric is
+                    √                                   √
+           ̃ 𝒅̂† ) = (2.5)2 + (−10)2 + (1.25)2 + (−5)2 = 132.8125 ≈ 11.5.
+      𝜌𝐇 (𝒅,
+By contrast, without incorporating 𝐇, the conventional Euclidean norm yields
+                    √                           √
+      ‖𝒅̃ − 𝒅̂† ‖2 = 102 + (−10)2 + 52 + (−5)2 = 250 ≈ 15.8.
+This example shows that the matrix 𝐇 adjusts the contribution of each component according to its variability. In particular, deviations
+in high-variance periods are downweighted, so that unusually volatile periods do not disproportionately dominate the overall disparity
+measure. As a result, the contextual disparity metric decreases from 15.8 to 11.5, yielding a more balanced and meaningful assessment
+of the deviation.
+    This example illustrates that 𝐇 reﬁnes the deviation metric 𝜌𝐇 (⋅, ⋅) by incorporating weights, ensuring that the overall deviation
+is assessed in a fairer and more reasonable manner. Next, we describe the generalizability of the above deﬁnition deviation metric
+𝜌𝐇 (⋅, ⋅).
+Remark 2. The 𝐿𝑝 -norm here can be extended to the absolute norm, and the application of the absolute norm is more extensive. An
+absolute norm satisﬁes ‖𝑢‖ = ‖𝑣‖ for all 𝑢 ∈ ℝ𝐾 , with 𝑣𝓁 = |𝑢𝓁 | for each 𝓁 ∈ [𝐿]. The properties of the absolute norm are detailed in
+Bertsimas and Sim (2006). In particular, for any 𝑣, 𝑢 ∈ ℝ𝐾 such that 𝑣𝓁 ≥ |𝑢𝓁 | for all 𝓁 ∈ [𝐿], ‖𝑣‖ ≥ ‖𝑢‖. Examples of absolute norms
+include the 𝐿𝑝 -norm and the 𝐷-norm introduced in Bertsimas and Sim (2004).
+   In addition to the generalizability, we seek to show that the contextual disparity metric also has properties that are consistent
+with the common metric.
+Theorem 1. The contextual disparity metric 𝜌𝐇 (⋅, ⋅) satisﬁes the following properties:
+                                                            2
+1. Positive deﬁnite: For all 𝒅, 𝜻 ∈ ℝ𝐼 𝑇 , 𝜌𝐇 (𝒅, 𝜻) ≥ 0. Moreover, 𝜌𝐇 (𝒅, 𝜻) = 0 if and only if 𝒅 = 𝜻.
+2. Convex: 𝜌𝐇 (𝒅, 𝜻) is a convex function in 𝒅, 𝜻 ∈ .
+                                                                     2
+3. Translation invariant: 𝜌𝐇 (𝒅, 𝜻) = 𝜌(𝒅 − 𝝃, 𝜻 − 𝝃) for all 𝝃 ∈ ℝ𝐼 𝑇 .
+4. Positive homogeneous: 𝜌𝐇 (𝑘𝒅, 𝑘𝜻) = 𝑘𝜌𝐇 (𝒅, 𝜻) for all 𝑘 ≥ 0.
+                                                      2
+5. Symmetric: 𝜌𝐇 (𝒅, 𝜻) = 𝜌𝐇 (𝜻, 𝒅) for all 𝒅, 𝜻 ∈ ℝ𝐼 𝑇 .
+Proof. See E-Companion Appendix B.1. □
+The ﬁrst property indicates that the metric is always non-negative and only equals zero when the two vectors are identical which
+reﬂects the fundamental idea of a metric. The second property implies that the metric behaves well in optimization, ensuring that
+any local minimum is a global minimum, which simpliﬁes solving optimization problems. The third property shows that shifting both
+vectors by the same amount does not aﬀect the deviation metric which is important when data undergoes translation change. The
+fourth property ensures that if both vectors are scaled by the same factor, the deviation is scaled proportionally, which keeps the
+metric consistent across diﬀerent magnitudes of data. The ﬁnally property indicates that the deviation metric is independent of the
+order of comparison, making the metric unbiased and consistent in its comparisons.
+
+                                                                                       9
+B. Lu et al.                                                                                      Transportation Research Part B 213 (2026) 103569
+
+
+4.2. JEPO uncertainty set
+
+    Building on the contextual disparity metric discussed in Section 4.1, we formally introduce the JEPO uncertainty set for the
+freight demand in this subsection. To ensure that the JEPO uncertainty set covers the uncertain demand 𝒅̃ with a high probability, it
+is essential to discuss the contextual conﬁdence ball.
+
+Deﬁnition 2. (Contextual conﬁdence ball) Given deviation matrix 𝐇, deviation tolerance 𝛾, and parameters 𝒅0 , 𝐃, the contextual
+conﬁdence ball of freight demand 𝒅̃ is deﬁned as:
+                                           ̃ 𝒅̂† ) ≤ 𝛾} = {𝒅̃ ∈  ∣ ‖𝐇−1 (𝒅̃ − 𝒅0 − 𝐃𝒗)‖𝑝 ≤ 𝛾},
+         (𝒅0 + 𝐃𝒗, 𝐇, 𝛾) = {𝒅̃ ∈  ∣ 𝜌𝐇 (𝒅,
+
+centered at (𝒅0 + 𝐃𝒗). And the deviation tolerance 𝛾 controls the radius of the conﬁdence ball.
+
+   To establish the upper bound of the infeasibility probability of the conﬁdence, such that the uncertainty demand 𝒅̃ falls into the
+contextual conﬁdence ball with a relatively high probability, we introduce the following theorem.
+
+Theorem 2. (Probabilistic guarantee) Suppose the random variable 𝒅̃ ∼ ℙ, ℙ ∈ 0 (), satisﬁes
+       [                         ]
+     𝔼ℙ 𝜓(‖𝐇−1 (𝒅̃ − 𝒅0 − 𝐃𝒗)‖𝑝 ) ≤ 1,
+                   2                            2
+for some 𝒅0 ∈ ℝ𝐼 𝑇 , 𝐃 ∈ ℝ𝑁×𝐾 and 𝐇 ∈ 𝕊𝐼++𝑇 , where 𝜓(⋅) is a power deviation penalty function which is deﬁned in Deﬁnition 3. Then we
+have the infeasibility probability bound of the conﬁdence ball:
+         {                       }
+       ℙ 𝒅̃ ∉ (𝒅0 + 𝐃𝒗, 𝐇, 𝛾) ≤ 1∕𝜓(𝛾) ∀𝛾 ≥ 0.
+
+Proof. See E-Companion Appendix B.2. □
+We proceed by introducing the power deviation penalty function which serves as a key part in the above probabilistic guarantee.
+
+Deﬁnition 3. (Power deviation penalty function) The power deviation penalty function 𝜓 ∶ ℝ+ → [0, ∞] serves as a mapping re-
+lationship, mapping the deviation into a quantitative penalty value. This function is a non-negative, non-decreasing, and convex
+function such that 𝜓(0) < 1 and for some 𝛼 ∈ [1, ∞], the power deviation penalty function is deﬁned as follows:
+                                       ‖𝐇−1 (𝒅̃ − 𝒅0 − 𝐃𝒗)‖𝛼𝑝
+         𝜓(‖𝐇−1 (𝒅̃ − 𝒅0 − 𝐃𝒗)‖𝑝 ) =                            ,
+                                                𝑁
+                                                                                    ̃
+which is normalized by 𝑁 which represents the dimension of the uncertain parameter 𝒅.
+
+    In Theorem 2, since the function 𝜓(⋅) is monotonically increasing, as 𝛾 approaches inﬁnity, the probability of violating the feasi-
+bility bound becomes negligible. This suggests that the uncertain demand 𝒅̃ is highly likely to fall within the conﬁdence ball.
+    Additionally, Theorem 2 establishes a relationship between the infeasibility probability bound of the conﬁdence ball
+(𝒅0 + 𝐃𝒗, 𝐇, 𝛾) and the estimated parameters (𝒅0 , 𝐃, 𝐇). Speciﬁcally, among the values of (𝒅0 , 𝐃, 𝐇) that satisfy the condition
+   [ ( −1                    )]
+𝔼ℙ 𝜓 ‖𝐇 (𝒅̃ − 𝒅0 − 𝐃𝒗)‖𝑝 ≤ 1, we aim to establish an upper bound on the volume of the conﬁdence ball (𝒅0 + 𝐃𝒗, 𝐇, 𝛾), i.e.,
+Vol((𝒅0 + 𝐃𝒗, 𝐇, 𝛾)). If the volume of the conﬁdence ball (𝒅0 + 𝐃𝒗, 𝐇, 𝛾) is too large, it means that more extreme uncertainty pa-
+rameters need to be considered, resulting in overly conservative solutions obtained through optimization. For example, in resource
+allocation problems, excessive resources need to be reserved to deal with extreme situations, thereby reducing proﬁts. The minimal
+volume of the conﬁdence ball constrains the range of uncertainty vectors while ensuring uncertainty coverage, thereby reducing the
+cost of “ﬁghting uncertainty”.
+    Building on the contextual disparity metric introduced in Section 4.1 and the contextual conﬁdence ball deﬁned above, we deﬁne
+the JEPO uncertainty set as the minimum-volume conﬁdence ball that preserves the prescribed conﬁdence level, thereby mitigating
+the excessive conservatism of robust solutions.
+                                                       2            2                2
+Deﬁnition 4. (JEPO uncertainty set) Let 𝐇 ∈ 𝕊𝐼++𝑇 , 𝐃 ∈ ℝ𝐼 𝑇 ×𝐾 , and 𝒅0 ∈ ℝ𝐼 𝑇 denote the parameters endogenously determined by
+the minimum volume conﬁdence ball (MVCB) problem (10), which will be introduced below. We deﬁne the JEPO uncertainty set for
+the uncertain demand as
+                   ⎧      | 𝜌𝐇 (𝒅,
+                                 ̃ 𝒅0 + 𝐃𝒗) ≤ 𝛾                   ⎫
+                   ⎪      |                                       ⎪
+                          | {                        }
+                   ⎪̃     |                                   1 ⎪
+                          |
+         (𝛾, 𝒗) = ⎨𝒅 ∈  | ℙ  𝒅̃ ∈ (𝒅   + 𝐃𝒗, 𝐇, 𝛾)  ≥ 1 −
+                                                             𝜓(𝛾) ⎬
+                                        0                           ,                                                                         (9)
+                   ⎪      |                                       ⎪
+                          |
+                   ⎪      |                                       ⎪
+                   ⎩      | Vol((𝒅0 + 𝐃𝒗, 𝐇, 𝛾)) ≤ 𝑅̂            ⎭
+where 𝑅̂ = Vol((𝒅0∗ + 𝐃∗ 𝒗, 𝐇∗ , 𝛾)), and (𝒅0∗ , 𝐃∗ , 𝐇∗ ) denotes an optimal solution to the MVCB problem (10).
+
+    In the JEPO uncertainty set (𝛾, 𝒗), the ﬁrst constraint requires that the contextual disparity metric 𝜌𝐇 (⋅, ⋅), as deﬁned in Deﬁni-
+tion 1, between the realized demand 𝒅̃ and the predicted demand 𝒅0 + 𝐃𝒗 does not exceed the deviation tolerance 𝛾. This constraint
+ensures that the uncertainty set excludes demand realizations that deviate excessively from the context-dependent prediction. The
+second constraint requires that the conﬁdence ball (𝒅0 + 𝐃𝒗, 𝐇, 𝛾) covers the realized demand 𝒅̃ with probability at least 1 − 1∕𝜓(𝛾),
+where 𝜓(⋅) is the power deviation penalty function introduced in Deﬁnition 3. Since 𝜓(𝛾) increases monotonically with 𝛾, the associ-
+ated coverage probability approaches one as 𝛾 becomes larger, thereby ensuring the statistical reliability of the uncertainty set. The
+
+                                                                        10
+B. Lu et al.                                                                                        Transportation Research Part B 213 (2026) 103569
+
+
+
+
+                                            Fig. 2. JEPO uncertainty set and contextual conﬁdence balls.
+Note: Contextual conﬁdence balls characterize the range in which uncertainty demand may vary for given parameters, whereas the JEPO uncertainty
+set is the particular conﬁdence ball that both meets the required coverage probability and achieves the smallest volume.
+
+
+
+
+                                                 Fig. 3. The process from the dataset to decisions.
+Note: Compared with the sequential decision pipeline, the contextual JEPO framework embeds both estimation and prediction directly into the
+optimization model, forming an integrated process. Meanwhile, conventional parameter estimation typically minimizes a loss function, which may
+lead to mismatch with the ﬁnal optimizing objective. Contextual JEPO framework estimates parameters by minimizing the volume of the conﬁdence
+set, ensuring that the uncertainty set covers the uncertain demand with high probability while simultaneously reducing the conservatism of the
+solutions.
+
+
+
+third constraint imposes an upper bound 𝑅̂ on the volume of the conﬁdence ball, which prevents the uncertainty set from becoming
+excessively large and overly conservative, and thus avoids unnecessarily costly robust decisions.
+    As illustrated in Fig. 2, we note that the JEPO uncertainty set diﬀers from the contextual conﬁdence balls. The contextual con-
+ﬁdence balls describe the range where the uncertainty demand may ﬂuctuate under given parameters (𝒅0 , 𝐃, 𝐇), while the JEPO
+uncertainty set is the conﬁdence ball that satisﬁes both probability and volume constraints among all such conﬁdence balls, i.e., the
+conﬁdence ball that provides suﬃcient coverage while being the most compact.
+    Under the JEPO uncertainty set, model (8) incorporates the parameters estimation, demand prediction, and decisions optimiza-
+tion in an uniﬁed framework. As illustrated in Fig. 3, the sequential decision-making process involves multiple independent stages,
+including estimation, prediction, and optimization. The interactions between these stages are often complex, which can result in
+high computational costs and the mismatch of the objective function. In contrast, the JEPO framework simpliﬁes and integrates the
+decision-making process by directly feeding both contextual information and dataset into the model simultaneously. By focusing the
+entire process on a uniﬁed optimization objective, JEPO enhances the consistency and reliability of the resulting decisions.
+    However, managing the volume of the conﬁdence ball Vol((𝒅0 + 𝐃𝒗, 𝐇, 𝛾)) poses a signiﬁcant challenge. To overcome this, the
+following proposition oﬀers an equivalent reformulation.
+
+                                                                      11
+B. Lu et al.                                                                                                 Transportation Research Part B 213 (2026) 103569
+
+
+Proposition 1. The volume of (𝒅0 + 𝐃𝒗, 𝐇, 𝛾) can be precisely calculated as following by changing variables from 𝐇−1 (𝒅̃ − 𝒅0 − 𝐃𝒗) to 𝒘:
+
+         Vol((𝒅0 + 𝐃𝒗, 𝐇, 𝛾)) =                                             ̃ =
+                                                                          d(𝒅)                  |det(𝐇)|d𝒘
+                                               ∫{𝒅∶‖𝐇
+                                                  ̃        ̃ 0 −𝐃𝒗)‖≤𝛾}
+                                                      −1 (𝒅−𝒅                      ∫{𝒘∶‖𝒘‖≤𝛾}
+                                            = |det(𝐇)| ⋅ Vol((𝟎, 𝐈, 𝛾)) ∝ |det(𝐇)|.
+    This expression indicates that, for a ﬁxed 𝛾, the volume and therefore the size of each conﬁdence ball is directly proportional to
+det(𝐇). Consequently, selecting a deviation matrix with a smaller determinant yields a less conservative uncertainty set. Consistent
+with the probabilistic guarantee in Theorem 2, the optimal parameter values can be obtained by solving the following optimization
+problem.
+Proposition 2. The minimum volume conﬁdence ball (MVCB) problem of the JEPO uncertainty set is:
+         inf det(𝐇)                                                                                                                                   (10a)
+                [                         ]
+         s.t. 𝔼ℙ 𝜓(‖𝐇−1 (𝒅̃ − 𝒅0 − 𝐃𝒗)‖𝑝 ) ≤ 1                                                                                                        (10b)
+                 𝐇 ⪰ Diag(𝐫)                                                                                                                          (10c)
+                            𝐼2𝑇               𝑁×𝐾            2
+                 𝒅0 ∈ ℝ           ,𝐃 ∈ ℝ            , 𝐇 ∈ 𝕊𝐼++𝑇 ,                                                                                    (10d)
+                                                                    2                                                   2
+where the conic inequality 𝐇 ⪰ Diag(𝐫) represents 𝐇 − Diag(𝐫) ∈ 𝕊𝐼++𝑇 and the pre-speciﬁed regularization vector 𝐫 ∈ ℝ𝐼++𝑇 ∪ {𝟎} is applied
+                  2
+to enforce 𝐇 ∈ 𝕊𝐼++𝑇 , ensuring the volume of the conﬁdence ball remains positive.
+   The JEPO uncertainty set (𝛾, 𝒗) involves probability and volume constraints, which are challenging to handle directly in opti-
+mization. By introducing Proposition 2 and replacing the implicit probability and volume bound constraint with explicit determinant
+                                                                    ̄ 𝒗) provides a more intuitive form, as shown in the following
+and expectation constraints. Mathematically, the reformulated set (𝛾,
+proposition.
+Proposition 3. Given the (𝛾, 𝒗), the JEPO uncertainty set (9) is equivalent to the following reformulation:
+                ⎧                          |𝜌𝐇 (𝒅,
+                                                 ̃ 𝒅0 + 𝐃𝒗) ≤ 𝛾                ⎫
+                                           |
+                                           | [
+                ⎪                          |𝔼 𝜓(‖𝐇−1 (𝒅̃ − 𝒅 − 𝐃𝒗)‖ )] ≤ 1⎪
+                ⎪                          | ℙ                0        𝑝       ⎪
+                                           |
+         ̄ 𝒗) = ⎪
+         (𝛾,   ⎨𝒅̃ ∈ 
+                                           |det(𝐇) ≤ 𝐾̂
+                                           |
+                                                                               ⎪
+                                                                               ⎬,                                                                      (11)
+                                           |
+                ⎪                          |𝐇 ⪰ Diag(𝐫)                        ⎪
+                ⎪                          |                                   ⎪
+                                           |
+                ⎪                          |
+                ⎩                          |𝒅 ∈ ℝ𝐼 2 𝑇 , 𝐃 ∈ ℝ𝑁×𝐾 , 𝐇 ∈ 𝕊𝐼 2 𝑇 ⎪
+                                           | 0                           ++ ⎭
+
+where 𝐫 ∈ ℝ𝑁                                              ̂        ∗          ∗
+           ++ ∪ {𝟎} represents regularization vector. Let 𝐾 = det(𝐇 ), where 𝐇 denotes the optimal solution set for the MVCB problem.
+
+   The uncertainty set (11) integrates parameter estimation and demand prediction within a uniﬁed framework. In the following
+subsection, we present a data-driven calibration of the JEPO uncertainty set.
+
+4.3. Data-driven calibration of JEPO uncertainty set
+
+    In this subsection, we propose a data-driven calibration of JEPO uncertainty set, which provides a computationally tractable
+method for estimating the parameters (𝒅0 , 𝐃, 𝐇) of the JEPO uncertainty set (11). Since the true joint distribution is not available in
+                                                ̃ 𝒗)
+                                             ̂ 𝒅,
+practice, we use the empirical distribution ℙ(    ̃ to estimate these parameters. Furthermore, because problem (10) is non-convex
+and cannot be solved directly, we demonstrate how the MVCB problem can be reformulated as a convex optimization problem. This
+reformulation is presented in the following theorem.
+Theorem 3. The optimal solution (𝒅0∗ , 𝐃∗ , 𝐇∗ ) of Problem (10) can be obtained from solving the following convex optimization problem:
+
+         sup det(𝐐)1∕𝑁                                                                                                                                (12a)
+                                       [              ]
+          s.t.   𝔼(𝒅 ,𝒗 )∼ℙ(
+                    𝑠   𝑠      ̃ 𝜓(‖𝐐𝒅𝑠 − 𝒒 − 𝐏𝒗𝑠 ‖𝑝 ) ≤ 1
+                             ̃ 𝒗)
+                          ̂ 𝒅,                                                                                                                        (12b)
+                                  −1
+                 𝐐 ⪯ Diag (𝐫)                                                                                                                         (12c)
+                            𝐼2𝑇              𝑁×𝐾            2
+                 𝒒∈ℝ              ,𝐏 ∈ ℝ           , 𝐐 ∈ 𝕊𝐼++𝑇 .                                                                                     (12d)
+Speciﬁcally, suppose the optimal solution of Problem (12) is (𝒒 ∗ , 𝐏∗ , 𝐐∗ ). Then 𝐇∗ = (𝐐∗ )−1 , 𝒅0∗ = 𝐇∗ 𝒒 ∗ , and 𝐃∗ = 𝐇∗ 𝐏∗ .
+Proof. See E-Companion Appendix B.3. □
+It is well known that the determinant optimization problem in the above issue can be expressed as the semideﬁnite optimization
+problem with a geometric mean constraint which can subsequently expressed as second-order cone problem (SOCP). These methods
+are implemented in RSOME, a Python-based algebraic modeling toolbox developed by Chen and Xiong (2023). Beyond its convexity,
+problem (12) also beneﬁts from the tractability of computing the expectation over the empirical distribution in the constraint, as
+following:
+                        [                   ]  1 ∑
+       𝔼(𝒅 ,𝒗 )∼ℙ(
+                ̂ 𝒅, ̃ 𝜓(‖𝐐𝒅𝑠 − 𝒒 − 𝐏𝒗𝑠 ‖𝑝 ) =
+                   ̃ 𝒗)                                𝜓(‖𝐐𝒅𝑠 − 𝒒 − 𝐏𝒗𝑠 ‖𝑝 ).
+           𝑠 𝑠                                 𝑆 𝑠∈[𝑆]
+
+                                                                                          12
+B. Lu et al.                                                                                                                              Transportation Research Part B 213 (2026) 103569
+
+
+   We next focus on a special case, we set the norm to be the 𝐿2 -norm and the power deviation penalty function to be 𝜓2 (𝑠). Therefore,
+we derive the following theorem.
+
+Theorem 4. The optimal solution to model (12) for the speciﬁc case with an 𝐿2 -norm, a deviation penalty 𝜓2 (⋅), and 𝐫 = 𝟎 can be expressed
+as follows:
+                                                                      (                   )1
+         𝐃∗ = 𝚺    ̂ −1 , 𝒅 ∗ = 𝝁̂ 𝒅 − 𝐃∗ 𝝁̂ 𝒗 , and
+              ̂ 𝒅𝒗 𝚺                                              𝐇∗ = 𝚺̂𝒅 −𝚺         ̂ 𝒗𝒅 2 ,
+                                                                                 ̂ −1 𝚺
+                                                                            ̂ 𝒅𝒗 𝚺
+                     𝒗     0                                                       𝒗
+                                             [                         ] ⊤              [                         ]
+where 𝝁̂ 𝒗 = 𝔼ℙ̂ [𝒗],            ̃ 𝚺
+                  ̃ 𝝁̂ 𝒅 = 𝔼ℙ̂ [𝒅],                                       ̂ =𝚺
+                                    ̂ 𝒗 = 𝔼 ̂ (𝒗̃ − 𝝁̂ 𝒗 )(𝒗̃ − 𝝁̂ 𝒗 )⊤ , 𝚺                                              ̂𝒅 −𝚺
+                                                                              ̂ 𝒅𝒗 = 𝔼 ̂ (𝒅̃ − 𝝁̂ 𝒅 )(𝒗̃ − 𝝁̂ 𝒗 )⊤ , and 𝚺        ̂ −1 𝚺
+                                                                                                                             ̂ 𝒅𝒗 𝚺    ̂ 𝒅𝒗 is assumed to be
+                                           ℙ                               𝒗𝒅         ℙ                                             𝒗
+positive deﬁnite.
+
+Proof. See E-Companion Appendix B.4. □
+Through this theorem, we ﬁnd that the optimal solution is completely determined by the ﬁrst-order moment (mean) and second-order
+moment (covariance) under the empirical distribution ℙ.̂ Theorem 4 provides an optimal analytical solution that can be calculated
+directly without optimization under speciﬁc conditions.
+   Building on Theorem 3, we introduce a data-driven calibration of the uncertainty set in the following proposition. For convenience,
+we deﬁne Ξ(𝒅𝑠 , 𝒗𝑠 ) ∶= {det(𝐐)1∕𝑁 ∣ (12b)–(12d)}.
+
+Proposition 4. Based on the solution to the optimization problem (12), the uncertainty set (11) can be reduced to the following concise
+reformulation:
+               {                                            }
+                       | ‖𝐐∗ 𝒅̃ − 𝒒 ∗ − 𝐏∗ 𝒗‖𝑝 ≤ 𝛾
+       ̂ 𝒗) = 𝒅̃ ∈  ||
+      (𝛾,                                                   ,                                                                    (13)
+                       | (𝒒 ∗ , 𝐏∗ , 𝐐∗ ) = argmaxΞ(𝒅 , 𝒗 )
+                       |                             𝑠 𝑠
+
+where (𝒒 ∗ , 𝐏∗ , 𝐐∗ ) is the optimal solution obtained by solving problem (12).
+
+Proof. See E-Companion Appendix B.7. □
+As shown in Proposition 4, this calibration enables eﬃcient estimation of the parameters by leveraging state-of-the-art solvers such
+as Rsome and Gurobi. Subsequent solutions to the dynamic AESs scheduling problem are derived using the data-driven calibration
+JEPO uncertainty set (13).
+
+5. Tractability of contextual JEPO framework
+
+    In this section, we discuss how one can solve the JEPO model (8) with uncertainty set (𝛾,   ̂ 𝒗) in an eﬀective way. Section 5.1
+reformulates the nonlinear part of constraint (8b) into a linear solvable form using the LDR approximation. Next, Section 5.2 constructs
+a lifted uncertainty set to address the inconsistency existing of uncertain demand in constraint and uncertainty set. Finally, to handle
+the decision-dependent uncertainty, we propose a binary search algorithm for the deviation tolerance 𝛾 in Section 5.3.
+
+5.1. Linear decision rule approximation
+
+    In this subsection, we concentrate on dealing with the nonlinear term of the constraint (8b). In the following, we apply the idea
+of LDR to seek a scalable approach to circumvent the computational diﬃculty. The LDR approximation is commonly used to tackle
+the intractability in robust optimization by limiting intractable term to aﬃne functions of the random variables (He et al., 2020;
+                                                                                                    [                            ]+
+                                                                                                      ∑                 ̃
+Hao et al., 2020). In our problem, we apply this method to approximate the piecewise function              frgt 𝑦𝑎 𝐿 − 𝑑𝑖,𝑗,𝑡 (𝒗)   . Speciﬁ-
+                                                                                                                                                    𝑎∈𝑖,𝑗,𝑡
+cally, for all 𝑖, 𝑗 ∈ [𝐼], 𝑡 ∈ [𝑇 ], we replace the piecewise function by 𝑘𝑖,𝑗,𝑡 (𝒅̃𝑖,𝑗,[𝑡−1] ) and impose additional constraints 𝑘𝑖,𝑗,𝑡 (𝒅̃𝑖,𝑗,[𝑡−1] ) ≥
+[                             ]+
+  ∑                  ̃
+        frgt 𝑦𝑎 𝐿 − 𝑑𝑖,𝑗,𝑡 (𝒗)   , where
+    𝑎∈𝑖,𝑗,𝑡
+
+
+                                               ∑ ∑ ∑
+                                                   𝑡−1
+                                                       (                                  )
+         𝑘𝑖,𝑗,𝑡 (𝒅̃𝑖,𝑗,[𝑡−1] ) = 𝑘0,𝑖,𝑗,𝑡 +             𝑘1,𝑖,𝑗,𝑡,𝑖′ ,𝑗 ′ ,𝑡′ 𝑑̃𝑖′ ,𝑗 ′ ,𝑡′ ,                                                                                        (14)
+                                              𝑖′ ∈[𝐼] 𝑗 ′ ∈[𝐼] 𝑡′ =1
+
+with the coeﬃcients 𝑘0,𝑖,𝑗,𝑡 and 𝑘1,𝑖,𝑗,𝑡,𝑖′ ,𝑗 ′ ,𝑡′ are the new decision variables. More compactly, the LDR approximation is represented as
+𝒌(⋅) ∈  where
+
+             ⎧               | for all 𝑖, 𝑗 ∈ [𝐼], 𝑡 ∈ [𝑇 ] ∶                                                                        ⎫
+                             |
+             ⎪               |                                                                                                       ⎪
+                             |                                              ∑       ∑      ∑𝑡−1
+             ⎪               |                                                                   (                                  )⎪
+          = ⎨𝒌(⋅) ∶  → ℝ+ || 𝑘𝑖,𝑗,𝑡 (𝒅̃𝑖,𝑗,[𝑡−1] ) = 𝑘0,𝑖,𝑗,𝑡 +                                 𝑘1,𝑖,𝑗,𝑡,𝑖′ ,𝑗 ′ ,𝑡′ 𝑑̃𝑖′ ,𝑗 ′ ,𝑡′ ⎬.                                             (15)
+             ⎪               |                                                                                                       ⎪
+                             |                                            𝑖′ ∈[𝐼] 𝑗 ′ ∈[𝐼] 𝑡′ =1
+             ⎪               |                                                                                                       ⎪
+             ⎩               | for some 𝑘
+                                                0,𝑖,𝑗,𝑡 , 𝑘1,𝑖,𝑗,𝑡,𝑖′ ,𝑗 ′ ,𝑡′ ∈ ℝ, 𝑖 , 𝑗 ∈ [𝐼], 𝑡 ∈ [1, 𝑡 − 1] ⎭
+                                                                                        ′ ′             ′
+                             |
+   Note that 𝑘𝑖,𝑗,𝑡 (𝒅̃𝑖,𝑗,[𝑡−1] ) depends on the demand that occurred during the ﬁrst 𝑡 − 1 periods because the amount of freight demand
+needs to be completed in time period 𝑡 is related to the demand in the ﬁrst 𝑡 − 1 time periods. Utilizing the LDR approximation, we
+have the following aﬃne approximation robust counterpart for the JEPO model in the following proposition.
+
+                                                                                                     13
+B. Lu et al.                                                                                                                    Transportation Research Part B 213 (2026) 103569
+
+
+                                              ̂ 𝒗) deﬁned in (11) and the LDR approximation deﬁned in (15), the JEPO model (8)
+Proposition 5. Given the JEPO uncertainty set (𝛾,
+can be equivalently reformulated as follows:
+         ̂ = max
+         Π              𝛾                                                                                                                                                (16a)
+               𝛾≥0
+
+               s.t. (2) − (6)
+                                                                     ⎛                                    ⎞
+                            ∑                 ∑ ∑ ∑                  ⎜ ∑                                  ⎟
+                                   𝑐𝑎 𝑦 𝑎 −                     𝑟𝑖,𝑗 ⎜        𝑦𝑎 𝐿 − 𝑘𝑖,𝑗,𝑡 (𝒅̃𝑖,𝑗,[𝑡−1] )⎟ ≤ 𝜏, ∀𝒅̃ ∈ (𝛾,
+                                                                                                                       ̂ 𝒗)                                              (16b)
+                        𝑎∈else              𝑖∈[𝐼] 𝑗∈[𝐼] 𝑡∈[𝑇 ]      ⎜𝑎∈frgt                             ⎟
+                                                                     ⎝ 𝑖,𝑗,𝑡                              ⎠
+                                                  ∑
+                        𝑘𝑖,𝑗,𝑡 (𝒅̃𝑖,𝑗,[𝑡−1] ) ≥          𝑦𝑎 𝐿 − 𝑑̃𝑖,𝑗,𝑡 (𝒗), ∀𝑖, 𝑗 ∈ [𝐼], 𝑡 ∈ [𝑇 ], 𝒅̃ ∈ (𝛾, ̂ 𝒗)                                                       (16c)
+                                                     frgt
+                                                 𝑎∈𝑖,𝑗,𝑡
+
+                        𝑘𝑖,𝑗,𝑡 (𝒅̃𝑖,𝑗,[𝑡−1] ) ≥ 0, ∀𝑖, 𝑗 ∈ [𝐼], 𝑡 ∈ [𝑇 ], 𝒅̃ ∈ (𝛾,
+                                                                               ̂ 𝒗)                                                                                     (16d)
+                        𝒌(⋅) ∈ .                                                                                                                                        (16e)
+
+At the expense of introducing 𝑂(𝑁 2 ) decision variables, we linearize the sums of piecewise function terms.
+    Proposition 5 establishes an equivalent reformulation of the JEPO model under the LDR approximation. We next present a result
+to clarify the feasibility of this approximation.
+
+Proposition 6. For any feasible decisions 𝒙 and 𝒚, and for any 𝒅̃ ∈ (𝛾,
+                                                                       ̂ 𝒗), there exists a decision rule 𝒌(⋅) ∈  satisfying constraints
+(16b)–(16d); that is, the LDR approximation problem (16) admits a feasible solution.
+
+Proof. See E-Companion Appendix B.5. □
+While LDR resolves the nonlinear terms associated with demand, the dismatch between scalar-level constraints and the vector-level
+uncertainty set which leads to both theoretical complications and computational intractability. To reconcile the structure of the
+uncertain parameters in the constraints and in the uncertainty set, we introduce a lifted uncertainty set in the next subsection.
+
+5.2. Lifted JEPO uncertainty set
+
+      In this subsection, we investigate a fundamental theoretical challenge stemming from the indivisible structure of the uncertainty
+set. In model (16), the function 𝑘𝑖,𝑗,𝑡 (𝒅̃𝑖,𝑗,[𝑡−1] ) appearing in constraints (16b)–(16d) depends linearly on the scalar component-wise
+𝑑̃𝑖,𝑗,𝑡 of the demand vector 𝒅. ̃ However, the uncertainty set (𝛾,̂ 𝒗) characterizes 𝒅̃ as an inseparable vector that cannot be decomposed
+across indices (𝑖, 𝑗, 𝑡). As a result, direct reformulation of the problem is not tractable for standard optimization solvers.
+      To address this inconsistency, we construct a lifted uncertainty set following the approach of Chen and Xiong (2023). This set
+expands the original uncertainty space into a higher-dimensional representation by introducing auxiliary random variables 𝒘̃ 1 , 𝒘̃ 2 ,
+and 𝑢,  ̃ deﬁned as follows:
+                     ⎧                                             |                  𝒘̃ 1 − 𝒘̃ 2 = 𝐐∗ 𝒅̃ − 𝒒 ∗ − 𝐏∗ 𝒗         ⎫
+                     ⎪ ̃                                           |                                                           ⎪
+                                                   2       2       |
+         ′ (𝛾, 𝒗) = ⎨(𝒅,               ̃ ∈  × ℝ𝐼+ 𝑇 × ℝ𝐼+ 𝑇 × ℝ+ |
+                          𝒘̃ 1 , 𝒘̃ 2 , 𝑢)                                            ‖𝒘̃ 1 + 𝒘̃ 2 ‖𝑝 ≤ 𝑢̃ ≤ 𝛾                 ⎬.
+                                                                   |
+                     ⎪                                             |                  (𝒒 ∗ , 𝐏∗ , 𝐐∗ ) = arg max Ξ(𝒅𝑠 , 𝒗𝑠 )   ⎪
+                     ⎩                                             |                                                           ⎭
+                                                                                                                                         ̂ 𝒗).
+Proposition 7. The lifted uncertainty set ′ (𝛾, 𝒗) with auxiliary random variables 𝒘̃ 1 , 𝒘̃ 2 and 𝑢̃ is equivalent to the original set (𝛾,
+
+Proof. See E-Companion Appendix B.8. □
+                                                                                                  ̂ 𝒗) into the following semi-
+Based on the Proposition 7 and standard duality argument, one can reformulate problem (16) with (𝛾,
+inﬁnite program in Proposition (8), which can then be reformulated as a second-order cone program (SOCP).
+                                                     ̂ 𝒗) is equivalent to the following optimization problem with the lifted uncertainty
+Proposition 8. The problem (16) with uncertainty set (𝛾,
+set ′ (𝛾, 𝒗):
+
+         𝑚(𝜏) = max         𝛾                                                                                                                                            (17a)
+                  𝛾≥0
+
+               s.t.     (2) − (6)
+                                                                     ⎛                                       ⎞
+                            ∑                 ∑ ∑ ∑                  ⎜ ∑                                     ⎟
+                                   𝑐𝑎 𝑦 𝑎 −                      𝑟𝑖𝑗 ⎜                                     ̃ ⎟ ≤ 𝜏,
+                                                                              𝑦𝑎 𝐿 − 𝑘𝑖,𝑗,𝑡 (𝒘̃ 1 , 𝒘̃ 2 , 𝑢)
+                         𝑎∈else              𝑖∈[𝐼] 𝑗∈[𝐼] 𝑡∈[𝑇 ]     ⎜𝑎∈frgt                                ⎟
+                                                                     ⎝ 𝑖,𝑗,𝑡                                 ⎠
+                        ∀(𝒅,̃ 𝒘̃ 1 , 𝒘̃ 2 , 𝑢)̃ ∈ ′ (𝛾, 𝒗)                                                                                                              (17b)
+                                                   ∑
+                                               ̃ ≥
+                        𝑘𝑖,𝑗,𝑡 (𝒘̃ 1 , 𝒘̃ 2 , 𝑢)          𝑦𝑎 𝐿 − 𝑑̃𝑖,𝑗,𝑡 (𝒗),
+                                                        frgt
+                                                   𝑎∈𝑖,𝑗,𝑡
+
+                        ∀𝑖, 𝑗 ∈ [𝐼], 𝑡 ∈ [𝑇 ], (𝒅,                   ̃ ∈ ′ (𝛾, 𝒗)
+                                                     ̃ 𝒘̃ 1 , 𝒘̃ 2 , 𝑢)                                                                                                  (17c)
+                                              ̃ ≥ 0, ∀𝑖, 𝑗 ∈ [𝐼], 𝑡 ∈ [𝑇 ], (𝒅,
+                        𝑘𝑖,𝑗,𝑡 (𝒘̃ 1 , 𝒘̃ 2 , 𝑢)                                                ̃ ∈ ′ (𝛾, 𝒗)
+                                                                                ̃ 𝒘̃ 1 , 𝒘̃ 2 , 𝑢)                                                                      (17d)
+
+                                                                                              14
+B. Lu et al.                                                                                                            Transportation Research Part B 213 (2026) 103569
+
+
+                        𝒌(⋅) ∈ (2𝑁 + 1).                                                                                                                            (17e)
+Here, (2𝑁 + 1) denotes the set of all aﬃne functions on domain ℝ2𝑁+1 to ℝ. That is to say, the LDR approximation (15) as an aﬃne
+function of 𝑑̃𝑖,𝑗,𝑡 , 𝑖, 𝑗 ∈ [𝐼], 𝑡 ∈ [𝑇 ] transforms into function 𝑘𝑖,𝑗,𝑡 ∶ ℝ2𝑁+1 → ℝ, as an aﬃne function of vector (𝒘̃ 1 , 𝒘̃ 2 , 𝑢),
+                                                                                                                                     ̃ which is given by:
+                               ̃ = 𝑘𝑖,𝑗,𝑡,0 + 𝒌⊤
+         𝑘𝑖,𝑗,𝑡 (𝒘̃ 1 , 𝒘̃ 2 , 𝑢)                     𝒘̃ + 𝒌⊤
+                                               𝒊,𝒋,𝒕,𝟏 1
+                                                                   𝒘̃ + 𝑘𝑖,𝑗,𝑡,3 𝑢,
+                                                            𝒊,𝒋,𝒕,𝟐 2
+                                                                                 ̃
+                                                                2
+where 𝑘𝑖,𝑗,𝑡,0 , 𝑘𝑖,𝑗,𝑡,3 ∈ ℝ and 𝒌𝒊,𝒋,𝒕,𝟏 , 𝒌𝒊,𝒋,𝒕,𝟐 ∈ ℝ𝐼 𝑇 , [𝒌𝒊,𝒋,𝒕,𝟏 ]𝑖′ ,𝑗 ′ ,𝑡′ = [𝒌𝒊,𝒋,𝒕,𝟐 ]𝑖′ ,𝑗 ′ ,𝑡′ = 0, ∀ 𝑡′ ≥ 𝑡 which are aﬃne functions with respect to lifted
+variables.
+Proof. See E-Companion Appendix B.9. □
+Under the lifted uncertainty set, the reformulation makes the structure of the uncertain parameters consistent in the constraints and
+the uncertainty set, thereby establishing computational tractability under LDR. Nevertheless, a key challenge remains in maximizing
+the parameter 𝛾 of the uncertainty set, which lead to decision-dependent uncertainty. Since standard optimization solvers cannot
+directly handle this issue, in the next subsection we propose an binary search with adaptive interval algorithm to overcome this
+challenge.
+
+5.3. Binary search with adaptive interval for deviation tolerance
+
+    To address the computational intractability caused by the decision-dependent structure of the uncertainty set, in this subsection
+we develop an binary search with adaptive interval algorithm. Since standard convex optimization solvers cannot directly handle
+uncertainty set that depend on decision variables, we reformulate the original problem as a sequence of parameterized subproblems.
+In each subproblem, the value of 𝛾 ≥ 0 is ﬁxed, and the problem is represented as follows:
+         𝑚𝛾 (𝜏) = min        𝜁 −𝜏                                                                                                                                   (18a)
+                    𝜁≤0
+
+                s.t.      (2) − (6); (17𝑐) − (17𝑒)
+                                                                     ⎛                                       ⎞
+                            ∑                ∑ ∑ ∑                   ⎜ ∑                                     ⎟
+                                   𝑐𝑎 𝑦𝑎 −                       𝑟𝑖𝑗 ⎜                                     ̃ ⎟ ≤ 𝜁,
+                                                                              𝑦𝑎 𝐿 − 𝑘𝑖,𝑗,𝑡 (𝒘̃ 1 , 𝒘̃ 2 , 𝑢)
+                          𝑎∈else             𝑖∈[𝐼] 𝑗∈[𝐼] 𝑡∈[𝑇 ]     ⎜𝑎∈frgt                                ⎟
+                                                                     ⎝ 𝑖,𝑗,𝑡                                 ⎠
+                             ̃                       ′
+                                             ̃ ∈  (𝛾, 𝒗).
+                          ∀(𝒅, 𝒘̃ 1 , 𝒘̃ 2 , 𝑢)                                                                                                                     (18b)
+We exploit the monotonicity of the function 𝑚𝛾 (𝜏) with respect to 𝛾 to design a precision search method which converges to the largest
+feasible 𝛾 within a prescribed error.
+
+Algorithm 1 Binary search with adaptive interval for deviation tolerance.
+Require: Let 𝛾̄ be a suﬃciently large initial upper bound such that 𝑚𝛾̄ (𝜏) ≥ 0. If this condition is not satisﬁed, we iteratively expand
+    𝛾̄ until feasibility is guaranteed. Let Δ > 0 denote the desired convergence accuracy.
+ 1: Initialization: Set 𝛾1 = 0 and 𝛾2 = 𝛾̄ .
+ 2: Iterative reﬁnement: While 𝛾2 − 𝛾1 > Δ, update:
+                           𝛾1 +𝛾2
+          1. Set 𝛾 ∶=         2
+                                  ;
+          2. Solve model (18) with ﬁxed 𝛾 and compute 𝑚𝛾 (𝜏);
+          3. If 𝑚𝛾 (𝜏) ≤ 0, update 𝛾1 ∶= 𝛾; otherwise, set 𝛾2 ∶= 𝛾.
+ 3: Termination: Output the solution 𝒙 and 𝒚𝒂 .
+
+
+Proposition 9. Suppose that model (17) is feasible. Then, Algorithm 1 ﬁnds solutions 𝒙 and 𝒚𝒂 with objective 𝛾̃ satisfying |̃𝛾 − 𝛾 ∗ | < Δ in
+at most ⌈log2 (̄𝛾 ∕Δ)⌉ computations of subproblem (18). Here, 𝛾 ∗ is the optimal objective of model (17), Δ > 0 is an arbitrary number, and
+𝛾̄ > 0 is a suﬃciently large number.
+Proof. See E-Companion Appendix B.6. □
+Proposition 9 provides the theoretical guarantees for the proposed algorithm by providing an asymptotic consistency. The conver-
+gence condition |̃𝛾 − 𝛾 ∗ | < Δ ensures that our algorithm preserves the solution quality of the optimization problem, demonstrating
+that the decomposition strategy does not compromise optimality within the speciﬁed tolerance. Additionally, the iteration bound
+⌈log2 (̄𝛾 ∕Δ)⌉ not only allows for accurate prediction of computational resource requirements but also highlights the logarithmic com-
+plexity advantage of the proposed algorithm. This bounded iteration guarantees the algorithm’s termination in ﬁnite time, ensuring
+the computational reliability for practical.
+
+6. Numerical studies
+
+   In this section, we outline the application of our methodology and investigate the performance of the model. We use the synthetic
+data to generate diverse instances with various freight demand, spatial-temporal-SoC network, electricity charging and discharg-
+ing prices. Section 6.1 provides the detailed data description and parameter settings. In Section 6.2, we validate the out-of-sample
+
+                                                                                             15
+B. Lu et al.                                                                                          Transportation Research Part B 213 (2026) 103569
+
+
+performance of the contextual JEPO framework. Section 6.3 draws insights on the beneﬁt of integrating S2G into the dynamic AESs
+scheduling problem. Lastly, Section 6.4 conducts a case study of eight ports in the North Sea region, Europe and provides management
+insights.
+
+6.1. Data description and parameter settings
+
+    Our research focuses on the North Sea region, Europe, one of Europe’s most active maritime corridors, which hosts several major
+hub ports such as Rotterdam, Antwerp, and Hamburg. The region is characterized by dense port networks and a high level of maritime
+electriﬁcation, making it an ideal context for investigating the scheduling problem of AESs.
+    In our numerical experiments, we consider three ports Rotterdam, Antwerp, and Vlissingen in the North Sea region, Europe, i.e.,
+𝐼 = 3. We set each time period cycle to one day, i.e., 24 hours, and consider ﬁve time periods, i.e., 𝑇 = 5. And the battery capacity
+is 5 MWh, which is a typical AES battery capacity. We divide it into ﬁve SoC levels, i.e., 𝐵 = 5. We consider both charging and
+discharging of rate 1 SoC unit/period, i.e., 1 MWh. We also consider the volatility of electricity prices across diﬀerent time periods,
+with time-of-use charging and discharging prices assume to be 𝑝𝑐𝑡 = {40, 65, 100, 80, 60} and 𝑝𝑠𝑡 = {80, 100, 150, 130, 105}, respectively.
+We also incorporate the battery degradation cost per unit of state of charge (SoC), denoted by 𝑐 deg , to internalize the long-term cost of
+battery wear within the optimization framework. In this study, we set 𝑐 deg = 8$∕MWh based on the calculations reported in Peterson
+et al. (2010).
+    Unfortunately, the dataset lacks detailed information on historical freight demand, making it impractical to perform such a case
+study. Therefore, we use the available demand data and synthetic data to generate the freight demand 𝒅. To investigate the per-
+formance of our JEPO model under diﬀerent charter budgets, we consider 𝑀 ∈ {10000, 15000, 20000, 25000, 30000} for the budget
+constraint (2). We prepare two demand datasets to examine the performance of the model: the (in-sample) training data to derive
+the decisions 𝑥𝑖 , 𝑦𝑎 , and the (out-of-sample) test data which is used to evaluate the out-of-sample performance of the decisions 𝑥𝑖 , 𝑦𝑎 .
+    Contextual information. As presented in Section 3.1, two main covariates we considered, which signiﬁcantly inﬂuence freight
+demand, are weather ﬂuctuations and port throughput. We gather the weather information of the ports in North Sea region, Europe
+from Weather Underground (WU, 2025). We also collect port information from the European Seaports Organization (ESPO, 2025).
+Therefore, we set the contextual information 𝒗 as a 2-dimensional vector of weather and port throughput.
+    Target parameter. Following the target-oriented robust satisﬁcing principle, we set this target using a deterministic contextual
+benchmark that reﬂects the reference cost the decision maker would expect when relying on the contextual prediction of freight
+demand. Speciﬁcally, for each budget level 𝑀 and observed contextual vector 𝒗, we ﬁrst solve a deterministic scheduling model in
+which the uncertain freight demand is replaced by its predicted value 𝑓 (𝒗). Let 𝑍0 (𝑀, 𝒗) denote the resulting optimal net cost, i.e.,
+
+         𝑍0 (𝑀, 𝒗) = min 𝑔(𝒙, 𝒚, 𝑓 (𝒗))   s.t. (2) − (6),
+                      𝒙,𝒚
+
+and we set 𝜏 = 𝑍0 (𝑀, 𝒗) accordingly.
+    Radius of the uncertainty set. Given the target parameter 𝜏, the radius of the uncertainty set is represented by the deviation
+tolerance 𝛾. Rather than ﬁxing 𝛾 exogenously as a tuning parameter, we determine it endogenously as the largest deviation tolerance
+for which the target performance level 𝜏 can still be guaranteed. Speciﬁcally, we follow the binary search with adaptive interval
+procedure described in Algorithm 1. For a ﬁxed candidate value of 𝛾, we solve the corresponding parameterized robust subproblem
+and check whether the target constraint can be satisﬁed. If the subproblem is feasible, the lower bound of the search interval is
+updated to this candidate value; otherwise, the upper bound is updated and the search terminates when the interval length is smaller
+than the desired convergence accuracy.
+    All numerical experiments are conducted on a PC with a 3.6 GHz processor and 16 GB of RAM. The algorithms are coded in Python
+3.13, and the optimization models were solved by the commercial solver Gurobi 12.0.1.
+
+6.2. Out-of-sample performance of models
+
+    In this subsection, we evaluate the out-of-sample performance of the contextual JEPO model by comparing it with several bench-
+mark models. To ensure a fair comparison, the decisions of all benchmark models are also made conditional on the available contextual
+                                                                                 2
+information. Speciﬁcally, we estimate the mapping 𝑓 ∶ ℝ𝐾 → ℝ𝐼 𝑇 , which relates contextual information to freight demand, using
+ordinary least squares (OLS) on the dataset. The benchmark models are described as follows.
+    (i) The deterministic (DET) model, which ignores demand uncertainty and treats the predicted demand 𝑓 (𝒗) as the realized
+demand.
+    (ii) The residual-based sample average approximation (SAA) model, in which the term 𝑔(𝒙, 𝒚, 𝒅(𝒗))              ̃    in model (7) is replaced by
+ 1 ∑𝑆       (                  )
+          𝑔  𝒙, 𝒚, 𝑓 (𝒗) + 𝜺
+                           ̂ 𝑠  , where 𝜺
+                                        ̂ 𝑠 ∶= 𝒅̂𝑠 − 𝑓 (𝒗̂ 𝑠 ), 𝑠 ∈ [𝑆], denotes  the empirical residual corresponding to sample 𝑠.
+𝑆    𝑠=1
+    (iii) The contextual robust optimization (CRO) model, which adopts the standard uncertainty set  (𝛾) = {𝒅̃ ∈  ∣ ‖𝒅̃ − 𝒅‖              ̂ ≤ 𝛾},
+typically deﬁned as a norm ball, where 𝒅̂ = 𝑓 (𝒗) denotes the predicted demand under the current contextual information.
+   (iv) The standardized robust optimization (SRO) model, which ﬁxes 𝐇 = 𝚲, where each diagonal element 𝚲𝑖𝑖 is computed from
+the dataset as the sample standard deviation of the 𝑖-th demand component.
+   Utilizing the parameter conﬁgurations outlined in Section 6.1, we solve the JEPO model and benchmark models, yielding the
+corresponding optimal strategy (𝑥𝑖 , 𝑦𝑎 ). Subsequently, we assess the out-of-sample performance using the Monte Carlo method with
+an additional 1000 test samples.
+
+                                                                        16
+B. Lu et al.                                                                                 Transportation Research Part B 213 (2026) 103569
+
+
+
+
+                   Fig. 4. Out-of-sample performance of our JEPO model and benchmark models under diﬀerent budget.
+
+
+    We evaluate the out-of-sample performance of the proﬁtability through two metrics, encompassing the average-case, 95% Con-
+ditional Value at Risk (CVaR). The average-case metric quantiﬁes the average performance of models, while the 95% CVaR metric
+oﬀers insights into their worst-case performance, i.e., the average of the 5% tail distribution.
+    For diﬀerent budget levels 𝑀 ∈ {10000, 15000, 20000, 25000, 30000}, Fig. 4 presents the out-of-sample performance of the proposed
+JEPO model and the three benchmark models with respect to the revenue objective under diﬀerent evaluation metrics. It can be seen
+that the JEPO model consistently outperforms all benchmark models across the tested budget settings. This superior performance
+stems from its ability to address the key limitations of the benchmark approaches. Speciﬁcally, the deterministic model treats the
+predicted demand as the realized demand and therefore ignores demand uncertainty, which leads to poor performance when the
+actual demand deviates from the prediction. The SAA model approximates the realized demand by combining the prediction with
+empirical residual samples, but this approximation does not adequately capture the structure of contextual uncertainty, resulting in
+inferior out-of-sample performance. The CRO model relies on a standard box-type uncertainty set and does not explicitly account for
+the conﬁdence level or control the conservatism of the uncertainty set, which also limits its eﬀectiveness.
+    The SRO model diﬀers from CRO by using a diagonal deviation matrix 𝐇 = 𝚲 to perform component-wise standardization of
+demand deviations, and indeed outperforms CRO in most budget settings. However, the diagonal structure of 𝚲 captures only the
+standard deviation of each demand component separately, while ignoring the cross-dimensional correlations among ports and time
+periods. By contrast, the JEPO model constructs the uncertainty set by explicitly incorporating both estimation and prediction pro-
+cedures, and estimates a full matrix 𝐇∗ via the MVCB approach to jointly capture demand heterogeneity and cross-dimensional
+correlations. This eﬀectively reduces the excessive conservatism of robust decisions and thereby improves out-of-sample perfor-
+mance.
+    To further assess the robustness of the target speciﬁcation, we conduct a sensitivity analysis by varying 𝜏 around the reference
+level 𝑍0 (𝑀, 𝑣). Speciﬁcally, we consider 𝜏 = 0.85𝑍0 (𝑀, 𝑣) and 𝜏 = 1.15𝑍0 (𝑀, 𝑣) and evaluate the corresponding 95% CVaR out-of-
+sample performance across diﬀerent budget levels. As shown in Fig. C.3, JEPO exhibits consistent out-of-sample performance under
+both target settings.
+    To understand why the JEPO model outperforms other models, Fig. 5 presents the initial AESs allocation across 8 ports when
+𝑀 = 10000. Compared with the benchmark models, the JEPO model tends to derive a mild allocation plan, i.e., it does not allocate
+too many AESs in some speciﬁc ports and thereby results in a stable revenue.
+    We also report the computational times of the JEPO model and the three benchmark models under diﬀerent budget levels 𝑀 in
+Table 2. As 𝑀 increases from 10,000 to 30,000, the DET model remains the fastest, with a runtime of less than one second, while
+the SAA and CRO models require moderate and relatively stable solution times. Owing to the iterative nature of the bisection search
+procedure and the need to solve the MVCB estimation problem, the JEPO model requires a comparatively longer computational time.
+Nevertheless, its runtime increases only moderately, from 1764 to 2032 seconds, as the budget level increases. This indicates that
+the JEPO model maintains stable computational performance across diﬀerent budget settings. Moreover, since the AES scheduling
+problem considered here is a strategic planning problem rather than a real-time operational problem, the observed computational
+time remains acceptable for practical implementation.
+
+
+6.3. Beneﬁt of S2G integration
+
+   In this subsection, we investigate various beneﬁts of integrating S2G in the dynamic AESs scheduling problem as well as how the
+beneﬁts are impacted by factors such as various budgets, seasonality of electricity prices.
+
+                                                                 17
+B. Lu et al.                                                                                    Transportation Research Part B 213 (2026) 103569
+
+
+
+
+                                      Fig. 5. Initial AESs allocation among 8 ports when 𝑀 = 10000.
+
+                                              Table 2
+                                              The computational time of the JEPO model
+                                              and benchmark models under diﬀerent 𝑀 val-
+                                              ues (seconds).
+                                                Budget (𝑀)   DET     SAA    CRO    JEPO
+
+                                                10000        <1      13     72     1764
+                                                15000        <1      13     72     1779
+                                                20000        <1      14     69     1801
+                                                25000        <1      14     75     1961
+                                                30000        <1      17     71     2032
+
+
+
+
+                                       Fig. 6. Revenue with/without S2G under diﬀerent budgets.
+
+
+
+    We begin with a small-scale experiment involving three ports. Fig. 6 compares the revenue generated with and without S2G
+under diﬀerent budget conditions. The results show that AESs equipped with S2G consistently outperform those without it in terms
+of revenue across all budget levels. This advantage grows more signiﬁcant as the budget increases, highlighting the potential of S2G
+to eﬀectively enhance operational revenue.
+    We also investigate the impact of seasonal electricity prices on S2G and, consequently, on the proﬁtability of shipping company.
+As illustrated in Fig. C.2, there are signiﬁcant diﬀerences in daily electricity prices between winter and summer. Speciﬁcally, summer
+electricity prices exhibit relatively stable ﬂuctuations with smaller variance, ranging between 0.85 and 0.98. In contrast, winter
+
+                                                                   18
+B. Lu et al.                                                                                        Transportation Research Part B 213 (2026) 103569
+
+
+
+
+                                      Fig. 7. Beneﬁt of S2G integration and the impact of seasonality.
+
+
+
+
+                                          Table 3
+                                          Beneﬁt of S2G integration and the impact of seasonality
+                                          under 𝑀 = 3000.
+                                                          With S2G             Without S2G
+
+                                           Season         Winter     Summer    Winter   Summer
+
+                                           Revenue
+                                           Freighting     1786       1901      2365     2,203
+                                           Discharging    935        574       N/A      N/A
+
+                                           Cost
+                                           Relocating     236        253       412      474
+                                           Idle           0          0         231      189
+                                           Charging       1293       1179      871      907
+
+                                           Net revenue    1,192      1043      851      833
+                                           % increase     40.07      25.21     N/A      N/A
+
+
+
+
+electricity prices show larger ﬂuctuations with greater variance, peaking at 0.95 and dipping as low as 0.79. The seasonal electricity
+price structure is the core driver of S2G revenue diﬀerence.
+    The larger price diﬀerential in winter makes AESs particularly more suitable to operate as ﬂexible “mobile energy storage units”.
+    Fig. 7 illustrates that the shipping company utilizing S2G consistently achieves higher proﬁts compared to the company that does
+not, regardless of the season. Furthermore, the proﬁt advantage grows more pronounced as the initial budget increases, due to the
+larger number of AESs available for charter as the budget expands. Once freight demand is met, idle AESs docked at ports can further
+enhance revenue by discharging electricity back to the grid.
+    Fig. 7 also shows a disparity in the beneﬁts of adopting S2G for AESs between winter and summer. Speciﬁcally, when the budget
+is relatively low, the revenue from adopting S2G in summer is signiﬁcantly higher than in winter. However, as the budget increases,
+the revenue from S2G adoption in winter exceeds that in summer. This indicates that the revenue-boosting eﬀect of adopting S2G is
+more pronounced in summer, especially when the budget is relatively low. In winter, as the budget increases, the revenue gains from
+S2G gradually grow, demonstrating higher revenue potential.
+    Table 3 shows the detailed of revenue or cost in freighting, discharging, relocating, idle, and charging operations respectively,
+with or without S2G in winter and summer. The “net revenue” indicates the total proﬁt after accounting for all relevant costs. The
+ﬁnal row (“% increase”) represents the percentage of proﬁt improvement achieved with S2G compared with the baseline case without
+S2G. Several observations can be obtained from Table 3.
+    First, integrating S2G into AES operations can increase net revenue by generating additional proﬁts from electricity fed back to the
+power grid. This highlights the substantial economic potential of bidirectional power exchange between AESs and the power system.
+    Second, the seasonal comparison shows that the ﬁnancial beneﬁts of S2G are more pronounced in winter. This suggests that the
+operational value of S2G integration is inﬂuenced by both seasonal conditions and the dynamic ﬂuctuations in electricity prices.
+
+                                                                     19
+B. Lu et al.                                                                                      Transportation Research Part B 213 (2026) 103569
+
+
+
+
+                                           Fig. 8. Average freight demand of 8 selected ports.
+
+
+
+
+                                        Fig. 9. The impact of S2G penetration on total revenue.
+
+
+
+
+6.4. Case study
+
+    In this subsection, we present a case study involving eight representative ports in the North Sea region, Europe, analyzed using
+our proposed model. These ports include major international hubs such as Rotterdam, Antwerp, and Vlissingen, as well as smaller
+regional ports, including Breda and Haarlem. Fig. 8 illustrates the average freight demand for each port.
+    To evaluate the economic beneﬁts under varying S2G levels of adoption, this study performs a sensitivity analysis on the S2G
+penetration rate within the eight ports under budget 𝐵 = 100000. Here, the S2G penetration rate refers to the proportion of AESs that
+are capable of bidirectional power exchange with the grid. Five scenarios are considered, corresponding to 0%, 25%, 50%, 75%, and
+100% S2G-equipped AESs. All other model parameters, including port electricity prices, charter budget, and freight demand, remain
+constant to ensure comparability.
+    Fig. 9 demonstrates that there is a clear upward trend in total revenue as the S2G penetration rate increases. The baseline sce-
+nario (0%) yields the lowest revenue, as AESs are unable to discharg electricity to the grid. At 25% penetration, revenue rises by
+approximately 17.95%. The 50% and 75% scenarios continue this upward trajectory, with proﬁt increases of 14.93% and 15.21%,
+respectively. However, beyond 75% penetration, marginal gains begin to taper oﬀ. Speciﬁcally, the 100% scenario provides only
+a 5.06% improvement compared to 75%. This deceleration in growth suggests that the system is approaching saturation in S2G
+utilization, as most ports are already equipped with suﬃcient AESs to discharge electricity back to the power grid.
+    Fig. 10 presents the eight selected ports (marked as blue) which are equipped with S2G technology. Using the freight demand data
+among these ports, we apply our model to obtain the distribution and routing of AESs across the North Sea region, Europe. Based on
+this analysis, we derive the following management insights.
+    First, the three major hub ports, Rotterdam, Antwerp, and Hamburg, account for over 65% of AESs, as they handle a larger volume
+of shipping operations. Government should prioritize the deployment of fast-charging/battery-swapping facilities in hub ports and
+then use feeder services to extend coverage to regional ports like Haarlem.
+
+                                                                   20
+B. Lu et al.                                                                                      Transportation Research Part B 213 (2026) 103569
+
+
+
+
+                               Fig. 10. The distribution and routes of AESs in the North Sea region, Europe.
+
+
+
+
+   Second, AESs are concentrated on short-haul routes of less than 200 nautical miles, e.g., Rotterdam–Antwerp, while long-haul
+routes are constrained by range. To overcome inter-port transshipment bottlenecks, it is urgent to develop “segmented electriﬁcation”
+routes supported by oﬀshore charging infrastructure.
+
+7. Conclusions
+
+    Shipping companies face mounting pressure from increasingly stringent environmental regulations and rising fuel costs, making
+AESs and S2G technology central to the sector’s operational transformation. This study develops a dynamic AES scheduling model on
+a spatial-temporal-SoC network that captures ﬁve key operational behaviors: freight routing, vessel relocation, idle docking, charging,
+and discharging. We explicitly consider context-dependent uncertainty in AES freight demand, whose ﬂuctuations can be partially
+inferred from contextual information such as seasonality and hinterland economic indicators. Methodologically, we propose a contex-
+tual joint estimation–prediction–optimization (JEPO) framework that establishes a uniﬁed data-to-decision paradigm by embedding
+estimation and prediction procedures directly into the optimization model’s uncertainty set. To reduce excessive conservatism, we
+further develop a data-driven calibration approach that identiﬁes a minimum-volume conﬁdence ball while preserving the desired
+conﬁdence level. From a computational perspective, the model is reformulated using linear decision rules and a lifted uncertainty set
+construction, and a binary-search algorithm with adaptive intervals is employed to ensure convergence to optimal solutions.
+    We validate the proposed approach using real-world instances from ports in the North Sea region of Europe. The results show that
+the JEPO model consistently outperforms benchmark models under both average and risk-averse criteria. In addition, comparative
+experiments indicate that incorporating S2G operations yields further revenue gains, particularly during periods of pronounced elec-
+tricity price volatility. Sensitivity analyses on S2G penetration further reveal a nonmonotonic eﬀect, with marginal revenue increasing
+initially and then diminishing as S2G penetration rises. Our ﬁndings oﬀer several managerial insights. For shipping companies, prof-
+itability can be improved by strategically deploying AESs equipped with S2G capabilities in response to seasonal electricity price
+variations. At higher levels of S2G penetration, however, ﬁrms must carefully balance marginal revenue gains against associated
+investment and operational costs to maximize overall returns. From a policy perspective, our results highlight the importance of pri-
+oritizing battery-swapping infrastructure in major ports and developing segmented electriﬁcation routes supported by oﬀshore charging
+facilities to address the challenges of long-haul AES operations.
+
+CRediT authorship contribution statement
+
+    Bo Lu: Writing – review & editing, Resources, Supervision, Project administration, Methodology, Investigation, Funding acquisi-
+tion, Formal analysis, Data curation, Conceptualization, Validation, Software, Visualization; Zhuoxi Shi: Writing – review & editing,
+Writing – original draft, Visualization, Software, Methodology, Investigation, Formal analysis; Guowei Zhang: Writing – review
+& editing, Writing – original draft, Validation, Supervision, Software, Project administration, Methodology, Investigation, Funding
+acquisition, Formal analysis, Conceptualization.
+
+Data availability
+
+    The authors do not have permission to share data
+
+Appendix A. Notations
+
+
+                                                                    21
+B. Lu et al.                                                                                                  Transportation Research Part B 213 (2026) 103569
+
+
+                    Table A.1
+                    List of parameters and variables.
+                      Parameter or variable   Deﬁnition
+
+                      Parameters
+                      𝐼                       The number of ports.
+                      𝑇                       The number of time periods.
+                      𝐵                       The number of battery states of charge (SoC).
+                       = ( , )             Spatial-temporal-SoC network,  ⊂ [𝐼] × [𝑇 ] × [𝐵].
+                      𝑙𝑖,𝑗                    Sailing time from port 𝑖 ∈ [𝐼] to 𝑗 ∈ [𝐼].
+                      𝑒𝐶                      Unit of SoC increased during one period of charging.
+                      𝑒𝐷                      Unit of SoC decreased during one period of discharging.
+                      𝑒𝐹                      Unit of SoC decreased during one period of freighting.
+                      𝑒𝑅                      Unit of SoC decreased during one period of relocating.
+                      𝑟𝑖,𝑗                    Shipping revenue per unit of freight demand from port 𝑖 ∈ [𝐼] to 𝑗 ∈ [𝐼].
+                        relo
+                      𝑐𝑖,𝑗                    Cost of relocating an AES from port 𝑖 ∈ [𝐼] to 𝑗 ∈ [𝐼] per time period.
+                      𝑐𝑖idle                  Cost of an AES idling at port 𝑖 per time period.
+                      𝑐 deg                   Unit of battery degradation cost.
+                      𝑝𝑠𝑡                     Discharging price of one unit electricity at time 𝑡 ∈ [𝑇 ].
+                      𝑝𝑐𝑡                     Charging price of one unit electricity at time 𝑡 ∈ [𝑇 ].
+                      𝑐𝑖                      Cost of chartering an AES at port 𝑖 ∈ [𝐼].
+                      𝑀                       Fixed budget.
+                      𝐿                       Capacity of an AES.
+                      𝑑̃𝑖,𝑗,𝑡                 Amount of freight demand transported from port 𝑖 ∈ [𝐼] to port 𝑗 ∈ [𝐼] at time 𝑡 ∈ [𝑇 ].
+
+                      Sets
+                      frgt                   Set of freighting arcs.
+                      relo                   Set of relocating arcs.
+                      idle                   Set of idle arcs.
+                      chrg                   Set of charging arcs.
+                      dsch                   Set of discharging arcs.
+                      𝛿 − (𝑛𝑖,𝑡,𝑏 )           Set of arcs of which node 𝑛𝑖,𝑡,𝑏 is the destination node.
+                      𝛿 + (𝑛𝑖,𝑡,𝑏 )           Set of arcs of which node 𝑛𝑖,𝑡,𝑏 is the origin node.
+
+                      Decision Variables
+                      𝑥𝑖                      The number of AESs chartered at the port 𝑖 ∈ [𝐼].
+                       frgt
+                      𝑦𝑎                      The number of AESs in the freighting arc 𝑎 ∈ frgt .
+                      𝑦relo
+                       𝑎
+                                              The number of AESs in the relocating arc 𝑎 ∈ relo .
+                      𝑦idle
+                       𝑎
+                                              The number of AESs in the idle arc 𝑎 ∈ idle .
+                       chrg
+                      𝑦𝑎                      The number of AESs in the charging arc 𝑎 ∈ chrg .
+                      𝑦dsch
+                       𝑎                      The number of AESs in the discharging arc 𝑎 ∈ dsch .
+
+
+
+
+Appendix B. Proof of propositions
+
+B.1. Proof of Theorem 1
+
+    1. Positive deﬁnite. From Deﬁnition 1, we have 𝜌(𝒅, 𝜻) = ‖𝐇−1 (𝒅 − 𝜻)‖𝑝 . Since 𝐇−1 is a symmetric positive deﬁnite matrix, it
+is invertible, and 𝐇−1 (𝒅 − 𝜻) is a well-deﬁned vector. The 𝐿𝑝 -norm ‖𝒙‖𝑝 , is always non-negative for any vector 𝒙. Thus, we have
+𝜌(𝒅, 𝜻) ≥ 0, and 𝜌(𝒅, 𝜻) = 0 if and only if 𝐇−1 (𝒅 − 𝜻) = 0, which implies 𝒅 = 𝜻. Thus, we have shown that 𝜌(𝒅, 𝜻) ≥ 0, and 𝜌(𝒅, 𝜻) = 0 if
+and only if 𝒅 = 𝜻.
+    2. Convex. We want to prove that for any 𝒅𝟏 , 𝒅𝟐 ∈  and 𝜆 ∈ [0, 1], the following holds: 𝜌(𝜆𝒅𝟏 + (1 − 𝜆)𝒅𝟐 , 𝜻) ≤ 𝜆Δ(𝒅𝟏 , 𝜻) + (1 −
+𝜆)𝜌(𝒅𝟐 , 𝜁 ). From Deﬁnition 1, we know Δ(𝒅, 𝜻) = ‖𝐇−1 (𝒅 − 𝜻)‖𝑝 . Since the 𝐿𝑝 -norm is a convex function, the composition of the
+𝐿𝑝 -norm with a linear function, 𝐇−1 (𝒅 − 𝜻) is also convex. Thus, we can conclude that 𝜌(𝒅, 𝜻) is convex.
+    3. Translation invariant. From Deﬁnition 1, we can obtain 𝜌(𝒅 − 𝝃, 𝜻 − 𝝃) = ‖𝐇−1 ((𝒅 − 𝝃) − (𝜻 − 𝝃))‖𝑝 = ‖𝐇−1 (𝒅 − 𝜻)‖𝑝 = 𝜌(𝒅, 𝜻).
+Thus, we prove that translation invariance holds.
+    4. Positive homogeneous. From Deﬁnition 1, we can obtain 𝜌(𝑘𝒅, 𝑘𝜻) = ‖𝐇−1 (𝑘𝒅 − 𝑘𝜻)‖𝑝 = ‖𝑘𝐇−1 (𝒅 − 𝜻)‖𝑝 . Since ‖𝑘𝒙‖𝑝 = 𝑘‖𝒙‖𝑝
+for 𝑘 ≥ 0, we have Δ(𝑘𝒅, 𝑘𝜻) = 𝑘‖𝐇−1 (𝒅 − 𝜻)‖𝑝 = 𝑘Δ(𝒅, 𝜻). Thus, we prove that positive homogeneity holds.
+    5. Symmetric. From Deﬁnition 1, we can obtain 𝜌(𝒅, 𝜻) = ‖𝐇−1 (𝒅 − 𝜻)‖𝑝 . Since the 𝐿𝑝 -norm is symmetric, meaning ‖𝒙‖𝑝 = ‖ − 𝒙‖𝑝 ,
+we have: ‖𝐇−1 (𝒅 − 𝜻)‖𝑝 = ‖𝐇−1 (𝜻 − 𝒅)‖𝑝 = 𝜌(𝜻, 𝒅). Thus, we prove that symmetry holds.
+
+
+B.2. Proof of Theorem 2
+
+    For any 𝛾 ≥ 0, we have:
+         {                     }   {                     }
+       ℙ 𝒅 ∉ (𝒅̂0 + 𝐃  ̃ 𝐇, 𝛾) =ℙ ‖𝐇−1 (𝒅̃ − 𝒅̂† )‖ > 𝛾
+                      ̂ 𝒗,
+                                   {                           }
+                                 ≤ℙ 𝜓(|𝐇−1 (𝒅̃ − 𝒅̂† )‖) > 𝜓(𝛾)
+
+                                                                            22
+B. Lu et al.                                                                                                       Transportation Research Part B 213 (2026) 103569
+
+                                             [                    ]
+                                           𝔼ℙ 𝜓(‖𝐇−1 (𝒅̃ − 𝒅̂† )‖)
+                                       ≤
+                                                    𝜓(𝛾)
+                                          1
+                                       ≤      ,
+                                         𝜓(𝛾)
+where the ﬁrst inequality is because the deviation penalty function 𝜓 is non-decreasing in 𝑠 + 𝛾 ≥ 0, and the second inequality applies
+Markov’s inequality as 𝜓 is non-negative.
+
+B.3. Proof of Theorem 3
+
+    Given the continuity of the deviation penalty function 𝜓 at 𝑟 = 0 and 𝜓(0) < 1, we note that the solution (𝒒, 𝐏, 𝐐) = (𝟎, 𝟎, 𝜖𝐈) is
+                                                                             2
+feasible for some 𝜖 > 0. Therefore, the optimal solution must satisfy 𝐐 ∈ 𝕊𝐼++𝑇 . Consider the variable substitution 𝐇−1 to 𝐐, 𝐇−1 𝒅̂0 to
+                                         2𝑇                              2𝑇
+            −1
+𝑞, and 𝐐, 𝐇 𝐃  ̂ to 𝐏. Note that 𝐇 ∈ 𝕊 𝐼    is equivalent to 𝐐 = 𝐇 ∈ 𝕊 .With another variable substitution 𝒅̂† = 𝐇𝒒 + 𝐇𝐏𝒗,
+                                                                  −1   𝐼                                                     ̃ we then
+                                               ++                                     ++
+have the following equivalence:
+           [                    ]              [                    ]
+        𝔼ℙ̂ 𝜓(‖𝐇−1 (𝒅̃ − 𝒅̂† )‖) ≤ 1 ⟺ 𝔼ℙ̂ 𝜓(‖𝐐𝒅̃ − 𝒒 − 𝐏𝒗‖)    ̃     ≤ 1.
+                                                              [                    ]
+Given that 𝜓 is a convex and non-increasing function, 𝔼ℙ̂ 𝜓(‖𝐐𝒅̃ − 𝒒 − 𝐏𝐯‖)      ̃   is a convex function with respect to the decision variable
+                     [                     ]
+(𝒒, 𝐏, 𝐐). Hence, 𝔼ℙ̂ 𝜓(‖𝐐𝒅̃ − 𝒒 − 𝐏𝒗‖)̃     is a convex constraint.
+    Consider the case of having a positive regularization vector 𝐫 > 𝟎. By Schur complement,
+                                                    [                     ]
+                                                       𝐇          𝐈
+        𝐇 ⪰ Diag(𝐫) ⟺ 𝐇 − Diag(𝐫) ⪰ 0 ⟺                                     ⪰ 0.
+                                                       𝐈    Diag−1 (𝐫)
+                            [                ]
+                                  𝐈      𝟎
+By left multiplying with                       and right multiplying by its transpose, we obtain that
+                                −𝐇−1     𝐈
+        [                           ]
+           𝐇            𝟎
+                     −1               ⪰ 0,
+            𝟎  Diag (𝐫) − 𝐇−𝟏
+
+which implies that Diag−1 (𝐫) ⪰ 𝐇−1 = 𝐐. Since 𝐐 is also a positive deﬁnite matrix, the constraint Diag−1 (𝐫) ⪰ 𝐐 implies Diag(𝐫) ⪰
+𝐐−1 = 𝐇. That is to say, the convex constraint 𝐐 ⪯ Diag−1 (𝐫) after the variable substitution is equivalent to the original constraint
+𝐇 ⪰ Diag(𝐫).
+   The objective of problem (MVCB) that minimizes det(𝐇) = 1∕ det(𝐐), is equivalent to maximizing log det(𝐐), for which the log
+determinant function is a concave function. This concludes that problem (12) is a convex optimization problem.
+
+B.4. Proof of Theorem 4
+
+    Changing decision variable from 𝐇−2 to 𝐆, model (12) is equivalent to:
+
+         sup log det(𝐆)
+                                       [                         ]
+                                         ‖                    ‖2
+          s.t.            min       𝔼ℙ̂ ‖𝐆1∕2 (𝒅̃ − 𝒅̂0 − 𝐃
+                                                          ̂ 𝒗)
+                                                            ̃ ‖ ≤𝐿
+                       2 ̂
+                 𝒅̂ ∈ℝ𝐼 𝑇 ,𝐃∈ℝ(𝑁)×𝐿      ‖                    ‖2
+                  0
+                          2
+             𝐆 ∈ 𝕊𝐼++𝑇 .
+             [                         ]     [                                  ]
+              ‖                 ̂ 𝒗)‖2                  ̂ 𝒗)                ̂ 𝒗)                                       ̂ Since 𝐆 ≻ 𝟎, equating
+Note that 𝔼ℙ̂ ‖𝐆1∕2 (𝒅̃ − 𝒅̂0 − 𝐃 ̃ ‖ = 𝔼ℙ̂ (𝒅̃ − 𝒅̂0 − 𝐃 ̃ ⊤ 𝐆(𝒅̃ − 𝒅̂0 − 𝐃  ̃ is a quadratic function of 𝒅̂0 and 𝐃.
+              ‖                     ‖2
+                                                           [                   ]                                          [                      ]
+the gradients with respect to 𝒅̂0 and 𝐃  ̂ then yields 2𝔼 ̂ 𝐆(𝒅̃ − 𝒅̂0 − 𝐃̂ 𝒗)
+                                                                             ̃ = 𝟎 ⇒ 𝒅̂∗ = 𝝁̂ 𝒅 − 𝐃                                    ̂ ∗ 𝒗)
+                                                                                                      ̂ ∗ 𝝁̂ 𝒗 , and −2𝔼 ̂ (𝒅̃ − 𝒅̂∗ − 𝐃   ̃ 𝒗̃ ⊤ =
+                                                                   ℙ                                      0                            ℙ         0
+0     ̂ 𝒅𝒗 = 𝐃
+     ⇒𝚺          ̂ 𝒗 . Hence, 𝐃
+              ̂ ∗𝚺               ̂∗ =𝚺 ̂ 𝒅𝒗 𝚺                     ̂ ∗ 𝝁̂ 𝒗 . Consequently, we have:
+                                            ̂ −1 and 𝒅̂∗ = 𝝁̂ 𝒅 − 𝐃
+                                              𝒗        0
+         [                                          ]     [                                                                ]
+      𝔼 ̂ (𝒅̃ − 𝒅̂∗ − 𝐃
+           ℙ          0
+                            ̃ ⊤ 𝐆(𝒅̃ − 𝒅̂∗ − 𝐃
+                        ̂ ∗ 𝒗)
+                                           0
+                                              ̂ ∗ 𝒗)
+                                                  ̃ = 𝔼 ̂ tr(𝐆(𝒅̃ − 𝝁𝒅 − 𝐃
+                                                           ℙ
+                                                                                                         ̂ ∗ (𝒗̃ − 𝝁𝒗 ))⊤ )
+                                                                               ̂ ∗ (𝒗̃ − 𝝁𝒗 ))(𝒅̃ − 𝝁𝒅 − 𝐃
+
+                                                      = tr(𝐆(𝚺   ̂ ∗𝚺
+                                                             ̂𝒅 −𝐃  ̂ 𝒗𝒅 − 𝚺     ̂ ∗ )⊤ + 𝐃
+                                                                           ̂ 𝒅𝒗 (𝐃        ̂ ∗𝚺    ̂ ∗ )⊤ ))
+                                                                                             ̂ 𝒗 (𝐃
+                                                             ̂𝒅 −𝚺
+                                                      = tr(𝐆(𝚺        ̂ −1 𝚺
+                                                                 ̂ 𝒅𝒗 𝚺    ̂ 𝒗𝒅 )).
+                                                                        𝒗
+
+Model (12) then becomes as follows:
+
+         sup log det(𝐆)
+          s.t.        ̂𝒅 −𝚺
+                 tr(𝐆(𝚺        ̂ −1 𝚺
+                          ̂ 𝒅𝒗 𝚺    ̂ 𝒗𝒅 )) ≤ 𝐿
+                                 𝒗
+                          2
+                 𝐆 ∈ 𝕊𝐼++𝑇 .
+                                                                          (                         )
+The Lagrangian function for this problem is: Λ(𝐆, 𝜆) = log det(𝐆) − 𝜆 tr 𝐆(𝚺   ̂𝒅 −𝚺     ̂ −1 𝚺
+                                                                                    ̂ 𝒅𝒗 𝚺    ̂ 𝒗𝒅 ) + 𝜆𝐿. We can calculate the gradient
+                                                                                           𝒗
+                                          ̂𝒅 −𝚺
+with respect to 𝐆 as ∇𝐆 Λ(𝐆, 𝜆) = 𝐆−1 − 𝜆(𝚺         ̂ −1 𝚺
+                                               ̂ 𝒅𝒗 𝚺    ̂ 𝒗𝒅 ). Equating it to zero, the optimal solution shall satisfy: 𝜆∗ 𝐆∗ = (𝚺̂𝒅 −
+                                                                   𝒗
+
+                                                                                23
+B. Lu et al.                                                                                                                Transportation Research Part B 213 (2026) 103569
+
+                                                                                   ( (                       )   )
+     ̂ −1 𝚺
+̂ 𝒅𝐯 𝚺
+𝚺                                                                                        ̂𝒅 −𝚺
+          ̂ 𝒗𝒅 )−1 . Complementary slackness of the KKT conditions requires that 𝜆∗ tr 𝐆(𝚺        ̂ −1 𝚺
+                                                                                             ̂ 𝒅𝒗 𝚺    ̂ 𝒗𝒅 ) − 𝐿 = 0, implying 𝜆∗ = 1.
+       𝒗                                                                                            𝒗
+                                                                                                                                                    1
+                                                                            ̂𝒅 −𝚺
+Therefore, we obtain the optimal solution of the deviation matrix via 𝐆∗ = (𝚺   ̂ 𝒅𝒗 𝚺    ̂ 𝒗𝒅 )−1 , and 𝐇∗ = (𝐆∗ )− 2 . The optimality is
+                                                                                     ̂ −1 𝚺
+                                                                                       𝒗
+ensured, as problem (12) is a convex optimization problem.
+
+
+B.5. Proof of Proposition 6
+
+    To establish the feasibility of the proposed LDR, we consider problem (16) in its two-stage form. For clarity, we denote the ﬁrst-
+stage decision variables as (𝛾, 𝒙, 𝒚) and the second-stage decision vector as 𝒌(⋅). The goal of this proof is to show that for any feasible
+ﬁrst-stage decision (𝛾, 𝒙, 𝒚), there exists a corresponding second-stage solution 𝒌(⋅) ∈  that satisﬁes all second-stage constraints. By
+establishing that the complete recourse condition holds, we guarantee the existence of a feasible solution for any admissible ﬁrst-stage
+decision, thereby conﬁrming the feasibility of the LDR for problem (16).
+    First, we formulate the corresponding ﬁrst-stage problem to ensure that the robust budget constraint is satisﬁed for all demand
+realizations within the uncertainty set, as follows:
+
+         max 𝛾
+          𝛾≥0
+
+           s.t.   (2) − (6)
+                                                                ⎛                                    ⎞
+                     ∑                  ∑ ∑ ∑                   ⎜ ∑                                  ⎟
+                             𝑐𝑎 𝑦 𝑎 −                      𝑟𝑖,𝑗 ⎜        𝑦𝑎 𝐿 − 𝑘𝑖,𝑗,𝑡 (𝒅̃𝑖,𝑗,[𝑡−1] )⎟ ≤ 𝜏,   ∀𝒅̃ ∈ (𝛾,
+                                                                                                                    ̂ 𝒗).
+                   𝑎∈else              𝑖∈[𝐼] 𝑗∈[𝐼] 𝑡∈[𝑇 ]      ⎜𝑎∈frgt                             ⎟
+                                                                ⎝ 𝑖,𝑗,𝑡                              ⎠
+
+    Given a feasible ﬁrst-stage decision (𝛾, 𝒙, 𝒚) and a realized demand 𝒅̃ ∈ (𝛾,
+                                                                              ̂ 𝒗), the second-stage problem can be expressed as:
+
+         min 𝑘𝑖,𝑗,𝑡 (𝒅̃𝑖,𝑗,[𝑡−1] )
+                                              ∑
+          s.t.    𝑘𝑖,𝑗,𝑡 (𝒅̃𝑖,𝑗,[𝑡−1] ) ≥              𝑦𝑎 𝐿 − 𝑑̃𝑖,𝑗,𝑡 (𝒗)
+                                               frgt
+                                            𝑎∈𝑖,𝑗,𝑡
+
+                  𝑘𝑖,𝑗,𝑡 (𝒅̃𝑖,𝑗,[𝑡−1] ) ≥ 0
+                  𝒌(⋅) ∈ .
+
+   The two scalar constraints can be compactly represented as a single vector inequality. Accordingly, the above problem can be
+written in matrix form as:
+
+         min 𝑘𝑖,𝑗,𝑡 (𝒅̃𝑖,𝑗,[𝑡−1] )
+                                               [∑                                  ]
+                                                                           ̃
+                                                              frgt 𝑦𝑎 𝐿 − 𝑑𝑖,𝑗,𝑡 (𝒗)
+                                                       𝑎∈𝑖,𝑗,𝑡
+          s.t.    𝐖𝑘𝑖,𝑗,𝑡 (𝒅̃𝑖,𝑗,[𝑡−1] ) ≥
+                                                                    0
+                  𝒌(⋅) ∈ ,
+                 [ ]
+                   1
+where 𝐖 =                ∈ ℝ2×1 denotes a column vector of ones.
+                   1
+    For any vector 𝒉 ∈ ℝ2 , it is straightforward to see that there exists 𝑘𝑖,𝑗,𝑡 (𝒅̃𝑖,𝑗,[𝑡−1] ) satisfying 𝐖𝑘𝑖,𝑗,𝑡 (𝒅̃𝑖,𝑗,[𝑡−1] ) ≥ 𝒉. This ensures that
+the complete recourse condition holds, meaning that for any ﬁrst-stage decision 𝒚, there exists a second-stage decision 𝒌(⋅) ∈  that
+satisﬁes all second-stage constraints.
+    Speciﬁcally, for any given ﬁrst-stage decisions, we can construct
+                                      [ ∑                       ]
+       𝑘̂ 𝑖,𝑗,𝑡 (𝒅̃𝑖,𝑗,[𝑡−1] ) ≥ max          𝑦𝑎 𝐿 − 𝑑̃𝑖,𝑗,𝑡 (𝒗) ,
+                                  ̃ (𝛾,𝒗)
+                                 𝒅∈ ̂
+                                                       frgt
+                                                𝑎∈𝑖,𝑗,𝑡
+
+
+and set the LDR decision variables as 𝑘0,𝑖,𝑗,𝑡 = 𝑘̂ 𝑖,𝑗,𝑡 (𝒅̃𝑖,𝑗,[𝑡−1] ), 𝑘1,𝑖,𝑗,𝑡,𝑖′ ,𝑗 ′ ,𝑡′ = 0.
+   This provides a feasible solution to the second-stage problem for any admissible ﬁrst-stage decision. Therefore, problem (16)
+always admits a feasible solution under the proposed LDR, establishing its feasibility.
+
+
+B.6. Proof of Proposition 9
+
+    Observe that each loop in Algorithm 1 reduces the gap between 𝑟2 and 𝑟1 by half (see Step 3). We now establish the correctness
+of this binary search. Suppose that 𝑚𝑟 (𝑍1 ) ≤ 0. Then 𝑟 is feasible in Model (17) and so 𝑟∗ ≥ 𝑟, since otherwise 𝑟 would be infeasible in
+Model (17). Because the function 𝑚𝑟 (𝑍1 ) is nondecreasing in 𝑟, we have 𝑟∗ < 𝑟. Hence, the number of computations 𝐾 must satisfy:
+𝑟̄∕2𝐾 < Δ; that is, 𝐾 ≥ ⌈log2 (̄𝑟∕Δ)⌉, which completes the proof.
+
+                                                                                              24
+B. Lu et al.                                                                                                           Transportation Research Part B 213 (2026) 103569
+
+
+B.7. Proof of Proposition 4
+
+    With Theorem 3, the uncertainty set (11) can be reformulated as:
+
+                       ⎧                  |𝜌𝐇 (𝒅,
+                                                ̃ 𝐇𝒒 + 𝐇𝐏𝒗) ≤ 𝛾               ⎫
+                                          |           [                   ]
+                       ⎪                  |
+                                          |𝔼(𝒅 ,𝒗 )∼ℙ̂ 𝜓(‖𝐐𝒅𝑠 − 𝒒 − 𝐏𝒗𝑠 ‖) ≤ 1⎪
+                       ⎪                  | 𝑠 𝑠                               ⎪
+                       ⎪                  |                                   ⎪
+                                          |det(𝐐) ≥ 1∕𝐾̂
+         ̄ ′ (𝛾, 𝒗) = ⎨𝒅̃ ∈             |                                   ⎬.
+                                          |
+                       ⎪                  |                                   ⎪
+                       ⎪                  |𝐐 ⪯ Diag (𝐫)
+                                                      −1
+                                                                              ⎪
+                                          |
+                       ⎪                  |                                   ⎪
+                       ⎩                  |𝒒 ∈ ℝ𝐼 𝑇 , 𝐏 ∈ ℝ(𝑁)×𝐿 , 𝐐 ∈ 𝕊𝐼 𝑇
+                                                   2                     2
+                                                                              ⎭
+                                          |                             ++
+which is equivalent as follows:
+                   ⎧                     |𝜌𝐇∗ (𝒅,
+                                                ̃ 𝐇∗ 𝒒 ∗ + 𝐇∗ 𝐏∗ 𝒗) ≤ 𝛾     ⎫
+                                         |
+                   ⎪                     | ∗ ∗ ∗
+         (𝛾, 𝒗) = ⎨𝒅̃ ∈ 
+         ̂                               |(𝒒 , 𝐏 , 𝐐 ) = argmaxΞ(𝒅𝑠 , 𝒗𝑠 ), ⎪
+                                                                            ⎬
+                                         |
+                   ⎪                     |                                  ⎪
+                   ⎩                     |𝐇∗ = (𝐐∗ )−1                      ⎭
+                                         |
+where Ξ(𝒅𝑠 , 𝒗𝑠 ) = {det(𝐐)1∕𝑁 |(12𝑏) − (12𝑑)}. According to the deﬁnition of the contextual disparity metric 𝜌𝐇 (⋅, ⋅), the ﬁrst constraint
+is equivalent to ‖𝐐∗ 𝒅̃ − 𝒒 ∗ − 𝐏∗ 𝒗‖𝑝 ≤ 𝛾. Therefore, we can obtain:
+                  {                                              }
+                              |‖𝐐∗ 𝒅̃ − 𝒒 ∗ − 𝐏∗ 𝒗‖𝑝 ≤ 𝛾
+        ̂ 𝒗) = 𝒅̃ ∈  ||
+       (𝛾,                                                        .
+                              |(𝒒 ∗ , 𝐏∗ , 𝐐∗ ) = argmaxΞ(𝒅 , 𝒗 )
+                              |                            𝑠 𝑠
+
+
+B.8. Proof of Proposition 7
+
+                                                         2
+    Let 𝒓 ∶= 𝐐∗ 𝒅̃ − 𝒒 ∗ − 𝐏∗ 𝒗 ∈ ℝ𝐼 𝑇 , we aim to show that (𝛾,
+                                                             ̂ 𝒗) = ′ (𝛾, 𝒗).
+    ̂ 𝒗) ⊆ ′ (𝛾, 𝒗)
+(i) (𝛾,
+                   ̂ 𝒗). By deﬁnition, we have ‖𝒓‖𝑝 = ‖𝐐∗ 𝒅̃ − 𝒒 ∗ − 𝐏∗ 𝒗‖𝑝 ≤ 𝛾. We denote:
+    Suppose 𝒅̃ ∈ (𝛾,
+         𝒘̃ 1 ∶= 𝒓+ ∶= max(𝒓, 0),                     𝒘̃ 2 ∶= 𝒓− ∶= max(−𝒓, 0),              𝑢̃ ∶= ‖𝒘̃ 1 + 𝒘̃ 2 ‖𝑝 .
+Clearly, we have 𝒘̃ 1 , 𝒘̃ 2 ≥ 𝟎 and 𝒘̃ 1 − 𝒘̃ 2 = 𝒓. Moreover, we can obtain‖𝒘̃ 1 + 𝒘̃ 2 ‖𝑝 = ‖|𝒓|‖𝑝 = ‖𝒓‖𝑝 ≤ 𝛾. Thus, (𝒅,
+                                                                                                                          ̃ 𝒘̃ 1 , 𝒘̃ 2 , 𝑢)
+                                                                                                                                          ̃ satisﬁes
+all constraints of ′ (𝛾, 𝒗), and therefore we have 𝒅̃ ∈ (𝛾,     ̂ 𝒗) ⟹ (𝒅,   ̃ 𝒘̃ 1 , 𝒘̃ 2 , 𝑢)
+                                                                                               ̃ ∈ ′ (𝛾, 𝒗).
+                 ̂ 𝒗)
+(ii) ′ (𝛾, 𝒗) ⊆ (𝛾,
+    Conversely, we suppose (𝒅,   ̃ 𝒘̃ 1 , 𝒘̃ 2 , 𝑢)
+                                                 ̃ ∈ ′ (𝛾, 𝒗). Then, we have:
+         𝒓 = 𝒘̃ 1 − 𝒘̃ 2 ,        𝒘̃ 1 , 𝒘̃ 2 ≥ 0,             ‖𝒘̃ 1 + 𝒘̃ 2 ‖𝑝 ≤ 𝑢̃ ≤ 𝛾.
+For each component, we have |𝒓| = |𝒘̃ 1 − 𝒘̃ 2 | ≤ 𝒘̃ 1 + 𝒘̃ 2 . Since the 𝑝-norm is monotone with respect to componentwise inequalities,
+we obtain ‖𝒓‖𝑝 = ‖|𝒓|‖𝑝 ≤ ‖𝒘̃ 1 + 𝒘̃ 2 ‖𝑝 ≤ 𝛾. Hence we have 𝒅̃ ∈ (𝛾, ̂ 𝒗).
+   We have shown both inclusions (𝛾,                                       ̂ 𝒗). Therefore, we obtain the result of the Proposition 7.
+                                        ̂ 𝒗) ⊆ ′ (𝛾, 𝒗) and ′ (𝛾, 𝒗) ⊆ (𝛾,
+
+B.9. Proof of Proposition 8
+
+    (i) Equivalence of the uncertainty set.
+                                                                   ̂ 𝒗). Proposition (7) shows that by introducing auxiliary variables
+    Problem (16) is formulated over the original uncertainty set (𝛾,
+̃ 1, 𝒘
+𝒘                                          ̂ 𝒗). Hence, for any continuous function 𝑓 we have
+           ̃ the set is an aﬃne lifting of (𝛾,
+     ̃ 2 , 𝑢,
+                       ̃ =
+               min 𝑓 (𝒅)                   min                        ̃
+                                                                  𝑓 (𝒅),
+          ̃ (𝛾,𝒗)
+         𝒅∈ ̂                      ̃𝒘
+                                 (𝒅,      ̃ 1 ,𝑢)∈
+                                     ̃ 1 ,𝒘    ̃   ′ (𝛾,𝒗)
+
+
+                                                                ̂
+which means optimizing over ′ is equivalent to optimizing over .
+(ii) Aﬃne representation of the LDR in the lifted space.
+    Under the linear decision rule approximation,
+                                      ∑∑
+                                       𝑡−1
+                  ̃ = 𝑘0,𝑖,𝑗,𝑡 +
+         𝑘𝑖,𝑗,𝑡 (𝒅)                                   𝑘1,𝑖,𝑗,𝑡,𝑖′ ,𝑗 ′ ,𝑡′ 𝑑̃𝑖′ ,𝑗 ′ ,𝑡′ ,
+                                      𝑖′ ,𝑗 ′ 𝑡′ =1
+
+which depends only on past demand realizations 𝑡′ < 𝑡. In problem (17), it is rewritten as
+                               ̃ = 𝑘𝑖,𝑗,𝑡,0 + 𝒌⊤
+         𝑘𝑖,𝑗,𝑡 (𝒘̃ 1 , 𝒘̃ 2 , 𝑢)                     𝒘̃ + 𝒌⊤
+                                               𝒊,𝒋,𝒕,𝟏 1
+                                                                   𝒘̃ + 𝑘𝑖,𝑗,𝑡,3 𝑢.
+                                                            𝒊,𝒋,𝒕,𝟐 2
+                                                                                 ̃
+To preserve the causal LDR structure, we impose a sparsity pattern on the coeﬃcient vectors:
+         [𝒌𝒊,𝒋,𝒕,𝟏 ]𝑖′ ,𝑗 ′ ,𝑡′ = [𝒌𝒊,𝒋,𝒕,𝟐 ]𝑖′ ,𝑗 ′ ,𝑡′ = 0          ∀ 𝑡′ ≥ 𝑡,
+so that only information from periods 𝑡′ < 𝑡 is extracted. This guarantees
+         𝑘𝑖,𝑗,𝑡 (𝒘̃ 1 , 𝒘̃ 2 , 𝑢)           ̃
+                               ̃ = 𝑘𝑖,𝑗,𝑡 (𝒅),                                  ̃ ∈ ′ .
+                                                                ̃ 𝒘̃ 1 , 𝒘̃ 2 , 𝑢)
+                                                             ∀(𝒅,
+
+                                                                                                      25
+B. Lu et al.                                                                                    Transportation Research Part B 213 (2026) 103569
+
+
+   The objective function remains unchanged in both formulations, and every robust constraint in Problem (16) can be rigorously
+transformed into its lifted counterpart in Problem (17) using the aﬃne lifting of the uncertainty set and the LDR representation.
+Therefore, Problems (16) and (17) deﬁne the same feasible region and share the same optimal objective value.
+
+Appendix C. Supplement for ﬁgures
+
+C.1. The impact of contexual information on AES freight demand
+
+
+
+
+                                  Fig. C.1. The impact of contextual information on AES freight demand.
+
+
+
+C.2. The daily electric prices per kWhs in summer and winter
+
+    Fig. C.2 illustrates the daily electric prices per kWhs in summer and winter.
+
+
+
+
+                                                 Fig. C.2. Daily electric prices per kWh.
+
+
+
+
+                                                                   26
+B. Lu et al.                                                                                                           Transportation Research Part B 213 (2026) 103569
+
+
+C.3. The 95% CVaR out-of-sample performance under diﬀerent target levels
+
+
+
+
+Fig. C.3. 95% CVaR out-of-sample performance under diﬀerent target levels.. (For interpretation of the references to colour in this ﬁgure legend,
+the reader is referred to the web version of this article.)
+
+
+
+References
+
+Badakhshan, S., Senemmar, S., Zhang, J., 2022. Dynamic feasibility assessment of ship-to-grid interconnection by DC-link. In: 2022 IEEE Texas Power and Energy
+   Conference (TPEC), pp. 1–6.
+Ban, G.-Y., Rudin, C., 2019. The big data newsvendor: practical insights from machine learning. Oper. Res. 67 (1), 90–108.
+Bandi, C., Bertsimas, D., 2012. Tractable stochastic analysis in high dimensions via robust optimization. Math. Program. 134 (1), 23–70.
+Ben-Tal, A., Den Hertog, D., De Waegenaere, A., Melenberg, B., Rennen, G., 2013. Robust solutions of optimization problems aﬀected by uncertain probabilities.
+   Manag. Sci. 59 (2), 341–357.
+Bengio, Y., 1997. Using a ﬁnancial training criterion rather than a prediction criterion. Int. J. Neural Syst. 8 (4), 433–443.
+Bertsimas, D., Gupta, V., Kallus, N., 2018. Data-driven robust optimization. Math. Program. 167 (2), 235–292.
+Bertsimas, D., Kallus, N., 2020. From predictive to prescriptive analytics. Manag. Sci. 66 (3), 1025–1044.
+Bertsimas, D., Sim, M., 2004. The price of robustness. Oper. Res. 52 (1), 35–53.
+Bertsimas, D., Sim, M., 2006. Tractable approximations to robust conic optimization problems. Math. Program. 107 (1–2), 5–36.
+Brown, D.B., Sim, M., 2009. Satisﬁcing measures for analysis of risky positions. Manag. Sci. 55 (1), 71–84.
+Chen, Z., Xiong, P., 2023. Rsome in python: an open-source package for robust stochastic optimization made easy. INFORMS J. Comput. 35 (4), 717–724.
+Christiansen, M., Fagerholt, K., Ronen, D., 2004. Ship routing and scheduling: status and perspectives. Transp. Sci. 38 (1), 1–18.
+Chuang, F.-C., Lin, C.-H., Lin, C.-S., 2010. A fuzzy linear programming model for robust liner ship ﬂeet planning under uncertain port times. J. Mar. Sci. Technol. 18
+   (4), 583–592.
+DNV, 2024. Maritime Energy Transition Outlook 2024. Technical Report. DNV. Høvik, Norway.
+Donti, P.L., Amos, B., Kolter, J.Z., 2017. Task-based end-to-end model learning in stochastic optimization. In: Advances in Neural Information Processing Systems
+   (NeurIPS) 30, pp. 5484–5494.
+Elmachtoub, A.N., Grigas, P., 2022. Smart “predict, then optimize”. Manag. Sci. 68 (1), 9–26.
+ESPO, 2025. The European Sea Ports Organisation. [https://www.espo.be/. Online; accessed 12 November 2025].
+EU, 2021. Part of the EU’s 2030 infrastructure strategy supporting alternative fuels infrastructure, including port electriﬁcation. https://eur-lex.europa.eu/
+   legal-content/EN/TXT/?uri=CELEX:32021R1153.
+Gürel, S., Krumke, S.O., Qu, R., Voss, S., 2019. Recovery of disrupted liner shipping services by container diversion and vessel swapping. Transp. Res. E: Logist. Transp.
+   Rev. 122, 249–270.
+Hao, Z., He, L., Hu, Z., Jiang, J., 2020. Robust vehicle pre-allocation with uncertain covariates. Prod. Oper. Manag. 29 (4), 955–972.
+He, L., Hu, Z., Zhang, M., 2020. Robust repositioning for vehicle sharing. Manuf. Serv. Oper. Manag. 22 (2), 241–256.
+Hein, K., Xu, Y., Wilson, G., Gupta, A.K., 2021. Coordinated optimal voyage planning and energy management of all-electric ship with hybrid energy storage system.
+   IEEE Trans. Power Syst. 36 (3), 2355–2365.
+Hong, L.J., Huang, Z., Lam, H., 2021. Learning-based robust optimization: procedures and statistical guarantees. Manag. Sci. 67 (6), 3447–3467.
+IMO, 2023. Fourth IMO Greenhouse Gas Study 2023. Technical Report. International Maritime Organization.
+Ivanov, G., 2022. All-electric cargo ships data analysis and eﬃciency vs fuel ships comparison. Int. J. Mar. Eng. Innov. Res. 7 (1), 33–40.
+Kanellos, F.D., Tsekouras, G.J., Hatziargyriou, N.D., 2014. Optimal demand-side management and power generation scheduling in an all-electric ship. IEEE Trans.
+   Sustain. Energy 5 (4), 1166–1175.
+Kannan, R., Bayraksan, G., Luedtke, J.R., 2024. Residuals-based distributionally robust optimization with covariate information. Math. Program. 207 (1–2), 369–425.
+Liyanage, L.H., Shanthikumar, J.G., 2005. A practical inventory control policy using operational statistics. Oper. Res. Lett. 33 (4), 341–348.
+Long, D.Z., Sim, M., Zhou, M., 2023. Robust satisﬁcing. Oper. Res. 71 (1), 61–82.
+Lou, Z., Chen, Z., Sim, M., Xie, J., Xiong, P., 2024. Estimation and prediction procedures for uniﬁed robust decision models. Available at SSRN 4890089.
+Meng, Q., Wang, S., Liu, Z., 2010. Liner shipping service network design with empty container repositioning. Transp. Res. E: Logist. Transp. Rev. 46 (6), 960–977.
+Mišić, V.V., Perakis, G., 2020. Data analytics in operations management: a review. Manuf. Serv. Oper. Manag. 22 (1), 158–169.
+MOT, 2024. Zero-Carbon Port Initiative Implementation Guidelines. China Communications Press, Beijing.
+Nemhauser, G.L., Wolsey, L.A., 1988. Integer and Combinatorial Optimization. Wiley-Interscience Series in Discrete Mathematics and Optimization, John Wiley &
+   Sons, New York.
+
+                                                                                   27
+B. Lu et al.                                                                                                           Transportation Research Part B 213 (2026) 103569
+
+
+Norstad, I., Fagerholt, K., Laporte, G., 2011. Tramp ship routing and scheduling with speed optimization. Transp. Res. C: Emerg. Technol. 19 (5), 853–865.
+Omholt-Jensen, S., Fagerholt, K., Meisel, F., 2025. Fleet repositioning in the tramp ship routing and scheduling problem with bunker optimization: a matheuristic
+    solution approach. Eur. J. Oper. Res. 321 (1), 88–106.
+Peterson, S.B., Whitacre, J.F., Apt, J., 2010. The economics of using plug-in hybrid electric vehicle battery packs for grid storage. J. Power Sources 195 (8), 2377–2384.
+Qi, X., Song, D.-P., Chang, C.-L., 2012. Service network design in liner shipping with empty container repositioning and demand uncertainty. Transp. Res. B: Methodol.
+    46 (10), 1491–1502.
+Reed, G.F., Grainger, B.M., Sparacino, A.R., Mao, Z.-H., 2012. Ship to grid: medium-voltage DC concepts in theory and practice. IEEE Power Energy Mag. 10 (6),
+    70–79.
+Shang, C., Srinivasan, D., Reindl, T., 2016. Economic and environmental generation and voyage scheduling of all-electric ships. IEEE Trans. Power Syst. 31 (5),
+    4087–4096.
+Sim, M., Tang, Q., Zhou, M., Zhu, T., 2024. The analytics of robust satisﬁcing: predict, optimize, satisﬁce, then fortify. Oper. Res. 73 (5), 2708–2728.
+Song, D.-P., Dong, J., Zhang, J., 2015. Liner shipping service network design with schedule reliability. Transp. Res. B: Methodol. 71, 1–16.
+Department for Transport, 2021. COP26: Clydebank Declaration for green shipping corridors. GOV.UK. https://www.gov.uk/government/publications/
+    cop-26-clydebank-declaration-for-green-shipping-corridors (accessed 12 August 2026).
+Vilhelmsen, C., Lusby, R., Larsen, J., 2014. Tramp ship routing and scheduling with integrated bunker optimization. EURO J. Transp. Logist. 3 (2), 143–175.
+Vlachokostas, A., Prousalidis, J., Spathis, D., Nikitas, M., Kourmpelis, T., Dallas, S., Soghomonian, Z., Georgiou, V., 2019. Ship-to-grid integration: environmental
+    mitigation and critical infrastructure resilience. In: 2019 IEEE Electric Ship Technologies Symposium (ESTS), pp. 542–547.
+Wang, S., Chen, Z., Liu, T., 2020. Distributionally robust hub location. Transp. Sci. 54 (5), 1189–1210.
+Wang, S., Meng, Q., Liu, Z., 2012. Liner ship ﬂeet planning with stochastic port times and demand. Transp. Res. E: Logist. Transp. Rev. 48 (4), 863–880.
+Wen, M., Ropke, S., Petersen, H.L., Larsen, R., Madsen, O.B.G., 2016. Full-shipload tramp ship routing and scheduling with variable speeds. Comput. Oper. Res. 70
+    (Jun.), 1–8.
+Wen, S., Zhao, T., Tang, Y., Xu, Y., Zhu, M., Huang, Y., 2020. A joint photovoltaic-dependent navigation routing and energy storage system sizing scheme for more
+    eﬃcient all-electric ships. IEEE Trans. Transp. Electrif. 6 (3), 1279–1289.
+WU, 2025. Local Weather Forecast, News and Conditions – Weather Underground. [https://www.wunderground.com. Online; accessed 12 November 2025].
+Zhang, Y., Lu, M., Shen, S., 2021. On the values of vehicle-to-grid electricity selling in electric vehicle sharing. Manuf. Serv. Oper. Manag. 23 (2), 488–507.
+
+
+
+
+                                                                                   28
+

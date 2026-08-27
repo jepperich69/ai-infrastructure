@@ -30,7 +30,7 @@
 <body>
 
 <h1>Handover Document &mdash; AI_auto</h1>
-<div class="meta">Generated: 2026-08-14 12:40 &nbsp;|&nbsp; Source: <code style="display:inline;padding:2px 6px">_ai_log.md</code> &nbsp;|&nbsp; Sidecar: <code style="display:inline;padding:2px 6px">_handover.json</code></div>
+<div class="meta">Generated: 2026-08-18 15:49 &nbsp;|&nbsp; Source: <code style="display:inline;padding:2px 6px">_ai_log.md</code> &nbsp;|&nbsp; Sidecar: <code style="display:inline;padding:2px 6px">_handover.json</code></div>
 
 <!-- ============================================================ -->
 <!-- AGENT INSTRUCTIONS                                            -->
@@ -62,21 +62,22 @@
 <div class="latest-session">
   <div class="session-status ok">Complete</div>
   <h2>Latest Session Snapshot</h2>
-  <p><strong>Session:</strong> 2026-08-14</p>
-  <p><strong>Agent:</strong> Claude Opus 5</p>
-  <p><strong>Goal:</strong> Build a presentation on how we do mathematical verification and certification of the math, in nine sections (idea, tools, numerical/symbolic, example of use, a literature paper, workflow diagram, limitations, install, conclusion).</p>
-  <p><strong>Outcome:</strong> Deck delivered. Section 5 is a real run, not a mock-up: Kahneman &amp; Tversky (1979) checked end to end, 49/49 derivations pass, plus one unstated side condition found in the p.285 probabilistic-insurance proof and three strictness gaps. See `math_check_report.md` for the findings. Method used for implication-chains (a positive-multiplier certificate, `C = m*P` with `m &gt; 0`) is new and reusable for prose-heavy theory papers.</p>
-  <p><strong>Next steps:</strong> (1) decide whether to cut ~4 slides for a 25-min slot (41 slides is dense); (2) reconcile `jr_optlib` doc counts -- `functions.yaml` has 40 vetted + 2 experimental, but `README.md` says 41 vetted / 139 tests and `registry\INDEX.md` lists 45 rows; actual test count is 143; (3) `/catch-up` backlog still open (known issues #43, #46, #47).</p>
-  <p><strong>Git ref:</strong> 3193e67</p>
+  <p><strong>Session:</strong> 2026-08-18</p>
+  <p><strong>Agent:</strong> Codex</p>
+  <p><strong>Goal:</strong> Build a shorter, popular mathematical-verification deck with anonymous audits of three randomly supplied top-journal papers.</p>
+  <p><strong>Outcome:</strong> Delivered a 16-slide popular talk. The anonymous sample illustrates three distinct printed-formulation failures: reversed optimization direction; variance/standard-deviation confusion plus a contradictory proof; and disagreement between a stated dynamic objective and its Bellman recursion. A joint table reports correct checks and flags for all four papers without presenting targeted screens as full audits. A new architecture slide separates solver backends from independent verification oracles and explains that Gurobi is optional for selected MIPs, MIQPs, and exact benchmark bounds. Arithmetic spot checks pass, the deck compiles cleanly, and the new slides were visually inspected. Findings are explicitly limited to internal consistency because unavailable source code could silently correct the printed models.</p>
+  <p><strong>Next steps:</strong> Rehearse for timing and decide whether to retain all three anonymous paper slides or move one to backup for a sub-15-minute slot.</p>
+  <p><strong>Git ref:</strong> 7789853</p>
   <h3>Files touched</h3>
   <ul>
-  <li>`presentations\verification\verification_talk.tex` -- new 41-slide Beamer deck (16:9), all nine sections; compiles clean.</li>
-  <li>`presentations\verification\verification_talk.pdf` -- compiled output.</li>
-  <li>`presentations\verification\workflow.png` -- mermaid two-lane workflow figure (landscape, 2.28:1).</li>
-  <li>`literature\verification_demo\KT1979\KT1979_claims.tex` -- verbatim transcription of every derivation in Kahneman &amp; Tversky (1979) with page numbers.</li>
-  <li>`literature\verification_demo\KT1979\verify.py` -- SymPy check of all 49 claims.</li>
-  <li>`literature\verification_demo\KT1979\verify_output.txt` -- raw run output.</li>
-  <li>`literature\verification_demo\KT1979\math_check_report.md` -- the audit (record document for the K&amp;T run).</li>
+  <li>`known_issues.md` -- marked infrastructure issues #43, #46, and #47 fixed after applying their documented repairs.</li>
+  <li>`scripts/helpi.ps1` -- forwarded the optional Overleaf Git URL for `helpi 1` in preview and execution.</li>
+  <li>`scripts/auto_handover.ps1` -- removed the leading UTF-8 BOM.</li>
+  <li>`C:\Users\rich\.agents\skills\research-close\SKILL.md` -- corrected the handover-generator path.</li>
+  <li>`presentations\verification\verification_talk_short.tex` -- new 16-slide popular Beamer deck; includes three anonymous paper audits, a joint four-paper audit table, and the optimization-library architecture; retains the original technical deck unchanged.</li>
+  <li>`presentations\verification\verification_talk_short.pdf` -- compiled and visually checked output.</li>
+  <li>`presentations\verification\audit_spotchecks.py` -- independent arithmetic checks for the anonymous audit slides.</li>
+  <li>`presentations\verification\{Transpormetrica_B_test,PartB_test,PartC}.txt` -- text extracted from the three supplied PDFs for the internal audits.</li>
 </ul>
 </div>
 
@@ -91,7 +92,6 @@
 <h2>Compressed sessions</h2>
 <br>
 <ul>
-  <li><strong>2026-06-19</strong> (Claude): Fix Gemini CLI auth (broken by Google&#39;s OAuth deprecation for indiv... -&gt; `gemini` is fully working again, both interactively and from `run_forum.ps1`, on the fl...</li>
   <li><strong>2026-06-22</strong> (Claude): Diagnose why interactive `gemini`/`agy` were failing with API/usage... -&gt; Root cause was a Google regression in agy v1.0.9/1.0.10 (OAuth token exchange fails wit...</li>
   <li><strong>2026-06-22b</strong> (Claude): agy had silently auto-updated back to the broken v1.0.10 (eligibili... -&gt; agy is pinned to v1.0.8 two ways (env-var kill-switch + ACL deny backstop) so it can no...</li>
   <li><strong>2026-06-25</strong> (Gemini 3.5 Flash (Medium)): Fix the &quot;src refspec master does not match any&quot; error that occurs d... -&gt; Fixed the push error for `Pub_FlowPaperSP2_TRD` (which is tracked on `main`), updated `...</li>
@@ -107,28 +107,8 @@
   <li><strong>2026-07-02 (Gemini CLI close)</strong> (Gemini CLI): Extract and verify legacy heuristics (VSP SA, Set-Cover Ladder Burn... -&gt; The optimization library jr_optlib is now fully operational, tested, and pushed to GitH...</li>
   <li><strong>2026-07-02 (fourth session)</strong> (Gemini CLI): Extract Napsti block-coordinate NLP primitive and the Dijkstra + SU... -&gt; The NLP fixed-point solver and routing (Dijkstra+SUE) were successfully extracted to th...</li>
   <li><strong>2026-07-02 (fifth session)</strong> (Gemini CLI): Survey the paper codebases to identify missing algorithmic families... -&gt; Successfully identified three major missing algorithmic families (Finite Horizon DP, Di...</li>
+  <li><strong>2026-07-02 (sixth session)</strong> (Claude): Verify the DP/choice/RL primitives Gemini (Agy) added to jr_optlib ... -&gt; Agy&#39;s choice/dp/rl code was numerically correct but registered vetted with no oracle/te...</li>
 </ul>
-<br>
-<hr>
-<br>
-<h2>Session 2026-07-02 (sixth session)</h2>
-<p><strong>Agent:</strong> Claude Opus 4.8</p>
-<p><strong>Goal:</strong> Verify the DP/choice/RL primitives Gemini (Agy) added to jr_optlib last session, then reconcile and push every repo touched across the day once the Overleaf git server came back up.</p>
-<p><strong>Files touched:</strong></p>
-<ul>
-  <li>`jr_optlib/src/jr_optlib/oracles/choice.py` (new) -- certify_mnl + certify_nested_logit (McFadden theta=1 -&gt; MNL consistency).</li>
-  <li>`jr_optlib/src/jr_optlib/oracles/dp.py` (new) -- certify_transition_contraction + certify_dp_vs_brute_force (backward induction vs exhaustive enumeration).</li>
-  <li>`jr_optlib/src/jr_optlib/oracles/rl.py` (new) -- certify_q_learning_vs_dp (Q-learning converges to exact DP).</li>
-  <li>`jr_optlib/src/jr_optlib/oracles/__init__.py` -- exported the five new oracles.</li>
-  <li>`jr_optlib/tests/{test_optimization_choice,test_optimization_dp,test_sampling_rl}.py` (new) -- 11 tests; suite 117 -&gt; 128 passing.</li>
-  <li>`jr_optlib/registry/functions.yaml` -- rewrote the 6 malformed choice/dp/rl stubs as full oracle-backed vetted entries; downgraded dijkstra_manhattan + compute_route_choice_shares to experimental; fixed a pre-existing YAML parse error.</li>
-  <li>`~/.claude/CLAUDE.md` -- added &quot;Shared optimization library (jr_optlib)&quot; section (registry-first, oracle-on-add, version-pin, honest paper wording).</li>
-  <li>`~/.claude/.../memory/project_jr_optlib_workflow.md` (new) + `MEMORY.md` -- persisted the workflow rule.</li>
-  <li>Pushes (committed work only, no build artifacts): jr_optlib (d565b8c), AI_auto, Pub_PMIP_AOR (Overleaf), Pub_QP_SAA_MC (code + Overleaf), Pub_DP_Logsum_TBA (code + Overleaf), Pub_DP_RL_TBA (code + Overleaf), Pub_NapstiGranularity (Overleaf), Pub_PMIP_VSP (root + code + Overleaf merged), Pub_ML_Entropy (merged remote PDF).</li>
-</ul>
-<p><strong>Outcome:</strong> Agy&#39;s choice/dp/rl code was numerically correct but registered vetted with no oracle/test; now fully oracle-backed + tested (128 pass) and the registry invariant restored. Every touched repo reconciled and pushed; two divergences (ML<em>Entropy, PMIP</em>VSP Overleaf) merged non-destructively. Confirmed the migration is extract-and-vet only -- papers still run their own local copies (Pub<em>QP</em>SAA_MC/code/solvers.py unchanged); rewiring deferred, done per-paper as each is reopened.</p>
-<p><strong>Next steps:</strong> (1) rewire papers to import jr<em>optlib one at a time (differential vs old copy, then delete local copy); (2) add VERIFICATION.md to jr</em>optlib + reproducibility/verification statement to each paper; (3) intentionally-left uncommitted files remain (handover files, PMIP<em>VSP/code 32 files, ML</em>Entropy script).</p>
-<p><strong>Git ref:</strong> af92321 (AI<em>auto); jr</em>optlib d565b8c</p>
 <br>
 <hr>
 <br>
@@ -175,7 +155,27 @@
 </ul>
 <p><strong>Outcome:</strong> Deck delivered. Section 5 is a real run, not a mock-up: Kahneman &amp; Tversky (1979) checked end to end, 49/49 derivations pass, plus one unstated side condition found in the p.285 probabilistic-insurance proof and three strictness gaps. See `math<em>check</em>report.md` for the findings. Method used for implication-chains (a positive-multiplier certificate, `C = m*P` with `m &gt; 0`) is new and reusable for prose-heavy theory papers.</p>
 <p><strong>Next steps:</strong> (1) decide whether to cut ~4 slides for a 25-min slot (41 slides is dense); (2) reconcile `jr_optlib` doc counts -- `functions.yaml` has 40 vetted + 2 experimental, but `README.md` says 41 vetted / 139 tests and `registry\INDEX.md` lists 45 rows; actual test count is 143; (3) `/catch-up` backlog still open (known issues #43, #46, #47).</p>
-<p><strong>Git ref:</strong> 3193e67</p>
+<p><strong>Git ref:</strong> 3193e67</p>
+<br>
+<hr>
+<br>
+<h2>Session 2026-08-18</h2>
+<p><strong>Agent:</strong> Codex</p>
+<p><strong>Goal:</strong> Build a shorter, popular mathematical-verification deck with anonymous audits of three randomly supplied top-journal papers.</p>
+<p><strong>Files touched:</strong></p>
+<ul>
+  <li>`known_issues.md` -- marked infrastructure issues #43, #46, and #47 fixed after applying their documented repairs.</li>
+  <li>`scripts/helpi.ps1` -- forwarded the optional Overleaf Git URL for `helpi 1` in preview and execution.</li>
+  <li>`scripts/auto_handover.ps1` -- removed the leading UTF-8 BOM.</li>
+  <li>`C:\Users\rich\.agents\skills\research-close\SKILL.md` -- corrected the handover-generator path.</li>
+  <li>`presentations\verification\verification_talk_short.tex` -- new 16-slide popular Beamer deck; includes three anonymous paper audits, a joint four-paper audit table, and the optimization-library architecture; retains the original technical deck unchanged.</li>
+  <li>`presentations\verification\verification_talk_short.pdf` -- compiled and visually checked output.</li>
+  <li>`presentations\verification\audit_spotchecks.py` -- independent arithmetic checks for the anonymous audit slides.</li>
+  <li>`presentations\verification\{Transpormetrica_B_test,PartB_test,PartC}.txt` -- text extracted from the three supplied PDFs for the internal audits.</li>
+</ul>
+<p><strong>Outcome:</strong> Delivered a 16-slide popular talk. The anonymous sample illustrates three distinct printed-formulation failures: reversed optimization direction; variance/standard-deviation confusion plus a contradictory proof; and disagreement between a stated dynamic objective and its Bellman recursion. A joint table reports correct checks and flags for all four papers without presenting targeted screens as full audits. A new architecture slide separates solver backends from independent verification oracles and explains that Gurobi is optional for selected MIPs, MIQPs, and exact benchmark bounds. Arithmetic spot checks pass, the deck compiles cleanly, and the new slides were visually inspected. Findings are explicitly limited to internal consistency because unavailable source code could silently correct the printed models.</p>
+<p><strong>Next steps:</strong> Rehearse for timing and decide whether to retain all three anonymous paper slides or move one to backup for a sub-15-minute slot.</p>
+<p><strong>Git ref:</strong> 7789853</p>
 <br>
 
 </div>
@@ -192,7 +192,6 @@
 
 ## Compressed sessions
 
-- **2026-06-19** (Claude): Fix Gemini CLI auth (broken by Google's OAuth deprecation for indiv... -&gt; `gemini` is fully working again, both interactively and from `run_forum.ps1`, on the fl...
 - **2026-06-22** (Claude): Diagnose why interactive `gemini`/`agy` were failing with API/usage... -&gt; Root cause was a Google regression in agy v1.0.9/1.0.10 (OAuth token exchange fails wit...
 - **2026-06-22b** (Claude): agy had silently auto-updated back to the broken v1.0.10 (eligibili... -&gt; agy is pinned to v1.0.8 two ways (env-var kill-switch + ACL deny backstop) so it can no...
 - **2026-06-25** (Gemini 3.5 Flash (Medium)): Fix the "src refspec master does not match any" error that occurs d... -&gt; Fixed the push error for `Pub_FlowPaperSP2_TRD` (which is tracked on `main`), updated `...
@@ -208,25 +207,7 @@
 - **2026-07-02 (Gemini CLI close)** (Gemini CLI): Extract and verify legacy heuristics (VSP SA, Set-Cover Ladder Burn... -&gt; The optimization library jr_optlib is now fully operational, tested, and pushed to GitH...
 - **2026-07-02 (fourth session)** (Gemini CLI): Extract Napsti block-coordinate NLP primitive and the Dijkstra + SU... -&gt; The NLP fixed-point solver and routing (Dijkstra+SUE) were successfully extracted to th...
 - **2026-07-02 (fifth session)** (Gemini CLI): Survey the paper codebases to identify missing algorithmic families... -&gt; Successfully identified three major missing algorithmic families (Finite Horizon DP, Di...
-
----
-
-## Session 2026-07-02 (sixth session)
-**Agent:** Claude Opus 4.8
-**Goal:** Verify the DP/choice/RL primitives Gemini (Agy) added to jr_optlib last session, then reconcile and push every repo touched across the day once the Overleaf git server came back up.
-**Files touched:**
-- `jr_optlib/src/jr_optlib/oracles/choice.py` (new) -- certify_mnl + certify_nested_logit (McFadden theta=1 -&gt; MNL consistency).
-- `jr_optlib/src/jr_optlib/oracles/dp.py` (new) -- certify_transition_contraction + certify_dp_vs_brute_force (backward induction vs exhaustive enumeration).
-- `jr_optlib/src/jr_optlib/oracles/rl.py` (new) -- certify_q_learning_vs_dp (Q-learning converges to exact DP).
-- `jr_optlib/src/jr_optlib/oracles/__init__.py` -- exported the five new oracles.
-- `jr_optlib/tests/{test_optimization_choice,test_optimization_dp,test_sampling_rl}.py` (new) -- 11 tests; suite 117 -&gt; 128 passing.
-- `jr_optlib/registry/functions.yaml` -- rewrote the 6 malformed choice/dp/rl stubs as full oracle-backed vetted entries; downgraded dijkstra_manhattan + compute_route_choice_shares to experimental; fixed a pre-existing YAML parse error.
-- `~/.claude/CLAUDE.md` -- added "Shared optimization library (jr_optlib)" section (registry-first, oracle-on-add, version-pin, honest paper wording).
-- `~/.claude/.../memory/project_jr_optlib_workflow.md` (new) + `MEMORY.md` -- persisted the workflow rule.
-- Pushes (committed work only, no build artifacts): jr_optlib (d565b8c), AI_auto, Pub_PMIP_AOR (Overleaf), Pub_QP_SAA_MC (code + Overleaf), Pub_DP_Logsum_TBA (code + Overleaf), Pub_DP_RL_TBA (code + Overleaf), Pub_NapstiGranularity (Overleaf), Pub_PMIP_VSP (root + code + Overleaf merged), Pub_ML_Entropy (merged remote PDF).
-**Outcome:** Agy's choice/dp/rl code was numerically correct but registered vetted with no oracle/test; now fully oracle-backed + tested (128 pass) and the registry invariant restored. Every touched repo reconciled and pushed; two divergences (ML_Entropy, PMIP_VSP Overleaf) merged non-destructively. Confirmed the migration is extract-and-vet only -- papers still run their own local copies (Pub_QP_SAA_MC/code/solvers.py unchanged); rewiring deferred, done per-paper as each is reopened.
-**Next steps:** (1) rewire papers to import jr_optlib one at a time (differential vs old copy, then delete local copy); (2) add VERIFICATION.md to jr_optlib + reproducibility/verification statement to each paper; (3) intentionally-left uncommitted files remain (handover files, PMIP_VSP/code 32 files, ML_Entropy script).
-**Git ref:** af92321 (AI_auto); jr_optlib d565b8c
+- **2026-07-02 (sixth session)** (Claude): Verify the DP/choice/RL primitives Gemini (Agy) added to jr_optlib ... -&gt; Agy's choice/dp/rl code was numerically correct but registered vetted with no oracle/te...
 
 ---
 
@@ -268,6 +249,24 @@
 **Outcome:** Deck delivered. Section 5 is a real run, not a mock-up: Kahneman & Tversky (1979) checked end to end, 49/49 derivations pass, plus one unstated side condition found in the p.285 probabilistic-insurance proof and three strictness gaps. See `math_check_report.md` for the findings. Method used for implication-chains (a positive-multiplier certificate, `C = m*P` with `m &gt; 0`) is new and reusable for prose-heavy theory papers.
 **Next steps:** (1) decide whether to cut ~4 slides for a 25-min slot (41 slides is dense); (2) reconcile `jr_optlib` doc counts -- `functions.yaml` has 40 vetted + 2 experimental, but `README.md` says 41 vetted / 139 tests and `registry\INDEX.md` lists 45 rows; actual test count is 143; (3) `/catch-up` backlog still open (known issues #43, #46, #47).
 **Git ref:** 3193e67
+
+---
+
+## Session 2026-08-18
+**Agent:** Codex
+**Goal:** Build a shorter, popular mathematical-verification deck with anonymous audits of three randomly supplied top-journal papers.
+**Files touched:**
+- `known_issues.md` -- marked infrastructure issues #43, #46, and #47 fixed after applying their documented repairs.
+- `scripts/helpi.ps1` -- forwarded the optional Overleaf Git URL for `helpi 1` in preview and execution.
+- `scripts/auto_handover.ps1` -- removed the leading UTF-8 BOM.
+- `C:\Users\rich\.agents\skills\research-close\SKILL.md` -- corrected the handover-generator path.
+- `presentations\verification\verification_talk_short.tex` -- new 16-slide popular Beamer deck; includes three anonymous paper audits, a joint four-paper audit table, and the optimization-library architecture; retains the original technical deck unchanged.
+- `presentations\verification\verification_talk_short.pdf` -- compiled and visually checked output.
+- `presentations\verification\audit_spotchecks.py` -- independent arithmetic checks for the anonymous audit slides.
+- `presentations\verification\{Transpormetrica_B_test,PartB_test,PartC}.txt` -- text extracted from the three supplied PDFs for the internal audits.
+**Outcome:** Delivered a 16-slide popular talk. The anonymous sample illustrates three distinct printed-formulation failures: reversed optimization direction; variance/standard-deviation confusion plus a contradictory proof; and disagreement between a stated dynamic objective and its Bellman recursion. A joint table reports correct checks and flags for all four papers without presenting targeted screens as full audits. A new architecture slide separates solver backends from independent verification oracles and explains that Gurobi is optional for selected MIPs, MIQPs, and exact benchmark bounds. Arithmetic spot checks pass, the deck compiles cleanly, and the new slides were visually inspected. Findings are explicitly limited to internal consistency because unavailable source code could silently correct the printed models.
+**Next steps:** Rehearse for timing and decide whether to retain all three anonymous paper slides or move one to backup for a sub-15-minute slot.
+**Git ref:** 7789853
 </textarea>
 </div>
 

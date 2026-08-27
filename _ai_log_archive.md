@@ -360,3 +360,10 @@
 ## Archived 2026-08-14 (1 entry)
 
 - **2026-06-17** (Claude): Extend the AI infrastructure so any non-paper folder under `JR\` ge... -> Verified end-to-end with a throwaway test folder (`JR\_test_generic_project_DELETE_ME`,...
+
+
+---
+
+## Archived 2026-08-18 (1 entry)
+
+- **2026-06-19** (Claude): Fix Gemini CLI auth (broken by Google's OAuth deprecation for indiv... -> `gemini` is fully working again, both interactively and from `run_forum.ps1`, on the fl...

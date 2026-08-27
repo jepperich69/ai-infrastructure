@@ -610,4 +610,4 @@ Reproducibility note: optional library availability must not select a different 
 **Status:** platform-fact
 **Affects:** Agent commands that invoke `helpi` by absolute path.
 
-The file `C:\Users\rich\OneDrive - Danmarks Tekniske Universitet\JR\AI_auto\helpi.ps1` no longer exists. The launcher is `C:\Users\rich\OneDrive - Danmarks Tekniske Universitet\JR\AI_auto\helpi.cmd`, while the PowerShell implementation lives under `AI_auto\scripts\helpi.ps1`. Use the absolute `.cmd` launcher for documented `helpi N ...` operations. This supersedes the absolute-path example in issue 19.
+The file `C:\Users\rich\OneDrive - Danmarks Tekniske Universitet\JR\AI_auto\helpi.ps1` no longer exists. The launcher is `C:\Users\rich\OneDrive - Danmarks Tekniske Universitet\JR\AI_auto\helpi.cmd`, while the PowerShell implementation lives under `AI_auto\scripts\helpi.ps1`. Likewise, `generate_handover.ps1` lives under `AI_auto\scripts\`, not the repository root. Use the absolute `.cmd` launcher for documented `helpi N ...` operations and the `scripts\` path for direct PowerShell calls. This supersedes the absolute-path example in issue 19.

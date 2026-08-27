@@ -1,0 +1,1426 @@
+                                                        Transportation Research Part C 192 (2026) 105895
+
+
+
+                                                             Contents lists available at ScienceDirect
+
+
+                                                   Transportation Research Part C
+                                                      journal homepage: www.elsevier.com/locate/trc
+
+
+
+
+Navigating the queue: A dynamic pricing framework for
+ride-sourcing platform with heterogeneous demand
+Zheng Huang a , Renxin Zhong a,∗, Tianlu Pan b , Enming Liang                                                 c
+                                                                                                                  ,
+Agachai Sumalee d , Yunping Huang e,∗
+a
+  Guangdong Provincial Key Laboratory of Intelligent Transportation Systems, School of Intelligent Systems Engineering, Sun Yat-Sen University,
+Shenzhen, China
+b
+  Department of Network Intelligence, Peng Cheng Laboratory, Shenzhen, China
+c School of Data Science, City University of Hong Kong, Hong Kong, China
+d
+  School of Integrated Innovation, Chulalongkorn University, Bangkok, Thailand
+e
+  Department of Civil Engineering, Schulich School of Engineering, University of Calgary, Alberta, Canada
+
+
+
+
+a r t i c l e            i n f o                           a b s t r a c t
+
+Keywords:                                                  Ride-sourcing platforms commonly employ dynamic pricing to regulate travel demand and dis-
+Ride-sourcing                                              patch or relocate vehicles to manage supply distribution. However, existing strategies often over-
+Dynamic pricing                                            look the heterogeneity in spatial-temporal demand distribution and diverse customer behaviors.
+Heterogeneous demand
+                                                           To address this gap, this paper proposes an origin-destination (OD)-based dynamic pricing frame-
+Queue jumping
+Approximate dynamic programming
+                                                           work that integrates link-node-level vehicle dispatching and relocation decisions, while account-
+                                                           ing for heterogeneous demand and customer queue-jumping behavior. In this framework, cus-
+                                                           tomers, characterized by varying values of time (VOT) and willingness to pay (WTP), can choose
+                                                           to wait, abandon the trip, or pay a premium to jump the queue. To model this heterogeneous
+                                                           behavior, we introduce an integral-form demand function that captures elasticity with respect to
+                                                           both VOT and WTP. The dynamic pricing problem is formulated as a constrained optimization
+                                                           problem that jointly determines OD-based pricing and queue-jumping premiums. A rolling hori-
+                                                           zon approach, featuring a short decision interval with a longer planning horizon, is introduced to
+                                                           capture queueing dynamics that extend across periods, thereby supporting both real-time respon-
+                                                           siveness and long-term optimization. An event-triggered control scheme is further incorporated
+                                                           to reduce computational complexity and stabilize pricing ﬂuctuations. An Approximate Dynamic
+                                                           Programming (ADP) approach is adopted to manage vehicle dispatching and relocation at the
+                                                           link-node level. Empirical validation on the Manhattan road network conﬁrmed the eﬀectiveness
+                                                           of the proposed approach in improving platform proﬁtability, increasing demand satisfaction, and
+                                                           enhancing overall system eﬃciency.
+
+
+
+
+1. Introduction
+
+   Ride-sourcing platforms, such as Didi, Uber, and Lyft, which use Internet-based technology to match passengers and drivers,
+have revolutionized the transportation industry and the form of personal mobility (Wang and Yang, 2019; Qin et al., 2022). When
+customers request a ride, platforms quote a trip fare and an estimated waiting time based on the spatial-temporal distribution of
+
+    ∗ Corresponding authors.
+
+    E-mail addresses: huangzh227@mail2.sysu.edu.cn (Z. Huang), zhrenxin@mail.sysu.edu.cn (R. Zhong), pantl@pcl.ac.cn (T. Pan),
+eliang4-c@my.cityu.edu.hk (E. Liang), agachai.s@chula.ac.th (A. Sumalee), yunping.huang@ucalgary.ca (Y. Huang).
+
+https://doi.org/10.1016/j.trc.2026.105895
+Received 23 November 2025; Received in revised form 18 July 2026; Accepted 20 July 2026
+Available online 24 July 2026
+0968-090X/© 2026 The Author(s).           Published by Elsevier Ltd.      This is an open access article under the CC BY license
+(http://creativecommons.org/licenses/by/4.0/).
+Z. Huang et al.                                                                                Transportation Research Part C 192 (2026) 105895
+
+
+
+
+                                                Fig. 1. Screenshots of Didi and Lyft apps.
+
+
+
+
+demand and supply. During periods of high customer demand, platforms may apply surge pricing to the base fare and quote longer
+estimated waiting times. Customers can then decide whether to submit or cancel their requests.
+    Once customers conﬁrm their ride requests, they typically join a matching queue to await driver assignment. Many platforms
+also allow customers to obtain higher matching priority by paying an additional premium. This practice has been widely adopted
+in real-world ride-sourcing platforms. For example, as illustrated in Fig. 1, Didi oﬀers multiple service categories, including Econ-
+omy, Standard, and Priority, with diﬀerent fare levels and expected waiting times. Similarly, Lyft oﬀers Standard and Priority Pickup
+services, where customers who pay a higher fare are promised shorter pickup times. Although these services are marketed as diﬀeren-
+tiated products, they essentially implement priority-based matching schemes in which higher-paying customers receive preferential
+access to available vehicles. Consequently, customers with higher values of time (VOT) and willingness to pay (WTP) are generally
+more inclined to choose surge pricing or premium services in exchange for shorter waiting times. This practical observation provides
+strong practical motivation for explicitly modeling queue-jumping behavior in ride-sourcing systems.
+    Dynamic pricing has long been recognized as an eﬀective approach for demand regulation in ride-sourcing systems. Early studies
+primarily focused on static pricing, assuming comprehensive knowledge of the system to determine optimal pricing policies under
+equilibrium conditions (Wang et al., 2016; Fang et al., 2019; Banerjee et al., 2022). To better cope with the uncertainty and non-
+stationarity of real-world environments, subsequent research shifted toward dynamic pricing, which has been shown to be more
+robust to ﬂuctuations in system parameters (Banerjee et al., 2015) and more eﬀective in promoting spatial-temporal equilibrium.
+Dynamic pricing has also been integrated with various incentive mechanisms, such as reward schemes for customers (Yang et al.,
+2020) and wage optimization for drivers (Bai et al., 2019), to further improve market eﬃciency. Despite these advances, existing
+pricing models generally rely on aggregate demand representations and pay limited attention to customer heterogeneity. Moreover,
+the priority service tiers oﬀered by ride-sourcing platforms provide strong practical motivation for explicitly modeling queue-jumping
+behavior, yet such mechanisms remain largely unexplored in the literature.
+    In addition to demand-side pricing, ride-sourcing platforms can alleviate supply-demand imbalances through vehicle dispatching
+and relocation, which play a critical role in improving ﬂeet utilization and enhancing operational eﬃciency (Zhu et al., 2024; Guo
+et al., 2026). To address these large-scale sequential decision-making problems, approximate dynamic programming (ADP) and
+reinforcement learning (RL) have emerged as eﬀective solution approaches for high-dimensional and stochastic ride-sourcing systems
+(Ke et al., 2022; Huang et al., 2023, 2025). Building on these methodologies, recent studies have investigated the joint optimization
+of pricing and vehicle operations by integrating dispatching and relocation decisions to improve overall system performance (Chen
+et al., 2019; Lei et al., 2020; Liang et al., 2021; Zhang et al., 2024; Sun et al., 2024; Zhang et al., 2025). However, most existing
+studies optimize pricing and vehicle operations at the same spatial and temporal resolutions, making it diﬃcult to simultaneously
+exploit OD-level demand information and link-node-level operational ﬂexibility.
+    Another practical challenge of dynamic pricing lies in its tendency to introduce undesirable price volatility in response to short-
+term ﬂuctuations in supply and demand (Yan et al., 2020). Rolling horizon optimization provides an eﬀective approach for addressing
+such sequential decision-making problems by repeatedly updating decisions as new information becomes available. It has been suc-
+cessfully applied to traﬃc state prediction (Pan et al., 2013; Zhong et al., 2017), trajectory planning (Xu and Geroliminis, 2026), taxi
+
+                                                                    2
+Z. Huang et al.                                                                                Transportation Research Part C 192 (2026) 105895
+
+
+dispatching (Miao et al., 2015), car-sharing (Li et al., 2025) and logistics (Tran and Stokkink, 2026) systems. These studies demon-
+strate its ability to balance real-time responsiveness with long-term decision quality, making it a promising approach for developing
+stable and adaptive dynamic pricing strategies in ride-sourcing systems.
+    To address these challenges, this paper proposes an integrated OD-based dynamic pricing framework that incorporates customer
+heterogeneity and queue-jumping behavior. Customers make pricing and queue-jumping decisions according to their individual VOT
+and WTP, while unmatched requests remain in the system until they are either matched or time out. A rolling horizon framework
+is adopted to capture the inter-temporal dynamics of the matching queue, and an event-triggered pricing mechanism is introduced
+to reduce unnecessary price ﬂuctuations and computational burden. Meanwhile, vehicle dispatching and relocation are optimized at
+the link-node level using ADP, enabling the coordinated optimization of demand regulation and supply management across multiple
+spatial scales. The main contributions of this paper are summarized as follows:
+
+ • Propose an OD-based dynamic pricing framework that integrates link-node-level vehicle dispatching and relocation decisions to
+   address heterogeneous spatial-temporal demand distribution.
+ • Model customer heterogeneity in VOT and WTP, and incorporate a queue-jumping premium mechanism to reﬂect individual
+
+   waiting and queue-jumping decisions.
+ • Adopt a rolling horizon approach to capture queueing demand that carries over into subsequent periods, combined with an event-
+
+   triggered scheme to reduce abrupt price ﬂuctuations.
+ • Apply ADP to manage detailed vehicle dispatching and relocation decisions at the link-node level eﬃciently.
+
+
+    The remainder of this paper is organized as follows. Section 2 reviews the existing literature on customer participation and het-
+erogeneity, demand-side modeling and pricing strategies, and joint pricing and vehicle operations in ride-sourcing systems. Section 3
+presents the OD-based dynamic pricing scheme incorporating a queue-jumping mechanism and models elastic customer demand
+based on individuals’ VOT and WTP. The dynamic pricing problem is formulated under a rolling horizon framework and coupled
+with an event-triggered scheme, while the vehicle dispatching and relocation problem at the link-node level is presented, along with
+an ADP solution. Section 4 evaluates the performance of the proposed framework under diﬀerent demand patterns and demonstrates
+the beneﬁts of incorporating queue-jumping behavior, the rolling horizon approach, and the event-triggered scheme. The proposed
+ADP approach is also compared against several baseline methods, while a sensitivity analysis is conducted to examine the robustness
+of the framework under zone partitioning and driver compliance rates. Finally, Section 5 concludes the study and outlines potential
+directions for future research.
+
+2. Related work
+
+2.1. Customer participation and heterogeneity
+
+    Customer participation and customer heterogeneity have received increasing attention in ride-sourcing pricing studies. Yang et al.
+(2020) integrated a reward scheme with surge pricing, where each customer is assumed to have a balance account. Customers pay an
+additional fee during peak periods and use the accumulated balance to subsidize trips during oﬀ-peak periods. However, customers do
+not explicitly decide whether to participate in the additional payment mechanism, despite the fact that participation is closely related
+to platform service quality (Stokkink et al., 2025). In contrast, auction-based approaches have been studied as a way to incorporate
+customer participation in pricing and service allocation (Karamanis et al., 2020; Buchholz et al., 2025). These mechanisms provide
+customers with explicit interaction through bidding, allowing them to inﬂuence service outcomes. However, these approaches rely on
+strategic bidding and active customer participation, increasing implementation complexity and limiting their practicality in real-time
+ride-sourcing systems. Moreover, bidding-based mechanisms may reduce pricing transparency because service outcomes depend on
+competing bids rather than posted prices.
+    Customers inherently exhibit substantial heterogeneity in their VOT and WTP. Eﬀective pricing strategies should price rides
+according to complex underlying demand functions with heterogeneous customers and detect non-stationary behavior (Abkarian and
+Mahmassani, 2024). Zhang et al. (2018) evaluated diﬀerent regulatory policies for a monopoly public transit service with passengers
+having heterogeneous VOT and WTP. Wu et al. (2025) introduced a heterogeneous VOT distribution to design optimal pricing for
+passenger choices between solo and pooled rides. In the context of ride-sourcing, when customers have the option to pay queue-
+jumping premiums based on their VOT and WTP, two key issues remain understudied: how to model such queue-jumping behavior,
+which is often observed in real-world scenarios, and how to design dynamic pricing and premiums to accommodate heterogeneous
+customer behaviors.
+
+2.2. Demand-side modeling and pricing strategies
+
+    Static pricing, dynamic pricing, and subsidy strategies have been widely studied as demand regulation mechanisms in ride-sourcing
+systems. Wang et al. (2016) modeled the ride-sourcing market using an aggregate static pricing approach and examined the existence
+and stability of market equilibria. Subsequent studies further investigated static pricing under diﬀerent optimization objectives,
+including maximizing platform revenue, social welfare, and throughput (Fang et al., 2019; Banerjee et al., 2022). However, static
+pricing requires comprehensive knowledge of the system and cannot eﬀectively capture the spatial-temporal dynamics of demand and
+supply. In contrast, dynamic pricing has been shown to oﬀer signiﬁcant advantages over static pricing, particularly in nonstationary
+
+                                                                   3
+Z. Huang et al.                                                                                             Transportation Research Part C 192 (2026) 105895
+
+
+environments (Chen et al., 2024). It is more robust to ﬂuctuations in system parameters (Banerjee et al., 2015) and eﬀective in
+promoting spatial-temporal equilibrium. A representative example is surge pricing during peak periods, which serves to reallocate
+supply in response to rising demand (Cohen et al., 2016). Moreover, Castillo et al. (2017) highlighted the role of surge pricing in
+mitigating the “Wild Goose Chase” (WGC) phenomenon, in which drivers are matched with distant passengers, resulting in longer
+passenger waiting times and lower driver availability.
+    In the context of dynamic pricing, Zha et al. (2018) developed a spatial pricing model based on the intra-zone matching assumption,
+which enables zone-speciﬁc pricing but falls short in capturing the spatial heterogeneity of supply and demand across diﬀerent
+regions. Tang et al. (2022) subsequently investigated optimal spatial pricing using a bi-level optimization framework, where the
+platform determines spatially diﬀerentiated prices in the upper level while solving trip distribution among zones in the lower level.
+To account for spatial imbalances and temporal variations in supply and demand, Yan et al. (2020) introduced a dynamic waiting
+pool-matching mechanism integrated with dynamic pricing to reduce price volatility and improve social welfare. Ma et al. (2022)
+proposed a spatial-temporal pricing mechanism that achieves incentive alignment by making driver trip acceptance a subgame-perfect
+equilibrium strategy, thereby improving social welfare and earning equity. Xu et al. (2022) examined dynamic pricing strategies with
+a time-dependent matching model that explicitly incorporates order cancellation behavior. Dynamic pricing has also been integrated
+with various incentive mechanisms, such as customer reward schemes (Yang et al., 2020) and driver wage optimization (Bai et al.,
+2019). To capture the impact of dynamic pricing on travel demand, existing studies typically model demand as an aggregate elastic
+function of travel cost, for example, using the Inverse Product Diﬀerentiation Logit model (Gómez-Lobo et al., 2022). However, such
+formulations generally overlook individual customer heterogeneity in the decision-making process. Moreover, they typically assume
+that demand is either immediately matched or permanently lost within each decision period, ignoring customers who are willing to
+remain in the matching queue. In practice, customers may choose to wait based on their individual trade-oﬀs between travel time and
+cost (Wu et al., 2025). Modeling these inter-temporal queueing dynamics is essential for accurately characterizing customer behavior
+under dynamic pricing, yet remains largely unexplored in the existing literature.
+
+
+2.3. Joint pricing and vehicle operations
+
+    For the two-sided ride-sourcing market, the platform can alleviate supply-demand disequilibrium via vehicle dispatching and
+relocation. Lei et al. (2020) proposed a bi-level mathematical program with equilibrium constraints, optimizing path-based pricing
+
+
+                           Table 1
+                           Nomenclature.
+                               Variable      Description
+
+                            System setting
+
+                                  𝕋          Simulation horizon set: 𝑡 ∈ 𝕋 = {0, 1, 2, … , 𝑇 − 1}
+                                  𝑇          Number of periods in the simulation horizon
+                                  𝛿𝑡         Decision interval
+                                  𝑡𝑝         Planning horizon
+                                  𝑍          Zone set: 𝑖, 𝑗 ∈ 𝑍
+                                  𝑁          Node set: 𝑙 ∈ 𝑁
+                                  𝐸          Edge set
+
+                             Demand side
+
+                                    ℂ        Customer set: 𝑐 ∈ ℂ
+                                 𝛾𝑖,𝑗,𝑡      Price multiplier for OD(𝑖, 𝑗) at time 𝑡
+                                 𝑏𝑖,𝑗,𝑡      Base fare for OD(𝑖, 𝑗) at time 𝑡
+                                 𝑝𝑖,𝑗,𝑡      Trip fare for OD(𝑖, 𝑗) at time 𝑡
+                                 𝑢𝑖,𝑗,𝑡      Queue-jumping premium for OD(𝑖, 𝑗) at time 𝑡
+                                 ℎ𝑖,𝑗,𝑡      Estimated waiting time for OD(𝑖, 𝑗) at time 𝑡
+                                 𝑑𝑖,𝑗,𝑡      Reserved demand rate for OD(𝑖, 𝑗) at time 𝑡
+                                    𝑞
+                                 𝑔𝑖,𝑗,𝑡      Total cost including trip fare and queue-jumping premium for OD(𝑖, 𝑗) at time 𝑡
+                                  𝑔𝑐𝑤        Generalized cost including trip fare and waiting time cost for customer 𝑐
+                                 𝑛𝑖,𝑗,𝑡      Total number of customers with OD(𝑖, 𝑗) at time 𝑡
+                                 𝑛̂ 𝑖,𝑗,𝑡    Number of newly arriving customers with OD(𝑖, 𝑗) at time 𝑡
+                                   𝑣𝑐        Customer’s value of time (VOT)
+                                  𝑤𝑐         Customer’s willingness to pay (WTP)
+
+                              Supply side
+
+                                   ℚ         Vehicle set: 𝑞 ∈ ℚ
+                                    𝑒        Travel cost per unit time
+                                  𝑚𝑖,𝑡       Number of idle vehicles in zone 𝑖 at time 𝑡
+                                  𝜏𝑜,𝑑       Base travel time from origin 𝑜 to destination 𝑑
+                                 𝜏̂𝑜,𝑑,𝑡     Estimated travel time from origin 𝑜 to destination 𝑑 at departure time 𝑡
+                                 𝐿𝑜,𝑑        Link-based distance between origin 𝑜 and destination 𝑑
+                                 𝑥𝑞,𝑐,𝑡      Dispatching status of vehicle 𝑞 with customer 𝑐 at time 𝑡
+                                 𝑦𝑞,𝑙,𝑡      Relocation status of vehicle 𝑞 relocated to node 𝑙 at time 𝑡
+
+
+                                                                            4
+Z. Huang et al.                                                                                Transportation Research Part C 192 (2026) 105895
+
+
+and vehicle dispatching in the upper level while modeling travelers’ equilibrium path choices in the lower level, and solved the
+problem using ADP. Chen et al. (2019) simultaneously optimized pricing and dispatch strategies using contextual bandits and temporal
+diﬀerence learning, while Zhang et al. (2024) further extended this framework by incorporating vehicle repositioning and solving the
+problem using contextual bandits and multi-agent deep reinforcement learning. Sun et al. (2024) formulated the interactions among
+vehicle dispatching, service pricing, and customer demand as a two-stage Stackelberg game under both independent and competitive
+pricing schemes. Zhang et al. (2025) further integrated re-dispatching and pricing strategies to optimize short-term revenue while
+strategically determining ﬂeet size and initial vehicle allocation to enhance long-term system welfare. These studies demonstrate the
+beneﬁts of jointly optimizing pricing and vehicle operations for improving system performance. However, they generally focus on
+integrated optimization frameworks without explicitly investigating how the spatial granularity of pricing and vehicle operations
+aﬀects system performance.
+    To further improve system performance, recent studies have investigated the spatial granularity of pricing and vehicle operations.
+Bimpikis et al. (2019) proposed a time-invariant equilibrium model to examine spatial price discrimination. Shi et al. (2022) designed a
+multi-region dynamic pricing algorithm to set diﬀerentiated unit prices for diﬀerent non-overlapping regions. Lei and Ukkusuri (2023)
+developed an enhanced twin-delayed deep determinant policy gradient (TD3) RL algorithm for pricing zones ranging from small grid
+networks to the New York City (NYC) network. Notably, the majority of zone-based pricing schemes adopt an origin-based pricing
+strategy, where prices are determined solely by the customer’s departure zone. While origin-based pricing ensures consistency for trips
+from the same location, it fails to account for trip distance and destination attractiveness, resulting in homogeneous pricing across
+diﬀerent origin-destination (OD) pairs and limiting its eﬀectiveness in demand management. In contrast, OD-based pricing enables
+diﬀerentiated fare regulation based on both trip origins and destinations, thereby better capturing OD-speciﬁc demand and facilitating
+long-term supply balancing. Meanwhile, existing studies commonly perform driver-customer matching at the regional scale (Beojone
+et al., 2024), whereas link-node-level modeling provides much ﬁner spatial granularity for real-time routing and dispatching (Garg and
+Ranu, 2018; Zhou et al., 2020; Yu and Shen, 2020; Liang et al., 2021). To bridge this spatial mismatch, Huang et al. (2024) proposed
+a bi-level framework integrating link-node-level vehicle route guidance with regional vehicle relocation. These studies demonstrate
+the eﬀectiveness of jointly optimizing pricing and vehicle operations for improving ride-sourcing system performance. However, most
+existing approaches either optimize pricing and vehicle operations at the same spatial scale or perform vehicle matching at a coarse
+regional level, making it diﬃcult to simultaneously exploit OD-level demand information and ﬁne-grained link-node-level operational
+ﬂexibility.
+
+3. Problem description
+
+    To facilitate readers’ understanding, Table 1 presents some critical variable notations used throughout the paper.
+
+3.1. Basic settings
+
+     To better illustrate the proposed framework, Fig. 2 compares the conventional ride-sourcing framework with the proposed one. In
+the conventional framework (Fig. 2a), customers submit trip requests to the platform and receive fare quotes and estimated waiting
+times, based on which they decide whether to accept and join the matching queue. The platform continuously monitors vehicle
+availability and subsequently dispatches vehicles to matched customers while relocating idle vehicles to balance supply and demand.
+Pricing, dispatching, and relocation are typically performed at a uniform spatial granularity, making zone-based decisions too coarse
+to support ﬁne-grained vehicle operations. In contrast, the proposed framework (Fig. 2b) integrates an OD-based dynamic pricing
+scheme with a queue-jumping mechanism, which determines trip fares and queue-jumping premiums for each OD pair. Customers
+exhibit heterogeneous VOT and WTP, inﬂuencing their choices to either wait in the regular queue or pay a premium for priority
+matching. Meanwhile, vehicle dispatching and relocation decisions are formulated at the link-node level, enhancing the granularity
+and realism of vehicle operations.
+     Speciﬁcally, we consider a monopolistic ride-sourcing platform operating a ﬂeet of fully controlled vehicles over a simulation
+horizon 𝕋 = {0, 1, 2, … , 𝑇 − 1}. The platform serves an urban region 𝑍 partitioned into several zones, and operates on a road network
+represented by a set of nodes (road intersections) 𝑁 and a set of edges (road links) 𝐸. During each decision interval, newly generated
+customer requests are collected by the platform, and the demand forecasting module predicts future travel demand based on both
+these requests and the current system state. Let 𝑛𝑖,𝑗,𝑡 denote the total number of customers with OD pair (𝑖, 𝑗) present in the system at
+time 𝑡, including both newly arriving potential customers 𝑛̂ 𝑖,𝑗,𝑡 and those carried over from previous intervals, regardless of whether
+they choose to wait or jump the queue. Let 𝑚𝑖,𝑡 denote the number of idle vehicles in zone 𝑖 at time 𝑡. At each decision epoch,
+the platform determines whether to enable the queue-jumping mechanism according to the current and predicted supply-demand
+conditions. If enabled, customers are oﬀered diﬀerent priority levels with corresponding queue-jumping premiums. Note that the zone
+partition is used to characterize local supply-demand conditions, while the pricing decisions (i.e., the trip fare and queue-jumping
+premium) are determined at the OD level.
+     Customers submit their requests through the ride-sourcing app and receive the trip fare 𝑝𝑖,𝑗,𝑡 and the estimated waiting time ℎ𝑖,𝑗,𝑡
+from the platform. Upon accepting the quoted fare, they enter the matching queue and wait to be paired with an idle driver. Each
+customer is characterized by an individual VOT 𝑣𝑐 and WTP 𝑤𝑐 , representing the monetary value assigned to travel time and the
+maximum fare they are willing to pay, respectively. Customers with higher VOT are more likely to pay the queue-jumping premium
+𝑢𝑖,𝑗,𝑡 to obtain higher matching priority and shorter expected waiting time, while those with lower VOT tend to wait until they are
+matched, their request times out, or they abandon the trip. Let 𝑔𝑐𝑤 denote the generalized cost comprising the trip fare and waiting time
+
+                                                                   5
+Z. Huang et al.                                                                                     Transportation Research Part C 192 (2026) 105895
+
+
+
+
+                             Fig. 2. Comparison of conventional and proposed ride-sourcing platform frameworks.
+
+
+
+
+            𝑞
+cost, and 𝑔𝑖,𝑗,𝑡  denote the total fare including the queue-jumping premium. Customers make their reservation decisions by comparing
+                                                       𝑞
+their WTP 𝑤𝑐 with the generalized costs 𝑔𝑐𝑤 and 𝑔𝑖,𝑗,𝑡   . This decision-making process is modeled by an integral demand function, which
+determines the reservation demand rate 𝑑𝑖,𝑗,𝑡 under the given pricing decisions. Accordingly, among the newly arriving potential
+demand 𝑛̂ 𝑖,𝑗,𝑡 , only a proportion 𝑑𝑖,𝑗,𝑡 is retained by the platform, resulting in the reserved demand of 𝑛̂ 𝑖,𝑗,𝑡 𝑑𝑖,𝑗,𝑡 . Customers who are
+not matched immediately remain in the system and are carried over to subsequent decision intervals until their individual waiting
+tolerance is exceeded, after which they leave the system without being served.
+    Once customer demand has been determined, the platform dispatches vehicles to matched customers and relocates idle vehicles
+to better balance future supply and demand. The dispatching decision 𝑥𝑞,𝑐,𝑡 indicates whether vehicle 𝑞 is assigned to customer 𝑐, and
+the relocation decision 𝑦𝑞,𝑙,𝑡 indicates whether vehicle 𝑞 is relocated to node 𝑙.
+
+                                                                      6
+Z. Huang et al.                                                                                            Transportation Research Part C 192 (2026) 105895
+
+
+
+
+                                                         Fig. 3. Workﬂow of the proposed framework.
+
+
+    Fig. 3 illustrates the workﬂow of the proposed framework, which integrates dynamic pricing with vehicle dispatching and relo-
+cation in a closed loop. Customer heterogeneity in terms of VOT and WTP is incorporated through an integral demand formulation.
+On the demand side, the platform determines optimal pricing decisions to regulate incoming demand and maximize proﬁts based on
+the current system state, represented by the number of potential customers and idle vehicles. The resulting regulated demand and
+corresponding trip fares are then passed as inputs to the supply side for vehicle-customer matching. On the supply side, the platform
+optimizes dispatching and relocation decisions to maximize long-term cumulative proﬁt leveraging ADP. Speciﬁcally, idle vehicles
+are dispatched to waiting customers according to real-time supply-demand conditions, while idle vehicles are proactively relocated
+to anticipated high demand areas to improve system eﬃciency. The system state is then updated and fed back to the demand side as
+input for the next pricing decision, thereby forming a closed-loop interaction between demand regulation and supply optimization.
+
+3.2. Demand side
+
+    The customer set is denoted by ℂ. Each customer request is represented by a tuple 𝑐 = (𝑖, 𝑗, 𝑡𝑐 , ℎ𝑐 , 𝑣𝑐 , 𝑤𝑐 ), where 𝑖, 𝑗 ∈ 𝑍 denote
+the origin and destination zones, 𝑡𝑐 ∈ 𝕋 denotes the request time, ℎ𝑐 denotes the maximum waiting time tolerated by the customer,
+𝑣𝑐 and 𝑤𝑐 are the customer’s VOT and WTP. Customer requests arriving during the interval [𝑡, 𝑡 + 1) are aggregated and processed at
+time 𝑡. Each customer may either abandon the request or wait for several decision intervals until being matched or timing out.
+
+3.2.1. Pricing mechanism
+      For each OD pair (𝑖, 𝑗) at time 𝑡, the platform determines the trip fare 𝑝𝑖,𝑗,𝑡 , which is calculated as the product of the price multiplier
+𝛾𝑖,𝑗,𝑡 and the base fare 𝑏𝑖,𝑗,𝑡 . The base fare is determined according to the estimated travel time of the trip, which is consistent with
+the fare structure familiar to most customers.
+             𝑝𝑖,𝑗,𝑡 = 𝛾𝑖,𝑗,𝑡 ⋅ 𝑏𝑖,𝑗,𝑡                                                                                                                (1a)
+        𝛾𝑚𝑖𝑛 ≤𝛾𝑖,𝑗,𝑡 ≤ 𝛾𝑚𝑎𝑥                                                                                                                          (1b)
+where (1b) speciﬁes the feasible range of the price multiplier.
+   In addition to the monetary cost, customers also consider the time cost associated with waiting. The waiting time for each OD
+pair is estimated by a neural network (NN), denoted by 𝑓Ω (⋅), which captures the nonlinear supply-demand interactions:
+                             ∑
+                   (           𝑗 𝑛𝑖,𝑗,𝑡
+        ℎ𝑖,𝑗,𝑡 = 𝑓Ω 𝑖, 𝑗, 𝑡,            )                                                                                     (2)
+                              𝑚𝑖,𝑡
+         ∑
+             𝑗 𝑛𝑖,𝑗,𝑡
+where        𝑚𝑖,𝑡
+                        denotes the demand-to-supply ratio in zone 𝑖 at time 𝑡, 𝑚𝑖,𝑡 is the number of idle vehicles in zone 𝑖, and 𝑛𝑖,𝑗,𝑡 is the total
+number of customers with OD pair (𝑖, 𝑗) in the system at time 𝑡, including both newly arriving customers and those carried over from
+previous decision intervals. Customers characterized by their VOT and WTP (𝑣𝑐 , 𝑤𝑐 ) compare the generalized costs under regular
+service and queue jumping to determine whether to conﬁrm the order. The set of reserved customers is deﬁned as
+             {                                                               }
+                                        𝑞
+         Θ = (𝑣𝑐 , 𝑤𝑐 )|𝑤𝑐 ≥ min(𝑔𝑐𝑤 , 𝑔𝑖,𝑗,𝑡 ), 0 ≤ 𝑤𝑐 ≤ 𝑤̄𝑐 , 0 ≤ 𝑣𝑐 ≤ 𝑣̄𝑐                                                     (3a)
+
+          𝑔𝑐𝑤 = 𝑝𝑖,𝑗,𝑡 + 𝑣𝑐 ⋅ ℎ𝑖,𝑗,𝑡                                                                                                                 (3b)
+         𝑞
+        𝑔𝑖,𝑗,𝑡 = 𝑝𝑖,𝑗,𝑡 + 𝑢𝑖,𝑗,𝑡                                                                                                                     (3c)
+         𝑢𝑚𝑖𝑛 ≤ 𝑢𝑖,𝑗,𝑡 ≤ 𝑢𝑚𝑎𝑥                                                                                                                        (3d)
+where (3b) deﬁnes the generalized cost under regular service as the sum of the trip fare and the waiting cost 𝑣𝑐 ⋅ ℎ𝑖,𝑗,𝑡 , (3c) deﬁnes the
+total cost under queue-jumping service as the sum of the trip fare and the queue-jumping premium 𝑢𝑖,𝑗,𝑡 , and (3d) speciﬁes the feasible
+
+                                                                              7
+Z. Huang et al.                                                                                                        Transportation Research Part C 192 (2026) 105895
+
+
+
+
+                                                                        Fig. 4. Market segment in the VOT-WTP space.
+
+
+range of the queue-jumping premium. The queue-jumping premium is interpreted as a payment for priority matching rather than
+immediate service, since premium customers may still experience a short waiting time. Instead, the premium implicitly represents
+the expected reduction in waiting disutility resulting from higher matching priority. Therefore, waiting time savings are not modeled
+as a separate cost component to avoid double counting.
+    Depending on the supply-demand conditions, two scenarios are considered. Note that the total customer demand considered by the
+platform, 𝑛𝑖,𝑗,𝑡 , comprises both newly arriving demand 𝑛̂ 𝑖,𝑗,𝑡 and carry-over demand retained from previous decision intervals. When
+                                                                                                 ∑
+the total customer demand originating from zone 𝑖 exceeds the available vehicle supply, i.e., 𝑗 𝑛𝑖,𝑗,𝑡 > 𝑚𝑖,𝑡 , the platform enables the
+queue-jumping option, corresponding to the high demand scenario. Otherwise, the queue-jumping option is disabled, corresponding
+to the medium to low demand scenario.
+    In high demand scenarios, the platform introduces a queue-jumping premium to diﬀerentiate customer choices. Under the opti-
+mized premium, the market is segmented into three groups, as illustrated in Fig. 4a. Customers in the blue region choose to wait,
+preferring to incur the time cost over the queue-jumping premium. Customers in the green region choose the queue-jumping service
+                                                                                                                                𝑞
+by paying the premium to avoid the higher waiting cost. The boundary between these two groups is deﬁned by 𝑔𝑐𝑤 = 𝑔𝑖,𝑗,𝑡           , corre-
+sponding to customers with 𝑣𝑐 = 𝑢𝑖,𝑗,𝑡 ∕ℎ𝑖,𝑗,𝑡 , for whom the waiting cost equals the queue-jumping premium. Finally, customers in the
+gray region ﬁnd both options unacceptable and abandon their travel demand. Let 𝑑𝑖,𝑗,𝑡   𝑤 and 𝑑 𝑞
+                                                                                                𝑖,𝑗,𝑡 denote the proportions of customers
+choosing regular waiting and queue jumping, respectively, with total reserved demand given by 𝑑𝑖,𝑗,𝑡 = 𝑑𝑖,𝑗,𝑡  𝑤 + 𝑑 𝑞 . We assume that
+                                                                                                                     𝑖,𝑗,𝑡
+the total fare, including the queue-jumping premium, does not exceed the maximum WTP, i.e., 0 ≤ 𝑢𝑖,𝑗,𝑡 ≤ 𝑤̄ 𝑐 − 𝑝𝑖,𝑗,𝑡 . This excludes
+pricing strategies in which no customers would choose the queue-jumping service, thereby restricting the optimization to practically
+meaningful solutions. It follows that
+                     𝑖,𝑗,𝑡      𝑢
+                    ℎ𝑖,𝑗,𝑡
+                              𝑤̄𝑐
+         𝑤
+        𝑑𝑖,𝑗,𝑡 =                  (𝑣𝑐 , 𝑤𝑐 ) d𝑤𝑐 d𝑣𝑐                                                                                                            (4a)
+                 ∫0        ∫𝑔 𝑤
+                             𝑐
+                            𝑣̄𝑐            𝑤̄𝑐
+         𝑞
+        𝑑𝑖,𝑗,𝑡 =                                  (𝑣𝑐 , 𝑤𝑐 ) d𝑤𝑐 d𝑣𝑐                                                                                            (4b)
+                      ∫ 𝑢𝑖,𝑗,𝑡 ∫𝑔𝑞
+                          ℎ𝑖,𝑗,𝑡          𝑖,𝑗,𝑡
+
+   Waiting customers pay the regular fare, whereas queue-jumping customers are charged an additional premium. The platform’s
+objective of maximizing the proﬁt generated from the reserved demand at time 𝑡 is formulated as
+              ∑[            (
+                                                𝑞        𝑞
+                                                               )]
+                              𝑤
+        max       𝑛̂ 𝑖,𝑗,𝑡 ⋅ 𝑑𝑖,𝑗,𝑡 ⋅ 𝑝𝑖,𝑗,𝑡 + 𝑑𝑖,𝑗,𝑡 ⋅ 𝑔𝑖,𝑗,𝑡                                                           (5)
+        𝛾𝑖,𝑗,𝑡 , 𝑢𝑖,𝑗,𝑡
+                          𝑖,𝑗
+
+        𝑠.𝑡. (1𝑎), (1𝑏), (2), (3𝑏) − (3𝑑), (4𝑎), (4𝑏)
+                                             ∑
+   In medium to low demand scenarios, i.e., 𝑗 𝑛𝑖,𝑗,𝑡 ≤ 𝑚𝑖,𝑡 , the platform disables the queue-jumping option and oﬀers only regular
+service. Consequently, all customers pay regular fares. As illustrated in Fig. 4b, the market segmentation is simpliﬁed accordingly:
+                                                         𝑤 , while the queue-jumping demand 𝑑 𝑞 = 0. Therefore,
+the reserved demand consists solely of waiting demand 𝑑𝑖,𝑗,𝑡                                     𝑖,𝑗,𝑡
+                            𝑣̄𝑐        𝑤̄𝑐
+         𝑤
+        𝑑𝑖,𝑗,𝑡 =                              (𝑣𝑐 , 𝑤𝑐 ) d𝑤𝑐 d𝑣𝑐                                                                                                (6a)
+                      ∫0            ∫𝑔 𝑤
+                                      𝑐
+         𝑞
+        𝑑𝑖,𝑗,𝑡 =0                                                                                                                                                (6b)
+    Accordingly, the objective function in (5) is simpliﬁed to
+           ∑
+                           𝑤
+       max    (𝑛̂ 𝑖,𝑗,𝑡 ⋅ 𝑑𝑖,𝑗,𝑡 ⋅ 𝑝𝑖,𝑗,𝑡 )                                                                                                                        (7)
+         𝛾𝑖,𝑗,𝑡
+                   𝑖,𝑗
+
+        𝑠.𝑡. (1𝑎), (1𝑏), (2), (3𝑏), (3𝑑), (6𝑎), (6𝑏)
+
+3.2.2. Rolling horizon approach and event-triggered scheme
+   The objective functions in (5) and (7) are formulated under a myopic planning approach, considering only the proﬁt of the current
+decision epoch. However, such a myopic strategy may result in suboptimal decisions. For example, during a temporary demand surge,
+
+                                                                                             8
+Z. Huang et al.                                                                                                              Transportation Research Part C 192 (2026) 105895
+
+
+
+
+                                                                Fig. 5. Illustration of the rolling horizon approach.
+
+
+the platform may impose high prices to maximize immediate revenue. If the surge is short-lived, this strategy may discourage demand
+reservations and reduce the platform’s long-term proﬁt. To overcome this limitation, we adopt a rolling horizon approach (see Fig. 5).
+The key idea is to balance responsiveness with anticipation by updating decisions at short intervals of 𝛿𝑡 (e.g., 30 s) while optimizing
+over a longer planning horizon 𝑡𝑝 (e.g., 5 min). The planning horizon should be suﬃciently long to capture short-term variations in
+supply and demand, yet short enough to limit forecasting uncertainty.
+    To support the rolling horizon framework, we incorporate a data-driven short-term forecasting module to predict near-future
+demand over the planning horizon. Rather than assuming perfect foresight, the platform infers future demand from historical obser-
+vations. Speciﬁcally, customer requests are aggregated at the OD level and organized into temporal sequences, where each observation
+represents the total demand within a rolling time interval. These sequences are used to train a recurrent neural network (RNN)-based
+predictor that maps recent demand trajectories to future OD demand over the planning horizon, capturing both temporal patterns
+(e.g., peak and oﬀ-peak demand) and spatial correlations. At each decision epoch, the platform updates the input sequence with the
+most recent observations and feeds it into the trained RNN model. The resulting multi-step demand forecasts replace the unknown
+future demand in the optimization model and serve as inputs to the pricing, dispatching, and relocation decisions. This forecast-
+ing module enables the platform to anticipate short-term demand ﬂuctuations and make forward-looking decisions under demand
+uncertainty.
+    Accordingly, the waiting time expression in (2) is updated as
+                                                     𝑡
+                    ⎛         ∑            ∑𝑡+ 𝛿𝑡𝑝 ∑            ⎞
+                    ⎜           𝑗 𝑛𝑖,𝑗,𝑡 +    𝜏=𝑡+1  𝑗 𝑛̂ 𝑖,𝑗,𝜏 ⎟
+        ℎ𝑖,𝑗,𝑡 = 𝑓𝜃 ⎜𝑖, 𝑗, 𝑡,                𝑡                  ⎟                                                                                                        (8)
+                    ⎜                   ∑𝑡+ 𝛿𝑡𝑝                 ⎟
+                    ⎝                      𝜏=𝑡 𝑚𝑖,𝜏             ⎠
+                      𝑡
+              ∑𝑡+ 𝛿𝑡𝑝
+where 𝑛𝑖,𝑗,𝑡 + 𝜏=𝑡+1  𝑛̂ 𝑖,𝑗,𝜏 represents the total customer demand with OD (𝑖, 𝑗) over the planning horizon, including the current demand
+and the forecasted arrivals.
+   Under the rolling horizon framework, whether the queue-jumping option is enabled is determined using the predicted supply-
+demand condition over the planning horizon. Speciﬁcally, the platform enables the queue-jumping option when the predicted total
+                                                                     𝑡                      𝑡
+                                                         ∑       ∑𝑡+ 𝛿𝑡𝑝 ∑              ∑𝑡+ 𝛿𝑡𝑝
+demand exceeds the available vehicle supply, i.e., 𝑗 𝑛𝑖,𝑗,𝑡 + 𝜏=𝑡+1        𝑗 𝑛̂ 𝑖,𝑗,𝜏 >  𝜏=𝑡 𝑚𝑖,𝜏 , corresponding to the high demand scenario.
+Otherwise, the queue-jumping option is disabled, corresponding to the medium to low demand scenario. For high demand scenarios,
+the rolling horizon pricing problem that maximizes the total proﬁt from reserved demand is formulated as
+                                                               𝑡𝑝
+                                        ∑ [(                                   )(                                       )]
+                                                            𝑡+ 𝛿𝑡
+                                                             ∑                                         𝑞        𝑞
+          ∗
+        (𝛾𝑖,𝑗,𝑡 , 𝑢∗𝑖,𝑗,𝑡 ) = arg max            𝑛𝑖,𝑗,𝑡 +           𝑛̂ 𝑖,𝑗,𝜏         𝑤
+                                                                                    𝑑𝑖,𝑗,𝑡 ⋅ 𝑝𝑖,𝑗,𝑡 + 𝑑𝑖,𝑗,𝑡 ⋅ 𝑔𝑖,𝑗,𝑡                                                    (9)
+                          𝛾𝑖,𝑗,𝑡 , 𝑢𝑖,𝑗,𝑡 𝑖,𝑗               𝜏=𝑡+1
+
+        𝑠.𝑡. (1𝑎), (1𝑏), (3𝑏) − (3𝑑), (4𝑎), (4𝑏), (8)
+       ∗ and 𝑢∗
+where 𝛾𝑖,𝑗,𝑡  𝑖,𝑗,𝑡 denote the optimal pricing decisions at time 𝑡.
+  For medium to low demand scenarios, the corresponding rolling horizon pricing problem is formulated as
+                                                    𝑡𝑝
+                            ∑ [(                                 )                ]
+                                                 𝑡+ 𝛿𝑡
+                                                 ∑
+         ∗                                                         𝑤
+        𝛾𝑖,𝑗,𝑡 = arg max              𝑛𝑖,𝑗,𝑡 +           𝑛̂ 𝑖,𝑗,𝜏 𝑑𝑖,𝑗,𝑡 ⋅ 𝑝𝑖,𝑗,𝑡                                                                                      (10)
+                   𝛾𝑖,𝑗,𝑡 𝑖,𝑗                    𝜏=𝑡+1
+
+        𝑠.𝑡. (1𝑎), (1𝑏), (3𝑏), (3𝑑), (6𝑎), (6𝑏), (8)
+
+   Solving the pricing problems (9) and (10) at every decision epoch can be computationally expensive. Moreover, frequent opti-
+mization may cause prices to ﬂuctuate substantially in response to short-term supply-demand variations, leading to market instability
+
+                                                                                                        9
+Z. Huang et al.                                                                                                        Transportation Research Part C 192 (2026) 105895
+
+
+
+
+                                                                 Fig. 6. Illustration of the event-triggered scheme.
+
+
+
+that is undesirable for both drivers and customers. To address these concerns, an event-triggered scheme (see Fig. 6) is adopted, under
+which pricing decisions are updated only when the supply-demand condition changes signiﬁcantly. An increase or decrease in the
+supply-demand condition is regarded as an event, and its magnitude is measured by the threshold parameter 𝜂.      ̄ Let 𝜂𝑖,𝑡 denote the
+supply-demand change in zone 𝑖 at time 𝑡.
+                   (∑                         𝑡
+                                       ∑𝑡+ 𝛿𝑡𝑝 ∑               ) ( ∑𝑡+ 𝑡𝑝    )
+                                                                       𝛿𝑡
+                          𝑗 𝑛𝑖,𝑗,𝑡 +     𝜏=𝑡+1    𝑗 𝑛̂ 𝑖,𝑗,𝜏    ∕   𝜏=𝑡 𝑚𝑖,𝜏
+        𝜂𝑖,𝑡 = (                          𝑡                  ) ( ∑𝑡+ 𝑡𝑝 −1      )                                                                                (11)
+                   ∑                  ∑𝑡+ 𝛿𝑡𝑝 −1 ∑                   𝛿𝑡
+                       𝑗 𝑛𝑖,𝑗,𝑡−1 +     𝜏=𝑡        𝑗 ̂
+                                                     𝑛 𝑖,𝑗,𝜏  ∕   𝜏=𝑡−1
+                                                                           𝑚𝑖,𝜏
+
+                                                                                                                𝑡
+where 𝜂𝑖,𝑡 is deﬁned as the demand-to-supply ratio over the planning horizon [𝑡, 𝑡 + 𝛿𝑡𝑝 ] divided by that over the previous planning
+                         𝑡𝑝
+horizon [𝑡 − 1, 𝑡 + 𝛿𝑡 − 1].
+   Note that (10) is a special case of (9) with 𝑢∗𝑖,𝑗,𝑡 = 0. Accordingly, the optimal pricing decisions under the event-triggered scheme
+are given by
+                                {
+          ∗
+                                 (𝛾𝑖,𝑗,𝑡−1 , 𝑢𝑖,𝑗,𝑡−1 ), if 1𝜂̄ ≤ 𝜂𝑖,𝑡 ≤ 𝜂̄
+       (̃𝛾𝑖,𝑗,𝑡 , 𝑢̃ ∗𝑖,𝑗,𝑡 ) =                                                                                                      (12)
+                                   ∗ , 𝑢∗ ),
+                                 (𝛾𝑖,𝑗,𝑡                 otherwise
+                                           𝑖,𝑗,𝑡
+
+(12) indicates that pricing decisions are retained from the previous decision epoch when the change in the supply-demand condition
+falls within the predeﬁned threshold range. Otherwise, the pricing optimization problem is re-solved, and the updated pricing decisions
+are implemented.
+    The objective functions in (9) and (10) involve demand rates expressed as double integrals, making the optimization problems
+highly nonlinear and non-convex. To address this computational challenge, a discrete approximation scheme is adopted. Speciﬁcally,
+the continuous VOT-WTP space is partitioned into a ﬁnite number of small grids, each representing a subregion of the joint probability
+density. The double integrals are approximated by summing the weighted probabilities over these grids, thereby obtaining estimates
+of the demand rates. The price multiplier 𝛾𝑖,𝑗,𝑡 and queue-jumping premium 𝑢𝑖,𝑗,𝑡 are discretized into ﬁnite levels within their respective
+feasible ranges. The demand rates and objective value are evaluated for each resulting pricing combination, and the combination that
+maximizes the proﬁt is selected as the optimal pricing strategy.
+
+
+3.3. Supply side
+
+    To provide a clearer illustration of the supply-side decisions, the customer sets are deﬁned as follows.
+
+           ℂ𝑡 = ℂ𝑤
+                 𝑡−1
+                     ∪ ℂ𝑞𝑡−1 ∪ ℂ𝑤
+                                𝑡 ∪ ℂ𝑡
+                                        𝑞
+                                                                                                                                                                (13a)
+                {                                                  }
+                                                     𝑞
+         ℂ𝑤                           𝑤
+            𝑡 = 𝑐 ∶ 𝑡 − 1 < 𝑡𝑐 ≤ 𝑡, 𝑔𝑐 ≤ 𝑤𝑐 ≤ 𝑔𝑖,𝑗,𝑡 , 𝑐 ∈ ℂ𝑡
+                                                               𝑛𝑒𝑤
+                                                                                                                                                                (13b)
+                {                                                  }
+                                      𝑞
+          ℂ𝑞𝑡 = 𝑐 ∶ 𝑡 − 1 < 𝑡𝑐 ≤ 𝑡, 𝑔𝑖,𝑗,𝑡 ≤ 𝑤𝑐 < 𝑔𝑐𝑤 , 𝑐 ∈ ℂ𝑛𝑒𝑤
+                                                               𝑡                                                                                                (13c)
+                {                                                                 }
+                                                            𝑞
+        ℂ𝑤𝑡−1
+              = 𝑐 ∶ 𝑡𝑐 ≤ 𝑡 − 1, 𝑡 ≤ 𝑡𝑐 + ℎ𝑐 , 𝑔𝑐𝑤 ≤ 𝑤𝑐 ≤ 𝑔𝑖,𝑗,𝑡 , 𝑐 ∈ ℂ𝑡−1 ⧵ ℂ𝑚
+                                                                              𝑡−1
+                                                                                                                                                               (13d)
+                {                                                                 }
+                                                𝑞
+        ℂ𝑞𝑡−1 = 𝑐 ∶ 𝑡𝑐 ≤ 𝑡 − 1, 𝑡 ≤ 𝑡𝑐 + ℎ𝑐 , 𝑔𝑖,𝑗,𝑡 ≤ 𝑤𝑐 < 𝑔𝑐𝑤 , 𝑐 ∈ ℂ𝑡−1 ⧵ ℂ𝑚
+                                                                              𝑡−1
+                                                                                                                                                                (13e)
+                                                                                                   𝑞
+where (13a) indicates that the total customer set ℂ𝑡 at time 𝑡 cconsists of four subsets. ℂ𝑤𝑡 and ℂ𝑡 denote newly arriving customers
+who choose to wait and jump the queue, respectively, based on the generalized cost (13b)-(13c). ℂ𝑛𝑒𝑤  𝑡   = {𝑐 ∶ 𝑡 − 1 < 𝑡𝑐 ≤ 𝑡} denotes
+                                                              𝑞
+the set of newly arriving potential customers. ℂ𝑤  𝑡−1
+                                                       and  ℂ 𝑡−1
+                                                                  denote the  waiting and queue-jumping  customers   from the previous
+decision epoch whose reservations remain active at time 𝑡, respectively (13d)-(13e). ℂ𝑡−1 denotes the customer set at the previous
+                                ∑
+decision epoch, and ℂ𝑚𝑡−1
+                          = {𝑐 ∶ 𝑞 𝑥𝑞,𝑐,𝑡 = 1, 𝑐 ∈ ℂ𝑡−1 } denotes the set of customers matched in the previous decision epoch.
+
+                                                                                         10
+Z. Huang et al.                                                                                    Transportation Research Part C 192 (2026) 105895
+
+
+Remark 1. Note that, in the proposed framework, customers who choose to jump the queue do not receive instantaneous service.
+Instead, they are assigned to a priority queue that is served ahead of the regular waiting queue but remains constrained by limited
+vehicle availability. When multiple customers choose the queue-jumping option within the same time period, congestion may arise
+within the priority queue itself, and their waiting times are determined by the relative priority ordering and prevailing supply
+conditions. Therefore, the queue-jumping mechanism aﬀects the service order and relative waiting times among customers, rather
+than eliminating waiting altogether.
+    Demand-side decisions regulate customer participation and priority levels within the queueing system. The resulting customer sets,
+including both regular waiting and priority (queue-jumping) customers, are then passed to the supply-side module, where vehicle
+dispatching and relocation decisions are carried out.
+
+3.3.1. Dispatching and relocation decisions
+     The vehicle set is denoted by ℚ. Each vehicle is represented by a tuple 𝑞 = (𝑜𝑞 , ℎ𝑞 ) ∈ ℚ, which indicates that the vehicle corresponds
+to its current location and time. For an occupied vehicle, 𝑜𝑞 is the destination node and ℎ𝑞 is the estimated arrival time. Therefore,
+(𝑜𝑞 , ℎ𝑞 ) represents the spatial-temporal point at which the vehicle becomes idle for future dispatching.
+     Leveraging historical trip records, we develop a hybrid travel-time prediction model consisting of a physics-based baseline and a
+                                                                                                                                         𝐿
+neural-network correction module. Speciﬁcally, the baseline travel time is estimated using the distance-based formulation 𝜏𝑜,𝑑 = 𝑣𝑜,𝑑      ̄
+                                                                                                                                             ,
+where 𝑜 and 𝑑 denote the origin and destination coordinates, respectively, 𝐿𝑜,𝑑 is the network distance between them, and 𝑣̄ is a
+reference speed. A neural network 𝑓Δ (⋅) then learns a multiplicative correction from the input features (𝑡, 𝑜, 𝑑, 𝐿𝑜,𝑑 ), where 𝑡 denotes
+the departure time. The resulting travel time estimate is
+                          (                       )
+          𝜏̂𝑜,𝑑,𝑡 = 𝜏𝑜,𝑑 ⋅ 1 + 𝑓Δ (𝑡, 𝑜, 𝑑, 𝐿𝑜,𝑑 )                                                                                       (14)
+where 𝑓Δ (⋅) has a bounded output to ensure that the correction remains within a reasonable range. This hybrid formulation preserves
+the physical relationship between travel distance and travel time while capturing complex spatial-temporal variations, such as time-
+of-day eﬀects and traﬃc congestion, that are diﬃcult to model analytically.
+    As vehicles are assumed to be fully controlled by the platform, the decision over the supply side contains the dispatching decision
+𝑥𝑞,𝑐,𝑡 and the relocation decision 𝑦𝑞,𝑙,𝑡 . Dispatching decision 𝑥𝑞,𝑐,𝑡 indicates whether vehicle 𝑞 is assigned to customer 𝑐 at time 𝑡, which
+is constrained by
+         ∑
+            𝑥𝑞,𝑐,𝑡 ≤ 1                                                                                                                   (15a)
+          𝑐
+        ∑
+              𝑥𝑞,𝑐,𝑡 ≤ 1                                                                                                                    (15b)
+          𝑞
+
+              𝑥𝑞,𝑐,𝑡 ∈ {0, 1}                                                                                                               (15c)
+where (15a) ensures that each vehicle is assigned to at most one customer, (15b) ensures that each customer is matched to at most
+one vehicle, and (15c) deﬁnes the binary dispatching decision. Speciﬁcally, 𝑥𝑞,𝑐,𝑡 = 1 if vehicle 𝑞 is assigned to customer 𝑐 at time 𝑡,
+and 𝑥𝑞,𝑐,𝑡 = 0 otherwise.
+   Relocation decision 𝑦𝑞,𝑙,𝑡 indicates whether vehicle 𝑞 is relocated to node 𝑙 at time 𝑡. For a vehicle 𝑞 ∈ ℚ, the decision is constrained
+by
+       ∑            ∑
+           𝑥𝑞,𝑐,𝑡 +   𝑦𝑞,𝑙,𝑡 ≤ 1                                                                                                       (16a)
+          𝑐               𝑙
+
+                              𝜏̂𝑜𝑞 ,𝑙,𝑡 ≤ 𝛿𝑡                                                                                                (16b)
+                              𝑦𝑞,𝑙,𝑡 ∈ {0, 1}                                                                                               (16c)
+where (16a) ensures that a vehicle is either assigned to a customer or relocated, (16b) requires the estimated travel time from the
+vehicle’s current idle location 𝑜𝑞 to the relocation node 𝑙 to be no greater than one decision interval 𝛿𝑡, and (16c) deﬁnes the binary
+relocation decision. Speciﬁcally, 𝑦𝑞,𝑙,𝑡 = 1 if vehicle 𝑞 is relocated to node 𝑙 at time 𝑡, and 𝑦𝑞,𝑙,𝑡 = 0 otherwise.
+    The immediate proﬁt associated with each decision is deﬁned as
+                    {
+                     𝑝𝑐 − 𝑒 ⋅ 𝜏̂𝑜𝑞 ,𝑜𝑐 ,𝑡 , 𝑐 ∈ ℂ𝑤     𝑤
+                                                 𝑡 ∪ ℂ𝑡−1
+       𝑟(𝑥𝑞,𝑐,𝑡 ) =   𝑞                          𝑞    𝑞                                                                           (17a)
+                     𝑔𝑐 − 𝑒 ⋅ 𝜏̂𝑜𝑞 ,𝑜𝑐 ,𝑡 , 𝑐 ∈ ℂ𝑡 ∪ ℂ𝑡−1
+         𝑟(𝑦𝑞,𝑙,𝑡 ) = −𝑒 ⋅ 𝜏̂𝑜𝑞 ,𝑙,𝑡                                                                                                        (17b)
+where (17a) gives the proﬁt associated with a dispatching decision, calculated as the fare collected from customers minus the travel
+cost incurred from the vehicle’s origin 𝑜𝑞 to the customer’s origin 𝑜𝑐 . The fare is either the regular trip fare 𝑝𝑐 for waiting customers
+or the total fare 𝑔𝑐𝑞 for queue-jumping customers. Here, 𝑒 denotes the travel cost per unit time. (17b) gives the proﬁt associated with
+a relocation decision, deﬁned as the negative travel cost incurred when a vehicle relocates from its origin 𝑜𝑞 to node 𝑙.
+    The platform’s objective is to maximize the expected total proﬁt over the planning horizon
+                  {                                          }
+                      ∑(∑∑                    ∑∑           )
+         max 𝔼                   𝑟(𝑥𝑞,𝑐,𝑡 ) +    𝑟(𝑦𝑞,𝑙,𝑡 )                                                                           (18)
+        𝑥𝑞,𝑐,𝑡 , 𝑦𝑞,𝑙,𝑡
+                              𝑡      𝑞    𝑐     𝑞   𝑙
+
+
+                                                                     11
+Z. Huang et al.                                                                                     Transportation Research Part C 192 (2026) 105895
+
+
+   While dynamic programming is a standard approach for solving (18), it is challenging to apply it directly due to the curse of
+dimensionality arising from the high-dimensional state and decision spaces. Therefore, we adopt an approximate dynamic program-
+ming (ADP) framework (Powell, 2007; Liang et al., 2021), in which the value function in the Bellman equation is approximated
+by a parameterized function learned from data. This enables eﬃcient policy learning for dispatching and relocation decisions while
+maintaining computational tractability. We next formulate the ADP model by deﬁning the state, decision variables, state transition,
+and objective function.
+   State The state at time 𝑡 is represented by the vehicle’s spatial-temporal information
+         𝑠𝑡 = (𝑜𝑞 , ℎ𝑞 )                                                                                                                      (19)
+    Decision The decision at time 𝑡 consists of dispatching and relocation actions
+         𝑎𝑡 = (𝑥𝑞,𝑐,𝑡 , 𝑦𝑞,𝑙,𝑡 )                                                                                                              (20)
+where the dispatching assigns idle vehicles to customers to eﬃciently match supply and demand while minimizing service delays,
+whereas the relocation action moves idle vehicles to better satisfy future spatial-temporal demand.
+  State transition Given the dispatching and relocation decisions, the system state evolves according to
+         𝑠𝑡+1 = 𝑀(𝑠𝑡 , 𝑎𝑡 )                                                                                                                   (21)
+    In principle, the state transition is governed by the conditional probability distribution ℙ(𝑠𝑡+1 | 𝑠𝑡 , 𝑎𝑡 ), which captures uncertainties
+in travel times, demand realizations, and matching outcomes. However, explicitly modeling or estimating this transition distribution
+is computationally intractable in large-scale network settings due to the high dimensionality and complex dependencies involved.
+Instead, we adopt a data-driven transition model in which 𝑀(⋅) is implicitly learned from historical trip data and simulation. This
+enables the proposed ADP framework to approximate the underlying stochastic dynamics without explicitly specifying the transition
+probabilities, thereby improving computational tractability while preserving modeling ﬂexibility.
+    Objective function Given the current state 𝑠𝑡 and decision 𝑎𝑡 , the platform receives an immediate reward 𝑟(𝑠𝑡 , 𝑎𝑡 ), which represents
+the proﬁt obtained from dispatching and relocation decisions. Under a policy 𝜋, the objective is to maximize the long-term cumulative
+proﬁt in the planning horizon
+                       [𝑇                | ]
+                        ∑                |
+          𝜋
+        𝑉 (𝑠0 ) = 𝔼𝜋        𝑟(𝑠𝑡 , 𝑎𝑡 ) || 𝑠0                                                                                             (22)
+                                         |
+                        𝑡=0              |
+    For an arbitrary state 𝑠𝑡 , the corresponding value function is deﬁned as
+                       [𝑇                 | ]
+                        ∑                 |
+        𝑉 𝜋 (𝑠𝑡 ) = 𝔼𝜋      𝑟(𝑠𝑘 , 𝑎𝑘 ) || 𝑠𝑡                                                                                             (23)
+                                          |
+                        𝑘=𝑡               |
+    According to the Bellman optimality equation, the optimal value function satisﬁes
+                         [                                      ]
+        𝑉 ∗ (𝑠𝑡 ) = max 𝔼 𝑟(𝑠𝑡 , 𝑎𝑡 ) + 𝛼𝑉 ∗ (𝑠𝑡+1 ) || 𝑠𝑡 , 𝑎𝑡                                                                           (24)
+                        𝑎𝑡
+
+where 𝛼 is the discount factor. Equivalently,
+                     [                                      ]
+      𝑄(𝑠𝑡 , 𝑎𝑡 ) = 𝔼 𝑟(𝑠𝑡 , 𝑎𝑡 ) + 𝛼𝑉 ∗ (𝑠𝑡+1 ) || 𝑠𝑡 , 𝑎𝑡                                                                                   (25)
+and the optimal policy is obtained by
+         𝜋 ∗ (𝑠𝑡 ) = arg max 𝑄(𝑠𝑡 , 𝑎𝑡 )                                                                                                      (26)
+                             𝑎𝑡
+
+    For the dispatching decision, the objective function can be expressed as
+            ∑ ∑
+       max         𝑄(𝑠𝑡 , 𝑎𝑡 ) ⋅ 𝑥𝑞,𝑐,𝑡                                                                                                       (27)
+         𝑥𝑞,𝑐,𝑡
+                  𝑞∈ℚ 𝑐∈ℂ𝑡
+
+         𝑠.𝑡. (15𝑎) − (15𝑐)
+    For the relocation decision, the objective function can be expressed as
+            ∑∑
+       max          𝑄(𝑠𝑡 , 𝑎𝑡 ) ⋅ 𝑦𝑞,𝑙,𝑡                                                                                                      (28)
+         𝑦𝑞,𝑙,𝑡
+                  𝑞∈ℚ 𝑙∈𝑁
+
+         𝑠.𝑡. (16𝑎) − (16𝑐)
+    To mitigate the curse of dimensionality in dynamic programming, we employ value function approximation. Speciﬁcally, a neural
+network is used to approximate the value function 𝑉 (𝑠𝑡 ) by 𝑉̂ (𝑠𝑡 | 𝜃), where 𝜃 denotes the neural network parameters. The network is
+trained using temporal-diﬀerence (TD) learning:
+          𝛿𝑡(𝑖) = 𝑟(𝑠𝑡 , 𝑎𝑡 ) + 𝛼 ⋅ 𝑉̂ (𝑠𝑡+1 | 𝜃) − 𝑉̂ (𝑠𝑡 | 𝜃)                                                                              (29a)
+                    ( )
+                  1 (𝑖) 2
+         𝐿(𝜃) =       𝛿                                                                                                                      (29b)
+                  2 𝑡
+         𝜃𝑘+1 = 𝜃𝑘 − 𝛽 ⋅ ∇𝜃 ⋅ 𝐿(𝜃𝑘 )                                                                                                         (29c)
+
+                                                                      12
+Z. Huang et al.                                                                                    Transportation Research Part C 192 (2026) 105895
+
+
+Algorithm 1 Dynamic pricing framework integrating vehicle dispatching and relocation decisions.
+Input: Zone set 𝑍, customer set ℂ, vehicle set ℚ
+ 1: for each decision epoch 𝑡 ∈ 𝕋 do
+ 2:    Environment observe and state update:
+ 3:       Observe the current vehicle set ℚ𝑡 ∈ ℚ and newly arriving customer set ℂ𝑛𝑒𝑤      𝑡 , and update 𝑚𝑖,𝑡 , 𝑛𝑖,𝑗,𝑡
+ 4:    Pricing decision:
+ 5:       Predict the newly arriving customer demand 𝑛̂ 𝑖,𝑗,𝑡 over the planning horizon
+ 6:       Calculate 𝜂𝑖,𝑡 according to (11)
+ 7:       if 𝜂𝑖,𝑡 exceeds the predeﬁned event-triggered threshold range then
+ 8:          Estimate the waiting time ℎ𝑖,𝑗,𝑡 according to (8)
+                               𝑡                      𝑡
+                 ∑         ∑𝑡+ 𝛿𝑡𝑝 ∑              ∑𝑡+ 𝛿𝑡𝑝
+ 9:          if 𝑗 𝑛𝑖,𝑗,𝑡 + 𝜏=𝑡+1     𝑗 𝑛̂ 𝑖,𝑗,𝜏 >  𝜏=𝑡 𝑚𝑖,𝜏 then                                                        ⊳ High demand scenario
+                 Solve for the optimal pricing decision 𝛾𝑖,𝑗,𝑡∗ , 𝑢∗
+10:                                                                𝑖,𝑗,𝑡 according to (9)
+11:          else                                                                                         ⊳ Medium/low demand scenario
+12:              Solve for the optimal pricing decision 𝛾𝑖,𝑗,𝑡∗ according to (10)
+
+13:          end if
+14:       else
+15:          Use the pricing decision 𝛾𝑖,𝑗,𝑡−1 , 𝑢𝑖,𝑗,𝑡−1 from the previous decision epoch
+16:       end if
+17:     Demand update:
+18:       Update the current reserved customer set ℂ𝑡 according to (13a)
+19:     Dispatching decision:
+20:       Solve for the optimal dispatching decision 𝑥∗𝑞,𝑐,𝑡 according to (27)
+21:     Relocation decision:
+22:       Solve for the optimal relocation decision 𝑦∗𝑞,𝑙,𝑡 according to (28)
+23:     Environment update:
+24:       Remove matched customers from ℂ𝑡 and update the vehicle status in ℚ𝑡
+25: end for
+
+
+
+where (29a) deﬁnes the TD error, (29b) is the corresponding loss function, and (29c) updates the neural network parameters using
+gradient descent. Here, 𝛽 denotes the learning rate.
+    Algorithm 1 summarizes the proposed dynamic pricing framework integrated with vehicle dispatching and relocation. At each
+decision epoch, the platform ﬁrst observes the current system state, including vehicle states and newly arriving customer requests, and
+updates zone-level supply-demand indicators. It then predicts customer demand over the planning horizon. Based on the predicted
+demand, an event-triggered mechanism determines whether the pricing policy should be updated. When the trigger condition is
+satisﬁed, the platform estimates expected waiting time and solves the corresponding pricing problem under either high demand or
+medium to low demand scenarios. Otherwise, the pricing decisions from the previous decision epoch are retained to avoid excessive
+price ﬂuctuations.
+    Based on the pricing decisions, customer choices are updated accordingly, yielding the regulated customer set that serves as the
+input to the subsequent operational layer. The platform then determines the dispatching and relocation decisions by solving the
+corresponding optimization problems to maximize the expected long-term system proﬁt while satisfying the operational constraints.
+Finally, the system state is updated by removing matched customers and updating vehicle states, and the process repeats in a rolling
+horizon manner until the end of the operating period.
+
+
+
+
+Fig. 7. Nodes and aggregated taxi OD zones in Manhattan. Adjacent taxi zones are merged into a single zone and represented by the same color.
+
+                                                                     13
+Z. Huang et al.                                                                                    Transportation Research Part C 192 (2026) 105895
+
+
+4. Empirical study
+
+4.1. Simulation environment
+
+    The proposed framework is evaluated using a simulator built on the Manhattan road network, with historical taxi trip records from
+June 2016 provided by the New York City Taxi and Limousine Commission 1 . The dataset contains pickup and drop-oﬀ coordinates,
+travel distance, travel time, and trip fare for each trip. The study area is partitioned into 8 zones by aggregating the original 263 taxi
+zones, as illustrated in Fig. 7. Pickup and drop-oﬀ locations are mapped to their nearest nodes in the underlying road network, which
+consists of 4486 nodes and 9755 links. A ﬂeet of 1000 vehicles is initially randomly distributed over the network. Each simulation
+run starts at 00:00, while performance metrics are collected from 06:00 to 24:00 to mitigate cold-start eﬀects. Approximately 80,000
+orders are observed during the evaluation period. Historical demand data from the ﬁrst 25 days are used to train the prediction and
+decision-making modules of the proposed framework, whereas the remaining days are reserved for out-of-sample evaluation.
+    Table 2 summarizes the neural network conﬁgurations used throughout the numerical experiments. Waiting time and travel
+time are estimated using lightweight feedforward neural networks to enable eﬃcient training and inference. OD demand forecasting
+employs an RNN-based model to capture temporal correlations in demand patterns. For the ADP-based dispatching and relocation
+algorithm, the value function (with discount factor 𝛼 = 0.9) is approximated by a fully connected neural network with three hidden
+layers. Training samples are generated from simulated transitions 𝑠𝑡 , 𝑎𝑡 , 𝑟(𝑠𝑡 , 𝑎𝑡 ). All models are trained using the Adam optimizer with
+a learning rate of 0.01 and implemented in Python with PyTorch on an Apple M1-based MacBook.
+
+                        Table 2
+                        Neural network architectures and training conﬁgurations.
+                                  Module                     Architecture           Activation   Epochs      Batch Size
+
+                           Waiting Time Estimation   NN (32-16) + zone embedding      ReLU         400         1000
+                            Demand Forecasting               RNN (64-32)              Tanh         200         1000
+                           Travel Time Estimation             NN (32-16)              ReLU         400         1000
+                          ADP Value Approximation            NN (32-16-4)          Leaky ReLU     1000         1000
+
+                        Note: Numbers in parentheses indicate the numbers of neurons in the hidden layers.
+
+
+    Note that the proposed integral demand formulation is not restricted to any speciﬁc functional form of the joint VOT-WTP distribu-
+tion. The framework is suﬃciently general to accommodate any joint distribution, provided that the corresponding probability density
+or cumulative distribution functions are well deﬁned. In line with Zhang et al. (2018), a truncated bivariate normal distribution is
+adopted to characterize customer heterogeneity in VOT and WTP:
+                                                   (        )
+                                                    64   0
+       (𝑣𝑐 , 𝑤𝑐 ) ∼  (𝜇, Σ), 𝜇 = (24, 18)⊤ , Σ =                                                                                (30)
+                                                     0   36
+where the mean VOT is set to 𝜇(𝑣𝑐 ) = 24 USD/hour, which is consistent with the estimated average VOT of 24.47 USD/hour in the
+United States reported by Gao et al. (2019). The corresponding standard deviation is 𝜎(𝑣𝑐 ) = 8 USD/hour. The mean WTP is set to
+𝜇(𝑤𝑐 ) = 18 USD with a standard deviation of 𝜎(𝑤𝑐 ) = 6 USD.
+
+
+
+
+                             Fig. 8. Heterogeneous demand modeled by a truncated bivariate normal distribution.
+
+
+    In general, individual incomes exhibit a long-tailed distribution, with most individuals concentrated at lower income levels and a
+relatively small proportion of high-income earners raising the overall mean (Neal and Rosen, 2000). The distribution of VOT exhibits a
+
+
+  1 NYC TLC opendata: https://www1.nyc.gov/site/tlc/about/tlc-trip-record-data.page
+
+
+                                                                       14
+Z. Huang et al.                                                                                     Transportation Research Part C 192 (2026) 105895
+
+
+similar characteristic. Customers with diﬀerent VOT and WTP levels naturally exhibit heterogeneous travel preferences. Accordingly,
+we focus on customers whose VOT exceeds the median, as they represent a substantial proportion of the ride-sourcing market and are
+more likely to be time-sensitive and willing to pay a premium for improved service. Based on this consideration, the bivariate normal
+distribution of VOT and WTP is truncated to 𝑣𝑐 ∈ [16, 48] USD/hour and 𝑤𝑐 ∈ [12, 36] USD, respectively, as shown in Fig. 8a. Each
+sampled point represents an individual customer characterized by a unique combination of VOT and WTP values. The corresponding
+density is illustrated in Fig. 8b, where darker blue shades indicate regions with higher customer density.
+
+4.2. Simulation results analysis
+
+   In this section, we comprehensively evaluate the performance of the proposed framework from multiple perspectives. Speciﬁcally,
+we examine its performance under diﬀerent demand patterns in Section 4.2.1, assess the impact of integrating the queue-jumping
+option into the dynamic pricing framework in Section 4.2.2, evaluate the beneﬁts of the rolling horizon approach in Section 4.2.3,
+and investigate the eﬀectiveness of the event-triggered scheme in Section 4.2.4. Finally, we compare the proposed ADP solution with
+other alternative approaches in Section 4.2.5.
+
+4.2.1. Performance under diﬀerent demand patterns
+    To investigate the eﬀects of diﬀerent demand patterns, we consider two additional cases: homogeneous demand (HD) and ﬁnite
+discrete demand (FDD). Given the mean values of VOT and WTP, HD is modeled as a single representative customer type with (24, 18).
+FDD is approximated by three discrete customer groups with VOT and WTP levels below, equal to, and above the mean, represented
+by (18,12), (24,18), and (30,24), respectively. The heterogeneous demand is modeled by a truncated bivariate normal distribution
+(TBND) deﬁned in (30).
+
+                           Table 3
+                           Performance under diﬀerent demand patterns.
+                                       Demand type                HD                 FDD               TBND
+
+                                      Proﬁt (USD)               413,236             513,858           648,462
+                                        Trip fare               486,003             591,865           727,732
+                                 Queue-jumping premium           1,406               4,521             15,673
+                                  Routing consumption            74,173             82,528             94,943
+
+                                      Abandonment               37,644              35,013            17,130
+                                     Realized orders            42,356              44,987            62,677
+                                     Reserved orders            42,356              44,987            62,870
+
+                                                 Realized       41,465              42,773            44,697
+                                   Waitinga
+                                                 Reserved       41,465              42,773            44,890
+                                                 Realized        891                 2,214            17,980
+                             Queue-jumpingb
+                                                 Reserved        891                 2,214            17,980
+                             a Number of waiting customers.
+                             b Number of queue-jumping customers.
+                             c Note: The same interpretation applies to all subsequent tables.
+
+
+
+   Table 3 summarizes the performance of the proposed framework under diﬀerent demand pattern assumptions. Compared with
+the HD scenario, the FDD setting yields moderate improvements in both reserved and realized orders. Meanwhile, the number of cus-
+tomers choosing the queue-jumping option increases by nearly 150%, leading to a 24.3% increase in system proﬁt. This improvement
+
+
+
+
+                                                Fig. 9. Diﬀerent log-normal demand distributions.
+
+                                                                         15
+Z. Huang et al.                                                                                       Transportation Research Part C 192 (2026) 105895
+
+
+demonstrates the beneﬁt of introducing representative customer types, which enables diﬀerentiated pricing and queue-jumping de-
+cisions across customer segments. Building on this, the heterogeneous demand setting, modeled by a continuous distribution of VOT
+and WTP, achieves the highest system proﬁt. Signiﬁcant increases in both realized and reserved orders, together with a substantial
+reduction in customer abandonments, contribute to higher revenues from trip fares and queue-jumping premiums. Moreover, a larger
+proportion of customers choose either to wait or jump the queue, indicating more eﬀective market segmentation. Consequently, the
+proposed framework is able to allocate vehicle capacity more eﬃciently while better aligning pricing decisions with heterogeneous
+customer preferences. Overall, these ﬁndings highlight the importance of accurately capturing customer heterogeneity for improving
+operational eﬃciency, market segmentation, and system proﬁtability.
+    To demonstrate that the proposed framework can accommodate alternative demand distributions, a bivariate log-normal distri-
+bution is adopted to capture the right-skewed and long-tailed characteristics of customer VOT and WTP, as illustrated in Fig. 9a. This
+distribution reﬂects the presence of a small proportion of customers with exceptionally high VOT and WTP values and is speciﬁed as
+                                                      (           )
+                                                        0.1  0.03
+       (ln 𝑣, ln 𝑤) ∼  (𝜇, Σ), 𝜇 = (3.1, 2.8)⊤ , Σ =
+                                                       0.03   0.1
+where 𝑣 and 𝑤 denote the VOT and WTP, respectively. This speciﬁcation induces right-skewed marginal distributions while preserving
+the positive correlation between the two variables. The distribution is further truncated to 𝑣𝑐 ∈ [16, 48] USD/hour and 𝑤𝑐 ∈ [12, 36]
+USD, as shown in Fig. 9b.
+
+                           Table 4
+                           Performance under diﬀerent log-normal demand distributions.
+                                                                    LND                         TLND
+
+                                   Proﬁt (USD)                     529,022                     629,544
+                                     Trip fare                     607,342                     709,133
+                              Queue-jumping premium                 14,634                      20,806
+                               Routing consumption                  92,954                     100,395
+
+                                   Abandonment                     23,989                       15,367
+                                  Realized orders                  55,782                       63,211
+                                  Reserved orders                  56,011                       64,633
+
+                                              Realized             40,534                       42,727
+                                Waiting
+                                              Reserved             40,762                       44,032
+                                              Realized             15,248                       20,484
+                             Queue-jumping
+                                              Reserved             15,249                       20,601
+
+
+   Table 4 summarizes the performance of the proposed framework under the log-normal distribution (LND) and truncated log-
+normal distribution (TLND) settings. Compared with LND, TLND achieves a clear improvement in system performance. System proﬁt
+increases by nearly 19%, accompanied by substantial increases in both realized and reserved orders. This improvement is primarily
+driven by a shift in demand composition. The truncated distribution captures a larger proportion of customers with higher VOT and
+WTP (see Fig. 10), which better reﬂects the target customer base of ride-sourcing platforms. Under TLND, a larger proportion of
+customers choose either to wait or to jump the queue. In particular, the number of customers selecting the queue-jumping option
+increases substantially, indicating a stronger willingness to pay for priority service.
+
+
+
+
+                                          Fig. 10. Histograms of diﬀerent log-normal distributions.
+
+   Overall, a truncated heterogeneous demand distribution better captures the demand characteristics of ride-sourcing platforms. By
+accounting for the joint distribution of VOT and WTP, the proposed framework increases the number of reserved orders, improves
+service for high-value customers, and ultimately enhances system proﬁtability.
+
+                                                                     16
+Z. Huang et al.                                                                                  Transportation Research Part C 192 (2026) 105895
+
+
+                          Table 5
+                          Performance with and without queue-jumping.
+                                                           With queue-jumping         Without queue-jumping
+
+                                  Proﬁt (USD)                    648,462                     618,801
+                                    Trip fare                    727,732                     715,487
+                             Queue-jumping premium                15,673                         –
+                              Routing consumption                 94,943                      96,686
+
+                                  Abandonment                    17,130                       18,442
+                                 Realized orders                 62,677                       61,382
+                                 Reserved orders                 62,870                       61,558
+
+                                             Realized            44,697                       61,382
+                              Waiting
+                                             Reserved            44,890                       61,558
+                                             Realized            17,980                          –
+                           Queue-jumping
+                                             Reserved            17,980                          –
+
+
+
+
+4.2.2. Eﬀect of the queue-jumping option
+   Table 5 summarizes the performance of the proposed framework with and without the queue-jumping option. Overall, introduc-
+ing the queue-jumping option leads to a modest improvement in system proﬁt, primarily driven by an increase in fulﬁlled orders
+and additional revenue from priority services. By allowing customers with higher VOT and WTP to receive higher service priority,
+the queue-jumping mechanism improves the allocation eﬃciency of limited vehicle supply under high demand conditions, thereby
+partially alleviating the supply-demand imbalance.
+
+
+
+
+                               Fig. 11. Customer choices for diﬀerent OD pairs within a decision interval.
+
+                                                                   17
+Z. Huang et al.                                                                                  Transportation Research Part C 192 (2026) 105895
+
+
+   Queue-jumping also redistributes service opportunities across customer groups. Fig. 11a and b illustrate customer decision-making
+behaviors under high demand and medium to low demand scenarios, respectively.
+   In high demand scenarios, a substantial proportion of customers, particularly those with medium and low VOT, choose to abandon
+their requests in response to elevated prices. Among those who continue to place orders, customers with low VOT and high WTP
+(upper-left corner in Fig. 11a) are more likely to wait than to jump the queue, as the cost of waiting is relatively low compared with
+the queue-jumping premium. In contrast, customers with high VOT and high WTP (upper-right corner in Fig. 11a) exhibit a stronger
+preference for time savings and are therefore more likely to select the queue-jumping option. These patterns are consistent with the
+market segmentation shown in Fig. 4a, highlighting heterogeneous behavioral responses across customer segments.
+   In medium to low demand scenarios, where supply-demand conditions are less constrained, some customers remain unserved.
+Customers with high VOT and high WTP (upper-right corner in Fig. 11b) face a trade-oﬀ between waiting and abandoning their
+requests. Those with relatively lower WTP are more likely to abandon, whereas those with higher WTP are more willing to wait. This
+behavior is consistent with practical ride-sourcing operations, where customers in areas with limited or unevenly distributed vehicle
+supply often decide whether to wait for service or abandon their requests.
+
+4.2.3. Eﬀects of rolling horizon approach
+    Fig. 12 illustrates the number of trip orders across diﬀerent VOT levels for each zone, including the total generated demand
+(Origin) and the realized demand under diﬀerent planning settings. Overall, demand decreases monotonically as VOT increases across
+all zones. Although supply constraints prevent all demand from being served, the extended planning horizon consistently realizes a
+larger proportion of demand than the short horizon setting. By anticipating future demand and supply conditions, it enables more
+strategic pricing, dispatching, and relocation decisions. Consequently, the system serves a larger proportion of demand, particularly
+customers with medium to low VOT, who constitute the majority of the market. This advantage is especially evident in high-demand
+zones (Zones 4–6), where the queue-jumping option is more frequently utilized. The extended planning horizon allows the system to
+better balance serving current demand with preserving capacity for future requests.
+
+
+
+
+                        Fig. 12. Reservation and realization of demand across diﬀerent planning horizons and zones.
+
+
+
+4.2.4. Eﬀects of event-triggered scheme
+    Fig. 13 presents the system proﬁt, reservation rate, and service rate under diﬀerent event-triggered thresholds. The reservation
+rate is deﬁned as the ratio of reserved to total orders, while the service rate is the ratio of fulﬁlled to total orders. A threshold of
+1.0 corresponds to the baseline without the event-triggered scheme, where pricing decisions are updated at every decision epoch.
+Thresholds from 1.1 to 1.3 represent increasing levels of event-triggering, resulting in less frequent pricing updates.
+    The event-triggered scheme generally improves the platform’s service performance. However, its impact on system proﬁt depends
+on the threshold. Among all tested values, a threshold of 1.1 achieves the highest system proﬁt, reservation rate, and service rate.
+
+                                                                    18
+Z. Huang et al.                                                                                      Transportation Research Part C 192 (2026) 105895
+
+
+
+
+                                         Fig. 13. Performance under diﬀerent event-triggered thresholds.
+
+
+
+
+             Fig. 14. Comparison of price multiplier and supply-demand condition under diﬀerent event-triggered thresholds (OD (5,7)).
+
+
+
+
+When the threshold exceeds 1.1, the reservation rate continues to increase, whereas the service rate declines. This result indicates
+that the platform reserves more orders than it can ultimately fulﬁll. The main reason is that less frequent pricing updates reduce the
+platform’s responsiveness to supply-demand changes, as shown in Fig. 14. For example, under a threshold of 1.3, the price multiplier
+remains low for an extended period (see Fig. 14a). Meanwhile, demand begins to surge around 9:40 (see Fig. 14b). The delayed
+pricing adjustment leads to suboptimal pricing decisions and lower system proﬁt.
+
+                                                                        19
+Z. Huang et al.                                                                                     Transportation Research Part C 192 (2026) 105895
+
+
+   These results suggest that a threshold of 1.1 provides a good balance between stabilizing price ﬂuctuations and maintaining
+responsiveness to dynamic supply-demand conditions. Consequently, it achieves the best overall performance on the Manhattan
+network. The optimal threshold may vary across networks and requires further analysis for other settings.
+
+4.2.5. Comparison between ADP and alternative approaches
+    To evaluate the eﬀectiveness of the proposed dispatching and relocation module, the ADP approach is compared with two rein-
+forcement learning approaches: MARL-TD3 and GraphDQN.
+
+ • MARL-TD3: A multi-agent reinforcement learning framework built upon Twin Delayed Deep Deterministic Policy Gradient (TD3)
+   (Fujimoto et al., 2018). Vehicles are modeled as cooperative agents that generate continuous dispatching and relocation actions in
+   the coordinate space. The policy is trained to maximize the cumulative system reward, thereby improving long-term operational
+   performance.
+ • GraphDQN: A graph-based deep Q-network in line with Yu and Hu (2022), where the transportation network is represented
+
+   as a graph and node embeddings are learned through graph convolution layers. Based on the aggregated spatial features, the
+   Q-network determines dispatching and relocation actions while explicitly capturing inter-zone spatial dependencies.
+
+   For a fair comparison, all methods share the same simulation environment, demand realization process, state representation, and
+reward function. The hyperparameters of the baseline methods are carefully tuned to ensure stable training and convergence.
+
+
+                  Table 6
+                  Performance comparison with baseline methods.
+                                                       Service Rate        Avg. Waiting   Avg. Empty          Computation
+                       Method          Proﬁt ($)
+                                                           (%)               Time (s)     VMT (mile)           Time (min)
+
+                     MARL-TD3           652,338           80.9                188.6          86.1                 28.6
+                     GraphDQN           631,840           77.1                181.3          81.3                 36.9
+                     ADP (Ours)         648,462           78.5                167.7          77.8                 24.3
+
+
+
+   Table 6 summarizes the performance of MARL-TD3, GraphDQN, and the proposed ADP approach. Among the three methods,
+MARL-TD3 achieves the highest proﬁt and service rate, demonstrating the eﬀectiveness of multi-agent coordination in improving
+long-term operational performance. However, these gains come at the expense of longer customer waiting times, higher empty vehicle
+miles traveled (VMT), and substantially greater computational cost. GraphDQN incorporates the spatial structure of the road network
+through graph convolution, but the additional model complexity leads to considerable computational overhead while providing only
+marginal improvements in operational performance.
+   In comparison, the proposed ADP approach achieves proﬁt and service rate comparable to those of MARL-TD3 while substantially
+reducing customer waiting times, empty VMT, and computational cost. This balanced performance indicates that the proposed method
+eﬀectively coordinates dispatching and relocation decisions while maintaining high computational eﬃciency. The lower waiting times
+and empty VMT also suggest more eﬃcient vehicle utilization and improved matching between supply and demand. Overall, these
+results demonstrate that the proposed approach provides a favorable trade-oﬀ between service quality, operational eﬃciency, and
+computational complexity, making it well suited for large-scale ride-sourcing applications.
+
+4.3. Discussion on model robustness
+
+4.3.1. Eﬀects of spatial partitioning
+    The granularity of spatial partitioning inﬂuences both the computational eﬃciency of the framework and the proﬁtability of the
+platform. Since dispatching determines vehicle-customer matching and routing decisions, it is performed at the link-node level, where
+spatial diﬀerences can substantially aﬀect pickup time, detour distance, and matching outcomes.
+    In contrast, the pricing module is designed to regulate aggregate supply-demand imbalance and customer competition within a
+zone rather than optimize individual matches. Consequently, pricing does not require the same level of spatial resolution. Applying
+pricing at the link-node level would result in overly sparse demand within each unit, reducing meaningful customer competition and
+limiting the eﬀectiveness of dynamic pricing. In addition, the resulting waiting time and demand estimates would become increasingly
+noisy, leading to higher computational complexity without corresponding performance gains.
+    Aggregating links and nodes into larger pricing zones increases demand density and preserves meaningful competition among cus-
+tomers. However, using overly coarse partitions, such as treating the entire city as a single zone, fails to capture spatial heterogeneity
+and local supply-demand imbalances. Therefore, the number of pricing zones represents a non-monotonic trade-oﬀ between spatial
+resolution and estimation reliability. Increasing the number of zones initially improves system performance by capturing localized
+market conditions more accurately, whereas excessive partitioning eventually degrades performance because of demand sparsity and
+unreliable estimates. To quantify this trade-oﬀ, a one-at-a-time sensitivity analysis is conducted.
+
+
+
+
+                                                                      20
+Z. Huang et al.                                                                                      Transportation Research Part C 192 (2026) 105895
+
+
+
+
+                                          Fig. 15. Topology of diﬀerent OD zones in Manhattan.
+
+
+
+
+   Fig. 16 presents the system performance under diﬀerent spatial partitions, with the corresponding zone layouts shown in Fig. 15.
+Increasing the number of pricing zones from 2 to 8 leads to noticeable improvements in both proﬁt and service rate, suggesting
+that the pricing strategy under a ﬁner spatial partition better captures localized supply-demand conditions. However, further in-
+creasing the number of zones to 13 degrades system performance, with both proﬁt and service rate declining. As shown in Fig. 16c,
+the computational time increases steadily as the number of zones grows. These results indicate that, for the Manhattan network
+considered in this study, an 8-zone partition achieves a favorable balance between operational performance and computational
+eﬃciency.
+
+
+
+
+                                         Fig. 16. Performance under diﬀerent spatial partitioning.
+
+
+
+
+4.3.2. Driver behavior
+    The current framework assumes full driver compliance with platform dispatching and relocation decisions, a common assumption
+in centralized ride-sourcing optimization. In practice, ride-sourcing platforms employ various incentive and penalty mechanisms to
+promote driver compliance. Acceptance-rate requirements and temporary account suspensions are commonly used, particularly for
+dispatched orders. Nevertheless, drivers may still reject assigned requests in real-world operations, introducing additional uncertainty
+into system performance.
+    To evaluate the robustness of the proposed framework under driver non-compliance, scenarios with driver rejection rates of
+0%, 5%, 10%, or 15% are considered. Rejected requests are returned to the matching pool, potentially causing additional delays or
+eventual abandonment. Fig. 17 summarizes the system performance under diﬀerent rejection rates.
+    As the rejection rate increases, the service rate decreases while the average waiting time increases. However, system proﬁt does
+not necessarily decline. Since rejected drivers remain available for subsequent requests and no rejection penalties are imposed, the
+resulting supply shortage encourages the platform to increase both the price multiplier and the queue-jumping premium (see Fig. 17d).
+The higher revenue generated from each completed trip partially oﬀsets the reduction in service volume. Although this mechanism
+helps sustain short-term proﬁtability, it may reduce customer satisfaction and long-term demand, ultimately weakening the platform’s
+competitiveness.
+    Overall, the proposed framework maintains stable performance under moderate driver rejection rates through adaptive pricing
+and dispatching decisions. Extending the framework to explicitly model driver incentives and compliance behavior constitutes an
+important direction for future research.
+
+                                                                    21
+Z. Huang et al.                                                                                  Transportation Research Part C 192 (2026) 105895
+
+
+
+
+                                       Fig. 17. Performance under diﬀerent driver rejection rates.
+
+5. Conclusion
+
+    This paper proposed an OD-based dynamic pricing framework that addresses key limitations in existing ride-sourcing strate-
+gies by incorporating heterogeneous spatial-temporal demand and customer-speciﬁc behaviors. The framework captured the diverse
+preferences of ride-sourcing users by incorporating customer-speciﬁc value of time (VOT) and willingness to pay (WTP) into an
+integral-form demand function. Customers with diﬀerent VOT and WTP could choose to wait for a ride, abandon the trip, or jump
+the queue by paying a premium. The dynamic pricing problem is formulated as a constrained optimization problem that jointly
+determines origin-destination (OD)-based pricing and queue-jumping premiums. To eﬀectively manage both short-term operational
+needs and long-term strategic goals, the framework incorporated a rolling horizon approach. This approach combined a short decision
+interval for real-time pricing adjustments with a longer planning horizon incorporating queuing dynamics and future travel demand.
+Furthermore, an event-triggered scheme was integrated to mitigate computational burden and stabilize pricing decisions, ensuring
+eﬃcient and responsive price adjustments. Approximate Dynamic Programming (ADP) was employed to manage vehicle dispatching
+and relocation at the link-node level. By jointly optimizing OD-based pricing, queue-jumping premium, and link-node-level vehicle
+dispatching and relocation decisions, the proposed framework captures the complex interplay between demand elasticity, customer
+heterogeneity, and supply distribution. Empirical validation on the Manhattan road network conﬁrmed the eﬀectiveness of the pro-
+posed approach in improving platform proﬁtability, increasing demand satisfaction, and enhancing overall system eﬃciency. These
+results suggest that incorporating behavioral and spatial-temporal heterogeneity into dynamic pricing and dispatching decisions is
+critical for building more adaptive and responsive ride-sourcing systems.
+    Future research could explore the trade-oﬀ between maximizing system proﬁt and ensuring customer fairness within dynamic
+pricing strategies for ride-sourcing platforms. Priority-based matching may lead to longer waiting times for lower-paying customers,
+which could reduce customer loyalty and trust. Oﬀering discounts or loyalty rewards to these customers may help mitigate fair-
+ness concerns while maintaining system eﬃciency. Another important direction is the design of incentive mechanisms to improve
+driver compliance, thereby enhancing the platform’s ability to meet demand and improve service quality. Understanding how
+monetary incentives, reputation systems, or penalty structures inﬂuence driver behavior would strengthen the operational viabil-
+ity of the proposed framework. In addition, developing more accurate approaches to characterize heterogeneous demand distri-
+butions, particularly variations in customers’ VOT and WTP, remains a critical avenue for improving model realism and decision
+eﬀectiveness.
+
+
+CRediT authorship contribution statement
+
+    Zheng Huang: Writing – review & editing, Writing – original draft, Visualization, Software, Methodology, Formal analysis, Con-
+ceptualization; Renxin Zhong: Writing – review & editing, Writing – original draft, Supervision, Methodology, Funding acquisition,
+Conceptualization; Tianlu Pan: Writing – review & editing, Visualization, Formal analysis, Conceptualization; Enming Liang: Writ-
+ing – review & editing, Visualization, Formal analysis, Conceptualization; Agachai Sumalee: Writing – original draft, Supervision,
+Methodology, Funding acquisition, Conceptualization; Yunping Huang: Writing – review & editing, Writing – original draft, Visual-
+ization, Software, Methodology, Formal analysis, Conceptualization.
+
+                                                                   22
+Z. Huang et al.                                                                                                         Transportation Research Part C 192 (2026) 105895
+
+
+Acknowledgement
+
+   The work in this paper was supported by research grants from the National Natural Science Foundation of China (No. 72071214
+& 62203239).
+
+Data availability
+
+    Data will be made available on request.
+
+References
+
+Abkarian, H., Mahmassani, H., 2024. Reinforcement learning for dynamic pricing of shared-use autonomous mobility systems considering heterogeneous users: model
+    development and scenario testing. Transp. Res. Rec. 2678 (5), 758–770.
+Bai, J., So, K.C., Tang, C.S., Chen, X., Wang, H., 2019. Coordinating supply and demand on an on-demand service platform with impatient customers. Manuf. Serv.
+    Oper. Manag. 21 (3), 556–570.
+Banerjee, S., Freund, D., Lykouris, T., 2022. Pricing and optimization in shared vehicle systems: an approximation framework. Oper. Res. 70 (3), 1783–1805.
+Banerjee, S., Johari, R., Riquelme, C., 2015. Pricing in ride-sharing platforms: a queueing-theoretic approach. In: Proceedings of the Sixteenth ACM Conference on
+    Economics and Computation, p. 639.
+Beojone, C.V., Zhu, P., Sirmatel, I.I., Geroliminis, N., 2024. A hierarchical control framework for vehicle repositioning in ride-hailing systems. Transp. Res. C: Emerg.
+    Technol. 168, 104717.
+Bimpikis, K., Candogan, O., Saban, D., 2019. Spatial pricing in ride-sharing networks. Oper. Res. 67 (3), 744–769.
+Buchholz, N., Doval, L., Kastl, J., Matejka, F., Salz, T., 2025. Personalized pricing and the value of time: evidence from auctioned cab rides. Econometrica 93 (3),
+    929–958.
+Castillo, J.C., Knoepﬂe, D., Weyl, G., 2017. Surge pricing solves the wild goose chase. In: Proceedings of the 2017 ACM Conference on Economics and Computation,
+    pp. 241–242.
+Chen, H., Jiao, Y., Qin, Z., Tang, X., Li, H., An, B., Zhu, H., Ye, J., 2019. InBEDE: integrating contextual bandit with TD learning for joint pricing and dispatch of
+    ride-hailing platforms. In: 2019 IEEE International Conference on Data Mining (ICDM), pp. 61–70.
+Chen, Q., Lei, Y., Jasin, S., 2024. Real-time spatial–intertemporal pricing and relocation in a ride-hailing network: near-optimal policies and the value of dynamic
+    pricing. Oper. Res. 72 (5), 2097–2118.
+Cohen, P., Hahn, R.W., Hall, J., Levitt, S.D., Metcalfe, R., 2016. Using big data to estimate consumer surplus: the case of uber. NBER Work. Pap. No.w22627.
+    https://www.nber.org/papers/w22627
+Fang, Z., Huang, L., Wierman, A., 2019. Prices and subsidies in the sharing economy. Perform. Eval. 136, 102037.
+Fujimoto, S., Hoof, H., Meger, D., 2018. Addressing function approximation error in actor-critic methods. In: International Conference on Machine Learning. PMLR,
+    pp. 1587–1596.
+Gao, J., Ranjbari, A., MacKenzie, D., 2019. Would being driven by others aﬀect the value of travel time? Ridehailing as an analogy for automated vehicles. Trans-
+    portation 46 (6), 2103–2116.
+Garg, N., Ranu, S., 2018. Route recommendations for idle taxi drivers: ﬁnd me the shortest route to a customer! In: Proceedings of the 24th ACM SIGKDD International
+    Conference on Knowledge Discovery & Data Mining, pp. 1425–1434.
+Guo, Y., Su, Z., Yang, H., Liang, E., Zhong, C., Ma, W., 2026. A smart predict-then-optimize framework for vehicle rebalancing problem. Transp. Res. B: Methodol.
+    206, 103411.
+Gómez-Lobo, A., Tirachini, A., Gutierrez, I., 2022. Optimal prices for ridesourcing in the presence of taxi, public transport and car competition. Transp. Res. C: Emerg.
+    Technol. 137, 103591.
+Huang, Y., Zheng, N., Huang, Z., Liang, E., Hsu, S.-C., Zhong, R., 2025. Data-driven optimization for ride-sourcing vehicle dispatching and relocation under demand
+    and travel time uncertainty. Transp. Res. C: Emerg. Technol. 178, 105217.
+Huang, Y., Zheng, N., Liang, E., Hsu, S., Zhong, R., 2023. An approximate dynamic programming approach to vehicle dispatching and relocation using time-dependent
+    travel times. In: 2023 IEEE 26th International Conference on Intelligent Transportation Systems (ITSC), pp. 2652–2657.
+Huang, Y., Zhu, P., Zhong, R., Geroliminis, N., 2024. A bi-level approach for optimal vehicle relocating in mobility-on-demand systems with approximate dynamic
+    programming and coverage control. Transp. Res. E: Logist. Transp. Rev. 192, 103754.
+Karamanis, R., Anastasiadis, E., Angeloudis, P., Stettler, M., 2020. Assignment and pricing of shared rides in ride-sourcing using combinatorial double auctions. IEEE
+    Trans. Intell. Transp. Syst. 22 (9), 5648–5659.
+Ke, J., Xiao, F., Yang, H., Ye, J., 2022. Learning to delay in ride-sourcing systems: a multi-agent deep reinforcement learning framework. IEEE Trans. Knowl. Data
+    Eng. 34 (5), 2280–2292.
+Lei, C., Jiang, Z., Ouyang, Y., 2020. Path-based dynamic pricing for vehicle allocation in ridesharing systems with fully compliant drivers. Transp. Res. B: Methodol.
+    132, 60–75.
+Lei, Z., Ukkusuri, S.V., 2023. Scalable reinforcement learning approaches for dynamic pricing in ride-hailing systems. Transp. Res. B: Methodol. 178, 102848.
+Li, M., Xi, H., Xie, C., Shen, Z., Hu, Y., 2025. Real-time vehicle relocation, personnel dispatch and trip pricing for carsharing systems under supply and demand
+    uncertainties. Transp. Res. B: Methodol. 193, 103154.
+Liang, E., Wen, K., Lam, W. H.K., Sumalee, A., Zhong, R., 2021. An integrated reinforcement learning and centralized programming approach for online taxi dispatching.
+    IEEE Trans. Neural Netw. Learn. Syst. 33 (9), 4742–4756.
+Ma, H., Fang, F., Parkes, D.C., 2022. Spatio-temporal pricing for ridesharing platforms. Oper. Res. 70 (2), 1025–1041.
+Miao, F., Lin, S., Munir, S., Stankovic, J.A., Huang, H., Zhang, D., He, T., Pappas, G.J., 2015. Taxi dispatch with real-time sensing data in metropolitan areas: a receding
+    horizon control approach. In: Proceedings of the ACM/IEEE Sixth International Conference on Cyber-Physical Systems, pp. 100–109.
+Neal, D., Rosen, S., 2000. Theories of the distribution of earnings. Handb. Income Distrib. 1, 379–427.
+Pan, T., Sumalee, A., Zhong, R., Indra-Payoong, N., 2013. Short-term traﬃc state prediction based on temporal-spatial correlation. IEEE Trans. Intell. Transp. Syst. 14
+    (3), 1242–1254.
+Powell, W.B., 2007. Approximate Dynamic Programming: Solving the Curses of dimensionality. Vol. 703. John Wiley & Sons.
+Qin, Z., Zhu, H., Ye, J., 2022. Reinforcement learning for ridesharing: an extended survey. Transp. Res. C: Emerg. Technol. 144, 103852.
+Shi, B., Cao, Z., Luo, Y., 2022. A deep reinforcement learning based dynamic pricing algorithm in ride-hailing. In: International Conference on Database Systems for
+    Advanced Applications, pp. 489–505.
+Stokkink, P., Yang, Z., Geroliminis, N., 2025. Optimal matching for ridesharing systems with endogenous and ﬂexible user participation. Transp. Res. B: Methodol.
+    200, 103290.
+Sun, G., Boateng, G.O., Liu, K., Ayepah-Mensah, D., Liu, G., 2024. Dynamic pricing for vehicle dispatching in mobility-as-a-service market via multi-agent deep
+    reinforcement learning. IEEE Trans. Veh. Technol. 73 (8), 12010–12025.
+Tang, W., Wang, H., Wang, Y., Chen, C., Chen, X., 2022. A bi-level optimization model for ride-sourcing platform’s spatial pricing strategy. J. Adv. Transp. 2022 (1),
+    9120129.
+Tran, P. A.T., Stokkink, P., 2026. A rolling horizon approach for multi-objective optimization of two-way logistics with postponed orders. Comput. Ind. Eng. 217,
+    112046.
+
+                                                                                    23
+Z. Huang et al.                                                                                                     Transportation Research Part C 192 (2026) 105895
+
+
+Wang, H., Yang, H., 2019. Ridesourcing systems: a framework and review. Transp. Res. B: Methodol. 129, 122–155.
+Wang, X., He, F., Yang, H., Oliver Gao, H., 2016. Pricing strategies for a taxi-hailing platform. Transp. Res. E: Logist. Transp. Rev. 93, 212–231.
+Wu, W., Sun, R., Liu, X., Huang, H., Tian, L., Shang, H., 2025. Optimal pricing and vehicle allocation in local ride-sharing markets with user heterogeneity. Transp.
+   Res. C: Emerg. Technol. 174, 105084.
+Xu, K., Saberi, M., Liu, W., 2022. Dynamic pricing and penalty strategies in a coupled market with ridesourcing service and taxi considering time-dependent order
+   cancellation behaviour. Transp. Res. C: Emerg. Technol. 138, 103621.
+Xu, M., Geroliminis, N., 2026. Knowledge-aware path planning for UAV parcel delivery and road monitoring. Transp. Res. C: Emerg. Technol. 190, 105780.
+Yan, C., Zhu, H., Korolko, N., Woodard, D., 2020. Dynamic pricing and matching in ride-hailing platforms. Nav. Res. Logist. 67 (8), 705–724.
+Yang, H., Shao, C., Wang, H., Ye, J., 2020. Integrated reward scheme and surge pricing in a ridesourcing market. Transp. Res. B: Methodol. 134, 126–142.
+Yu, X., Shen, S., 2020. An integrated decomposition and approximate dynamic programming approach for on-demand ride pooling. IEEE Trans. Intell. Transp. Syst.
+   21 (9), 3811–3820.
+Yu, Z., Hu, M., 2022. Deep reinforcement learning with graph representation for vehicle repositioning. IEEE Trans. Intell. Transp. Syst. 23 (8), 13094–13107.
+Zha, L., Yin, Y., Xu, Z., 2018. Geometric matching and spatial pricing in ride-sourcing markets. Transp. Res. C: Emerg. Technol. 92, 58–75.
+Zhang, J., Lindsey, R., Yang, H., 2018. Public transit service frequency and fares with heterogeneous users under monopoly and alternative regulatory policies. Transp.
+   Res. B: Methodol. 117, 190–208.
+Zhang, J., Zhu, R., Wang, J., 2025. Joint re-dispatching and pricing on a business-to-consumer ride-hailing platform. Transp. Res. E: Logist. Transp. Rev. 196, 103998.
+Zhang, Z., Yang, L., Yao, J., Ma, C., Wang, J., 2024. Joint optimization of pricing, dispatching and repositioning in ride-hailing with multiple models interplayed
+   reinforcement learning. IEEE Trans. Knowl. Data Eng. 36 (12), 8593–8606.
+Zhong, R., Luo, J., Cai, H., Sumalee, A., Yuan, F., Chow, A. H.F., 2017. Forecasting journey time distribution with consideration to abnormal traﬃc conditions. Transp.
+   Res. C: Emerg. Technol. 85, 292–311.
+Zhou, X., Rong, H., Yang, C., Zhang, Q., Khezerlou, A.V., Zheng, H., Shaﬁq, Z., Liu, A.X., 2020. Optimizing taxi driver proﬁt eﬃciency: a spatial network-based markov
+   decision process approach. IEEE Trans. Big Data 6 (1), 145–158.
+Zhu, P., Sirmatel, I.I., Ferrari-Trecate, G., Geroliminis, N., 2024. A coverage control-based idle vehicle rebalancing approach for autonomous mobility-on-demand
+   systems. IEEE Trans. Control Syst. Technol. 32 (5), 1839–1853.
+
+
+
+
+                                                                                  24
+

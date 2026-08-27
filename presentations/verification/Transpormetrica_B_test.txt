@@ -1,0 +1,1216 @@
+      Transportmetrica B: Transport Dynamics
+
+
+
+
+      ISSN: 2168-0566 (Print) 2168-0582 (Online) Journal homepage: www.tandfonline.com/journals/ttrb20
+
+
+
+
+A mathematical approach for designing speed-
+limit and low/zero emission zones in urban areas
+
+Néstor García-Chan, Lino J. Alvarez-Vázquez , Aurea Martínez & Miguel E.
+Vázquez-Méndez
+
+To cite this article: Néstor García-Chan, Lino J. Alvarez-Vázquez , Aurea Martínez & Miguel
+E. Vázquez-Méndez (2026) A mathematical approach for designing speed-limit and low/zero
+emission zones in urban areas, Transportmetrica B: Transport Dynamics, 14:1, 2718458, DOI:
+10.1080/21680566.2026.2718458
+
+To link to this article: https://doi.org/10.1080/21680566.2026.2718458
+
+
+
+
+       Published online: 18 Aug 2026.
+
+
+
+       Submit your article to this journal
+
+
+
+       View related articles
+
+
+
+       View Crossmark data
+
+
+
+
+                      Full Terms & Conditions of access and use can be found at
+             https://www.tandfonline.com/action/journalInformation?journalCode=ttrb20
+TRANSPORTMETRICA B: TRANSPORT DYNAMICS
+2026, VOL. 14, NO. 1, 2718458
+https://doi.org/10.1080/21680566.2026.2718458
+
+
+RESEARCH ARTICLE
+
+A mathematical approach for designing speed-limit and low/zero
+emission zones in urban areas
+Néstor García-Chana               , Lino J. Alvarez-Vázquezb, Aurea Martínezb and Miguel E. Vázquez-Méndezc,d
+a
+ Departamento de Física, C.U. Ciencias Exactas e Ingenierías, Universidad de Guadalajara, Guadalajara, Mexico; bDepartamento de
+Matemática Aplicada II, Universidade de Vigo, E.E. Telecomunicación, Vigo, Spain; cCITMAga, Santiago de Compostela, Spain;
+d
+ Departamento de Matemática Aplicada, Universidade de Santiago de Compostela, E.P.S. Enxeñaría, Lugo, Spain
+
+
+    ABSTRACT                                                                                           ARTICLE HISTORY
+                                                                                                       Received 28 March 2026
+    Urban policies like Low-Emission Zones (LEZs) and Zero-Emission Zones (ZEZs) are
+                                                                                                       Accepted 24 July 2026
+    crucial for accelerating pollutant reduction. This paper introduces a numerical multi-
+    objective optimization framework to determine the optimal spatial extent of these                  KEYWORDS
+    restricted areas by balancing environmental benefits and economic costs. The method­               Multi-objective optimization;
+    ology integrates the finite element method with a semi-implicit time scheme to                     pareto front; speed-limit
+    efficiently compute coupled traffic and emission dynamics. We address two scenarios:               zones; low- and zero-
+    a single-control problem identifying the optimal radius of a Zone 30 via exhaustive                emission zones; macroscopic
+                                                                                                       traffic flow
+    search, and a multi-control problem defining a combined LEZ (outer annulus) and ZEZ
+    (inner disk). The latter employs a hybrid Genetic Algorithm and Pattern Search to
+    compute the Pareto front. Applied to the Guadalajara Metropolitan Area (Mexico),
+    this framework successfully identifies Pareto-optimal solutions, providing a robust
+    decision-making tool to evaluate the trade-offs between air quality and economic
+    constraints in urban planning.
+
+
+
+
+1 Introduction
+Efforts to mitigate urban air pollution have led to diverse traffic management strategies, beginning with
+speed-limited areas commonly known as Zones 30. These areas define urban perimeters where the
+maximum speed is restricted to 30 km/h (Yannis and Michelaraki 2025) through the use of urban design
+elements like narrowed passages and pedestrian-priority signaling Ewing (1999). From an environmental
+viewpoint, these zones indirectly curb pollution by preventing aggressive acceleration and engine over-
+exertion, thereby fostering a smoother, more constant traffic flow (Göttlich, Herty, and Ulke 2025; Int Panis,
+Broekx, and Liu 2006). Zones 30 represent a highly admissible entry-level strategy, as they require minimal
+public investment; because public services remain unchanged, parking demand and public transport are
+largely unaffected. Thus, they do not impose significant changes on the habits of inhabitants and vehicle
+owners.
+   Beyond speed regulation, a more logistical approach is found in Low-Emission Zones (LEZs), which act as
+a selective filter by restricting access to older, and high-polluting vehicles. Since their pioneering imple­
+mentation in Stockholm in 1996, LEZs have spread reach a number of 363 across Europe in 2026. The
+benefits and limitations of LEZs have been extensively documented in the recent systematic review by
+Delgado-Lindeman et al. (2025), which includes ex-ante and ex-post analyses based on data science and
+modelling. LEZs have led to a quantifiable decrease in NO2 and particulate matter PM2.5 concentrations, with
+typical reductions of 15%–30% for NO2 and 5%–15% for PM2.5. This air pollution mitigation correlates
+directly with reduced incidences of ischemic heart disease and premature mortality. Specifically, cardiovas­
+cular and respiratory hospital admissions have decreased by 2%–7% and 3%–11%, respectively.
+Additionally, this mitigation is associated with a decrease in mortality from natural causes (2%–5%) and
+the incidence of low birth weight (2%–8%). Furthermore, these zones facilitate a reduction in chronic stress
+levels caused by the high-decibel environment of congested traffic.
+
+
+CONTACT Néstor García-Chan          nestor.gchan@academicos.udg.mx   Departamento de Física, C.U. Ciencias Exactas e Ingenierías,
+Universidad de Guadalajara, Guadalajara 44430, Mexico
+© 2026 Hong Kong Society for Transportation Studies Limited.
+2      N. GARCÍA-CHAN ET AL.
+
+
+    Despite these gains, the effectiveness of LEZs is often undermined by a well-known phenomenon called
+the displacement effect, as evidenced by empirical data from the London Ultra-Low Emission Zone
+analyzed in Hajmohammadi and Heydecker (2022). This paper reveals that while air quality improves
+within the restricted perimeter, non-compliant vehicles tend to cluster at the boundaries, exacerbating
+congestion and elevating pollutant concentrations in peripheral areas. This shift frequently necessitates
+larger infrastructure adaptations, such as peripheral parking, to maintain socioeconomic admissibility.
+Furthermore, as noted in Sarmiento, Wägner, and Zaklan (2023), the high private costs of vehicle replace­
+ment and the perceived loss of freedom can trigger significant social discontent, often outweighing
+the—sometimes invisible—health benefits for the average citizen.
+    The most radical restriction is the Zero-Emission Zone (ZEZ), which mandates the exclusive use of electric
+vehicles. This shift stems from evidence—such as predictive modelling for Manchester (Broster and Terzano
+2025)—showing that traditional LEZs may fail to meet WHO-recommended PM2.5 levels. According to
+recent ex-ante modelling for Milan (Piccoli et al. 2025), implementing a ZEZ can reduce local NO2 and PM2.5
+concentrations by 85% and 25%, respectively, within the zone relative to 2017 levels. Furthermore, such
+interventions could potentially reduce mortality and morbidity indicators by up to 50% compared to the
+same baseline year. Also, these zones help lower stress and sleep disruptions caused by engine noise
+(Delgado-Lindeman et al. 2025; Piccoli et al. 2025). Despite these projected health benefits, ZEZs drastically
+intensify socioeconomic friction by excluding even modern hybrid cars, imposing a severe financial burden
+on both owners of older combustion engines and recent adopters of transitional green technologies.
+    It is important to note that in most of the aforementioned studies, the spatial extent of the restricted
+area is treated as a fixed input parameter—often dictated by existing political or administrative
+borders—limiting the analysis to impact assessment rather than spatial planning. While recent literature
+has addressed zone delimitation via multi-objective Pareto optimization (Göttlich, Herty, and Ulke 2025;
+Wang et al. 2025; Xue et al. 2025), these frameworks typically rely on discrete network controls, such as
+traffic light timings, tolling, or blocking specific arcs within a graph network. Furthermore, their state
+variables are frequently derived from static statistical data, microscopic models or macroscopic models (like
+LWR or Dynamic Traffic Assignment (DTA)) restricted to 1D road networks, which allow to capture
+microscopic elements as traffic lights, lane management and turning movements but them struggle to
+extend across a large number of streets by the unfeasible computational cost. Consequently, existing
+approaches remain limited in their ability to perform an optimization to reach the best restricted area which
+its design is inherently coupled with continuous 2D urban domains.
+    Macroscopic traffic modelling has evolved to alleviate the computational burden of discrete network
+graphs extended the LWR and DTA models to 2D continuous domains (Jiang, Ma, and Zhou 2018), but they
+oversimplified urban landscape by neglecting building blocks and then an important element, the turning
+movements. To overcome this limitation, in García-Chan et al. (2025) the city is interpreted as a 2D porous
+medium, establishing a rigorous physical foundation where buildings act as the solid phase that restricts
+traffic flow, while the streets define the fluid phase that facilitates it. Under this framework, discrete turning
+movements and cars discrete density are upscaled into a continuous vehicle density and a mean velocity
+field (conceptually representing the average zig-zag trajectory of urban driving), however others discrete
+elements as traffic lights or lane management were omitted. The model was later coupled with a Navier-
+Stokes system and a transport equation to get a wind field and the air pollutant dispersion but considering
+the urban landscape using the same principle of urban porous media (see García-Chan et al. (2026)). This
+multi-model system provides essential state variables—such as vehicle density, velocity, and CO2
+concentrations—to evaluate variations caused by changes in the urban landscape as the presence of
+restriction areas, wind, fleet composition or others.
+    We take CO2 as the primary environmental metric rather than NO2 or PM2.5 due it serves as a robust proxy
+for the overall intensity of internal combustion activity; furthermore, since CO2 and toxic co-pollutants share
+a common tailpipe origin which reduction necessarily yields a concurrent decrease in air toxicity.
+Consequently, the environmental objective of this framework is formulated around mitigating the mean
+CO2 concentration within the restricted area.
+    Meanwhile, the parking flow at the boundary of the restricted perimeters is used as a robust proxy for
+urban socioeconomic activities. In our macroscopic representation, vehicles cannot enter the LEZ/ZEZ core
+freely; therefore, this flow captures the exact rate at which commuters, visitors, and shoppers transition
+                                                                     TRANSPORTMETRICA B: TRANSPORT DYNAMICS        3
+
+
+from drivers to pedestrians to conduct their commercial and social activities within the city centre.
+Mathematically, accounting for this terminal flow ensures that the urban core remains accessible (Geurs
+and van Wee 2004), thereby preventing the economic desertification or ‘dead-centre’ effect often triggered
+by poorly planned traffic bans (Marsden 2006; Mingardo and van Meerkerk 2012). By incorporating this
+metric, the model establishes a realistic balance between environmental preservation and urban vitality.
+   Finally, a geometric simplification by characterizing the restricted area as a disk centred at the city core
+with a fixed radius, or as a combination of zones forming an outer annulus and an inner disk defined by two
+radii. It is important to note that this simplification reflects urban reality, where restricted zones are typically
+defined as ellipses or avoids with flattered segments and centred in the city core (as can be seen in the
+cases of London, Milan or Madrid (Broster and Terzano 2025; Piccoli et al. 2025; Tassinari 2024)).
+   Therefore, to fills the gap left by the works mentioned above this article proposes a new optimization
+approach to find the optimal area in the sense of Pareto optimality where traffic flow restrictions are
+imposed to minimize the spatio-temporal average of air pollutant concentrations within the restricted
+perimeters, while maximizing parking flow outside the zones as an indirect index of socioeconomic activity
+and an indicator of potential congestion due to insufficient parking spaces. We formulate two multi-
+objective optimization problems: the first aims to determine the optimal radius for a disk-shaped Zone 30,
+the second treats two radii as control variables to define a hybrid configuration consisting of a ZEZ (the
+inner disk) surrounded by a LEZ (the outer annulus). The dual-objective nature of both problems allows for
+the identification of Pareto-optimal radii that prevent environmental gains from being neutralized by
+peripheral traffic saturation.
+   The paper is organized as follows: Section 2 briefly yet concisely reviews the models established in
+García-Chan et al. (2026), covering traffic flow, emission rates, airflow, and pollutant transport. The two
+multi-objective control problems are formulated in Section 3, where the control variables are defined as the
+radii that shape the disks and annuli. In Section 4, a new semi-implicit time scheme for the traffic flow
+model is introduced to achieve stable solutions with reduced computational cost. This section also details
+the spatial and temporal discretization of the cost functionals and provides insights into the hybrid MATLAB
+algorithms employed for optimization. In Section 5, several numerical results regarding the optimal
+solutions are presented through figures illustrating average vehicle density and air pollution distributions,
+as well as tables summarizing the numerical values of the cost functionals for the different scenarios. Finally,
+concluding remarks are provided in Section 6.
+
+
+2 Mathematical framework: a porous media approach
+For all models described below, the computational domain             2 comprises the urban area
+                                                                                                   u and the
+surrounding rural-forest region s , such that = u          s and    u    s =   . The boundary consists of
+three disjoint segments: the obstacle walls w , the wind inlet in, and the wind outlet out . Notably, specific
+parts of the segment w may be included or excluded depending on the requirements of each individual
+model.
+    The urban part u is modelled as a porous medium, where the area covered by streets and buildings
+defines the fluid and solid phases common in porous media literature (see, e.g. Das and Mukherjee, 2018).
+Consequently, the porosity 0 < < 1 represents the proportion of a reference volume occupied by streets
+(fluid phase), while (1    ) accounts for the portion occupied by buildings (solid phase). Four distinct
+physical processes are coupled within this framework: traffic flow dynamics, traffic-induced CO2 emissions,
+airflow, and atmospheric transport. Given the detailed derivation of these models in García-Chan et al.
+(2026) and references therein.
+
+
+2.1 Modelling of traffic flow and macroscopic emissions of CO2 in a porous city
+Traffic flow is governed by a modified Navier-Stokes-like system for porous media, where (x, t ) and u (x , t )
+denote car density and velocity, respectively. A fundamental variable in this formulation is the instanta­
+neous travel cost potential , obtained by solving an Eikonal equation (see García-Chan et al. (2025)) for
+further details). This variable drives the traffic dynamics through the following two key components: the
+desired velocity ud and the traffic demand q, both of which account for the density-dependent travel cost
+4      N. GARCÍA-CHAN ET AL.
+
+
+f ( ) within the urban domain u . First, the travel cost f ( ) is defined by accounting for congestion and
+speed limit Umax (Treiber and Kesting 2013):
+
+                                                             i               yz
+                                             f ( ) = Umax jjjj1               zz ,
+                                                                               z
+                                                             k           max {
+                                                                                                                       (1)
+
+
+where max denotes the maximum road capacity. Consequently, the desired velocity ud is defined as the
+product of f ( ) and an unit vector pointing in the direction of steepest descent of the potential , thereby
+directing traffic toward the destination. So, desired velocity is determined by:
+
+                                                ud = f ( )                   ,                                         (2)
+
+where vector stands for the classical space gradient operator.
+   Finally, the traffic demand q represents the rate at which vehicles are released into the flow from their
+parking locations. This deployment is based on a maximum capacity and is modulated by both a saturation
+term and the temporal dynamics of urban activity:
+
+                                                        i             yz
+                                            q = qmax jjjj1             zz g (t ),
+                                                                        z
+                                                        k         max {
+                                                                                                                       (3)
+
+where qmax is the maximum rate, max is the maximum instantaneous travel cost, and g (t ) accounts for daily
+peak and off-peak traffic hours.
+    In this framework, the target velocity is coupled to the momentum balance as a relaxation term,
+representing the drivers' tendency to adjust their current velocity u toward the desired direction ud within
+a time scale . Simultaneously, the traffic demand q acts as the source term in a mass balance. Furthermore,
+the transport and dissipative properties of the traffic flow are governed by the car mass diffusivity and the
+macroscopic traffic viscosity. Thus, we seek for the car density [veh/km2 ] and the local traffic speed
+u = (u1, u2)[km/h] such that satisfy the governing system for the urban porous media traffic flow, being the
+dot ( ) operator the time derivative:
+
+                                      +     ( u)          (       )+             = (1       ) q,                      (4a)
+
+                                                                       ij
+                                                                        jj
+                                                                                     yz
+                                                                                      zzu   jij                y
+                                                                                                         ¸u¸zzzzu ,
+                                                                                              jj
+                                                                         k             {
+                       1                             ud       u                                        F
+                                                                                               k K             {
+                  u+       (u   )u   c2 (   u) 1 =                +                                +                  (4b)
+                                                                                                       K
+
+where is the urban porosity, (1      ) q [veh/km2 /h] is the traffic demand function associated to the building-
+blocks (solid-phase), c is the traffic sonic speed (computed as c2 = / max with
+                         2                                                                        an anticipation
+             K                               F
+coefficient), is the urban permeability, is the Forchheimer coefficient,           [km 2 /h] is the coefficient of
+mass diffusion, [h 1] is the absorption (parking) rate from the streets (fluid-phase) to parking-spaces inside
+building-blocks (solid-phase), [h] is the relaxation time, and [km2 /h] is the viscosity.
+   This macroscopic model (4) considers a straight direction towards drivers' destination, but its velocity
+magnitude is a mean value corresponding to a zig-zag movement which depends directly on porosity.
+Unfortunately, microscopic elements as traffic lights, lane management or turning movements are omitted
+here due its microscopic nature. Also, we highlight that parameters , K , and F can be prescribed from an
+idealized city but also from real-data which make the model very flexible for real study cases and future
+validation but also for theoretical exercises as the present work.
+   Regarding boundary conditions, these are imposed to prevent vehicles from leaving the domain, except
+when they reach their destination and are removed by means of the parking flow (absorption) term on the
+mass balance equation. Therefore, a slip condition is imposed on the walls, and a homogeneous Neumann
+condition on the inlet and outlet segments.
+   From the macroscopic variables ( , u) solution of system (4), we derive the microscopic velocity U and
+acceleration a by the formulas (see Jiang, Ma, and Zhou (2018)):
+                                                                                                    TRANSPORTMETRICA B: TRANSPORT DYNAMICS      5
+
+
+                                                             U = ¸u¸/ 1,                                                                     (5a)
+
+                                                         a = (a u /U ) 2,                                                                    (5b)
+
+being 1 = 3.6, 2 = 10 3/(3.6)2 factors to scale the macroscopic units [km/h2 ] into microscopic ones [m/s2],
+and the macroscopic acceleration a computed using the definition of the acceleration as the material
+derivative:
+
+                                                                                  ij                y    ij               y
+                                                                                   jj
+                                                                                    j           uzzzz     jj
+                                                                                                           j K +     u zzzz u ,
+                                                                                    k               {
+                             ud        u                                                                           F
+                                                                                                           k              {
+                       a=                  + c2 (       u) 1 +                                                                                (6)
+                                                                                                                   K
+
+maintaining physical consistency due is derived directly from the momentum balance (4b) as the sum of
+the relaxation, viscous, and porous resistance forces (see details in (Das and Mukherjee 2018; García-Chan
+et al. 2026)).
+   The quantities U and a are essential in the micro-scale emission model proposed in Int Panis, Broekx, and
+Liu (2006). Although this model is capable of estimating various pollutants (e.g. NOx , PMx or Volatile Organic
+Compounds (VOCs)), CO2 is selected as the proxy of air pollution in this study. Thus, to compute the
+instantaneous CO2 microscopic emissions with the regression model:
+
+                             ECO2 = max{f1 + f2 U + f3 U2 + f4 a + f5 a2 + f6 Ua , 0.0},                                                      (7)
+
+where coefficients fi , i = 1, 2, …, 6 have suitable values for CO2.
+  Therefore, using the scale factor 1 and the macroscopic density we project the emissions ECO2 onto
+emissions but in macroscopic coordinates EC by the formula proposed in García-Chan et al. (2026):
+
+                                                          EC =         1         ECO2.                                                        (8)
+
+
+
+2.2 Air circulation and CO2 transport
+Air circulation within our porous city obeys fluid dynamics principles similar to those of traffic flow.
+Specifically, the air flows through the streets (fluid-phase), while the buildings (solid-phase) acts as a
+stationary obstacle. Similarly, CO2 transport is governed by advection, diffusion, and gravitational settling.
+These transport mechanisms occur exclusively within the fluid phase of the porous medium. Consequently,
+while parameters such as porosity, permeability, and Forchheimer coefficient are shared with the traffic flow
+model, physical differences are accounted for through specific parameters such as fluid density and
+diffusivity coefficient.
+   Within this setting, the air velocity v (x, t ) is modelled as an incompressible flow through the same
+porous medium, characterized by the air density a and dynamic viscosity a , subject to the continuity
+equation as a physical constraint. Therefore, we seek a velocity vector field v = (v1, v2) [km/h] and the
+associated pressure field P [kg/km/h2 ] that satisfy the following system:
+
+                                                                                                        ij a               y
+                                                                           jij              y
+                                                                                         vzzz            jj          ¸v¸zzzzv ,
+                                                                             j                            j K +
+                                                                             k              {
+                              1                                                                                    F
+                                                                                                          k a              {
+                                                                                  a
+                        v+        (v       )v +         P=                                                                                   (9a)
+                                                    a          a                                                   K
+
+                                                                   v = 0.                                                                    (9b)
+Furthermore, given the macroscopic emission concentration EC from Equation (8) as the CO2 source term,
+and adequate coefficients for diffusivity and deposition rate , the advection-diffusion-reaction model
+governing the carbon dioxide pollutant concentration                              (x, t )[kg/km2] is formulated as:
+
+                                            +v                     (                    )+                = EC ,                             (10)
+
+where is a heterogeneous coefficient that accounts for the emissions from combustion, hybrid, and
+electric vehicles, as detailed below (see Equation (16)).
+6      N. GARCÍA-CHAN ET AL.
+
+
+    Boundary conditions for both models are prescribed to ensure that air enters through the inlet segment
+ in and exits via the outlet segment out , while being diverted around solid obstacles. These conditions
+facilitate the evacuation of pollutants through the outlet part of the boundary, prevent any leakage through
+the walls w , and ensure that the only pollution source is the traffic flow within the domain interior (a
+detailed description is provided in García-Chan et al. (2026)).
+
+
+3 Optimal design of speed-limit, low- and zero-emissions zones
+In this section, we formulate two optimal control problems based on environmental traffic management strategies
+currently deployed by local governments. The first intervention focuses on speed-limit zones (commonly known as
+Zones 30), where maximum speeds are strictly capped to reduce tailpipe emissions, requiring only traffic-calming
+measures and leaving unchanged the parking capacities. The second strategy combines Low Emission Zones
+(LEZs) and Zero Emission Zones (ZEZs). This policy enforces a graduated prohibition scheme where internal
+combustion vehicles are banned from both zones, while hybrid vehicles are additionally excluded from the
+innermost ZEZ, effectively reserving the city core for purely electric mobility. In contrast with speed-limit zones this
+strategy requires large investments and could generate social obstruction as was mentioned above.
+    Both interventions are modelled within a multi-objective framework aimed at simultaneously minimizing
+average pollutant concentrations within the restricted perimeters (JP ) and maximizing the vehicle flow
+toward parking infrastructure (JK ) as a proxy of a socioeconomic rate at which commuters, visitors, and
+shoppers conduct their commercial and social activities within the city centre. Following the ellipsoid or
+ovoid shape of real LEZ and ZEZ our restricted zones are modelled using a concentric circular layout. This
+geometric formulation closely reflects the mono-centric urban sprawl and radial traffic patterns typical of
+emerging metropolitan areas like Guadalajara (Guerra 2015; Monkkonen and Comandon, 2018), while
+aligning with the roughly elliptical or ovoid structures centred on the city core observed in European
+implementations like Paris (Poulhès, Proulhac, and Malriat 2025) and London (Broster and Terzano 2025).
+                                                                                                                 n
+    Formally, we consider the multi-objective optimization problem: Find an optimal radii vector r                 such
+that satisfies the following problem:
+
+                                           minJ (r) = (J1(r), J2 (r), …, Jk (r)),                                  (11)
+                                           r R
+
+where R is the feasible set of control radii, r is a vector of controls, and each Ji (r) is an objective to minimize.
+Since a single solution that simultaneously minimizes all objectives rarely exists, we seek solutions in the
+sense of Pareto optimality:
+
+Definition 3.1. (Pareto optimality) A solution r        R is said to be Pareto-optimal if there is no other r R
+such that Ji (r) Ji (r ) for all i {1, …, k } and Jj (r) < Jj (r ) for at least one index j . The set of all Pareto-
+optimal solutions is known as the Pareto set, and its projection onto the objective space is the Pareto front.
+   While for k 3 the Pareto front can be fully characterized via any appropriate search method, a higher
+dimension k 4 makes the Pareto front impractical to visualize. Thus, a priori or interactive techniques
+(Hillermeier 2012; Miettinen 1999) are commonly used to find a specific front point (or compromise
+solution).
+
+
+3.1 Optimal control problem 1: speed-limit zone
+Numerical experiments in García-Chan et al. (2026) suggest that implementing maximum speed limits can
+be an effective strategy to protect sensitive areas from high concentrations of air pollutants, such as CO2. In
+this study, we formulate an optimal control problem to delimit a zone B       u , defined as a disk with radius
+r > 0 centred in the city core, where the maximum speed is restricted to 30 km/h (see Figure 1a). To
+evaluate this strategy, we define the two following objective functionals: first, the average CO2 concentra­
+tion, given by the integral:
+
+                                                         1    T
+                                           JP (r ) =                  (x, t )dxdt ,                                (12)
+                                                       |B|T   0   B
+                                                                                  TRANSPORTMETRICA B: TRANSPORT DYNAMICS      7
+
+
+
+
+defined as a disk B with centre in the city core and radius r . (b) The LEZ as an outer annulus BhîBe of thickness (rh re )
+Figure 1. Design of restricted zones in the urban domain u and its rural surroundings s : (a) The speed-limit zone
+
+banned to internal combustion vehicles, and the ZEZ as an inner disk Be with radius re banned to hybrid vehicles.
+
+
+
+where |B| denotes the area of B.
+  Also, assuming a pre-existing distribution of parking spaces with a specific parking rate (x) and infinite
+capacity, and aiming to maximize the parking flow, we define the related objective functional as:
+
+                                                         1     T
+                                           JK (r ) =                     (x) (x, t )dxdt .                                 (13)
+                                                       |B|T    0    B
+
+   Consequently, our goal is to mitigate air pollution levels while simultaneously maximizing the traffic flow
+into parking facilities within the sensitive zone B      u . To achieve this, we seek an optimal radius r by
+solving the following optimal control problem:
+
+                                            l
+                                            o
+                                            o
+                                            m
+                                            o subject to
+                                            o
+                                              Minimize J (r ) = (JP (r ), JK (r ))
+                                            n
+                                                                                   ,                                       (14)
+                                                              rlw r rup
+
+where rlw and rup represent the lower and upper bounds, respectively. These constraints are determined by
+construction costs, land use, changes in citizen habits, or other logistical barriers to implementing speed
+limits. Given the single-control nature of the problem (varying only r ), its solution is obtained in a
+straightforward manner through an exhaustive computation of both cost functionals, allowing us for
+determining the entire Pareto front, which provides a complete map of the trade-offs between air quality
+and commercial accessibility. This stands for this simple case in contrast to the following, more complex
+scenario.
+
+
+3.2 Optimal control problem 2: LEZ and ZEZ design
+
+
+Unrestricted Zone (URZ) as the subdomain u îBh where are allowed any kind of vehicle, the LEZ as the
+We seek to determine two optimal radii re and rh, re < rh, defining the disks Be and Bh, which delimit the
+
+outer annulus BhîBe of thickness (rh re ) as a banned zone for internal combustion cars, and the ZEZ defined
+as the inner disk Be itself as a banned zone for combustion and hybrid cars (see Figure 1b). Also, car density
+  must be decomposed into combustion, hybrid, and electric cars categories using the proportions pc , ph
+and pe , such that pc , ph , pe 0 and pc + ph + pe = 1. To do it, we define a travel cost f ( ) formulated as:
+                                              ÄÅ
+                                               ÅÅ
+                               f ( ) = Umax ÅÅÅ 1
+                                               (ÅÅÇ       ) 1 + (1                              )1 + ,
+                                                                      ÑÉÑ
+                                                                   URZ          (pe + ph) max    LEZ
+
+
+
+                                                              ) ÑÑÑÑÑÑÖ
+                                                         max
+                                                                                                                           (15)
+                                                       (1      1
+                                                               pe max    ZEZ
+
+
+
+being 1 the indicator function of any subdomain                            .
+8       N. GARCÍA-CHAN ET AL.
+
+
+   Similarly, CO2 emissions are modelled via an heterogeneous coefficient , accounting for the vehicle
+stock in each banned zone:
+
+                                                        l
+                                                        o
+                                                        o
+                                                        o
+                                                        o
+                                                        o ph
+                                                               p
+
+
+                                                       =m
+                                                          pc + 2h , in URZ,
+                                                        o
+                                                        o 2,
+                                                        o
+                                                        o
+                                                        o
+                                                        o
+                                                                    in LEZ,                                                     (16)
+
+                                                        n 0,        in ZEZ.
+   This formulation assumes that emissions from hybrid vehicles are half of those produced by internal
+combustion engines, while electric vehicles are considered zero-emission. Following García-Chan et al.
+(2026), the resulting emission field must be directly proportional to this new coefficient . Thus, the source
+term is now defined as EC , where EC is obtained from Equation (8).
+   The first cost objective JP , to be minimized, is now the spatial-temporal average of the CO2 concentration
+
+the combustion zone u îBh, which we aim to maximize; this is, for r = (rh , re ):
+within the hybrid banned zone Be . The second one, JK , corresponds here to the average parking flow within
+
+
+                                                           1       T
+                                             JP (r) = |LEZ| T 0 LEZ             (x , t )dxdt ,                                  (17)
+
+                                                       1       T
+                                          JK (r) = |URZ| T 0       URZ
+                                                                            (x) (x, t )dxdt .                                   (18)
+   Additionally, we introduce a new vector cost functional G that can model the implementation costs of
+the restricted zones, such as parking infrastructure, public transport, electric vehicle (EV) charging stations,
+signage, and street adaptations. The socioeconomic costs associated with these urban transformations vary
+by zone. Indeed, the combustion vehicle zone requires a higher density of parking spaces and public
+transport facilities near the boundary defined by rh to expedite drivers access to the city centre.
+   By defining a fixed, adequate increment p = rp rh, the outermost boundary radius rp becomes a
+dependent variable rp = rh + p. Thus, we can compute the area of the annulus where these significant
+modifications must be implemented as Ap (rh) =                         [(rh +    p)
+                                                                                   2    rh2], with its corresponding socioeconomic
+cost given by Gp = Ep Ap.
+    Similarly, we compute the area for hybrid and electric cars as Ah (rh, re ) =                   (rh2   re2), and the exclusive EV
+area as Ae (re ) = re2, along with their respective implementation costs Gh = Eh Ah and Ge = Ee Ae . In both inner
+areas, the interventions require fewer parking spaces and electric infrastructure, proportional to a smaller
+vehicular fleet. Therefore, the constant values Ep , Eh , Ee are estimated to represent the macroscopic cost per
+square kilometre in each zone. Thus, the vector cost functional G, evaluated strictly over the decision
+variables (rh , re ), is formulated as:
+
+                                               G (r) = (Gp (rh), Gh (rh , re ), Ge (re )),                                      (19)
+
+assuming that Ep     Eh > Ee , due to the greater need for parking and transit infrastructure required for the
+more peripheral area.
+   To establish the layout of the zero-emission zone and the restricted zone for internal combustion cars
+while maintaining socioeconomic activity (measured by parking flow), we solve the following constrained
+multi-objective optimal control problem. We seek the optimal pair of radii r = (rh , re ) such that:
+
+                                l
+                                o
+                                o
+                                o
+                                o
+                                o subject to
+                                o
+                                  Minimize J (r) = (JP (r), JK (r), Gp (rh), Gh (rh, re ), Ge (re ))
+
+                                m
+                                o
+                                o
+                                o
+                                                           rh re       r,
+                                o
+                                o
+                                o
+                                                                                                                                (20)
+                                o
+                                                           rh, lw rh rh, up ,
+                                n                           re , lw re re , up ,
+
+where r , rh, lw , rh, up , re , lw and re , up represent suitable constraint bounds.
+    In this case, since the number of objectives is high (greater than three), generating the complete Pareto
+front is not appropriate, not only because it is computationally expensive, but also because it is hard for the
+decision maker (the local government) to select from a large set of alternatives (Miettinen 1999). Then, as a
+first approach to the problem, we think of an a priori strategy, assuming that there are available weight
+                                                                                TRANSPORTMETRICA B: TRANSPORT DYNAMICS       9
+
+
+vectors W = ( P , K , p , h , e ) with j 0 and j = 1, which represent the preferences of the decision-
+maker and allow us to seek for specific points on the Pareto front (specific Pareto solutions). According to
+this assumption, the multi-objective problem (20) is transformed into a single-objective one by minimizing
+the weighted sum:
+
+                                            l
+                                            o
+                                            o
+                                            o
+                                            o
+                                            o
+                                            o subject to rh re
+                                              Minimize     W J (r)
+
+                                            m
+                                            o
+                                            o
+                                            o
+                                                                    r,
+                                            o
+                                            o
+                                            o
+                                                                                                                          (21)
+                                            o
+                                                         r       r   rh, up ,
+                                            n
+                                                          h , lw  h
+                                                         re , lw re  re , up ,
+
+
+being the dot operator ( ) the usual inner product between vectors. By varying the combinations in W , we
+can identify ‘extreme cases’ (prioritizing only one objective) and ‘compromise solutions’ (balancing envir­
+onmental health with urban implementation costs).
+
+
+4 Numerical solution of state variables and the optimal control problems
+The multi-objective problems (14)–(20) are nonconvex; therefore, multiple local optima are expected.
+Furthermore, because the control variables are not explicitly formulated within the problem, gradient
+computation is infeasible. This leads us to employ derivative-free methods. However, these methods require
+not only an efficient numerical scheme to evaluate the objective functions but also stable and efficient
+numerical solutions of models (4), (9) and (10) in order to obtain its state variables. All models were solved
+numerically in previous authors' papers (see (García-Chan et al. 2025, 2026; García-Chan, Licea-Salazar, and
+Gutierrez-Ibarra 2024)), using explicit schemes for time integration in the traffic flow model, and semi-
+implicit ones in case of the others. The explicit scheme is not adequate in a context of solving optimal
+control problems which requires numerous evaluations of the cost functionals. Consequently, this section
+begins by formulating a new semi-implicit scheme for the traffic flow model, followed by a brief description
+of the finite element method used for air velocity and CO2 transport. Finally, we detail the discretization of
+the cost functionals and the implementation of a hybrid solver that combines a genetic algorithm with a
+derivative-free method to efficiently solve the discrete optimal control problems.
+
+
+4.1 A semi-implicit scheme to solve the traffic flow model
+This section introduces an efficient numerical framework for solving the traffic flow model (4). To
+accommodate the high number of cost functional evaluations required by optimization solvers we
+formulate a semi-implicit -family scheme with the aim to increase the time step t . Thus, we define
+  t = T / N and the discrete time steps as t n = n t ; for a given state variable its intermediate state is
+formulated as n + = (1         ) n+     n +1 where       [0.5, 1] to ensure at least first-order accuracy and
+improved stability. Therefore, the resulting semi-discrete problem for system (4) is formulated as: Given
+an initial state for density 0 = ( ,0) and velocity u0 = u ( ,0), we seek for n+1 and un+1 such that satisfies for
+n = 0, …, N ,, the system:
+                         n +1       n
+                                        +   ( n + un )          (       n+ ) +          n+    = (1         ) qn + ,      (22a)
+                                t
+
+                            un +1 un  1                                                      und +1 un +
+                                     + (un            ) un +   c 2 n +1 (   un + ) 1 +                     =
+
+                                                                                          ¸un ¸ un +
+                                 t
+
+                                                          ( u ) (                                 )
+                                                                                        F
+                                                                                                                      (22b22b)
+                                                               n+                   +                      .
+                                               n +1                         n +1K
+                                                                                        K
+
+   This semi-discrete formulation decouples velocity un from density (splitting approach), allowing the
+continuity equation to be solved first for n+1, followed by the instantaneous travel cost ( n+1) obtaining
+the update of the desired velocity un+1 d , and then the momentum equation for u
+                                                                                       n+1. This decoupling is
+
+physically justified for the subsonic regime of the traffic flow, where a small pressure wave speed weakens
+the pressure term. While the use of previous step velocity un technically reduces the formal temporal
+accuracy, this consistency error remains negligible compared to the significant gains in computational
+10        N. GARCÍA-CHAN ET AL.
+
+
+efficiency (Logg, Mardal, and Wells 2012). Furthermore, the high viscosity of the model acts as a natural
+damping mechanism that enhances the robustness of the linear solvers allowing stable simulations at much
+larger time steps. The spatial discretization is performed using a Galerkin Finite Element Method with the
+space Vh and the vector space Wh composed of continuous piecewise linear functions (P1). For the sake of
+brevity, the variational form of the system (22), as well as the specific details on integration by parts and
+boundary condition implementation, are omitted here as they follow the procedures detailed in García-
+Chan et al. (2025, 2026). The resulting nonlinear algebraic system is addressed using a fixed-point (Picard)
+iteration strategy. By linearizing the advective and Forchheimer terms, and the stabilizing effect given by
+the viscosity terms our approach achieves convergence within 3 to 5 iterations per time step in the
+numerical experiments, maintaining the efficiency of the semi-implicit scheme.
+
+
+4.2 Numerical framework for airflow and transport models
+The governing equations for air velocity (9) and pollutant transport (10) are solved using a numerical
+framework based on the finite element method, semi-implicit time schemes and the Galerkin-Least-Squares
+stabilization. For further details on these schemes, the reader is referred to our previous works (García-Chan
+et al. 2025, 2026; García-Chan, Licea-Salazar, and Gutierrez-Ibarra 2024).
+
+
+4.3 Computational assessment of cost functionals
+To evaluate the cost functionals over the spatial mesh is important to emphasize here that our framework
+utilizes two distinct meshes: one for traffic flow and another for air pollution. The latter is more refined to
+cover areas where vehicle access is prohibited, such as parks. This dual-mesh approach requires careful
+indexing in the discrete integrals. Let ntP and ndP denote the number of triangles and nodes in the air
+pollution mesh, respectively. Similarly, let ntK and ndK represent the corresponding values for the traffic flow
+mesh. For problem (14), given a control radius r and the corresponding restricted velocity zone B          u , we
+denote by i the indices of triangles in the pollution mesh belonging to B, and by j those in the traffic mesh.
+If |T e| represents the area of a triangular element T e , the discrete area |Bh| is approximated by i |T i| or
+       j
+  j |T |, depending on the mesh being used.
+
+     Now, given the discrete functions for air pollution concentration { { ln}nd P N                      n ndK N
+                                                                              l =1}n =0 , car density { { m }m =1}n =0 , and
+
+parking rate { m}ndK
+                 m =1 we evaluate the discrete cost functionals as:
+
+                                                             ÄÅ                                 É
+                                                     |T i| ÅÅÅ     t ijj 0                    yÑÑ
+                                                                                             nz  Ñ
+                                                              ÅÅ       j +                    zÑÑÑ,
+                                                                                            l z
+                                        T |Bh| T i B 3 ÅÅÅÇxl T i 2 jk l
+                                                               Å                              zÑÑ
+                                                                                              {ÑÑÖ
+                                                                                     N 1
+                                           1                                  N
+                                   JP =                                      l + 2                                    (23a)
+                                                                                     n =1
+
+
+                                                           ÅÄ                                    yÑÑ
+                                                                                                     É
+                                                   |T j| ÅÅÅ      t jij 0                      nz  Ñ
+                                                                                                zÑÑÑ .
+                                                            ÅÅ     mj m +                      mz
+                                       T |Bh| T j B 3 ÅÅÇx m T j 2 jk
+                                                             Å
+                                                             Å                                  zÑ
+                                                                                                 {ÑÑÑÖ
+                                                                                       N 1
+                                          1                                   N
+                                  JK =                                        m + 2                                   (23b)
+                                                                                       n =1
+
+
+This choice of numerical integration is consistent with the P1 finite element approximation used in our
+solvers. Since the state variables and are piecewise linear over the triangular elements, the spatial
+quadrature is exact. Furthermore, the trapezoidal rule provides a second-order accurate integration,
+ensuring that the discrete cost functionals JP and JK are smooth. This smoothness is critical for the stability
+of the optimization solvers, which demand a great number of cost functional evaluations.
+
+annulus BhîBe = LEZ and the inner disk Be = ZEZ, but their detailed formulas are omitted here for brevity.
+    The integrals for the cost functional in problem (21) are computed analogously, considering the outer
+
+    To solve the problem (17), its single control r allows for determining the entire Pareto front through an
+exhaustive computation of both cost functionals. In contrast, due to the high number of objectives,
+problem (20) is addressed with an a priori strategy, and only some Pareto solutions are obtained by
+solving the single-optimization problem (21) within the two-dimensional control space (rh , re ). Given the
+likely nonconvexity of the cost functional and the lack of gradient information, we implement a hybrid
+optimization approach. First, a Genetic Algorithm (GA) explores the admissible set to identify promising
+                                                                      TRANSPORTMETRICA B: TRANSPORT DYNAMICS         11
+
+
+candidate regions mitigating the risk of entrapment in local minima. Subsequently, the derivative-free
+solver Pattern Search (PS) is used to refine this initial guess and converge toward a high quality solution.
+   Since GA and PS methods require hundreds of cost functionals evaluations, the large-scale sparse
+matrices from our system were offloaded to the GPU (Cecka, Lew, and Darve 2011; Li and Saad 2013).
+The linear systems contained in the fixed-point loop are solved via the Preconditioned Conjugate Gradient
+(PCG) method using an ILUTP preconditioner (Saad 2003) resulting in a computationally feasible
+methodology.
+
+
+5 Numerical experiments
+In this section, we present the initial distribution of state variables and given data required by the numerical
+solution of the optimal control problems formulated in Sections (3.1) and (3.2), and the numerical results
+achieved for them.
+
+
+5.1 Case study: computational domain based on the Guadalajara Metropolitan Area (Mexico)
+The rectangular computational domain encompasses both the Guadalajara Metropolitan Area (GMA) and
+its surrounding rural zones (see Figure 2a). To ensure consistency across the different physical models, we
+utilize a nested polygonal discretization (García-Chan et al. 2026) generated with the license free software
+Gmsh (Geuzaine and Remacle 2009). This approach allows the creation of a modular mesh where specific
+urban features –such as industrial zones, parks, and university campuses– can be either included or omitted
+depending on the simulation requirements. Specifically, the airflow and pollutant transport models employ
+a refined mesh (9363 nodes, 18,258 triangles) to account for these internal features (see Figure 2b), while
+the traffic flow model uses a simplified version by omitting zones restricted to vehicles (not shown here for
+the sake of conciseness). Finally, the domain boundary is partitioned into three functional segments: inlet
+ in, outlet out , and natural obstacles w , as illustrated in Figure 2b. These segments facilitate the imposition
+of specific boundary conditions for each model –traffic flow, wind velocity, and pollutant transport–
+ensuring physical consistency.
+
+
+5.2 Initial values for the model variables
+The numerical solution of above models requires well-defined initial conditions for the state variables and
+input data; these distributions are graphically represented across the domain in Figure 3. Specifically, the
+initial traffic density 0 (x), shown in Figure 3a, follows a concentric distribution where the maximum density
+
+
+
+
+Figure 2. (a) Computational domain: the Guadalajara Metropolitan Area. Satellite image showing the urban domain, the
+rural surroundings, and natural obstacles (image taken from Google-Earth (2024)). (b) Triangular mesh generated with the
+software Gmsh, showing the subdomains, the boundary segments and also the speed-limit zone as a disk B of radius r for
+the single-objective problem (14).
+12       N. GARCÍA-CHAN ET AL.
+
+
+
+
+Figure 3. Spatial distribution of initial states and given data: (a) Vehicle density distribution decreases from high values
+in the suburbs to nearly zero in the centre. (b) The urban landscape is assumed to be concentric; thus, the city exhibits
+high building density at the centre and more space for traffic flow in the suburbs. (c) By taking the initial density and
+fixing the city centre as an attraction point, the Eikonal problem generates a desired velocity pointing toward the centre;
+this velocity decreases as vehicle density grows. (d) A constant reference wind is assumed, blowing from the NW, with a
+noticeably lower velocity inside the city due to the urban porosity distribution.
+
+
+
+is located in the suburban areas while the city centre remains nearly empty. This spatial configuration is
+characteristic of cities that have historically prioritized private vehicle flow over mass public transit. A clear
+example is Guadalajara (Mexico) which hosts over 5 million inhabitants and a motorization rate of nearly
+one vehicle for every two people, but has only three subway lines and three Bus Rapid Transit (BRT) lines.
+    It is worth noting that due to the current absence of operational speed-limit and LEZ/ZEZs zones in the
+Guadalajara Metropolitan Area, this case study is configured as an ex-ante planning tool rather than an
+empirical post-hoc assessment. Accordingly, baseline traffic parameters as max = 2000 veh/km2,
+  = 0.009 h, = 1.25 km2 /h, = 3.6 × 10 8 km2 /h, Umax = 50 km/h, and max = 18 h 1 are adopted from
+García Chan et al. (2025); Jiang et al. (2018), while the initial conditions are synthetically generated to
+demonstrate the feasibility of the optimization framework. However the model supports real-data parame­
+ters, even if they are not constants.
+    Complementing this, the urban landscape is characterized through the concept of urban porosity ,
+following the concentric city model described in García-Chan et al. (2026). We consider a dense city with a
+concentric layout—a spatial structure that reflects typical monocentric urban sprawl and peripheral growth
+trends in emerging economies—where initial traffic and housing densities naturally decrease away from the
+city core. This peripheral expansion in Mexican cities has been heavily driven by housing finance policies
+that displaced low-income residential developments to outer urban rings while employment remained
+centralized (Guerra 2015; Monkkonen and Comandon, 2018). Accordingly, the urban medium is character­
+ized by a baseline porosity value of = 0.38 at the downtown core (Hu et al. 2012), which increases
+                                                                        TRANSPORTMETRICA B: TRANSPORT DYNAMICS   13
+
+
+monotonically through the suburban rings until reaching a free-flow value of = 1.0 in the rural surround­
+ings (see Figure 3b). The interaction between these variables defines the desired velocity field, which is
+directed toward the city centre; it reflects near-zero speeds in congested zones and a free-flow maximum of
+50 km/h, as illustrated in Figure 3c. Additionally, a reference wind field is generated by running the airflow
+model until a stationary state is reached. Rather than an arbitrary uniform vector, this stationary field
+operates under the Darcy–Brinkman–Forchheimer aerodynamic equations, directly capturing the spatial
+drag and physical resistance induced by the city's building blocks (see Figure 3d). Finally, all experiments
+are simulated assuming zero incoming traffic demand (q = 0) over a 2-h period to represent a morning rush
+hour scenario. This duration ensures that most vehicles shown initially present within the system either
+reach or approach their final parking destinations, enabling a comprehensive evaluation of traffic conges­
+tion and pollutant accumulation during peak hours.
+   The parking rate distribution may be fixed or variable depending on the specific optimal control
+problem. For the single-control problem (14), (x) is fixed with a concentric distribution (see Figure 4a).
+In contrast, for the optimal control problem (20), the parking rate distribution depends on the radius rh
+through the relation p = rp rh, where rp is fixed. Consequently, the maximum parking rate values are
+located within a circular annulus of thickness p , which varies according to rh (see Figure 4b).
+
+
+5.3 The optimal control problem 1
+To solve the optimal control problem (14), we set the constraints rlw = 2 and rup = 6, and perform an
+exhaustive search to characterize the Pareto front. Taking advantage of the single-control nature of the
+radius r , a discrete vector r = [r1, r2, …, rm ], with m = 20, was defined to evaluate the objective functionals
+across the entire admissible interval [2, 6]. This approach allowed for the identification of the maximum
+values JP,max and JK ,max , which were used to normalize the environmental and socioeconomic objectives,
+respectively. These normalized costs, JP max and JK max , enable a direct comparison of the competing
+objectives as illustrated by the trade-off curve (Pareto front) in Figure 5a. This visualization reveals the set of
+non-dominated solutions, where any improvement in air quality JP necessarily results in a degradation of
+the parking flow rate JK . For instance, the front shows that prioritizing a parking rate greater than 0.95
+restricts the reduction of pollution to levels no lower than 0.8; conversely, accepting a reduction in parking
+efficiency to 0.8 enables a significant environmental gain, lowering pollution to 0.6. Furthermore, Figure 5b
+displays the sensitivity of these costs to the control variable r . While the parking rate remains stable to
+increases in the radius, maintaining a value of 0.8 even at r = 6, the air pollution levels are sharply affected,
+decreasing by nearly half (0.55) at the same radius. Consequently, a compromise solution can be straight­
+forwardly selected from this front based on the specific priorities and weights assigned by the decision-
+maker. As an illustrative example, in Figure 5 the results for the compromise solution corresponding to
+
+
+
+
+Figure 4. Parking rate distribution for the optimal control problems.
+14       N. GARCÍA-CHAN ET AL.
+
+
+
+
+Figure 5. Characterization of the Pareto front and sensitivity analysis for the single-control problem.
+
+
+
+
+Figure 6. Time-averaged distribution of state variables: (a) car density and (b) air pollution for the compromise solution
+r = 4.06 km, corresponding to the bullets shown on the trade-off curve ( Figure 5).
+
+
+
+r = 4.06 are highlighted with bullets, and its consequences on average cars density and air pollution are
+shown in Figure 6.
+   These graphical insights are quantified by the numerical data of Table 1, which presents the typical
+conflict found in environmental problems: maximizing commercial accessibility (parking flow) requires a
+smaller sensitive area, directly compromising air quality. In contrast, expanding the regulated radius moves
+the system towards the environmental extreme of the Pareto front.
+
+
+5.4 The optimal control problem 2
+Optimization problem (20) was solved using a hybrid derivative-free approach implemented in MATLAB
+2025b via the GA and Pattern Search functions. To eliminate statistical dependency on random seeding
+and ensure an exhaustive search, the Genetic Algorithm was initialized using a population of 40 individuals.
+This initial population includes the operational lower and upper boundaries of the radii, while the
+                                                                         TRANSPORTMETRICA B: TRANSPORT DYNAMICS    15
+
+
+                        Table 1. Selected non-dominated solutions from the Pareto front for
+                        the single-control problem. The table presents both normalized and
+                        absolute values for the objective functionals JP and JK at various radii r ,
+                        illustrating the quantitative trade-off between air quality and
+                        parking flow.
+                        r             JP max            JK max           JP (× 104)        JK (× 103)
+                        2.00          1.0000            1.0000             2.22               4.49
+                        2.95          0.8208            0.9659             1.82               4.34
+                        4.06          0.6605            0.9010             1.47               4.05
+                        5.05          0.5750            0.8354             1.28               3.75
+                        6.00          0.5233            0.7784             1.16               3.50
+
+
+
+
+remaining 38 individuals are uniformly distributed across the admissible space but holding the fixed
+thickness r . The Genetic Algorithm was executed with a function tolerance of 10 2, and to ensure a fair
+competition between the objectives, the cost functionals were normalized using maximum values esti­
+mated from the initial population. Subsequently, the best candidate generated by the GA was passed to the
+Pattern Search algorithm for local refinement, subject to a precision tolerance of 10 5.
+     Regarding the physical configuration of the test cases, the cost parameters Ep, Eh, and Ee were set to unity
+due to the lack of empirical data, making implementation costs directly proportional to the area of each
+zone. Furthermore, the vehicle fleet is assumed to follow a distribution of pc = 0.7, ph = 0.2, and pe = 0.1,
+representing an urban environment where internal combustion vehicles significantly outnumber their
+hybrid and electric counterparts. These parameters, along with the geometric constraints (rh, lw = 2.5,
+rh, up = 6, re , lw = 0.5, re , up = 3, and r = 2), define the search space for the four illustrative scenarios formu­
+lated by varying the weight vector W = ( P , K , p , h , e ) representing specific, predictable points on the
+Pareto front:
+
+1. Unlimited resources ( P = 1/2, K = 1/2, p = h = e = 0 ): in this scenario, costs associated with urban
+   modifications –particularly the establishment of new parking infrastructure outside the LEZ– are
+   neglected. It is expected that, without this socioeconomic penalty, both radii expand to their maximum
+   constraints. The outer radius rh increases to displace combustion vehicles as far from the centre as
+   possible, since the financial burden of accommodating them is unpenalized. Simultaneously, the inner
+   radius re expands to enlarge the ZEZ. This keeps hybrid vehicles away from the core while strictly
+   satisfying the LEZ annulus thickness constraint.
+2. Limited resources ( P = 1/3, K = 1/3, p = h = e = 1/9): in this scenario, all implementation costs are
+   equally penalized. We expect re and rh to shift toward their minimum constraints to minimize the
+   socioeconomic burden, thus reducing both the LEZ and ZEZ areas. This leads to higher pollution levels,
+   as combustion cars remain closer to the centre. Furthermore, a minimized rh reduces the area of the LEZ
+   and, consequently, the space for parking infrastructure in the URZ, inherently limiting the maximum
+   parking flow rate.
+3. Parking-only ( P = 1/3, K = 1/3, p = 1/3, h = e = 0): this case evaluates the equilibrium between air
+   quality and the costs proportional to the outermost parking area Ap associated with the LEZ. We
+   anticipate a moderate increase in the LEZ outer radius rh. However, the ZEZ inner radius re is also forced
+   to increase in order to satisfy the geometric constraint rh re 2 km, even if expanding the ZEZ area Ae
+   is not economically penalized.
+4. Electric-only ( P = 1/3, K = 1/3, p = h = 0, e = 1/3): this hypothetical case is designed specifically to
+   force the optimization model to its extremes. By heavily penalizing the costs in the ZEZ area Ae , and
+   neglecting them in the LEZ parking area Ap , the model drives the LEZ outer radius rh towards its
+   maximum bound in order to improve air quality. Simultaneously, the ZEZ inner radius re contracts to its
+   minimum allowable limit to avoid the severe costs associated with the only-electric zone.
+
+Remark 1. The normalization of the unit implementation costs (Ep = Eh = Ee = 1) does not structurally
+distort the identification of the Pareto-optimal points. In Cases (i), (iii), and (iv), the weights assigned to
+these cost objectives are either zero or isolated, meaning they do not actively compete. Conversely, in Case
+16      N. GARCÍA-CHAN ET AL.
+
+
+(ii), where a uniform weight distribution is considered, the optimization effectively triggers a direct trade-off
+between environmental benefits against the total spatial covered by the restricted zones.
+     The application of aforementioned hybrid strategy to solve these four test cases yields a highly efficient
+optimization process. The convergence profile in Figure 7 confirms that the GA effectively identifies a global
+candidate region where population fitness stabilizes, allowing the PS stage to finalize the search with high
+precision at a much lower computational cost than GA.
+     Having established the numerical efficiency of the solver, we now examine the physical implications of
+the optimized scenarios. Across all test cases, the vehicle density maps demonstrate a clear spatial
+segregation of the fleet according to the imposed restrictions. Internal combustion vehicles, representing
+the majority of the traffic, are effectively restricted to the region outside the LEZ, leading to visible
+accumulation along its boundaries. Conversely, hybrid vehicles are allowed to penetrate the LEZ but
+remain excluded from the ZEZ. As a result, the ZEZ exhibits a near-zero vehicle density in all simulations.
+This traffic distribution directly dictates the CO2 concentration patterns. The ZEZ remains nearly free of
+pollution, with only trace concentrations present due to atmospheric transport by wind fields from
+neighbouring areas. The LEZ also exhibits significantly low pollution levels, as it only accounts for the
+reduced emissions of hybrid vehicles –modelled here with a 50% reduction relative to combustion engines–
+and the influx of transported pollutants. Consequently, the highest CO2 concentrations are strictly confined
+to the URZ, where the bulk of the combustion-based fleet is concentrated.
+     Building upon this general traffic behaviour, we now analyze the specific Pareto-optimal configurations
+for each scenario: The optimal solutions summarized in Table 2 align strictly with our predictions. In the
+‘Unlimited resources’ scenario, the ZEZ and the LEZ expand upto their maximum constraints. This effectively
+shields the city core from pollution and avoids congestion by pushing the URZ outward, where wide
+parking infrastructure can be accommodated (see Figure 8a and b). In contrast, in the ‘Limited resources’
+scenario, the quadratic growth of area-based costs outweighs the marginal environmental gains, forcing
+the ZEZ and LEZ radii (re , rh) towards their lower bounds. As shown in Figure 8c and d, this fact limits the
+outward displacement of the URZ, leading to insufficient parking area for a higher car density and,
+subsequently, generate higher congestion –and consequently more travel time– and higher pollution
+levels near the city core area.
+     The ‘Parking-only’ scenario reflects a balanced urban intervention, featuring a moderate expansion of
+both boundaries relative to their constraints. Expanding the LEZ outer radius rh simultaneously forces the
+ZEZ inner radius re to expand in order to maintain the 2 km minimum thickness. This incurs no additional
+
+
+
+
+Figure 7. Convergence profile of the hybrid solver. The plot shows the evolution of the objective functional,
+distinguishing the GA phase from the PS refinement. The GA stage concludes when the best and the mean fitness
+values (blue and red dots, respectively) converge, providing an optimal seed for the PS (magenta dots) to achieve a high
+quality final solution.
+                                                                      TRANSPORTMETRICA B: TRANSPORT DYNAMICS           17
+
+
+   Table 2. Comparison of Pareto-optimal solutions across different scenarios for problem 2. The objective
+   functionals JP and JK represent the normalized environmental and mobility costs, respectively. The terms
+   Ap , Ah , and Ae denote the area covered by the URZ, LEZ and ZEZ (km2). Each scenario corresponds to a specific
+   configuration of the weight vector W , illustrating the trade-offs between urban infrastructure investment and
+   environmental quality.
+   Case scenario           re            rh          JP (× 103)     JK (× 103)       Ap            Ah           Ae
+   (i) Unlimited res.    2.5000        5.8552          3.47           1.53          39.93         88.06        19.63
+   (ii) Limited res.     0.5000        3.0000          7.09           1.42          21.99         27.49         0.79
+   (iii) Parking-only    2.0712        4.1254          5.12           1.46          29.06         39.99        13.48
+   (iv) Electric-only    0.5037        5.8547          3.67           1.54          39.98        106.89         0.79
+
+
+
+
+Figure 8. Time-averaged spatial distribution of state variables: The left column displays car density , while the right
+column shows CO2 concentration for the first two optimal scenarios listed in Table 2. From top to bottom, the rows
+correspond to cases: (i) unlimited resources, (ii) limited resources.
+
+
+
+penalty since the ZEZ area costs are neglected ( e = 0). As shown in Figure 9a and b, this configuration
+yields a cleaner urban core while avoiding severe congestion in the URZ. Meanwhile, the ‘Electric-only’
+scenario serves as a theoretical stress test for the solver's consistency. Here, the ZEZ radius re contracts to its
+minimum limit to avoid heavily penalized infrastructure costs. Concurrently, the LEZ radius rh expands,
+acting as a buffer that pushes combustion vehicles outward into the URZ. Consequently, while the worst
+emissions are kept far from the core, the confined ZEZ allows hybrid vehicles closer to the centre, leading to
+a slight localized increase in pollution (see Figure 9c and d).
+   To further demonstrate the sensitivity of the LEZ/ZEZ zones to fleet composition, we extend the analysis of
+the 'Parking-only' scenario defined by the weights P = 1/3, K = 1/3, p = 1/3, h = 0, e = 0, considering the
+cleaner vehicle penetration trends in Mexico (Islas-Samperio, Manzini, and Grande-Acosta 2020). Specifically, we
+execute the algorithm assuming a plausible mid-term composition fleet of pc = 0.55, ph = 0.3, pe = 0.15. Our
+18      N. GARCÍA-CHAN ET AL.
+
+
+
+
+Figure 9. Time-averaged spatial distribution of state variables: the left column displays car density , while the right
+column shows CO2 concentration for the last two optimal scenarios listed in Table 2. From top to bottom, the rows
+correspond to cases: (iii) parking-only, (iv) electric-only.
+
+
+
+results show that the Pareto-optimal radii are contracted to re = 1.7281 and rh = 3.7847 (down from re = 2.0712
+and rh = 4.1254). This geometric contraction is due to the fact that less combustion vehicles produce less
+tailpipe emissions mitigating the average CO2 concentration (JP = 5.06 × 103) on the restriction zone.
+Consequently, the demand of parking spaces is relaxed (JK = 1.34 × 103) and then shrinks its cover area
+(Ap = 26.9212). Furthermore, since h = e = 0 implies zero penalization for allocating hybrid and electric
+vehicles, the algorithm directly compresses the remaining internal zones to Ah = 35.6192 and Ae = 9.3820.
+
+
+6 Conclusions
+This work presents a novel methodology for the design and delimitation of restricted urban zones through
+a multi-objective optimization framework. The approach identifies Pareto-optimal solutions that balance
+the minimization of average pollutant concentrations with the maximization of parking flow, utilized here
+as a proxy for socioeconomic activity and traffic congestion. In order to maintain generality and computa­
+tional efficiency, the radii of concentric zones serve as the primary control variables.
+   Two distinct urban interventions were evaluated: a speed-limit zone (Zone 30) and a graduated
+prohibition strategy (LEZ and ZEZ). The latter implements a two-stage filter that restricts internal combus­
+tion vehicles in the outer annulus and excludes hybrid vehicles from the inner disk, effectively reserving the
+city core for only-electric mobility. The numerical experiments focused on CO2 emissions, but can be
+directly extended to other health-critical pollutants like NO2, PM2.5 or VOCs, because these pollutants share a
+common tailpipe origin and, therefore, any policy implemented to promote a reduction in fuel consump­
+tion produces a decrease in air toxicity.
+                                                                      TRANSPORTMETRICA B: TRANSPORT DYNAMICS         19
+
+
+   The results from the first optimization problem, characterized by the Pareto front, reveal that minimizing
+pollution requires expanding the radius of the limited area, which in turn reduces the inflow rate of vehicles
+accessing the parking infrastructure. By generating these trade-off curves, this study provides the set of
+non-dominated solutions, offering decision-makers a tool to select an operating point based on specific
+policy priorities.
+   Regarding combined LEZ/ZEZ zones, the consistency of the framework was evaluated across four
+benchmark scenarios using the weighted sum method. The model's ability to converge towards predictable
+optimal outcomes in these test cases confirms its reliability in identifying specific Pareto-optimal points.
+This flexibility allows urban planners to prioritize different aspects of the urban transition—such as
+infrastructure costs versus air quality—by simply adjusting the weight vector W . Furthermore, our
+numerical simulations suggest that LEZ/ZEZ boundaries are not rigid but adapt to fleet composition,
+where the mid-term growth of hybrid and electric vehicles naturally leads to a contraction of the restricted
+areas. This underscores a public policy insight: rethinking the trade-off between allocating fiscal incentives
+for private fleet renewal versus financing costly urban infrastructure interventions in parking spaces and
+public transportation.
+   Finally, the nature of this macroscopic framework is not capable of incorporating microscopic elements
+widely used in traffic flow management, such as traffic light timing and lane management. Furthermore, the
+lack of calibration for continuous parameter—such as urban porosity—against local datasets, combined
+with the current absence of operational restrictive zones in the city of Guadalajara, renders this work a
+theoretical baseline. Nevertheless, once these limitations are addressed in future stages, this framework has
+the potential to become a versatile decision-making tool for evaluating urban interventions before full-scale
+implementation.
+
+
+Acknowledgements
+We thank the anonymous reviewers for their comments that helped to improve this paper.
+
+
+Author contributions
+CRediT: Lino J. Alvarez-Vázquez: Conceptualization, Investigation, Methodology, Visualization, Writing – review &
+editing; Aurea Martínez: Conceptualization, Investigation, Methodology, Visualization, Writing – original draft; Miguel
+E. Vázquez-Méndez: Conceptualization, Investigation, Methodology, Visualization, Writing – review & editing.
+
+
+Disclosure statement
+No potential conflict of interest was reported by the author(s).
+
+
+Funding
+This work was supported by the Ministerio de Ciencia y Tecnología [Grant No. TED2021-129324B-I00]; Secretaría de
+Ciencia, Humanidades, Tecnología e Innovación [Grant No. CBF-2025-I-380]; PRODEP [Grant number 103/16/8066];
+Sistema Nacional de Investigadores [Grant No. 52768].
+
+
+ORCID
+Néstor García-Chan     http://orcid.org/0000-0003-4700-8192
+
+
+References
+Broster, S., and K. Terzano. 2025. “A Systematic Review of the Pollution and Health Impacts of Low Emission Zones.” Case
+  Studies on Transport Policy 19: 101340. https://doi.org/10.1016/j.cstp.2024.101340.
+Cecka, C., A. J. Lew, and E. Darve. 2011. “Assembly of Finite Element Methods on Graphics Processors.” International
+  Journal for Numerical Methods in Engineering 85 (5): 212–269. https://doi.org/10.1002/nme.2989.
+Das, M. K., P. P. Mukherjee, and K. Muralidhar. 2018. Modeling Transport Phenomena in Porous Media with Applications.
+  Springer International Publishing. https://doi.org/10.1007/978-3-319-69866-3.
+20       N. GARCÍA-CHAN ET AL.
+
+
+Delgado-Lindeman, M., R. Cordera, J. L. Moura, and A. Rodriguez. 2025. “Characteristics and Effects of Low Emission
+    Zones in Europe. a Systematic Literature Review.” European Transport Research Review 17 (1): 1866–8887. https://
+    doi.org/10.1186/s12544-025-00749-2.
+Ewing, R. 1999. Traffic Calming: State of the Practice, Ite/FhwaInstitute of Transportation Engineers, Federal Highway
+    Administration.
+García-Chan, N., J. A. Licea-Salazar, and L. G. Gutierrez-Ibarra. 2024. “Numerical Evaluation of Urban-Warming Mitigation
+    Strategies in an Urban-Porous Media. An Application of Stabilized Finite Elements Methods.” Journal of Mathematics
+    in Industry 14(26): 1–20. https://doi.org/10.1186/s13362-024-00163-8.
+García-Chan, N., L. J. Alvarez-Vázquez, A. Martínez, and M. E. Vázquez-Méndez. 2025. “A Nonconservative Macroscopic
+    Traffic Flow Model in a Two-Dimensional Urban-Porous City.” Mathematics and Computers in Simulation 233: 60–74.
+    https://doi.org/10.1016/j.matcom.2025.01.016.
+García-Chan, N., L. J. Alvarez-Vázquez, A. Martínez, and M. E. Vázquez-Méndez. 2026. “A Multi-Model Study of the Air
+    Pollution Related to Traffic Flow in a Two-Dimensional Porous Metropolitan Area.” Journal of Computational and
+    Applied Mathematics 473: 116903. https://doi.org/10.1016/j.cam.2025.116903.
+Geurs, K. T., and B. van Wee. 2004. “Accessibility Evaluation of Land-Use and Transport Strategies: Review and Research
+    Directions.” Journal of Transport Geography 12 (2): 127–140. https://doi.org/10.1016/j.jtrangeo.2003.10.005.
+Geuzaine, C., and J.-F. Remacle. 2009. “Gmsh: A 3-d Finite Element Mesh Generator with Built-In pre- and Post-
+    Processing Facilities.” International Journal for Numerical Methods in Engineering 79 (11): 1309–1331. https://
+    doi.org/10.1002/nme.2579.
+Göttlich, S., M. Herty, and A. Ulke. 2025. “Speed Limits in Traffic Emission Models Using Multi-Objective Optimization.”
+    Optimization and Engineering 26: 199–227. https://doi.org/10.1007/s11081-024-09894-4.
+Guerra, E. 2015. “The Geography of Car Ownership in Mexico City: A Joint Model of Households' Residential
+    Location and Car Ownership Decisions.” Journal of Transport Geography 43: 171–180. https://doi.org/10.1016/
+    j.jtrangeo.2015.01.014.
+Hajmohammadi, H., and B. Heydecker. 2022. “Evaluation of Air Quality Effects of the London Ultra-Low Emission Zone
+    By State-Space Modelling.” Atmospheric Pollution Research 13 (8): 101514. https://doi.org/10.1016/j.apr.2022.101514.
+Hillermeier, C. 2012. Nonlinear Multiobjective Optimization: A Generalized Homotopy Approach. Basel: Birkhäuser,
+    Retrieved from. https://doi.org/10.1007/978-3-0348-8280-4
+Hu, Z., B. Yu, Z. Chen, T. Li, and M. Liu. 2012. “Numerical Investigation on the Urban Heat Island in an Entire City
+    with an Urban Porous Media Model.” Atmospheric Environment 47: 509–518. https://doi.org/10.1016/
+    j.atmosenv.2011.09.064.
+Int Panis, L., S. Broekx, and R. Liu. 2006. “Modelling Instantaneous Traffic Emission and the Influence of Traffic Speed
+    Limits.” Science of the Total Environment 371 (1-3): 270–285. https://doi.org/10.1016/j.scitotenv.2006.08.017.
+Islas-Samperio, J. M., F. Manzini, and G. K. Grande-Acosta. 2020. “Toward a Low-Carbon Transport Sector in Mexico.”
+    Energies 13(1). https://doi.org/10.3390/en13010084.
+Jiang, Y.-Q., P.-J. Ma, and S.-G. Zhou. 2018. “Macroscopic Modeling Approach to Estimate Traffic-Related Emissions in
+    Urban Areas.” Transportation Research Part D: Transport and Environment 60: 41–55. (Special Issue on Traffic Modeling
+    for Low-Emission Transport). Retrieved from. https://doi.org/10.1016/j.trd.2015.10.022.
+Li, R., and Y. Saad. 2013. “Gpu-Accelerated Preconditioned Iterative Linear Solvers.” The Journal of Supercomputing 63 (2):
+    443–466. https://doi.org/10.1007/s11227-012-0825-3.
+Logg, A., K.-A. Mardal, and G. Wells. 2012. Automated Solution of Differential Equations by the Finite Element Method In
+    Lecture Notes in Computational Science and Engineering. Heidelberg: Springer Berlin.
+Marsden, G. 2006. “The Evidence Base for Parking policies—a Review.” Transport Policy 13(6): 447–457.
+Miettinen, K. 1999. Nonlinear Multiobjective Optimization. Boston: Kluwer Academic Publishers.
+Mingardo, G., and J. van Meerkerk. 2012. “Is Parking Supply Related to Turnover of Shopping Areas? The Case of the
+    Netherlands.” Journal of Retailing and Consumer Services 19 (2): 195–201. https://doi.org/10.1016/j.jretconser.2011.12.001.
+Monkkonen, P., A. Comandon, J. A. Montejano Escamilla, and E. Guerra. 2018. “Urban Sprawl and the Growing
+    Geographic Scale of Segregation in Mexico, 1990--2010.” Habitat International 73: 89–95. https://doi.org/10.1016/
+    j.habitatint.2017.12.003.
+Piccoli, A., V. Agresti, M. Bedogni, G. Lonati, and G. Pirovano. 2025. “Modelling the Air Quality Impacts of a Zero Emission
+    Zone Scenario in the City of Milan.” Atmospheric Environment: X 25: 100318. https://doi.org/10.1016/j.aeaoa.2025.100318.
+Poulhès, A., L. Proulhac, and J. Malriat. 2025. “Low Emission Zone and Inequalities: Car Restriction and Reduction of Air Pollution
+    Exposure in the Paris Region.” Sustainable Cities and Society 128: 106469. https://doi.org/10.1016/j.scs.2025.106469.
+Saad, Y. 2003. Iterative Methods for Sparse Linear Systems. 2nd ed. Philadelphia, PA, USA: Society for Industrial and
+    Applied Mathematics.
+Sarmiento, L., N. Wägner, and A. Zaklan. 2023. “The Air Quality and Well-Being Effects of Low Emission Zones.” Journal of
+    Public Economics 227: 105014. https://doi.org/10.1016/j.jpubeco.2023.105014.
+Tassinari, F. 2024. “Low Emission Zones and Traffic Congestion: Evidence from Madrid Central.” Transportation Research
+    Part A: Policy and Practice 185: 104099. https://doi.org/10.1016/j.tra.2024.104099.
+Treiber, M., and A. Kesting. 2013. Traffic Flow Dynamics. Data, Models and Simulation. Berlin, Heidelberg: Springer.
+    https://doi.org/10.1007/978-3-642-32460-4.
+                                                                    TRANSPORTMETRICA B: TRANSPORT DYNAMICS        21
+
+
+Wang, M., Q. Zhou, Y. Hu, Z. Lou, and X. Zhou. 2025. “An Optimization Framework for Multi-Objective Traffic Signal
+  Control Using Intersection Similarity and Reinforcement Learning.” Alexandria Engineering Journal 133: 653–672.
+  https://doi.org/10.1016/j.aej.2025.11.025.
+Xue, S., H. Zou, Q. Feng, X. Wang, Y. Liu, Y. Wang, and L. Liu. 2025. “A Method for Delineating Traffic Low Emission
+  Control Zone Based on Deep Learning and Multi-Objective Optimization.” Environmental Monitoring and Assessment
+  197 (5): 523. https://doi.org/10.1007/s10661-025-13949-z.
+Yannis, G., and E. Michelaraki. 2025. “Effectiveness of 30 Km/H Speed Limit – a Literature Review.” Journal of Safety
+  Research 92: 490–503. https://doi.org/10.1016/j.jsr.2024.11.003.
+

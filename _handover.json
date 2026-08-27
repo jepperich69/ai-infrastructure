@@ -1,22 +1,23 @@
 {
   "project": "AI_auto",
-  "generated": "2026-08-14 12:40",
+  "generated": "2026-08-18 15:49",
   "source": "_ai_log.md",
   "latest_session": {
-    "title": "2026-08-14",
-    "agent": "Claude Opus 5",
-    "goal": "Build a presentation on how we do mathematical verification and certification of the math, in nine sections (idea, tools, numerical/symbolic, example of use, a literature paper, workflow diagram, limitations, install, conclusion).",
-    "outcome": "Deck delivered. Section 5 is a real run, not a mock-up: Kahneman & Tversky (1979) checked end to end, 49/49 derivations pass, plus one unstated side condition found in the p.285 probabilistic-insurance proof and three strictness gaps. See `math_check_report.md` for the findings. Method used for implication-chains (a positive-multiplier certificate, `C = m*P` with `m > 0`) is new and reusable for prose-heavy theory papers.",
-    "next_steps": "(1) decide whether to cut ~4 slides for a 25-min slot (41 slides is dense); (2) reconcile `jr_optlib` doc counts -- `functions.yaml` has 40 vetted + 2 experimental, but `README.md` says 41 vetted / 139 tests and `registry\\INDEX.md` lists 45 rows; actual test count is 143; (3) `/catch-up` backlog still open (known issues #43, #46, #47).",
-    "git_ref": "3193e67",
+    "title": "2026-08-18",
+    "agent": "Codex",
+    "goal": "Build a shorter, popular mathematical-verification deck with anonymous audits of three randomly supplied top-journal papers.",
+    "outcome": "Delivered a 16-slide popular talk. The anonymous sample illustrates three distinct printed-formulation failures: reversed optimization direction; variance/standard-deviation confusion plus a contradictory proof; and disagreement between a stated dynamic objective and its Bellman recursion. A joint table reports correct checks and flags for all four papers without presenting targeted screens as full audits. A new architecture slide separates solver backends from independent verification oracles and explains that Gurobi is optional for selected MIPs, MIQPs, and exact benchmark bounds. Arithmetic spot checks pass, the deck compiles cleanly, and the new slides were visually inspected. Findings are explicitly limited to internal consistency because unavailable source code could silently correct the printed models.",
+    "next_steps": "Rehearse for timing and decide whether to retain all three anonymous paper slides or move one to backup for a sub-15-minute slot.",
+    "git_ref": "7789853",
     "files_touched": [
-      "`presentations\\verification\\verification_talk.tex` -- new 41-slide Beamer deck (16:9), all nine sections; compiles clean.",
-      "`presentations\\verification\\verification_talk.pdf` -- compiled output.",
-      "`presentations\\verification\\workflow.png` -- mermaid two-lane workflow figure (landscape, 2.28:1).",
-      "`literature\\verification_demo\\KT1979\\KT1979_claims.tex` -- verbatim transcription of every derivation in Kahneman & Tversky (1979) with page numbers.",
-      "`literature\\verification_demo\\KT1979\\verify.py` -- SymPy check of all 49 claims.",
-      "`literature\\verification_demo\\KT1979\\verify_output.txt` -- raw run output.",
-      "`literature\\verification_demo\\KT1979\\math_check_report.md` -- the audit (record document for the K&T run)."
+      "`known_issues.md` -- marked infrastructure issues #43, #46, and #47 fixed after applying their documented repairs.",
+      "`scripts/helpi.ps1` -- forwarded the optional Overleaf Git URL for `helpi 1` in preview and execution.",
+      "`scripts/auto_handover.ps1` -- removed the leading UTF-8 BOM.",
+      "`C:\\Users\\rich\\.agents\\skills\\research-close\\SKILL.md` -- corrected the handover-generator path.",
+      "`presentations\\verification\\verification_talk_short.tex` -- new 16-slide popular Beamer deck; includes three anonymous paper audits, a joint four-paper audit table, and the optimization-library architecture; retains the original technical deck unchanged.",
+      "`presentations\\verification\\verification_talk_short.pdf` -- compiled and visually checked output.",
+      "`presentations\\verification\\audit_spotchecks.py` -- independent arithmetic checks for the anonymous audit slides.",
+      "`presentations\\verification\\{Transpormetrica_B_test,PartB_test,PartC}.txt` -- text extracted from the three supplied PDFs for the internal audits."
     ]
   },
   "latest_session_complete": true,
