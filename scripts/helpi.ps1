@@ -127,7 +127,9 @@ $commands = @(
     [PSCustomObject]@{ N=26; NeedsProject=$false; Tag="MANUAL";  Name="Update infrastructure from GitHub";
          Example="update.ps1" },
     [PSCustomObject]@{ N=27; NeedsProject=$false; Tag="ONCE";    Name="Create generic project (non-paper)";
-         Example="new_generic_project.ps1 -Project XXX" }
+         Example="new_generic_project.ps1 -Project XXX" },
+    [PSCustomObject]@{ N=28; NeedsProject=$false; Tag="MANUAL";  Name="Add PyQGIS to current project";
+         Example="add_qgis.ps1 [-Project XXX]" }
     )
 
 # ── Contextual help for a single command ──────────────────────────
@@ -507,6 +509,35 @@ function Show-CommandHelp {
             "  helpi 27 MyFolder              # creates/initializes JR\MyFolder",
             "  helpi 27 'Interne projekter\Foo'"
         )}
+        28 { @(
+            "Add PyQGIS to current project",
+            "QGIS is a tool, not a project type. There is no standing QGIS folder",
+            "and no central workspace: a project that needs a map gets the",
+            "interpreter plumbing dropped in, and projects that never touch QGIS",
+            "carry nothing.",
+            "",
+            "Writes three workspace-scoped files into the project:",
+            "  .vscode/settings.json  interpreter, envFile, Pylance extraPaths",
+            "  .env                   PYTHONPATH (the only variable that may be set)",
+            "  qgis_smoketest.py      proves the stack imports and processing inits",
+            "",
+            "Nothing global is touched -- not %APPDATA%\Code\User\settings.json,",
+            "not your user PYTHONPATH, not miniconda. Existing files are backed up",
+            "with a timestamp unless -Force is given.",
+            "",
+            "The QGIS install is discovered at run time, not hardcoded, so this",
+            "survives an upgrade. Re-run it after upgrading QGIS.",
+            "",
+            "Map data and .qgz files belong in the project, next to the analysis.",
+            "If a second project ever needs the same base layer, that is the point",
+            "to create a shared JR\geodata\ -- not before.",
+            "",
+            "Three PyQGIS traps are documented in known_issues.md #50.",
+            "",
+            "Example:",
+            "  helpi 28                      # adds PyQGIS to the current directory",
+            "  helpi 28 Pub_Foo              # resolves the project by name"
+        )}
         default { @("No help available for command $n.") }
     }
 
@@ -598,6 +629,7 @@ function Get-CommandPreview {
            }
         26 { "update.ps1" }
         27 { if ($proj) { "new_generic_project.ps1 -Project $proj" } else { "new_generic_project.ps1  (current directory)" } }
+        28 { if ($proj) { "add_qgis.ps1 -Project $proj" } else { "add_qgis.ps1  (current directory)" } }
     }
 }
 
@@ -862,6 +894,8 @@ function Invoke-Command-N {
         26 { & "$PSScriptRoot\update.ps1" }
         27 { if ($proj) { & "$PSScriptRoot\new_generic_project.ps1" -Project $proj }
              else        { & "$PSScriptRoot\new_generic_project.ps1" } }
+        28 { if ($proj) { & "$PSScriptRoot\add_qgis.ps1" -Project $proj }
+             else        { & "$PSScriptRoot\add_qgis.ps1" } }
     }
 }
 

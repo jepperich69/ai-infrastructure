@@ -611,3 +611,25 @@ Reproducibility note: optional library availability must not select a different 
 **Affects:** Agent commands that invoke `helpi` by absolute path.
 
 The file `C:\Users\rich\OneDrive - Danmarks Tekniske Universitet\JR\AI_auto\helpi.ps1` no longer exists. The launcher is `C:\Users\rich\OneDrive - Danmarks Tekniske Universitet\JR\AI_auto\helpi.cmd`, while the PowerShell implementation lives under `AI_auto\scripts\helpi.ps1`. Likewise, `generate_handover.ps1` lives under `AI_auto\scripts\`, not the repository root. Use the absolute `.cmd` launcher for documented `helpi N ...` operations and the `scripts\` path for direct PowerShell calls. This supersedes the absolute-path example in issue 19.
+
+---
+
+### 50. PyQGIS in VS Code: three traps, and the QGIS-as-a-tool convention
+**Status:** platform-fact
+**Affects:** Any project that needs maps or geoprocessing. Set up with `helpi 28`.
+
+QGIS 3.44.12 LTR ("Solothurn") is installed at `C:\Program Files\QGIS 3.44.12`. It ships its own Python 3.12.13, separate from miniconda 3.13.9. `import qgis` from miniconda fails, and that is correct: there is no leakage between the two.
+
+**Convention.** QGIS is a tool, not a project type. There is no standing QGIS folder and no central QGIS workspace. A project that needs a map gets the interpreter plumbing dropped in with `helpi 28`; projects that never touch QGIS carry nothing. Map data and `.qgz` files live in the project, next to the analysis. If a second project ever needs the same base layer, that is the moment to create a shared `JR\geodata\`, not before.
+
+`helpi 28` writes three workspace-scoped files: `.vscode/settings.json`, `.env`, and `qgis_smoketest.py`. Nothing global is touched. It discovers the QGIS install at run time rather than hardcoding the version, so re-running it after a QGIS upgrade refreshes the paths. Existing files are backed up with a timestamp unless `-Force` is given.
+
+**Trap 1: use `apps\Python312\python.exe`, not `bin\python.exe`.** `bin\python.exe` has no `sys.prefix` of its own; it inherits one from the calling process and dies with `ModuleNotFoundError: No module named 'encodings'` unless `PYTHONHOME` is pre-set. `apps\Python312\python.exe` self-resolves and runs bare.
+
+**Trap 2: never set `QGIS_PREFIX_PATH` in `.env`.** `qgis/__init__.py::setupenv()` returns early if that variable is already set, skipping `bin\qgis-ltr-bin.env` -- the file that defines the other ~28 variables (`PATH`, `GDAL_DATA`, `PROJ_DATA`, `QT_PLUGIN_PATH`, ...). Setting it by hand gives `ImportError: DLL load failed while importing _core`. Set only `PYTHONPATH` and let QGIS configure itself.
+
+**Trap 3: the bare `.` entry in the user `PATH`.** `qgis/__init__.py` calls `os.add_dll_directory(p)` for every existing `PATH` entry, and that call rejects relative paths with `OSError: [WinError 87]`. It does not bite in the normal case only because `setupenv()` replaces `PATH` with QGIS's own clean list before that loop runs. Set `QGIS_PREFIX_PATH` (trap 2) and both failures appear at once. Removing the `.` from the user `PATH` is worth doing independently; it is a mild security smell.
+
+**Other notes.** Extra packages must go into the QGIS interpreter, not miniconda: `& "C:\Program Files\QGIS 3.44.12\apps\Python312\python.exe" -m pip install <pkg>`. Headless runs outside VS Code use `bin\python-qgis-ltr.bat` (full env) or `bin\qgis_process-qgis-ltr.bat` (geoprocessing). In QGIS Desktop, set Project Properties > General > Save paths to "relative" or the project breaks when the folder moves. OneDrive holds locks on open `.gpkg` files and can produce conflict copies, so close the project before it syncs.
+
+`.vscode/settings.json` is emitted with forward slashes: a single backslash before `P`, `Q` or `a` is not a legal JSON escape, and VS Code accepts forward slashes on Windows.
