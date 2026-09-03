@@ -4,7 +4,6 @@
 
 ## Compressed sessions
 
-- **2026-06-25 (second session)** (Gemini 3.5 Flash (Medium)): Address NoteTaker watcher failures on the 20-minute test recording,... -> Handled the 18 MB test recording (transcript, Markdown, and LaTeX summaries written, PD...
 - **2026-06-25 (third session)** (Claude): Three infrastructure tasks: (1) stop NoteTaker's free-tier Supabase... -> All three done, validated, committed and pushed. NoteTaker keep-alive is live (watcher ...
 - **2026-06-30** (Claude): User asked whether CLI LLMs integrate with a symbolic math engine (... -> Established SymPy (not Z3) is the right fit for the actual need; Z3 considered but not ...
 - **2026-06-30 (second session)** (Claude): Document the new `/verify-math` (SymPy) skill in the infrastructure... -> `/verify-math` is fully documented with an architecture report; SymPy flagged as an ins...
@@ -20,24 +19,7 @@
 - **2026-07-03** (Gemini CLI (Gemini 3.1 Pro (High))): Establish automated, recurring Google Drive backups for AI_auto, No... -> Deployed a local background daemon that bypasses DTU Task Scheduler restrictions. It si...
 - **2026-07-03 (2)** (Claude Fable 5): Discuss a portfolio "helicopter view" (surface unexploited/dormant ... -> Decided the helicopter view is NOT a RAG (36 logs, 278 KB, fits in context) but an agen...
 - **2026-08-14** (Claude Opus 5): Build a presentation on how we do mathematical verification and cer... -> Deck delivered. Section 5 is a real run, not a mock-up: Kahneman & Tversky (1979) check...
-
----
-
-## Session 2026-08-18
-**Agent:** Codex
-**Goal:** Build a shorter, popular mathematical-verification deck with anonymous audits of three randomly supplied top-journal papers.
-**Files touched:**
-- `known_issues.md` -- marked infrastructure issues #43, #46, and #47 fixed after applying their documented repairs.
-- `scripts/helpi.ps1` -- forwarded the optional Overleaf Git URL for `helpi 1` in preview and execution.
-- `scripts/auto_handover.ps1` -- removed the leading UTF-8 BOM.
-- `C:\Users\rich\.agents\skills\research-close\SKILL.md` -- corrected the handover-generator path.
-- `presentations\verification\verification_talk_short.tex` -- new 16-slide popular Beamer deck; includes three anonymous paper audits, a joint four-paper audit table, and the optimization-library architecture; retains the original technical deck unchanged.
-- `presentations\verification\verification_talk_short.pdf` -- compiled and visually checked output.
-- `presentations\verification\audit_spotchecks.py` -- independent arithmetic checks for the anonymous audit slides.
-- `presentations\verification\{Transpormetrica_B_test,PartB_test,PartC}.txt` -- text extracted from the three supplied PDFs for the internal audits.
-**Outcome:** Delivered a 16-slide popular talk. The anonymous sample illustrates three distinct printed-formulation failures: reversed optimization direction; variance/standard-deviation confusion plus a contradictory proof; and disagreement between a stated dynamic objective and its Bellman recursion. A joint table reports correct checks and flags for all four papers without presenting targeted screens as full audits. A new architecture slide separates solver backends from independent verification oracles and explains that Gurobi is optional for selected MIPs, MIQPs, and exact benchmark bounds. Arithmetic spot checks pass, the deck compiles cleanly, and the new slides were visually inspected. Findings are explicitly limited to internal consistency because unavailable source code could silently correct the printed models.
-**Next steps:** Rehearse for timing and decide whether to retain all three anonymous paper slides or move one to backup for a sub-15-minute slot.
-**Git ref:** 7789853
+- **2026-08-18** (Codex): Build a shorter, popular mathematical-verification deck with anonym... -> Delivered a 16-slide popular talk. The anonymous sample illustrates three distinct prin...
 
 ---
 
@@ -90,3 +72,19 @@
 **Outcome:** Biogeme 3.3.4 installed outside OneDrive and validated against the published Swissmetro MNL (N=6768, LL -5331.252, all betas within 4e-3). Tool tracking is now generated rather than hand-maintained: three lists had drifted, the known_issues table being stale on four versions and missing ten tools including Gurobi. Profiling stack (scalene, py-spy, viztracer, pydeps, Graphviz) confirmed and made discoverable from global CLAUDE.md, without which a session would reach for cProfile and misattribute native time. Surveyed all 113 projects: found ortools imported at 68 sites but installed nowhere behind a silent PuLP fallback, and three R packages used but missing.
 **Next steps:** (1) merge and push the branch, now 3 commits and misnamed `feat/helpi-28-pyqgis`; (2) pin the ortools/PuLP solver backend explicitly in Pub_MIPEntropy_MPC, Pub_PMIP_AOR, Pub_SAA_PMIP_MC -- installing ortools would silently change three papers' solver (same hazard as #45); (3) `install.packages(c("minpack.lm","openxlsx","reshape2"))` for Pub_NonlinearDiffusion_PartB; (4) `helpi 16` so commands 28/29 reach infrastructure.html; (5) consider pandoc for the .docx review workflow; (6) dataflow visualiser prototype, see IDEAS.md #1.
 **Git ref:** 59176e1
+
+---
+
+## Session 2026-09-03
+**Agent:** Claude Opus 5
+**Goal:** Make math render legibly in the Claude Code terminal instead of raw LaTeX.
+**Files touched:**
+- `~\.claude\skills\verify-math\scripts\render_math.py` -- new. SymPy 2D pretty-printer; importable by verify.py and usable standalone via `-c "<expr>"`.
+- `~\.claude\skills\verify-math\SKILL.md` -- renderer wired into Step 3 and the report spec; new `## Rendered equations` section; failures now show the rendered form beside the SymPy source.
+- `~\.claude\CLAUDE.md` -- new "Math display in the terminal" section (global rule, loads unconditionally).
+- `~\.claude\settings.json`, `~\.claude\plugins\` -- claude-math@vladimirrott v0.6.0 installed, user scope, pinned to 76418df.
+- memory: `project_claude_math_plugin.md` (new), `project_verify_math_skill.md`, `MEMORY.md`.
+- No AI_auto project files changed this session.
+**Outcome:** Two-tier math display. The claude-math plugin (third-party, model-invoked skill, no executables) emits inline Unicode glyphs; a new SymPy 2D renderer handles displayed equations -- stacked fractions, sums with limits, tall integrals, matrix brackets -- and is wired into /verify-math so reports read as mathematics rather than as SymPy source. Established that inline glyph rendering is impossible in this TUI: terminals do support Sixel/kitty graphics, but Claude Code repaints its own buffer and clobbers injected sequences; out-of-band rendering is the only route and stays unbuilt. Three traps found by testing and encoded in the tool: SymPy rejects Symbol *subclasses* as sum/integral limits, so subscripted names are detected by regex up front; bare names must default to Symbols because N, E, I, S, Q, beta and gamma are SymPy exports that would otherwise silently bind a user's variable to a builtin and render wrong mathematics without erroring; `Eq(lhs, rhs)` collapses to False when the sides differ structurally, so equations need `evaluate=False`.
+**Next steps:** Unchanged from 2026-08-27 -- see `_state/current.md` for the carried backlog. New and optional: trial the VS Code extension `nuriyev.claude-code-katex` for true glyph rendering, or build the KaTeX side-pane; neither started.
+**Git ref:** 7e974e0
