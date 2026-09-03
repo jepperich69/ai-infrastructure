@@ -1,21 +1,18 @@
 {
   "project": "AI_auto",
-  "generated": "2026-09-03 09:58",
+  "generated": "2026-09-03 10:45",
   "source": "_ai_log.md",
   "latest_session": {
     "title": "2026-09-03",
     "agent": "Claude Opus 5",
-    "goal": "Make math render legibly in the Claude Code terminal instead of raw LaTeX.",
-    "outcome": "Two-tier math display. The claude-math plugin (third-party, model-invoked skill, no executables) emits inline Unicode glyphs; a new SymPy 2D renderer handles displayed equations -- stacked fractions, sums with limits, tall integrals, matrix brackets -- and is wired into /verify-math so reports read as mathematics rather than as SymPy source. Established that inline glyph rendering is impossible in this TUI: terminals do support Sixel/kitty graphics, but Claude Code repaints its own buffer and clobbers injected sequences; out-of-band rendering is the only route and stays unbuilt. Three traps found by testing and encoded in the tool: SymPy rejects Symbol *subclasses* as sum/integral limits, so subscripted names are detected by regex up front; bare names must default to Symbols because N, E, I, S, Q, beta and gamma are SymPy exports that would otherwise silently bind a user's variable to a builtin and render wrong mathematics without erroring; `Eq(lhs, rhs)` collapses to False when the sides differ structurally, so equations need `evaluate=False`.",
-    "next_steps": "Unchanged from 2026-08-27 -- see `_state/current.md` for the carried backlog. New and optional: trial the VS Code extension `nuriyev.claude-code-katex` for true glyph rendering, or build the KaTeX side-pane; neither started.",
-    "git_ref": "7e974e0",
+    "goal": "Get voice input working in the Claude Code CLI, expected to need a Whisper plugin.",
+    "outcome": "No plugin needed or possible. Dictation is native since v2.x (`/voice`, hold or tap); plugins run only after a prompt is submitted, so none can capture a microphone. Neither configured marketplace carries anything voice-related. The real fault was a device one: Windows had made a webcam mic the system default while the laptop array mic sat active and unused, which would have degraded transcription and looked like a model failure. Privacy consent was already `Allow` at all three levels including `NonPackaged`, the subkey that governs terminals. Switched the default via `IPolicyConfig` for eConsole, eMultimedia and eCommunications, then confirmed clean transcription end to end. Details and the diagnosis order are in known_issues #53.",
+    "next_steps": "Optional, pin `\"voice\": { \"enabled\": true, \"mode\": \"tap\" }` in `~/.claude/settings.json`; the setting already persists without it. The AKG Ara USB mic is the best input on this machine and is currently unplugged, worth using for long dictation. Project backlog carried unchanged, see `_state/current.md`.",
+    "git_ref": "47fa1a7",
     "files_touched": [
-      "`~\\.claude\\skills\\verify-math\\scripts\\render_math.py` -- new. SymPy 2D pretty-printer; importable by verify.py and usable standalone via `-c \"<expr>\"`.",
-      "`~\\.claude\\skills\\verify-math\\SKILL.md` -- renderer wired into Step 3 and the report spec; new `## Rendered equations` section; failures now show the rendered form beside the SymPy source.",
-      "`~\\.claude\\CLAUDE.md` -- new \"Math display in the terminal\" section (global rule, loads unconditionally).",
-      "`~\\.claude\\settings.json`, `~\\.claude\\plugins\\` -- claude-math@vladimirrott v0.6.0 installed, user scope, pinned to 76418df.",
-      "memory: `project_claude_math_plugin.md` (new), `project_verify_math_skill.md`, `MEMORY.md`.",
-      "No AI_auto project files changed this session."
+      "`known_issues.md` -- new entry #53: native `/voice`, its auth requirements, and the wrong-default-microphone trap with its two measurement pitfalls.",
+      "System audio config -- default capture device switched from `Microphone (Webcam C170)` to `Microphone Array (Intel Smart Sound)`, all three roles.",
+      "No AI_auto scripts or code changed."
     ]
   },
   "latest_session_complete": true,

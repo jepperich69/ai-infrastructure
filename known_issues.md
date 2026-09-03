@@ -698,3 +698,42 @@ registration, not the body.
 rather than a walk-up search, `git add -u` or named paths rather than `-A`, and a guard that
 skips repos holding a manuscript. As written it is aimed at exactly the repos where history
 matters most.
+
+### 53. Voice dictation is native to Claude Code, and Windows had defaulted to the wrong microphone
+
+**There is no Whisper plugin, and there cannot usefully be one.** Claude Code plugins are
+skills, commands, agents, hooks and MCP servers, all of which run *after* a prompt is
+submitted. Nothing in that model can capture the microphone and type into the prompt box.
+Dictation has to live in the CLI itself, and since v2.x it does: `/voice` toggles it,
+`/voice hold` is push-to-talk, `/voice tap` starts and sends on separate taps. Neither
+configured marketplace (`claude-plugins-official`, `vladimirrott`) carries anything
+voice-related. Do not install a third-party dictation stack to solve this.
+
+**Requirements that actually bite.** Transcription streams to Anthropic, it is not local
+Whisper, and it is only available under Claude.ai account auth. It does not work with a
+direct Anthropic API key, Bedrock, Vertex or Foundry. It consumes no tokens and does not
+count toward `/usage`. A local microphone is required, so it is dead in SSH sessions and in
+Claude Code on the web.
+
+**The trap: Windows silently picks the wrong capture device.** This machine has fourteen
+capture endpoints registered. The system default was `Microphone (Webcam C170)`, a cheap
+far-field webcam mic, while the laptop's `Microphone Array (Intel Smart Sound)` sat active
+and unused and the good `AKG Ara USB Microphone` sat unplugged. Dictation then works but
+transcribes badly, and the failure looks like a model problem rather than a device problem.
+Check the default capture device before blaming transcription quality.
+
+**Diagnosis order.** Privacy consent lives at
+`HKCU/HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\microphone`.
+The subkey that governs terminals is `NonPackaged`, since Windows Terminal is not a Store
+app; all three must read `Allow`. Endpoint states are under
+`HKLM:\...\MMDevices\Audio\Capture` (1 = Active, 4 = Unplugged, 8 = NotPresent).
+
+**Two measurement traps.** `Role:*` subkeys are not written on Windows 11, so the registry
+will not tell you which device is default; query `IMMDeviceEnumerator::GetDefaultAudioEndpoint`
+instead. And `IAudioMeterInformation::GetPeakValue` reads 0.0 on an idle endpoint when no
+application holds a capture stream, so a zero peak is not evidence of a dead microphone.
+
+**Fix.** Settings -> System -> Sound -> Input, or programmatically via the undocumented
+`IPolicyConfig` COM interface (CLSID `870AF99C-...`, IID `F8679F50-...`), setting all three
+roles: eConsole, eMultimedia, eCommunications. Setting only eConsole leaves other
+applications on the old device.

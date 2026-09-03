@@ -395,3 +395,10 @@
 ## Archived 2026-09-03 (1 entry)
 
 - **2026-06-25 (second session)** (Gemini 3.5 Flash (Medium)): Address NoteTaker watcher failures on the 20-minute test recording,... -> Handled the 18 MB test recording (transcript, Markdown, and LaTeX summaries written, PD...
+
+
+---
+
+## Archived 2026-09-03 (1 entry)
+
+- **2026-06-25 (third session)** (Claude): Three infrastructure tasks: (1) stop NoteTaker's free-tier Supabase... -> All three done, validated, committed and pushed. NoteTaker keep-alive is live (watcher ...

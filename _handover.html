@@ -30,7 +30,7 @@
 <body>
 
 <h1>Handover Document &mdash; AI_auto</h1>
-<div class="meta">Generated: 2026-09-03 09:58 &nbsp;|&nbsp; Source: <code style="display:inline;padding:2px 6px">_ai_log.md</code> &nbsp;|&nbsp; Sidecar: <code style="display:inline;padding:2px 6px">_handover.json</code></div>
+<div class="meta">Generated: 2026-09-03 10:45 &nbsp;|&nbsp; Source: <code style="display:inline;padding:2px 6px">_ai_log.md</code> &nbsp;|&nbsp; Sidecar: <code style="display:inline;padding:2px 6px">_handover.json</code></div>
 
 <!-- ============================================================ -->
 <!-- AGENT INSTRUCTIONS                                            -->
@@ -64,18 +64,15 @@
   <h2>Latest Session Snapshot</h2>
   <p><strong>Session:</strong> 2026-09-03</p>
   <p><strong>Agent:</strong> Claude Opus 5</p>
-  <p><strong>Goal:</strong> Make math render legibly in the Claude Code terminal instead of raw LaTeX.</p>
-  <p><strong>Outcome:</strong> Two-tier math display. The claude-math plugin (third-party, model-invoked skill, no executables) emits inline Unicode glyphs; a new SymPy 2D renderer handles displayed equations -- stacked fractions, sums with limits, tall integrals, matrix brackets -- and is wired into /verify-math so reports read as mathematics rather than as SymPy source. Established that inline glyph rendering is impossible in this TUI: terminals do support Sixel/kitty graphics, but Claude Code repaints its own buffer and clobbers injected sequences; out-of-band rendering is the only route and stays unbuilt. Three traps found by testing and encoded in the tool: SymPy rejects Symbol *subclasses* as sum/integral limits, so subscripted names are detected by regex up front; bare names must default to Symbols because N, E, I, S, Q, beta and gamma are SymPy exports that would otherwise silently bind a user&#39;s variable to a builtin and render wrong mathematics without erroring; `Eq(lhs, rhs)` collapses to False when the sides differ structurally, so equations need `evaluate=False`.</p>
-  <p><strong>Next steps:</strong> Unchanged from 2026-08-27 -- see `_state/current.md` for the carried backlog. New and optional: trial the VS Code extension `nuriyev.claude-code-katex` for true glyph rendering, or build the KaTeX side-pane; neither started.</p>
-  <p><strong>Git ref:</strong> 7e974e0</p>
+  <p><strong>Goal:</strong> Get voice input working in the Claude Code CLI, expected to need a Whisper plugin.</p>
+  <p><strong>Outcome:</strong> No plugin needed or possible. Dictation is native since v2.x (`/voice`, hold or tap); plugins run only after a prompt is submitted, so none can capture a microphone. Neither configured marketplace carries anything voice-related. The real fault was a device one: Windows had made a webcam mic the system default while the laptop array mic sat active and unused, which would have degraded transcription and looked like a model failure. Privacy consent was already `Allow` at all three levels including `NonPackaged`, the subkey that governs terminals. Switched the default via `IPolicyConfig` for eConsole, eMultimedia and eCommunications, then confirmed clean transcription end to end. Details and the diagnosis order are in known_issues #53.</p>
+  <p><strong>Next steps:</strong> Optional, pin `&quot;voice&quot;: { &quot;enabled&quot;: true, &quot;mode&quot;: &quot;tap&quot; }` in `~/.claude/settings.json`; the setting already persists without it. The AKG Ara USB mic is the best input on this machine and is currently unplugged, worth using for long dictation. Project backlog carried unchanged, see `_state/current.md`.</p>
+  <p><strong>Git ref:</strong> 47fa1a7</p>
   <h3>Files touched</h3>
   <ul>
-  <li>`~\.claude\skills\verify-math\scripts\render_math.py` -- new. SymPy 2D pretty-printer; importable by verify.py and usable standalone via `-c &quot;&lt;expr&gt;&quot;`.</li>
-  <li>`~\.claude\skills\verify-math\SKILL.md` -- renderer wired into Step 3 and the report spec; new `## Rendered equations` section; failures now show the rendered form beside the SymPy source.</li>
-  <li>`~\.claude\CLAUDE.md` -- new &quot;Math display in the terminal&quot; section (global rule, loads unconditionally).</li>
-  <li>`~\.claude\settings.json`, `~\.claude\plugins\` -- claude-math@vladimirrott v0.6.0 installed, user scope, pinned to 76418df.</li>
-  <li>memory: `project_claude_math_plugin.md` (new), `project_verify_math_skill.md`, `MEMORY.md`.</li>
-  <li>No AI_auto project files changed this session.</li>
+  <li>`known_issues.md` -- new entry #53: native `/voice`, its auth requirements, and the wrong-default-microphone trap with its two measurement pitfalls.</li>
+  <li>System audio config -- default capture device switched from `Microphone (Webcam C170)` to `Microphone Array (Intel Smart Sound)`, all three roles.</li>
+  <li>No AI_auto scripts or code changed.</li>
 </ul>
 </div>
 
@@ -90,7 +87,6 @@
 <h2>Compressed sessions</h2>
 <br>
 <ul>
-  <li><strong>2026-06-25 (third session)</strong> (Claude): Three infrastructure tasks: (1) stop NoteTaker&#39;s free-tier Supabase... -&gt; All three done, validated, committed and pushed. NoteTaker keep-alive is live (watcher ...</li>
   <li><strong>2026-06-30</strong> (Claude): User asked whether CLI LLMs integrate with a symbolic math engine (... -&gt; Established SymPy (not Z3) is the right fit for the actual need; Z3 considered but not ...</li>
   <li><strong>2026-06-30 (second session)</strong> (Claude): Document the new `/verify-math` (SymPy) skill in the infrastructure... -&gt; `/verify-math` is fully documented with an architecture report; SymPy flagged as an ins...</li>
   <li><strong>2026-06-30 (third session)</strong> (Claude): Fix the stale-PDF bug in `generate_docs.ps1` (helpi 16) surfaced la... -&gt; Fix validated with Edge open (the exact failure condition) -- the output PDF now contai...</li>
@@ -106,26 +102,8 @@
   <li><strong>2026-07-03 (2)</strong> (Claude Fable 5): Discuss a portfolio &quot;helicopter view&quot; (surface unexploited/dormant ... -&gt; Decided the helicopter view is NOT a RAG (36 logs, 278 KB, fits in context) but an agen...</li>
   <li><strong>2026-08-14</strong> (Claude Opus 5): Build a presentation on how we do mathematical verification and cer... -&gt; Deck delivered. Section 5 is a real run, not a mock-up: Kahneman &amp; Tversky (1979) check...</li>
   <li><strong>2026-08-18</strong> (Codex): Build a shorter, popular mathematical-verification deck with anonym... -&gt; Delivered a 16-slide popular talk. The anonymous sample illustrates three distinct prin...</li>
+  <li><strong>2026-08-27</strong> (Claude Opus 5): Design and build an instruction set (skill) for refereeing and edit... -&gt; /review-paper is live. It extends the user&#39;s eight criteria with venue fit, claim-evide...</li>
 </ul>
-<br>
-<hr>
-<br>
-<h2>Session 2026-08-27</h2>
-<p><strong>Agent:</strong> Claude Opus 5</p>
-<p><strong>Goal:</strong> Design and build an instruction set (skill) for refereeing and editing papers, so review decisions rest on verified findings rather than impression.</p>
-<p><strong>Files touched:</strong></p>
-<ul>
-  <li>`C:\Users\rich\.agents\skills\review-paper\SKILL.md` -- new /review-paper skill: 9 passes, 2 gates, hard rules (confidentiality, anchoring, defect-vs-preference, confidence markers, expertise boundary).</li>
-  <li>`...\review-paper\references\checklist.md` -- dimensions D1-D12 plus 1-5 rubric anchors for C/R/D/E/P/Rp.</li>
-  <li>`...\review-paper\references\review-paradigms.md` -- PRISMA 2020 / PRISMA-ScR / MOOSE branch for review and survey papers.</li>
-  <li>`...\review-paper\references\voice.md` -- voice rules and calibration protocol for drafting the letter as the user.</li>
-  <li>`...\review-paper\templates\review_to_authors.md`, `review_confidential.md` -- letter, confidential note, editor decision letter, reviewer brief.</li>
-  <li>`JR\Reviews\_index.md`, `JR\Reviews\_voice\README.md` -- review register (rubric row per review) and voice-sample folder.</li>
-  <li>`~\.claude\skills\review-paper` -- junction to the shared .agents copy.</li>
-</ul>
-<p><strong>Outcome:</strong> /review-paper is live. It extends the user&#39;s eight criteria with venue fit, claim-evidence alignment, identification, a complexity budget test (missing naive baseline is a MAJOR finding), uncertainty practice, reproducibility, arithmetic and cross-reference audit, reference integrity, salami-slicing, limitations honesty, and revision-round classification. Mechanical audit runs before judgment; a devil&#39;s-advocate pass precedes scoring; decision rule maps rubric to accept/minor/major/reject. Simple method on strong data is written in as a full contribution.</p>
-<p><strong>Next steps:</strong> (1) drop 2-3 past review letters into `JR\Reviews\_voice\` for voice calibration; (2) calibrate the rubric by running the skill on a paper already decided and comparing recommendations; (3) add /review-paper to `infrastructure.html` if it should appear in the helpi docs.</p>
-<p><strong>Git ref:</strong> ae23b09</p>
 <br>
 <hr>
 <br>
@@ -182,7 +160,22 @@
 </ul>
 <p><strong>Outcome:</strong> Two-tier math display. The claude-math plugin (third-party, model-invoked skill, no executables) emits inline Unicode glyphs; a new SymPy 2D renderer handles displayed equations -- stacked fractions, sums with limits, tall integrals, matrix brackets -- and is wired into /verify-math so reports read as mathematics rather than as SymPy source. Established that inline glyph rendering is impossible in this TUI: terminals do support Sixel/kitty graphics, but Claude Code repaints its own buffer and clobbers injected sequences; out-of-band rendering is the only route and stays unbuilt. Three traps found by testing and encoded in the tool: SymPy rejects Symbol *subclasses* as sum/integral limits, so subscripted names are detected by regex up front; bare names must default to Symbols because N, E, I, S, Q, beta and gamma are SymPy exports that would otherwise silently bind a user&#39;s variable to a builtin and render wrong mathematics without erroring; `Eq(lhs, rhs)` collapses to False when the sides differ structurally, so equations need `evaluate=False`.</p>
 <p><strong>Next steps:</strong> Unchanged from 2026-08-27 -- see `_state/current.md` for the carried backlog. New and optional: trial the VS Code extension `nuriyev.claude-code-katex` for true glyph rendering, or build the KaTeX side-pane; neither started.</p>
-<p><strong>Git ref:</strong> 7e974e0</p>
+<p><strong>Git ref:</strong> 7e974e0</p>
+<br>
+<hr>
+<br>
+<h2>Session 2026-09-03</h2>
+<p><strong>Agent:</strong> Claude Opus 5</p>
+<p><strong>Goal:</strong> Get voice input working in the Claude Code CLI, expected to need a Whisper plugin.</p>
+<p><strong>Files touched:</strong></p>
+<ul>
+  <li>`known_issues.md` -- new entry #53: native `/voice`, its auth requirements, and the wrong-default-microphone trap with its two measurement pitfalls.</li>
+  <li>System audio config -- default capture device switched from `Microphone (Webcam C170)` to `Microphone Array (Intel Smart Sound)`, all three roles.</li>
+  <li>No AI_auto scripts or code changed.</li>
+</ul>
+<p><strong>Outcome:</strong> No plugin needed or possible. Dictation is native since v2.x (`/voice`, hold or tap); plugins run only after a prompt is submitted, so none can capture a microphone. Neither configured marketplace carries anything voice-related. The real fault was a device one: Windows had made a webcam mic the system default while the laptop array mic sat active and unused, which would have degraded transcription and looked like a model failure. Privacy consent was already `Allow` at all three levels including `NonPackaged`, the subkey that governs terminals. Switched the default via `IPolicyConfig` for eConsole, eMultimedia and eCommunications, then confirmed clean transcription end to end. Details and the diagnosis order are in known_issues #53.</p>
+<p><strong>Next steps:</strong> Optional, pin `&quot;voice&quot;: { &quot;enabled&quot;: true, &quot;mode&quot;: &quot;tap&quot; }` in `~/.claude/settings.json`; the setting already persists without it. The AKG Ara USB mic is the best input on this machine and is currently unplugged, worth using for long dictation. Project backlog carried unchanged, see `_state/current.md`.</p>
+<p><strong>Git ref:</strong> 47fa1a7</p>
 <br>
 
 </div>
@@ -199,7 +192,6 @@
 
 ## Compressed sessions
 
-- **2026-06-25 (third session)** (Claude): Three infrastructure tasks: (1) stop NoteTaker's free-tier Supabase... -&gt; All three done, validated, committed and pushed. NoteTaker keep-alive is live (watcher ...
 - **2026-06-30** (Claude): User asked whether CLI LLMs integrate with a symbolic math engine (... -&gt; Established SymPy (not Z3) is the right fit for the actual need; Z3 considered but not ...
 - **2026-06-30 (second session)** (Claude): Document the new `/verify-math` (SymPy) skill in the infrastructure... -&gt; `/verify-math` is fully documented with an architecture report; SymPy flagged as an ins...
 - **2026-06-30 (third session)** (Claude): Fix the stale-PDF bug in `generate_docs.ps1` (helpi 16) surfaced la... -&gt; Fix validated with Edge open (the exact failure condition) -- the output PDF now contai...
@@ -215,23 +207,7 @@
 - **2026-07-03 (2)** (Claude Fable 5): Discuss a portfolio "helicopter view" (surface unexploited/dormant ... -&gt; Decided the helicopter view is NOT a RAG (36 logs, 278 KB, fits in context) but an agen...
 - **2026-08-14** (Claude Opus 5): Build a presentation on how we do mathematical verification and cer... -&gt; Deck delivered. Section 5 is a real run, not a mock-up: Kahneman & Tversky (1979) check...
 - **2026-08-18** (Codex): Build a shorter, popular mathematical-verification deck with anonym... -&gt; Delivered a 16-slide popular talk. The anonymous sample illustrates three distinct prin...
-
----
-
-## Session 2026-08-27
-**Agent:** Claude Opus 5
-**Goal:** Design and build an instruction set (skill) for refereeing and editing papers, so review decisions rest on verified findings rather than impression.
-**Files touched:**
-- `C:\Users\rich\.agents\skills\review-paper\SKILL.md` -- new /review-paper skill: 9 passes, 2 gates, hard rules (confidentiality, anchoring, defect-vs-preference, confidence markers, expertise boundary).
-- `...\review-paper\references\checklist.md` -- dimensions D1-D12 plus 1-5 rubric anchors for C/R/D/E/P/Rp.
-- `...\review-paper\references\review-paradigms.md` -- PRISMA 2020 / PRISMA-ScR / MOOSE branch for review and survey papers.
-- `...\review-paper\references\voice.md` -- voice rules and calibration protocol for drafting the letter as the user.
-- `...\review-paper\templates\review_to_authors.md`, `review_confidential.md` -- letter, confidential note, editor decision letter, reviewer brief.
-- `JR\Reviews\_index.md`, `JR\Reviews\_voice\README.md` -- review register (rubric row per review) and voice-sample folder.
-- `~\.claude\skills\review-paper` -- junction to the shared .agents copy.
-**Outcome:** /review-paper is live. It extends the user's eight criteria with venue fit, claim-evidence alignment, identification, a complexity budget test (missing naive baseline is a MAJOR finding), uncertainty practice, reproducibility, arithmetic and cross-reference audit, reference integrity, salami-slicing, limitations honesty, and revision-round classification. Mechanical audit runs before judgment; a devil's-advocate pass precedes scoring; decision rule maps rubric to accept/minor/major/reject. Simple method on strong data is written in as a full contribution.
-**Next steps:** (1) drop 2-3 past review letters into `JR\Reviews\_voice\` for voice calibration; (2) calibrate the rubric by running the skill on a paper already decided and comparing recommendations; (3) add /review-paper to `infrastructure.html` if it should appear in the helpi docs.
-**Git ref:** ae23b09
+- **2026-08-27** (Claude Opus 5): Design and build an instruction set (skill) for refereeing and edit... -&gt; /review-paper is live. It extends the user's eight criteria with venue fit, claim-evide...
 
 ---
 
@@ -283,6 +259,19 @@
 **Outcome:** Two-tier math display. The claude-math plugin (third-party, model-invoked skill, no executables) emits inline Unicode glyphs; a new SymPy 2D renderer handles displayed equations -- stacked fractions, sums with limits, tall integrals, matrix brackets -- and is wired into /verify-math so reports read as mathematics rather than as SymPy source. Established that inline glyph rendering is impossible in this TUI: terminals do support Sixel/kitty graphics, but Claude Code repaints its own buffer and clobbers injected sequences; out-of-band rendering is the only route and stays unbuilt. Three traps found by testing and encoded in the tool: SymPy rejects Symbol *subclasses* as sum/integral limits, so subscripted names are detected by regex up front; bare names must default to Symbols because N, E, I, S, Q, beta and gamma are SymPy exports that would otherwise silently bind a user's variable to a builtin and render wrong mathematics without erroring; `Eq(lhs, rhs)` collapses to False when the sides differ structurally, so equations need `evaluate=False`.
 **Next steps:** Unchanged from 2026-08-27 -- see `_state/current.md` for the carried backlog. New and optional: trial the VS Code extension `nuriyev.claude-code-katex` for true glyph rendering, or build the KaTeX side-pane; neither started.
 **Git ref:** 7e974e0
+
+---
+
+## Session 2026-09-03
+**Agent:** Claude Opus 5
+**Goal:** Get voice input working in the Claude Code CLI, expected to need a Whisper plugin.
+**Files touched:**
+- `known_issues.md` -- new entry #53: native `/voice`, its auth requirements, and the wrong-default-microphone trap with its two measurement pitfalls.
+- System audio config -- default capture device switched from `Microphone (Webcam C170)` to `Microphone Array (Intel Smart Sound)`, all three roles.
+- No AI_auto scripts or code changed.
+**Outcome:** No plugin needed or possible. Dictation is native since v2.x (`/voice`, hold or tap); plugins run only after a prompt is submitted, so none can capture a microphone. Neither configured marketplace carries anything voice-related. The real fault was a device one: Windows had made a webcam mic the system default while the laptop array mic sat active and unused, which would have degraded transcription and looked like a model failure. Privacy consent was already `Allow` at all three levels including `NonPackaged`, the subkey that governs terminals. Switched the default via `IPolicyConfig` for eConsole, eMultimedia and eCommunications, then confirmed clean transcription end to end. Details and the diagnosis order are in known_issues #53.
+**Next steps:** Optional, pin `"voice": { "enabled": true, "mode": "tap" }` in `~/.claude/settings.json`; the setting already persists without it. The AKG Ara USB mic is the best input on this machine and is currently unplugged, worth using for long dictation. Project backlog carried unchanged, see `_state/current.md`.
+**Git ref:** 47fa1a7
 </textarea>
 </div>
 
