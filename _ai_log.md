@@ -84,3 +84,16 @@
 **Outcome:** No plugin needed or possible. Dictation is native since v2.x (`/voice`, hold or tap); plugins run only after a prompt is submitted, so none can capture a microphone. Neither configured marketplace carries anything voice-related. The real fault was a device one: Windows had made a webcam mic the system default while the laptop array mic sat active and unused, which would have degraded transcription and looked like a model failure. Privacy consent was already `Allow` at all three levels including `NonPackaged`, the subkey that governs terminals. Switched the default via `IPolicyConfig` for eConsole, eMultimedia and eCommunications, then confirmed clean transcription end to end. Details and the diagnosis order are in known_issues #53.
 **Next steps:** Optional, pin `"voice": { "enabled": true, "mode": "tap" }` in `~/.claude/settings.json`; the setting already persists without it. The AKG Ara USB mic is the best input on this machine and is currently unplugged, worth using for long dictation. Project backlog carried unchanged, see `_state/current.md`.
 **Git ref:** 47fa1a7
+
+---
+
+## Session 2026-09-03
+**Agent:** Codex
+**Goal:** Strengthen the `review-paper` skill against ghost references and citations that do not support the claims where they appear.
+**Files touched:**
+- `~\.agents\skills\review-paper\SKILL.md` -- added an exhaustive reference-integrity harness covering citation-graph closure, DOI resolution, DOI-to-title/publication/author/year matching, identity classifications, claim-support classifications, escalation rules, a required audit table, and revision-round behavior.
+- `~\.agents\skills\review-paper\references\checklist.md` -- made exhaustive reference identity and risk-based claim-support checks explicit in D3.
+- `_ai_log.md` -- recorded this session.
+**Outcome:** Full reviews and revision rounds must now verify every bibliography entry rather than sample references. Each DOI must resolve to metadata matching the cited title and publication; load-bearing and high-risk citations must also be checked in context and classified as supporting, partially supporting, unsupported, or unverifiable.
+**Next steps:** Exercise the harness on the next full or revision review and refine only if the resulting audit is too costly or produces ambiguous classifications.
+**Git ref:** 2b4085b
