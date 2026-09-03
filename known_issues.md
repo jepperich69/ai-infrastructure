@@ -652,3 +652,49 @@ Installed 2026-08-27 at `C:\Users\rich\venvs\biogeme313` (850 MB, 26,076 files),
 **Scaling trap that check exposed.** `biogeme.data.swissmetro` defines `TRAIN_TT_SCALED = TRAIN_TT / 100` and likewise for the other time and cost variables. Coefficients on the scaled regressors are therefore 100x the per-minute / per-franc values. Both -1.08 / -1.28 and -0.0108 / -0.0128 appear in the literature for this same model; they differ only in regressor units. Check which scaling an example uses before comparing estimates.
 
 **Noise on import.** `pymc` is a hard dependency and pulls `pytensor`, which warns that no g++ is available and falls back to a slower backend. Harmless unless doing Bayesian estimation.
+
+---
+
+### 52. The `Stop` auto-commit hook does `git add -A` and bundles unrelated work
+**Status:** OPEN -- needs a removal from `~/.claude/settings.json` that Claude cannot make itself
+**Affects:** Every project with a git repo reachable from the working directory. Observed in `Pub_NapstiGranularity_TBA` in both `code/` and `Overleaf_source/`.
+
+`scripts/auto_commit_hook.ps1` is registered as a Claude Code **`Stop` hook** at line 50 of
+`C:\Users\rich\.claude\settings.json`. It walks up to four levels from the working directory
+looking for a `.git`, then runs `git add -A` followed by
+`git commit -m "claude: auto-commit <timestamp>"`.
+
+**This is indiscriminate by construction, not a misconfiguration.** `git add -A` stages
+everything in the tree, so any file that happened to be dirty before the session started is
+swept into the same commit as the session's own work, under a message that describes neither.
+The hook fires on EVERY stop, so one working session produces many such commits.
+
+Measured 2026-09-01:
+
+- `code/` commit `31050ef` bundled a shelved exploratory route-choice benchmark together with
+  six Paper 1 pipeline files that had been dirty since the 2026-08-29/30 sessions. Split by hand
+  into `840e1b4` (Paper 1 pipeline) and `1fa2f46` (benchmark).
+- `Overleaf_source/` carries fourteen `claude: auto-commit` entries from 2026-08-30 alone.
+  Manuscript history is accumulating commits whose messages say nothing.
+
+The damage is bounded only because the commits are local: nothing was pushed. A hook that
+commits on every stop will eventually produce a pushed commit nobody reviewed.
+
+**Fix.** Remove the `Stop` hook entry from `~/.claude/settings.json`. Quickest route: type
+`/hooks` in Claude Code, select `Stop`, delete the entry. That also shows whatever else is
+registered there. Leave the rest of the `hooks` object alone.
+
+**Why Claude could not do it.** `~/.claude/` is behind a deny rule in the permission settings:
+both the Read and the Grep tool refuse that path, so the file cannot be inspected or edited from
+a session. That is working as intended, the global config should not be agent-writable, but it
+means this fix is always a manual one.
+
+**Do not "fix" it by gutting the script.** An early `exit 0` in `scripts/auto_commit_hook.ps1`
+would disable the behaviour today and then silently restore it the next time `helpi 26` pulls
+infrastructure from GitHub, with nobody remembering why the commits came back. Remove the
+registration, not the body.
+
+**If an auto-commit hook is wanted at all**, it needs at minimum: an explicit path allowlist
+rather than a walk-up search, `git add -u` or named paths rather than `-A`, and a guard that
+skips repos holding a manuscript. As written it is aimed at exactly the repos where history
+matters most.
