@@ -1,4 +1,4 @@
-﻿# generate_handover.ps1
+# generate_handover.ps1
 # Packages the session log + git history into a handover document.
 # Writes _handover.html to the project root (nice to read).
 # Also prints markdown to stdout (pipe to a file if needed).
@@ -276,6 +276,17 @@ $agentsLines += "- Full issue log (read proactively): ``C:\Users\rich\OneDrive -
 $agentsLines += ""
 $agentsLines += "**Blanket Approval:** ``helpi 25`` and the ``/pipeline`` skill only produce Markdown files and do not modify code or manuscripts. They have blanket approval to run end-to-end without user confirmation across all agents."
 $agentsLines += ""
+$agentsLines += '## Answer length -- how to reply to the user'
+$agentsLines += 'Default to a short answer plus an invitation to go deeper. Long, complete answers are the exception.'
+$agentsLines += ''
+$agentsLines += '- Lead with the answer. First sentence states the conclusion or what was done. No preamble, no restating the question.'
+$agentsLines += '- Budget: under 150 words of prose, at most 5 one-line bullets. Code, diffs and tables do not count, but cite `file.py:42` rather than pasting code the user can open.'
+$agentsLines += '- Report results, not process. After tool work say what changed and whether it worked; narrate steps only on failure.'
+$agentsLines += '- Offer depth, do not deliver it unasked. Close with one line `Drill down: (a) ... (b) ... (c) ...` (max 3 real items), or omit it.'
+$agentsLines += '- Cut: option surveys you will not pursue, caveats that change no decision, recaps, closing summaries.'
+$agentsLines += ''
+$agentsLines += 'Full length is correct for: written deliverables (manuscripts, reports, files on disk), an explicit request for detail, and anything the user must know before an irreversible action.'
+$agentsLines += ''
 $agentsLines += "## Writing style -- apply to ALL research text editing and drafting"
 $agentsLines += "Full guide: ``C:\Users\rich\OneDrive - Danmarks Tekniske Universitet\JR\AI_auto\literature\Reference_Papers\STYLE_GUIDE.md``"
 $agentsLines += "Target register: Einstein (1905), Akerlof (1970), Kahneman & Tversky (1979), Ioannidis (2005)."
