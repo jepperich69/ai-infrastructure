@@ -220,8 +220,8 @@
   .one-pager .op-col h2 { font-size: 0.88em; font-weight: bold; letter-spacing: 0.06em;
                            text-transform: uppercase; color: var(--blue);
                            border-bottom: 1px solid var(--border); padding-bottom: 4px; margin-bottom: 8px; }
-  .one-pager table { width: 100%; border-collapse: collapse; font-size: 0.8em; }
-  .one-pager td { padding: 4px 6px; vertical-align: top; border-bottom: 1px solid #eee; line-height: 1.4; }
+  .one-pager table { width: 100%; border-collapse: collapse; font-size: 0.72em; }
+  .one-pager td { padding: 2px 4px; vertical-align: top; border-bottom: 1px solid #eee; line-height: 1.35; }
   .one-pager td:first-child { white-space: nowrap; font-family: Consolas, monospace;
                                font-weight: bold; color: #333; padding-right: 10px; }
   .one-pager td:last-child { color: #555; }
@@ -231,8 +231,8 @@
   .one-pager .op-step code { background: none; font-size: 1em; font-weight: bold; }
   .one-pager .op-step small { display: block; color: #666; font-size: 0.85em; margin-top: 1px; }
   .one-pager .op-arr { color: #aaa; font-size: 1em; }
-  .one-pager .op-scenarios { font-size: 0.8em; }
-  .one-pager .op-scenarios dt { font-weight: bold; color: #333; margin-top: 7px; }
+  .one-pager .op-scenarios { font-size: 0.72em; }
+  .one-pager .op-scenarios dt { font-weight: bold; color: #333; margin-top: 4px; }
   .one-pager .op-scenarios dd { color: #555; margin-left: 12px; line-height: 1.45; }
   .one-pager .op-scenarios dd code { font-size: 0.9em; }
   .one-pager .op-print-note { font-size: 0.74em; color: #999; text-align: right; margin-top: 10px; font-style: italic; }
@@ -264,6 +264,11 @@
                  box-shadow: none; page-break-inside: avoid; }
     .one-pager .op-print-note { display: none; }
     .one-pager h1 { font-size: 1.15em; }
+    .one-pager .op-grid { gap: 12px; margin-bottom: 10px; }
+    .one-pager table, .one-pager .op-scenarios { font-size: 0.72em; }
+    .one-pager td { padding: 2px 4px; }
+    .one-pager .op-scenarios dt:nth-of-type(n+5),
+    .one-pager .op-scenarios dd:nth-of-type(n+5) { display: none; }
   }
   </style>
 </head>
@@ -275,7 +280,7 @@
   <img src="Infra_frontpage.png" alt="Research Infrastructure Guide — overview infographic">
 </div>
 
-<div class="subtitle">Infrastructure version: <strong>v1.0</strong> &nbsp;&bull;&nbsp; Last updated: 2026-05-30 &nbsp;&bull;&nbsp; Scripts live in <code>JR\AI_auto\scripts\</code> &nbsp;&bull;&nbsp; Claude commands live in <code>~\.claude\commands\</code></div>
+<div class="subtitle">Infrastructure version: <strong>v1.1</strong> &nbsp;&bull;&nbsp; Last updated: 2026-09-04 &nbsp;&bull;&nbsp; Scripts live in <code>JR\AI_auto\scripts\</code> &nbsp;&bull;&nbsp; Shared skills live in <code>~\.agents\skills\</code></div>
 
 <!-- ═══════════════════════════════════════════════════════════════ -->
 <!-- CONTENTS                                                        -->
@@ -297,8 +302,8 @@
       <div><a href="#helpi7" style="color:inherit;">7 &mdash; Session Logging &amp; Handover</a></div>
       <div><a href="#helpi89" style="color:inherit;">8/9 &mdash; Snapshot &amp; Rollback</a></div>
       <div><a href="#helpi1012" style="color:inherit;">10–12 &mdash; Submit &amp; Reviewer Loop</a></div>
-      <div><a href="#helpi1319" style="color:inherit;">13–25 &mdash; Status, Network, Guide, Docs, Cheatsheet, Model-check, Slides, Compress Log, Push GitHub, One-pager, Forum</a></div>
-      <div><a href="#quickref" style="color:inherit;">Quick Command Reference (helpi 1–25)</a></div>
+      <div><a href="#helpi1319" style="color:inherit;">13–29 &mdash; Operations, setup, generic projects, QGIS, tool inventory</a></div>
+      <div><a href="#quickref" style="color:inherit;">Quick Command Reference (helpi 1–29)</a></div>
     </div>
 
     <div>
@@ -306,6 +311,7 @@
       <div><a href="#secA" style="color:inherit;">A &mdash; Claude Code Commands</a></div>
       <div><a href="#secA-style" style="color:inherit;">A2 &mdash; /style-edit &amp; /style-apply</a></div>
       <div><a href="#secA-verify" style="color:inherit;">A3 &mdash; /verify-math &mdash; SymPy math check</a></div>
+      <div><a href="#research-quality" style="color:inherit;">A4 &mdash; Review, grilling, diagnosis &amp; development skills</a></div>
       <div><a href="#secB" style="color:inherit;">B &mdash; /submit &mdash; Submission package</a></div>
       <div><a href="#secC" style="color:inherit;">C &mdash; /respond &mdash; Reviewer response loop</a></div>
       <div><a href="#secD" style="color:inherit;">D &mdash; Cross-Project Memory &amp; Feeders</a></div>
@@ -313,6 +319,7 @@
       <div><a href="#secF" style="color:inherit;">F &mdash; Typical Working Session</a></div>
       <div><a href="#secG" style="color:inherit;">G &mdash; Worked Example</a></div>
       <div><a href="#secH" style="color:inherit;">H &mdash; GPT Codex CLI Skills</a></div>
+      <div><a href="#notetaker" style="color:inherit;">I &mdash; NoteTaker Mobile Voice Bridge</a></div>
       <div><a href="#secInstall" style="color:inherit;">Install &mdash; New machine / new colleague</a></div>
       <div><a href="#secI" style="color:inherit;">I &mdash; Collaborative Setup</a></div>
 
@@ -524,8 +531,8 @@
           </tr>
           <tr>
             <td class="diag-phase-tag" rowspan="3">WORK</td>
-            <td class="diag-phase-cmd">auto-commit hook</td>
-            <td class="diag-phase-desc">every Claude response committed to git automatically</td>
+            <td class="diag-phase-cmd">verify + commit</td>
+            <td class="diag-phase-desc">group coherent changes under descriptive git commits</td>
           </tr>
           <tr>
             <td class="diag-phase-cmd">/snapshot V2</td>
@@ -752,12 +759,11 @@ co-author's version of the sentence
   </p>
   <pre>helpi 22 Pub_XXX    # compress on demand; also runs automatically at /close</pre>
 
-  <h3>Auto-commit hook <span class="tag auto">AUTO</span></h3>
+  <h3>Git commits <span class="tag manual">MANUAL</span></h3>
   <p>
-    A Claude Code <em>Stop hook</em> runs <code>auto_commit_hook.ps1</code> after every Claude
-    response. It walks up from the current directory, finds the nearest git repo, and commits
-    any file changes with <code>claude: auto-commit HH:MM</code>. This gives rollback
-    granularity at the turn level.
+    Commit coherent changes deliberately with descriptive messages. The former Claude Code
+    <em>Stop hook</em> ran <code>git add -A</code> after every response and could bundle unrelated
+    work; it is deprecated and must not be registered. The script remains only as legacy infrastructure.
   </p>
 
   <h3>Incremental session draft <span class="tag auto">AUTO</span></h3>
@@ -867,8 +873,8 @@ git checkout snapshot-v2 -- main.tex       # restore one file from snapshot</pre
 
   <h3>Rollback (helpi 9) &mdash; undo last N commits</h3>
   <p>
-    Previews the diff before reverting. Every Claude turn is auto-committed (Stop hook), so
-    rollback is fine-grained down to individual responses.
+    Previews the diff before reverting. Rollback granularity follows the deliberate commits in
+    the project code repository.
   </p>
   <pre>helpi 9 Pub_XXX -N 1      # preview + undo last commit
 helpi 9 Pub_XXX -N 3      # undo last 3 commits</pre>
@@ -910,7 +916,7 @@ helpi 9 Pub_XXX -N 3      # undo last 3 commits</pre>
 <!-- STATUS / NETWORK / DOCS                                         -->
 <!-- ═══════════════════════════════════════════════════════════════ -->
 <div class="section teal" id="helpi1319">
-  <h2>13–25 &mdash; Status, Network, Guide, Docs, Cheatsheet, Model-check, Slides, Compress Log, Push GitHub, Technical One-pager, Convergence Forum</h2>
+  <h2>13–29 &mdash; Operations, Setup, Generic Projects, QGIS, and Tool Inventory</h2>
 
   <table class="cmd-table">
     <tr><th>#</th><th>What it does</th><th>Usage</th></tr>
@@ -979,6 +985,10 @@ helpi 9 Pub_XXX -N 3      # undo last 3 commits</pre>
       <td>Convergence Forum &mdash; adversarial multi-agent debate to reach a stress-tested consensus on a research task. Two modes: <strong>Forum</strong> (Claude, Gemini, Codex challenge each other in structured rounds with a Blackboard); <strong>SAD</strong> (single agent in three roles: Critic, Advocate, Realist). <code>-Stage</code> controls conservatism: <em>draft</em> (full open debate), <em>revision</em> (surgical edits only), <em>final</em> (defect detection only). Output: structured Markdown report with consensus position and dissenting views.</td>
       <td><code>helpi 25 Pub_XXX 'Task description' [-Mode SAD] [-Stage draft|revision|final]</code></td>
     </tr>
+    <tr><td>26</td><td>Update AI_auto from GitHub, preserving machine-local configuration and checking Claude hook paths.</td><td><code>helpi 26</code></td></tr>
+    <tr><td>27</td><td>Create a lightweight non-paper project with an AI log, project brief, proxy sandbox, and retrieved-source register; no Overleaf or code repository is assumed.</td><td><code>helpi 27 [Project]</code></td></tr>
+    <tr><td>28</td><td>Add project-scoped PyQGIS support. Writes VS Code interpreter settings, <code>.env</code>, and a smoke test without changing global Python.</td><td><code>helpi 28 [Project]</code></td></tr>
+    <tr><td>29</td><td>Probe installed research software and regenerate <code>TOOLS.md</code>. This is the authoritative current inventory; do not hand-edit it.</td><td><code>helpi 29</code></td></tr>
   </table>
 </div>
 
@@ -986,7 +996,7 @@ helpi 9 Pub_XXX -N 3      # undo last 3 commits</pre>
 <!-- HELPI / COMMAND REFERENCE                                       -->
 <!-- ═══════════════════════════════════════════════════════════════ -->
 <div class="section teal" id="quickref">
-  <h2>Quick Command Reference &mdash; <code>helpi 1&ndash;25</code></h2>
+  <h2>Quick Command Reference &mdash; <code>helpi 1&ndash;29</code></h2>
 
   <h3>Calling conventions</h3>
   <pre>helpi                              # show all commands (project auto-detected from CWD)
@@ -1068,6 +1078,10 @@ helpi 3 Pub_X main.tex             # run command 3 with a specific .tex file</pr
     <tr><td>23</td><td>Push code/ to GitHub</td><td><code>push_to_github.ps1 -Project Pub_XXX</code> &mdash; creates GitHub repo via <code>gh</code> CLI if no remote exists, then pushes. No browser needed. Default: private repo named <code>&lt;project&gt;-code</code>.</td><td><span class="tag manual">manual</span></td></tr>
     <tr><td>24</td><td>Boil paper to technical one-pager</td><td>Reads main .tex and generates a self-contained LaTeX note distilling core ideas, formulas, and checks. Compiles to one A4 page. Uses <code>generate_onepager.ps1</code>.</td><td><span class="tag manual">manual</span></td></tr>
     <tr><td>25</td><td>Convergence Forum (Multi-agent / SAD debate)</td><td><code>run_forum.ps1 -Project XXX -Task '...' [-Mode Forum|SAD] [-Stage draft|revision|final]</code> &mdash; orchestrates adversarial debate to reach stress-tested consensus. <b>Forum</b> mode uses multiple agents (default: Claude, Gemini, Codex); <b>SAD</b> mode uses one agent in three roles (Critic, Advocate, Realist). <code>-Stage</code> controls agent conservatism: <b>draft</b> (full debate), <b>revision</b> (surgical edits), <b>final</b> (defect detection only).</td><td><span class="tag manual">manual</span></td></tr>
+    <tr><td>26</td><td>Update AI_auto from GitHub</td><td><code>update.ps1</code> &mdash; pulls the stable repository while preserving <code>config.local.ps1</code>; checks Claude hook paths</td><td><span class="tag manual">manual</span></td></tr>
+    <tr><td>27</td><td>Create generic non-paper project</td><td><code>new_generic_project.ps1 [-Project Name]</code> &mdash; creates the AI continuity layer without assuming Overleaf or a code repository</td><td><span class="tag once">once</span></td></tr>
+    <tr><td>28</td><td>Add PyQGIS to a project</td><td><code>add_qgis.ps1 [-Project Name]</code> &mdash; writes project-scoped VS Code settings, environment file, and smoke test</td><td><span class="tag once">once</span></td></tr>
+    <tr><td>29</td><td>Regenerate software inventory</td><td><code>tool_inventory.ps1</code> &mdash; probes installed tools and rewrites generated <code>TOOLS.md</code></td><td><span class="tag manual">manual</span></td></tr>
   </table>
 </div>
 
@@ -1389,6 +1403,18 @@ git checkout snapshot-v2                     # restore everything</pre>
   </p>
 
   <hr>
+
+  <h3 id="research-quality">Research quality and development skills <span class="tag ai">AI</span></h3>
+  <p>Shared skills in <code>~\.agents\skills\</code> make the same disciplined workflows available across agents. The main additions since v1.0 are:</p>
+  <table class="cmd-table">
+    <tr><th>Skill</th><th>Use</th></tr>
+    <tr><td><code>/review-paper</code></td><td>Full referee or editor assessment, including exhaustive bibliography identity checks and claim-support checks for load-bearing citations.</td></tr>
+    <tr><td><code>/grill-paper</code> + <code>/grill-edit</code></td><td>Separate pre-submission diagnosis from author-approved manuscript edits.</td></tr>
+    <tr><td><code>/diagnose</code> + <code>/tdd</code></td><td>Reproduce and isolate hard bugs, then use red-green-refactor when implementing the fix.</td></tr>
+    <tr><td><code>/prototype</code></td><td>Build a disposable model or UI to resolve design questions before committing to production structure.</td></tr>
+    <tr><td><code>/pipeline</code></td><td>Run a task through a configurable sequence of Claude, Gemini, and Codex in the background, then log and hand over the result.</td></tr>
+    <tr><td><code>/to-prd</code>, <code>/to-issues</code>, <code>/triage</code></td><td>Convert decisions into implementation work and manage its state explicitly.</td></tr>
+  </table>
 
   <h3>Agent task delegation &mdash; Haiku vs. Sonnet <span class="tag ai">AI</span></h3>
   <p>
@@ -1790,11 +1816,11 @@ claude --full-auto        # launch Claude Code without approval pauses
     <li><strong>Start Claude Code</strong> in the project folder. Type <code>/work Pub_XXX</code> (or paste the folder path). Claude reads the log, checks feeder digests for updates, summarises where you left off, and asks for today's goal.</li>
     <li><strong>Link feeder projects</strong> (first time only): <code>/family Pub_YYY1</code> — Claude reads that project and stores a digest. Future sessions only check for deltas.</li>
     <li><strong>Snapshot before risky edits</strong> (optional): <code>/snapshot V2</code> git-tags the full <code>Overleaf_source/</code> state (.tex, .bib, figures, styles) before a major rewrite.</li>
-    <li><strong>Work</strong> &mdash; Claude edits code or LaTeX. Each response auto-commits to git (Stop hook).</li>
+    <li><strong>Work</strong> &mdash; the agent edits code or LaTeX, verifies the result, and makes coherent commits when requested.</li>
     <li><strong>Compile &amp; preview</strong> as needed: save in VS Code, or <code>helpi 6 Pub_XXX</code> from the terminal.</li>
     <li><strong>Close the session</strong>: <code>helpi 7 Pub_XXX</code> &mdash; runs <code>/close</code>, regenerates handover, and opens the browser in one step.</li>
     <li><strong>Push to Overleaf</strong> (<code>helpi 4 Pub_XXX</code>).</li>
-    <li><strong>Hand off to GPT</strong>: run <code>helpi 7 Pub_XXX</code>, paste the markdown textarea into GPT. GPT adds its session block. Paste updated markdown back into <code>_ai_log.md</code>, rerun helpi 7.</li>
+    <li><strong>Switch agents</strong>: run <code>/close</code> or <code>helpi 7 Pub_XXX</code>. Claude, Codex, and Gemini read the generated <code>AGENTS.md</code> and share <code>_ai_log.md</code>; no manual paste is needed.</li>
   </ol>
 </div>
 
@@ -1954,15 +1980,14 @@ claude --full-auto        # launch Claude Code without approval pauses
       <span class="ex-num">6</span>
       <span class="ex-title">Work — Claude edits code and LaTeX</span>
     </div>
-    <p class="ex-why">Claude refactors <code>surrogate.py</code> to run the full variance decomposition sweep, regenerates <code>variance_decomposition_compare.png</code>, and updates the figure reference in Section&nbsp;4. Each Claude response is auto-committed to git by the Stop hook.</p>
+    <p class="ex-why">Claude refactors <code>surrogate.py</code> to run the full variance decomposition sweep, regenerates <code>variance_decomposition_compare.png</code>, and updates the figure reference in Section&nbsp;4. The related changes are verified and committed together.</p>
     <div class="term">
 <span class="tm">  [Claude edits strategic_pmip_killer/surrogate.py]</span>
 <span class="tm">  [Claude runs the sweep — results written to results/gp_sweep_results.csv]</span>
 <span class="tm">  [Claude regenerates pictures/variance_decomposition_compare.png]</span>
 <span class="tm">  [Claude updates Section 4 caption in main.tex]</span>
 <span class="tb"></span>
-<span class="to">  Auto-commit: claude: auto-commit 10:47   </span><span class="tg">✓  3 files</span>
-<span class="to">  Auto-commit: claude: auto-commit 11:02   </span><span class="tg">✓  2 files</span>
+<span class="to">  Commit: analysis: add variance decomposition sweep   </span><span class="tg">✓  5 files</span>
     </div>
   </div>
 
@@ -2229,7 +2254,7 @@ claude --full-auto        # launch Claude Code without approval pauses
     <tr><td>Convergence Forum (<code>helpi 25</code>)</td><td>&#10003; (orchestrates/moderates)</td><td>&#10003; (participant)</td><td>&#10003; (participant)</td></tr>
     <tr><td>Reviewer response loop (<code>/respond</code>)</td><td>&#10003;</td><td>&#10007;</td><td>&#10007;</td></tr>
     <tr><td>Submission package (<code>/submit</code>)</td><td>&#10003;</td><td>&#10007;</td><td>&#10007;</td></tr>
-    <tr><td>Auto-commit after every response</td><td>&#10003; (Stop hook)</td><td>&#10007;</td><td>&#10007;</td></tr>
+    <tr><td>Deliberate git commits</td><td>&#10003;</td><td>&#10003;</td><td>&#10003;</td></tr>
     <tr><td>Global instructions</td><td><code>~\.claude\CLAUDE.md</code></td><td><code>~\.codex\config.toml</code></td><td><code>~\.gemini\AGENTS.md</code></td></tr>
     <tr><td>Per-project context</td><td><code>.claude/CLAUDE.md</code> (auto)</td><td><code>AGENTS.md</code> (via skill)</td><td><code>AGENTS.md</code> (auto)</td></tr>
   </table>
@@ -2472,6 +2497,21 @@ Goal: Add robustness checks to results
 <!-- ═══════════════════════════════════════════════════════════════ -->
 <!-- J — ENVIRONMENT MAP                                              -->
 <!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="section indigo" id="notetaker">
+  <h2>I &mdash; NoteTaker: Mobile Voice Bridge</h2>
+  <p>
+    NoteTaker moves dictated notes from a phone into the file-based research workflow without
+    exposing the workstation as a public server.
+  </p>
+  <table class="cmd-table">
+    <tr><th>Layer</th><th>Implementation</th></tr>
+    <tr><td>Phone app</td><td>GitHub Pages: <code>jepperich69/notetaker-app</code></td></tr>
+    <tr><td>Proxy</td><td>Supabase Edge Function</td></tr>
+    <tr><td>Spool</td><td>GitHub Releases: <code>jepperich69/notetaker-inbox</code></td></tr>
+    <tr><td>PC engine</td><td><code>code/notetaker_watcher.ps1</code> in resident mode</td></tr>
+  </table>
+</div>
+
 <div class="section" id="envmap">
   <h2>J &mdash; Environment Map &amp; Known Issues</h2>
   <p>
@@ -2482,6 +2522,7 @@ Goal: Add robustness checks to results
   </p>
 
   <h3>Software on this machine</h3>
+  <p><code>TOOLS.md</code> is the generated source of truth for installed software and exact versions. Run <code>helpi 29</code> after installing or upgrading tools. The table below lists only the stable essentials.</p>
   <table class="cmd-table">
     <tr><th>Tool</th><th>Version</th><th>In PATH?</th><th>Full path (if not in PATH)</th></tr>
     <tr><td>PowerShell</td><td>7.6.1</td><td>Yes</td><td>&mdash;</td></tr>
@@ -2498,6 +2539,13 @@ Goal: Add robustness checks to results
   SymPy 1.14.0 is installed in <code>base</code> &mdash; required by <code>/verify-math</code>;
   install with <code>&amp; "C:\Users\rich\AppData\Local\miniconda3\python.exe" -m pip install sympy</code>.</p>
 
+  <h3>Specialized research tools</h3>
+  <ul>
+    <li><strong>QGIS:</strong> add it only to projects that need geospatial work with <code>helpi 28</code>. QGIS uses its own Python interpreter; do not import PyQGIS from miniconda.</li>
+    <li><strong>Biogeme:</strong> version 3.3.4 is installed in <code>C:\Users\rich\venvs\biogeme313</code>, outside OneDrive. Its 3.3 API differs from older 3.2 tutorials; use the installed known-answer Swissmetro check after upgrades.</li>
+    <li><strong>Voice input:</strong> Claude Code provides native dictation through <code>/voice</code>, <code>/voice hold</code>, and <code>/voice tap</code>. It requires Claude.ai authentication and a local microphone; no Whisper plugin is needed.</li>
+  </ul>
+
   <h3>Key platform rules</h3>
   <ul>
     <li><code>python3</code> is a Windows Store alias &mdash; returns exit 49. Always use the full miniconda path.</li>
@@ -2512,6 +2560,11 @@ Goal: Add robustness checks to results
     At <code>/close</code>, Claude automatically checks whether any new platform fact was
     discovered this session and adds it to both the inline block and <code>known_issues.md</code>
     (1&ndash;2 entries max; one-off flukes ignored). The map grows without manual upkeep.
+  </p>
+  <p>
+    Web sources used to support research claims are saved in the project <code>Literature/</code>
+    folder and registered in <code>Literature/_retrieved_sources.md</code> with citation, URL,
+    retrieval date, where used, and the facts verified from the source.
   </p>
 </div>
 
@@ -2553,6 +2606,10 @@ Goal: Add robustness checks to results
         <tr><td>helpi 23 Pub_XXX</td><td>Push code/ to GitHub (creates repo via gh CLI if needed)</td></tr>
         <tr><td>helpi 24 Pub_XXX</td><td>Boil paper to technical one-pager (core idea + checks)</td></tr>
         <tr><td>helpi 25 XXX 'Task' [-Mode SAD] [-Stage revision]</td><td>Convergence Forum &mdash; adversarial multi-agent debate; stage controls agent conservatism (draft/revision/final)</td></tr>
+        <tr><td>helpi 26</td><td>Update AI_auto from GitHub</td></tr>
+        <tr><td>helpi 27 [Project]</td><td>Create generic non-paper project</td></tr>
+        <tr><td>helpi 28 [Project]</td><td>Add project-scoped PyQGIS support</td></tr>
+        <tr><td>helpi 29</td><td>Regenerate <code>TOOLS.md</code> software inventory</td></tr>
       </table>
     </div>
 
@@ -2569,6 +2626,9 @@ Goal: Add robustness checks to results
         <tr><td>/add-memory</td><td>Add a specific file or note to project memory</td></tr>
         <tr><td>/respond R1</td><td>Autonomous reviewer response loop — runs overnight, wakes you with a finished letter</td></tr>
         <tr><td>/submit</td><td>Generate full submission package — zip, anonymous PDF, cover letter, highlights, author statements</td></tr>
+        <tr><td>/review-paper</td><td>Referee/editor assessment with reference-integrity audit</td></tr>
+        <tr><td>/grill-paper</td><td>Pre-submission stress-test; records issues without editing</td></tr>
+        <tr><td>/pipeline</td><td>Background sequence of Claude, Gemini, and Codex</td></tr>
       </table>
 
       <h2 style="margin-top:14px;">GPT Codex CLI — equivalent skills</h2>
@@ -2576,6 +2636,8 @@ Goal: Add robustness checks to results
         <tr><td>/work Pub_XXX</td><td>Open session (research-work skill)</td></tr>
         <tr><td>/close</td><td>Close session (research-close skill)</td></tr>
         <tr><td>/snapshot V2</td><td>Version manuscript (research-snapshot skill)</td></tr>
+        <tr><td>/review-paper</td><td>Referee/editor assessment (shared skill)</td></tr>
+        <tr><td>/diagnose</td><td>Reproduce, isolate, instrument, and report hard failures</td></tr>
       </table>
       <p style="font-size:0.75em; color:#777; margin-top:6px;">
         Skills live in <code>~\.codex\skills\</code>. Verify with <code>/skills</code> inside Codex.
@@ -2587,7 +2649,7 @@ Goal: Add robustness checks to results
         <tr><td>git tag -l "snapshot-*"</td><td>List all named snapshots</td></tr>
         <tr><td>git diff snapshot-v2 HEAD</td><td>What changed since V2</td></tr>
         <tr><td>git checkout snapshot-v2 -- main.tex</td><td>Restore one file from snapshot</td></tr>
-        <tr><td>git log --oneline</td><td>Full commit history (auto-commits every Claude turn)</td></tr>
+        <tr><td>git log --oneline</td><td>Full history of deliberate project commits</td></tr>
       </table>
       <p style="font-size:0.75em; color:#777; margin-top:6px;">
         All git commands run inside <code>Overleaf_source/</code> or <code>code/</code>.
@@ -2608,7 +2670,7 @@ Goal: Add robustness checks to results
     <span class="op-arr">&#8594;</span>
     <div class="op-step"><code>/snapshot</code><small>optional — before big edit</small></div>
     <span class="op-arr">&#8594;</span>
-    <div class="op-step"><code style="color:#2a6b4a;">work with Claude</code><small>auto-commits every turn</small></div>
+    <div class="op-step"><code style="color:#2a6b4a;">work with an agent</code><small>verify and commit coherent changes</small></div>
     <span class="op-arr">&#8594;</span>
     <div class="op-step"><code>helpi 6</code><small>compile &amp; check PDF</small></div>
     <span class="op-arr">&#8594;</span>
@@ -2627,7 +2689,7 @@ Goal: Add robustness checks to results
     <dt>Co-author edited Overleaf while you were working locally</dt>
     <dd><code>helpi 4</code> detects diverged history, rebases your changes on top, pushes cleanly. If same lines were edited, conflict markers appear in the .tex file — fix them, then push again.</dd>
     <dt>Need to undo Claude's last few edits</dt>
-    <dd><code>helpi 9 Pub_XXX -N 2</code> — previews the rollback before committing. Every Claude turn is a separate auto-commit, so rollback is fine-grained.</dd>
+    <dd><code>helpi 9 Pub_XXX -N 2</code> — previews the rollback. It operates on the deliberate commits in the code repository.</dd>
     <dt>About to rewrite a section — want a safety net</dt>
     <dd><code>/snapshot V2</code> or <code>helpi 8 Pub_XXX</code> — git-tags the full manuscript. Restore one file: <code>git checkout snapshot-v2 -- main.tex</code></dd>
     <dt>Using knowledge from another project</dt>
@@ -2638,7 +2700,7 @@ Goal: Add robustness checks to results
     <dd>They need: Claude Code installed, global <code>CLAUDE.md</code> copied, project repo cloned. Then <code>/work Pub_XXX</code> gives them full context immediately. <code>helpi</code> scripts are optional — only needed if they want local Overleaf sync and PDF compilation.</dd>
   </dl>
 
-  <p class="op-print-note">Full reference: AI_auto\infrastructure.html &nbsp;&bull;&nbsp; v1.0 &nbsp;&bull;&nbsp; Updated 2026-05-30</p>
+  <p class="op-print-note">Full reference: AI_auto\infrastructure.html &nbsp;&bull;&nbsp; v1.1 &nbsp;&bull;&nbsp; Updated 2026-09-04</p>
 
 </div>
 
@@ -2650,7 +2712,7 @@ Goal: Add robustness checks to results
   <p>
     The infrastructure itself is versioned so that you can recover a working state,
     understand what changed between sessions, and avoid accidentally breaking things
-    mid-project. The current version is <strong>v1.0</strong> (see <code>VERSION</code> file — single source of truth).
+    mid-project. The current version is <strong>v1.1</strong> (see <code>VERSION</code> file — single source of truth).
   </p>
 
   <h3>Workflow in plain language</h3>
@@ -2912,16 +2974,6 @@ Goal: Add robustness checks to results
   });
 })();
 </script>
-    <section id='notetaker'>
-        <h2>NoteTaker: Mobile Voice Bridge</h2>
-        <p>A serverless bridge between mobile devices and the research infrastructure.</p>
-        <ul>
-            <li><strong>Phone App:</strong> GitHub Pages (jepperich69/notetaker-app)</li>
-            <li><strong>Proxy:</strong> Supabase Edge Function (dpslhidnmifmbmrhugea)</li>
-            <li><strong>Spool:</strong> GitHub Releases (jepperich69/notetaker-inbox)</li>
-            <li><strong>PC Engine:</strong> code/notetaker_watcher.ps1 (Resident Mode)</li>
-        </ul>
-    </section>
 </body>
 </html>
 

@@ -5,6 +5,16 @@ A "change" is anything that affects how you or Claude interacts with the system.
 
 ---
 
+## [v1.1] — 2026-09-04 — Current command set, shared skills, and research tools
+
+- Documented `helpi 26–29`: infrastructure updates, generic projects, project-scoped PyQGIS, and generated tool inventory.
+- Documented the expanded shared-skill system, including paper review, pre-submission grilling, diagnosis, TDD, prototyping, pipelines, and issue workflows.
+- Added QGIS, Biogeme, native Claude voice input, retrieved-source persistence, and the generated `TOOLS.md` convention.
+- Removed obsolete claims that Claude auto-commits after every response; commits are now deliberate and scoped.
+- Updated the GitHub README, command tables, desk reference, dates, and script links for the `scripts/` repository layout.
+
+---
+
 ## [v1.0] — 2026-05-30 — Professional repo structure: scripts/ subfolder, config.local.ps1 split, helpi 26 update
 
 **Repository restructure**

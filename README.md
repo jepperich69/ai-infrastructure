@@ -24,6 +24,9 @@ AI_auto adds a file-based backbone:
 - Version snapshots before major manuscript changes.
 - Submission package generation for journal workflows.
 - Cross-project "feeder" links so one paper can inherit compact context from another.
+- A shared skill layer for referee review, mathematical verification, pre-submission grilling, diagnosis, TDD, prototyping, and multi-agent pipelines.
+- Project-scoped integrations for specialized tools such as QGIS, plus a generated software inventory in [`TOOLS.md`](TOOLS.md).
+- A NoteTaker bridge that moves dictated notes from a phone through a serverless spool into the local workflow.
 
 It is intentionally local-first. The system does not replace Overleaf, GitHub, or the AI agent. It coordinates them.
 
@@ -59,6 +62,11 @@ helpi 15                        # open the infrastructure guide
 helpi 16                        # regenerate HTML/PDF documentation
 helpi 22 Pub_MyPaper_JR         # compress old AI log entries
 helpi 23 Pub_MyPaper_JR         # push code/ to GitHub
+helpi 25 Pub_MyPaper_JR "Task"  # run a structured multi-agent forum
+helpi 26                        # update AI_auto from GitHub
+helpi 27 MyProject              # create a generic non-paper project
+helpi 28 Pub_MyPaper_JR         # add project-scoped PyQGIS support
+helpi 29                        # regenerate the installed-tool inventory
 ```
 
 Inside AI agents, the main workflow commands are:
@@ -67,6 +75,9 @@ Inside AI agents, the main workflow commands are:
 /work Pub_MyPaper_JR
 /snapshot V2
 /family Pub_RelatedPaper_AB
+/review-paper
+/grill-paper
+/pipeline "Task" --project Pub_MyPaper_JR
 /close
 ```
 
@@ -74,59 +85,55 @@ Inside AI agents, the main workflow commands are:
 
 Core entry points:
 
-- [`helpi.cmd`](helpi.cmd) and [`helpi.ps1`](helpi.ps1): command wrapper and menu for all infrastructure tasks.
-- [`config.ps1`](config.ps1): shared paths and configuration.
+- [`helpi.cmd`](helpi.cmd) and [`scripts/helpi.ps1`](scripts/helpi.ps1): command wrapper and menu for all infrastructure tasks.
+- [`scripts/config.ps1`](scripts/config.ps1): shared configuration loader; machine-specific values stay in gitignored `config.local.ps1`.
 - [`infrastructure.html`](infrastructure.html): authoritative human-readable guide.
 - [`README.md`](README.md): GitHub-facing introduction.
 - [`CHANGELOG.md`](CHANGELOG.md), [`RELEASING.md`](RELEASING.md), [`VERSION`](VERSION): release notes and version metadata.
 
 Project lifecycle:
 
-- [`new_project.ps1`](new_project.ps1): create a new paper project folder.
-- [`setup_project.ps1`](setup_project.ps1): initialize project-local infrastructure.
-- [`setup_tagged.ps1`](setup_tagged.ps1): set up tagged/registered projects.
-- [`init_project_git.ps1`](init_project_git.ps1): initialize local git repositories where needed.
-- [`setup.ps1`](setup.ps1): first-time setup for a new user or machine.
-- [`restore.ps1`](restore.ps1): restore infrastructure on a replacement machine.
+- [`scripts/new_project.ps1`](scripts/new_project.ps1): create a new paper project folder.
+- [`scripts/new_generic_project.ps1`](scripts/new_generic_project.ps1): create the AI continuity layer for a non-paper project.
+- [`scripts/setup_project.ps1`](scripts/setup_project.ps1): initialize project-local infrastructure.
+- [`scripts/setup.ps1`](scripts/setup.ps1): first-time setup for a new user or machine.
+- [`scripts/restore.ps1`](scripts/restore.ps1): restore infrastructure on a replacement machine.
 
 Overleaf sync and manuscript work:
 
-- [`sync_all.ps1`](sync_all.ps1): pull all registered Overleaf projects.
-- [`sync_one.ps1`](sync_one.ps1): pull one project.
-- [`sync_background.ps1`](sync_background.ps1): background sync entry point.
-- [`push_to_overleaf.ps1`](push_to_overleaf.ps1): push local manuscript edits back to Overleaf.
-- [`open_project.ps1`](open_project.ps1): open and compile a project for work.
-- [`compile_latex.ps1`](compile_latex.ps1): compile a LaTeX manuscript.
+- [`scripts/sync_all.ps1`](scripts/sync_all.ps1): pull all registered Overleaf projects.
+- [`scripts/sync_one.ps1`](scripts/sync_one.ps1): pull one project.
+- [`scripts/push_to_overleaf.ps1`](scripts/push_to_overleaf.ps1): push local manuscript edits back to Overleaf.
+- [`scripts/compile_latex.ps1`](scripts/compile_latex.ps1): compile a LaTeX manuscript.
 
 AI continuity:
 
-- [`generate_handover.ps1`](generate_handover.ps1): build `_handover.html`, `_handover.json`, `AGENTS.md`, and collaborator handovers.
-- [`auto_handover.ps1`](auto_handover.ps1): scheduled/automatic handover generation.
-- [`ai_log_tools.ps1`](ai_log_tools.ps1): helpers for AI session logs.
-- [`compress_log.ps1`](compress_log.ps1): compress old `_ai_log.md` sessions into compact summaries.
-- [`log_tool_use.ps1`](log_tool_use.ps1): hook for incremental session draft logging.
+- [`scripts/generate_handover.ps1`](scripts/generate_handover.ps1): build `_handover.html`, `_handover.json`, `AGENTS.md`, and collaborator handovers.
+- [`scripts/ai_log_tools.ps1`](scripts/ai_log_tools.ps1): helpers for AI session logs.
+- [`scripts/compress_log.ps1`](scripts/compress_log.ps1): compress old `_ai_log.md` sessions into compact summaries.
 - [`_ai_log.md`](_ai_log.md): session history for this infrastructure project.
 - [`_handover.html`](_handover.html): generated handover for agent switching.
 - [`AGENTS.md`](AGENTS.md): generated instructions for AI agents entering this repo.
 
 Versioning, rollback, and submission:
 
-- [`snapshot.ps1`](snapshot.ps1): create manuscript snapshot tags.
-- [`rollback.ps1`](rollback.ps1): rollback recent code commits.
-- [`submit.ps1`](submit.ps1): build journal submission packages.
-- [`stage_submission_ai.ps1`](stage_submission_ai.ps1): deterministic AI-assisted submission staging.
-- [`push_to_github.ps1`](push_to_github.ps1): push a project's `code/` repository to GitHub.
+- [`scripts/snapshot.ps1`](scripts/snapshot.ps1): create manuscript snapshot tags.
+- [`scripts/rollback.ps1`](scripts/rollback.ps1): rollback recent code commits.
+- [`scripts/submit.ps1`](scripts/submit.ps1): build journal submission packages.
+- [`scripts/push_to_github.ps1`](scripts/push_to_github.ps1): push a project's `code/` repository to GitHub.
 
 Adversarial Debate:
 
-- [`run_forum.ps1`](run_forum.ps1): orchestrate a **Convergence Forum** (MAD/SAD) to reach consensus via adversarial debate. Supports **Multi-agent** round-robin and **SAD (Single-Agent Debate)** where one agent takes three distinct roles (Critic, Advocate, Realist) sequentially to break cognitive bias.
+- [`scripts/run_forum.ps1`](scripts/run_forum.ps1): orchestrate a **Convergence Forum** using multi-agent rounds or one agent in three roles.
 
 Monitoring and documentation:
 
-- [`status.ps1`](status.ps1): project status dashboard.
-- [`network.ps1`](network.ps1): generate the project network graph.
+- [`scripts/status.ps1`](scripts/status.ps1): project status dashboard.
+- [`scripts/network.ps1`](scripts/network.ps1): generate the project network graph.
 - [`network.html`](network.html): generated network visualization.
-- [`generate_docs.ps1`](generate_docs.ps1): regenerate summary/full HTML and PDF documentation from `infrastructure.html`.
+- [`scripts/generate_docs.ps1`](scripts/generate_docs.ps1): regenerate summary/full HTML and PDF documentation from `infrastructure.html`.
+- [`scripts/add_qgis.ps1`](scripts/add_qgis.ps1): add project-scoped PyQGIS configuration.
+- [`TOOLS.md`](TOOLS.md): generated inventory of installed research software; refresh with `helpi 29`.
 - [`known_issues.md`](known_issues.md): local environment map and platform notes.
 - [`onboarding_paper_projects.md`](onboarding_paper_projects.md): onboarding guide for paper project naming and group rollout.
 - [`book_draft_researcher_ai_infrastructure.md`](book_draft_researcher_ai_infrastructure.md): working draft about the research workflow.
@@ -169,6 +176,8 @@ The naming convention is `Pub_Topic_Driver`, where the driver is the person resp
 - Snapshot before large rewrites, submissions, and revision rounds.
 - Close AI sessions with `/close` so `_ai_log.md` and `_handover.html` stay current.
 - Treat GitHub as the home for code repositories, while Overleaf remains the manuscript collaboration layer.
+- Save web sources used in research outputs under `Literature/` and register them in `Literature/_retrieved_sources.md`.
+- Make deliberate, scoped commits; do not use indiscriminate per-response auto-commit hooks.
 
 ## Requirements
 

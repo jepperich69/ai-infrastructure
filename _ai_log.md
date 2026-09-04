@@ -76,3 +76,18 @@
 **Outcome:** The rule is live for all three CLIs everywhere. Regeneration ran `generate_handover.ps1` per project directly rather than `helpi 7`, so no session-log entries were written and no browsers opened; only AGENTS.md, `_handover.html` and `_handover.json` were rebuilt from each `_ai_log.md`. Checked first that no AGENTS.md was hand-written before overwriting: all 38 existing ones carried the auto-generated marker. Three projects had none and got one: `Ansoegninger\RSO electric`, `Projekter - JHR Privat\BertramVO`, `Publikationer\Reviews\JCYMR_26_28`.
 **Next steps:** Optional, add the rule to the per-project `.claude/CLAUDE.md` template so new projects carry it at creation. Pre-existing latent bug found and left alone: `scripts\generate_handover.ps1:200` has an em-dash inside a PowerShell string literal, the exact encoding trap in the global platform rules. Backlog otherwise unchanged, see `_state/current.md`.
 **Git ref:** e79b5a2
+
+---
+
+## Session 2026-09-04
+**Agent:** Codex
+**Goal:** Bring the infrastructure guide and GitHub README up to date, replace the stale versioned cover, regenerate the documentation, and commit the release.
+**Files touched:**
+- `infrastructure.html` -- updated through helpi 29; added current shared skills, research tools, source persistence, NoteTaker, and deliberate commit guidance; fixed NoteTaker placement and summary pagination.
+- `README.md` -- updated commands, capabilities, operating principles, and stale script links.
+- `Infra_frontpage.png` -- replaced with a simple version-neutral generated cover.
+- `VERSION`, `CHANGELOG.md` -- released v1.1 and recorded the documentation update.
+- `infrastructure_full.pdf` -- regenerated and visually verified; summary HTML/PDF outputs were also regenerated locally.
+**Outcome:** The guide now reflects the September 2026 infrastructure. The full PDF has a clean version-neutral cover, and the printable desk reference renders in two pages without overflow.
+**Next steps:** Keep `TOOLS.md` generated through `helpi 29`; update this guide when a new helpi command or material shared skill is added.
+**Git ref:** -
