@@ -402,3 +402,11 @@
 ## Archived 2026-09-03 (1 entry)
 
 - **2026-06-25 (third session)** (Claude): Three infrastructure tasks: (1) stop NoteTaker's free-tier Supabase... -> All three done, validated, committed and pushed. NoteTaker keep-alive is live (watcher ...
+
+
+---
+
+## Archived 2026-09-04 (2 entries)
+
+- **2026-06-30** (Claude): User asked whether CLI LLMs integrate with a symbolic math engine (... -> Established SymPy (not Z3) is the right fit for the actual need; Z3 considered but not ...
+- **2026-06-30 (second session)** (Claude): Document the new `/verify-math` (SymPy) skill in the infrastructure... -> `/verify-math` is fully documented with an architecture report; SymPy flagged as an ins...

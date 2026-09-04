@@ -1,21 +1,22 @@
 {
   "project": "AI_auto",
-  "generated": "2026-09-04 08:10",
+  "generated": "2026-09-04 08:12",
   "source": "_ai_log.md",
   "latest_session": {
-    "title": "2026-09-03",
-    "agent": "Codex",
-    "goal": "Strengthen the `review-paper` skill against ghost references and citations that do not support the claims where they appear.",
-    "outcome": "Full reviews and revision rounds must now verify every bibliography entry rather than sample references. Each DOI must resolve to metadata matching the cited title and publication; load-bearing and high-risk citations must also be checked in context and classified as supporting, partially supporting, unsupported, or unverifiable.",
-    "next_steps": "Exercise the harness on the next full or revision review and refine only if the resulting audit is too costly or produces ambiguous classifications.",
-    "git_ref": "2b4085b",
+    "title": "2026-09-04",
+    "agent": "Claude Opus 5",
+    "goal": "Stop the CLI agents from producing long, hard-to-digest answers; make short answers with drill-down offers the default across Claude, Codex and Gemini.",
+    "outcome": "The rule is live for all three CLIs everywhere. Regeneration ran `generate_handover.ps1` per project directly rather than `helpi 7`, so no session-log entries were written and no browsers opened; only AGENTS.md, `_handover.html` and `_handover.json` were rebuilt from each `_ai_log.md`. Checked first that no AGENTS.md was hand-written before overwriting: all 38 existing ones carried the auto-generated marker. Three projects had none and got one: `Ansoegninger\\RSO electric`, `Projekter - JHR Privat\\BertramVO`, `Publikationer\\Reviews\\JCYMR_26_28`.",
+    "next_steps": "Optional, add the rule to the per-project `.claude/CLAUDE.md` template so new projects carry it at creation. Pre-existing latent bug found and left alone: `scripts\\generate_handover.ps1:200` has an em-dash inside a PowerShell string literal, the exact encoding trap in the global platform rules. Backlog otherwise unchanged, see `_state/current.md`.",
+    "git_ref": "e79b5a2",
     "files_touched": [
-      "`~\\.agents\\skills\\review-paper\\SKILL.md` -- added an exhaustive reference-integrity harness covering citation-graph closure, DOI resolution, DOI-to-title/publication/author/year matching, identity classifications, claim-support classifications, escalation rules, a required audit table, and revision-round behavior.",
-      "`~\\.agents\\skills\\review-paper\\references\\checklist.md` -- made exhaustive reference identity and risk-based claim-support checks explicit in D3.",
-      "`_ai_log.md` -- recorded this session."
+      "`~\\.claude\\CLAUDE.md` -- new section \"Answer length and drill-downs\" after Communication style. Conclusion first, under ~150 words of prose, max 5 one-line bullets, cite `file.py:42` instead of pasting code, report results not process, close with one optional `Drill down: (a)... (b)... (c)...` line. Full length reserved for written deliverables, explicit requests for detail, and irreversible actions.",
+      "`scripts\\generate_handover.ps1` -- same rule injected into the generated AGENTS.md, ahead of the writing-style block, so Codex and Gemini inherit it. ASCII only; parse-checked.",
+      "`AGENTS.md` in all 41 projects under `JR\\` -- regenerated.",
+      "`~\\.claude\\projects\\...\\memory\\feedback_answer_length.md` + MEMORY.md index entry."
     ]
   },
   "latest_session_complete": true,
   "latest_session_missing": null,
-  "session_count": 5
+  "session_count": 4
 }

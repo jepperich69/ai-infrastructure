@@ -30,7 +30,7 @@
 <body>
 
 <h1>Handover Document &mdash; AI_auto</h1>
-<div class="meta">Generated: 2026-09-04 08:10 &nbsp;|&nbsp; Source: <code style="display:inline;padding:2px 6px">_ai_log.md</code> &nbsp;|&nbsp; Sidecar: <code style="display:inline;padding:2px 6px">_handover.json</code></div>
+<div class="meta">Generated: 2026-09-04 08:12 &nbsp;|&nbsp; Source: <code style="display:inline;padding:2px 6px">_ai_log.md</code> &nbsp;|&nbsp; Sidecar: <code style="display:inline;padding:2px 6px">_handover.json</code></div>
 
 <!-- ============================================================ -->
 <!-- AGENT INSTRUCTIONS                                            -->
@@ -62,17 +62,18 @@
 <div class="latest-session">
   <div class="session-status ok">Complete</div>
   <h2>Latest Session Snapshot</h2>
-  <p><strong>Session:</strong> 2026-09-03</p>
-  <p><strong>Agent:</strong> Codex</p>
-  <p><strong>Goal:</strong> Strengthen the `review-paper` skill against ghost references and citations that do not support the claims where they appear.</p>
-  <p><strong>Outcome:</strong> Full reviews and revision rounds must now verify every bibliography entry rather than sample references. Each DOI must resolve to metadata matching the cited title and publication; load-bearing and high-risk citations must also be checked in context and classified as supporting, partially supporting, unsupported, or unverifiable.</p>
-  <p><strong>Next steps:</strong> Exercise the harness on the next full or revision review and refine only if the resulting audit is too costly or produces ambiguous classifications.</p>
-  <p><strong>Git ref:</strong> 2b4085b</p>
+  <p><strong>Session:</strong> 2026-09-04</p>
+  <p><strong>Agent:</strong> Claude Opus 5</p>
+  <p><strong>Goal:</strong> Stop the CLI agents from producing long, hard-to-digest answers; make short answers with drill-down offers the default across Claude, Codex and Gemini.</p>
+  <p><strong>Outcome:</strong> The rule is live for all three CLIs everywhere. Regeneration ran `generate_handover.ps1` per project directly rather than `helpi 7`, so no session-log entries were written and no browsers opened; only AGENTS.md, `_handover.html` and `_handover.json` were rebuilt from each `_ai_log.md`. Checked first that no AGENTS.md was hand-written before overwriting: all 38 existing ones carried the auto-generated marker. Three projects had none and got one: `Ansoegninger\RSO electric`, `Projekter - JHR Privat\BertramVO`, `Publikationer\Reviews\JCYMR_26_28`.</p>
+  <p><strong>Next steps:</strong> Optional, add the rule to the per-project `.claude/CLAUDE.md` template so new projects carry it at creation. Pre-existing latent bug found and left alone: `scripts\generate_handover.ps1:200` has an em-dash inside a PowerShell string literal, the exact encoding trap in the global platform rules. Backlog otherwise unchanged, see `_state/current.md`.</p>
+  <p><strong>Git ref:</strong> e79b5a2</p>
   <h3>Files touched</h3>
   <ul>
-  <li>`~\.agents\skills\review-paper\SKILL.md` -- added an exhaustive reference-integrity harness covering citation-graph closure, DOI resolution, DOI-to-title/publication/author/year matching, identity classifications, claim-support classifications, escalation rules, a required audit table, and revision-round behavior.</li>
-  <li>`~\.agents\skills\review-paper\references\checklist.md` -- made exhaustive reference identity and risk-based claim-support checks explicit in D3.</li>
-  <li>`_ai_log.md` -- recorded this session.</li>
+  <li>`~\.claude\CLAUDE.md` -- new section &quot;Answer length and drill-downs&quot; after Communication style. Conclusion first, under ~150 words of prose, max 5 one-line bullets, cite `file.py:42` instead of pasting code, report results not process, close with one optional `Drill down: (a)... (b)... (c)...` line. Full length reserved for written deliverables, explicit requests for detail, and irreversible actions.</li>
+  <li>`scripts\generate_handover.ps1` -- same rule injected into the generated AGENTS.md, ahead of the writing-style block, so Codex and Gemini inherit it. ASCII only; parse-checked.</li>
+  <li>`AGENTS.md` in all 41 projects under `JR\` -- regenerated.</li>
+  <li>`~\.claude\projects\...\memory\feedback_answer_length.md` + MEMORY.md index entry.</li>
 </ul>
 </div>
 
@@ -87,8 +88,6 @@
 <h2>Compressed sessions</h2>
 <br>
 <ul>
-  <li><strong>2026-06-30</strong> (Claude): User asked whether CLI LLMs integrate with a symbolic math engine (... -&gt; Established SymPy (not Z3) is the right fit for the actual need; Z3 considered but not ...</li>
-  <li><strong>2026-06-30 (second session)</strong> (Claude): Document the new `/verify-math` (SymPy) skill in the infrastructure... -&gt; `/verify-math` is fully documented with an architecture report; SymPy flagged as an ins...</li>
   <li><strong>2026-06-30 (third session)</strong> (Claude): Fix the stale-PDF bug in `generate_docs.ps1` (helpi 16) surfaced la... -&gt; Fix validated with Edge open (the exact failure condition) -- the output PDF now contai...</li>
   <li><strong>2026-07-02</strong> (Claude): Design (not yet build) a general code-robustness system for Jeppe&#39;s... -&gt; Design phase complete and agreed. No infrastructure code written yet -- this was a scop...</li>
   <li><strong>2026-07-02 (close)</strong> (Claude): Build the jr_optlib robustness system end-to-end, migrate the MIPEn... -&gt; jr_optlib is a working, tested, committed shared library with the transport primitive f...</li>
@@ -103,46 +102,9 @@
   <li><strong>2026-08-14</strong> (Claude Opus 5): Build a presentation on how we do mathematical verification and cer... -&gt; Deck delivered. Section 5 is a real run, not a mock-up: Kahneman &amp; Tversky (1979) check...</li>
   <li><strong>2026-08-18</strong> (Codex): Build a shorter, popular mathematical-verification deck with anonym... -&gt; Delivered a 16-slide popular talk. The anonymous sample illustrates three distinct prin...</li>
   <li><strong>2026-08-27</strong> (Claude Opus 5): Design and build an instruction set (skill) for refereeing and edit... -&gt; /review-paper is live. It extends the user&#39;s eight criteria with venue fit, claim-evide...</li>
+  <li><strong>2026-08-27</strong> (Claude Opus 5): Decide how QGIS should fit the JR structure, and implement it. -&gt; QGIS is a per-project tool, not a project type. No standing QGIS folder: `helpi 28` add...</li>
+  <li><strong>2026-08-27 (2)</strong> (Claude Opus 5): Install Biogeme for discrete choice, then make tool tracking surviv... -&gt; Biogeme 3.3.4 installed outside OneDrive and validated against the published Swissmetro...</li>
 </ul>
-<br>
-<hr>
-<br>
-<h2>Session 2026-08-27</h2>
-<p><strong>Agent:</strong> Claude Opus 5</p>
-<p><strong>Goal:</strong> Decide how QGIS should fit the JR structure, and implement it.</p>
-<p><strong>Files touched:</strong></p>
-<ul>
-  <li>`AI_auto\scripts\add_qgis.ps1` -- new, backs helpi 28. Discovers the QGIS install at run time (handles LTR and regular layouts), writes workspace-scoped `.vscode/settings.json`, `.env` and `qgis_smoketest.py` into a project, backs up existing files unless -Force.</li>
-  <li>`AI_auto\scripts\helpi.ps1` -- registered command 28 at all four points (command array, contextual help, dry-run, dispatch).</li>
-  <li>`AI_auto\known_issues.md` -- #50: the QGIS-as-a-tool convention plus the three PyQGIS traps.</li>
-  <li>`~\.claude\CLAUDE.md` -- helpi table row 28 and a QGIS software fact.</li>
-  <li>`JR\QGIS_dev\` -- deleted once the plumbing was preserved.</li>
-  <li>`JR\Reviews\2026_JCYMR_Gao\`, `JR\Reviews\_index.md` -- first live /review-paper run (JCYMR-D-26-00038, major revision).</li>
-</ul>
-<p><strong>Outcome:</strong> QGIS is a per-project tool, not a project type. No standing QGIS folder: `helpi 28` adds the PyQGIS plumbing where a project needs maps and nothing anywhere else. Generated config verified against a scratch folder (9 providers, 747 algorithms, valid memory layer, 85 OGR drivers) and emits valid JSON, unlike the hand-written original. Committed on `feat/helpi-28-pyqgis`, not merged.</p>
-<p><strong>Next steps:</strong> (1) merge and push `feat/helpi-28-pyqgis`; (2) `helpi 16` so command 28 reaches infrastructure.html; (3) record the `gpd.datasets.get<em>path` deprecation at `Pub</em>StopGeometry<em>TBA\Code\visualize.py:393` in that project -- fig3 may be silently skipping; (4) `JR\Reviews\</em>voice\` is absent although last session logged creating it, so voice calibration is still unstarted.</p>
-<p><strong>Git ref:</strong> 08aab17</p>
-<br>
-<hr>
-<br>
-<h2>Session 2026-08-27 (2)</h2>
-<p><strong>Agent:</strong> Claude Opus 5</p>
-<p><strong>Goal:</strong> Install Biogeme for discrete choice, then make tool tracking survive a machine replacement.</p>
-<p><strong>Files touched:</strong></p>
-<ul>
-  <li>`scripts/tool_inventory.ps1` -- new, backs helpi 29. Probes 26 tools, rewrites TOOLS.md, read-only.</li>
-  <li>`TOOLS.md` -- new, generated. Replaces the hand-maintained table that had drifted.</li>
-  <li>`PROFILING.md` -- new. Profiling workflow, tools and traps.</li>
-  <li>`IDEAS.md` -- new. Designed-but-unbuilt backlog; first entry is the dataflow visualiser.</li>
-  <li>`INSTALL.md` -- Part B rewritten into four tiers with the install traps.</li>
-  <li>`known_issues.md` -- #51 (Biogeme); software table replaced by a pointer to TOOLS.md.</li>
-  <li>`scripts/helpi.ps1` -- helpi 29 registered at all four points.</li>
-  <li>`~\.claude\CLAUDE.md` -- Biogeme entry, venvs-outside-OneDrive rule, helpi 29 row, profiling block.</li>
-  <li>`C:\Users\rich\venvs\biogeme313\` -- new venv (850 MB) plus `biogeme_check.py`.</li>
-</ul>
-<p><strong>Outcome:</strong> Biogeme 3.3.4 installed outside OneDrive and validated against the published Swissmetro MNL (N=6768, LL -5331.252, all betas within 4e-3). Tool tracking is now generated rather than hand-maintained: three lists had drifted, the known_issues table being stale on four versions and missing ten tools including Gurobi. Profiling stack (scalene, py-spy, viztracer, pydeps, Graphviz) confirmed and made discoverable from global CLAUDE.md, without which a session would reach for cProfile and misattribute native time. Surveyed all 113 projects: found ortools imported at 68 sites but installed nowhere behind a silent PuLP fallback, and three R packages used but missing.</p>
-<p><strong>Next steps:</strong> (1) merge and push the branch, now 3 commits and misnamed `feat/helpi-28-pyqgis`; (2) pin the ortools/PuLP solver backend explicitly in Pub<em>MIPEntropy</em>MPC, Pub<em>PMIP</em>AOR, Pub<em>SAA</em>PMIP<em>MC -- installing ortools would silently change three papers&#39; solver (same hazard as #45); (3) `install.packages(c(&quot;minpack.lm&quot;,&quot;openxlsx&quot;,&quot;reshape2&quot;))` for Pub</em>NonlinearDiffusion_PartB; (4) `helpi 16` so commands 28/29 reach infrastructure.html; (5) consider pandoc for the .docx review workflow; (6) dataflow visualiser prototype, see IDEAS.md #1.</p>
-<p><strong>Git ref:</strong> 59176e1</p>
 <br>
 <hr>
 <br>
@@ -192,6 +154,22 @@
 <p><strong>Next steps:</strong> Exercise the harness on the next full or revision review and refine only if the resulting audit is too costly or produces ambiguous classifications.</p>
 <p><strong>Git ref:</strong> 2b4085b</p>
 <br>
+<hr>
+<br>
+<h2>Session 2026-09-04</h2>
+<p><strong>Agent:</strong> Claude Opus 5</p>
+<p><strong>Goal:</strong> Stop the CLI agents from producing long, hard-to-digest answers; make short answers with drill-down offers the default across Claude, Codex and Gemini.</p>
+<p><strong>Files touched:</strong></p>
+<ul>
+  <li>`~\.claude\CLAUDE.md` -- new section &quot;Answer length and drill-downs&quot; after Communication style. Conclusion first, under ~150 words of prose, max 5 one-line bullets, cite `file.py:42` instead of pasting code, report results not process, close with one optional `Drill down: (a)... (b)... (c)...` line. Full length reserved for written deliverables, explicit requests for detail, and irreversible actions.</li>
+  <li>`scripts\generate_handover.ps1` -- same rule injected into the generated AGENTS.md, ahead of the writing-style block, so Codex and Gemini inherit it. ASCII only; parse-checked.</li>
+  <li>`AGENTS.md` in all 41 projects under `JR\` -- regenerated.</li>
+  <li>`~\.claude\projects\...\memory\feedback_answer_length.md` + MEMORY.md index entry.</li>
+</ul>
+<p><strong>Outcome:</strong> The rule is live for all three CLIs everywhere. Regeneration ran `generate<em>handover.ps1` per project directly rather than `helpi 7`, so no session-log entries were written and no browsers opened; only AGENTS.md, `</em>handover.html` and `<em>handover.json` were rebuilt from each `</em>ai<em>log.md`. Checked first that no AGENTS.md was hand-written before overwriting: all 38 existing ones carried the auto-generated marker. Three projects had none and got one: `Ansoegninger\RSO electric`, `Projekter - JHR Privat\BertramVO`, `Publikationer\Reviews\JCYMR</em>26_28`.</p>
+<p><strong>Next steps:</strong> Optional, add the rule to the per-project `.claude/CLAUDE.md` template so new projects carry it at creation. Pre-existing latent bug found and left alone: `scripts\generate<em>handover.ps1:200` has an em-dash inside a PowerShell string literal, the exact encoding trap in the global platform rules. Backlog otherwise unchanged, see `</em>state/current.md`.</p>
+<p><strong>Git ref:</strong> e79b5a2</p>
+<br>
 
 </div>
 
@@ -207,8 +185,6 @@
 
 ## Compressed sessions
 
-- **2026-06-30** (Claude): User asked whether CLI LLMs integrate with a symbolic math engine (... -&gt; Established SymPy (not Z3) is the right fit for the actual need; Z3 considered but not ...
-- **2026-06-30 (second session)** (Claude): Document the new `/verify-math` (SymPy) skill in the infrastructure... -&gt; `/verify-math` is fully documented with an architecture report; SymPy flagged as an ins...
 - **2026-06-30 (third session)** (Claude): Fix the stale-PDF bug in `generate_docs.ps1` (helpi 16) surfaced la... -&gt; Fix validated with Edge open (the exact failure condition) -- the output PDF now contai...
 - **2026-07-02** (Claude): Design (not yet build) a general code-robustness system for Jeppe's... -&gt; Design phase complete and agreed. No infrastructure code written yet -- this was a scop...
 - **2026-07-02 (close)** (Claude): Build the jr_optlib robustness system end-to-end, migrate the MIPEn... -&gt; jr_optlib is a working, tested, committed shared library with the transport primitive f...
@@ -223,41 +199,8 @@
 - **2026-08-14** (Claude Opus 5): Build a presentation on how we do mathematical verification and cer... -&gt; Deck delivered. Section 5 is a real run, not a mock-up: Kahneman & Tversky (1979) check...
 - **2026-08-18** (Codex): Build a shorter, popular mathematical-verification deck with anonym... -&gt; Delivered a 16-slide popular talk. The anonymous sample illustrates three distinct prin...
 - **2026-08-27** (Claude Opus 5): Design and build an instruction set (skill) for refereeing and edit... -&gt; /review-paper is live. It extends the user's eight criteria with venue fit, claim-evide...
-
----
-
-## Session 2026-08-27
-**Agent:** Claude Opus 5
-**Goal:** Decide how QGIS should fit the JR structure, and implement it.
-**Files touched:**
-- `AI_auto\scripts\add_qgis.ps1` -- new, backs helpi 28. Discovers the QGIS install at run time (handles LTR and regular layouts), writes workspace-scoped `.vscode/settings.json`, `.env` and `qgis_smoketest.py` into a project, backs up existing files unless -Force.
-- `AI_auto\scripts\helpi.ps1` -- registered command 28 at all four points (command array, contextual help, dry-run, dispatch).
-- `AI_auto\known_issues.md` -- #50: the QGIS-as-a-tool convention plus the three PyQGIS traps.
-- `~\.claude\CLAUDE.md` -- helpi table row 28 and a QGIS software fact.
-- `JR\QGIS_dev\` -- deleted once the plumbing was preserved.
-- `JR\Reviews\2026_JCYMR_Gao\`, `JR\Reviews\_index.md` -- first live /review-paper run (JCYMR-D-26-00038, major revision).
-**Outcome:** QGIS is a per-project tool, not a project type. No standing QGIS folder: `helpi 28` adds the PyQGIS plumbing where a project needs maps and nothing anywhere else. Generated config verified against a scratch folder (9 providers, 747 algorithms, valid memory layer, 85 OGR drivers) and emits valid JSON, unlike the hand-written original. Committed on `feat/helpi-28-pyqgis`, not merged.
-**Next steps:** (1) merge and push `feat/helpi-28-pyqgis`; (2) `helpi 16` so command 28 reaches infrastructure.html; (3) record the `gpd.datasets.get_path` deprecation at `Pub_StopGeometry_TBA\Code\visualize.py:393` in that project -- fig3 may be silently skipping; (4) `JR\Reviews\_voice\` is absent although last session logged creating it, so voice calibration is still unstarted.
-**Git ref:** 08aab17
-
----
-
-## Session 2026-08-27 (2)
-**Agent:** Claude Opus 5
-**Goal:** Install Biogeme for discrete choice, then make tool tracking survive a machine replacement.
-**Files touched:**
-- `scripts/tool_inventory.ps1` -- new, backs helpi 29. Probes 26 tools, rewrites TOOLS.md, read-only.
-- `TOOLS.md` -- new, generated. Replaces the hand-maintained table that had drifted.
-- `PROFILING.md` -- new. Profiling workflow, tools and traps.
-- `IDEAS.md` -- new. Designed-but-unbuilt backlog; first entry is the dataflow visualiser.
-- `INSTALL.md` -- Part B rewritten into four tiers with the install traps.
-- `known_issues.md` -- #51 (Biogeme); software table replaced by a pointer to TOOLS.md.
-- `scripts/helpi.ps1` -- helpi 29 registered at all four points.
-- `~\.claude\CLAUDE.md` -- Biogeme entry, venvs-outside-OneDrive rule, helpi 29 row, profiling block.
-- `C:\Users\rich\venvs\biogeme313\` -- new venv (850 MB) plus `biogeme_check.py`.
-**Outcome:** Biogeme 3.3.4 installed outside OneDrive and validated against the published Swissmetro MNL (N=6768, LL -5331.252, all betas within 4e-3). Tool tracking is now generated rather than hand-maintained: three lists had drifted, the known_issues table being stale on four versions and missing ten tools including Gurobi. Profiling stack (scalene, py-spy, viztracer, pydeps, Graphviz) confirmed and made discoverable from global CLAUDE.md, without which a session would reach for cProfile and misattribute native time. Surveyed all 113 projects: found ortools imported at 68 sites but installed nowhere behind a silent PuLP fallback, and three R packages used but missing.
-**Next steps:** (1) merge and push the branch, now 3 commits and misnamed `feat/helpi-28-pyqgis`; (2) pin the ortools/PuLP solver backend explicitly in Pub_MIPEntropy_MPC, Pub_PMIP_AOR, Pub_SAA_PMIP_MC -- installing ortools would silently change three papers' solver (same hazard as #45); (3) `install.packages(c("minpack.lm","openxlsx","reshape2"))` for Pub_NonlinearDiffusion_PartB; (4) `helpi 16` so commands 28/29 reach infrastructure.html; (5) consider pandoc for the .docx review workflow; (6) dataflow visualiser prototype, see IDEAS.md #1.
-**Git ref:** 59176e1
+- **2026-08-27** (Claude Opus 5): Decide how QGIS should fit the JR structure, and implement it. -&gt; QGIS is a per-project tool, not a project type. No standing QGIS folder: `helpi 28` add...
+- **2026-08-27 (2)** (Claude Opus 5): Install Biogeme for discrete choice, then make tool tracking surviv... -&gt; Biogeme 3.3.4 installed outside OneDrive and validated against the published Swissmetro...
 
 ---
 
@@ -300,6 +243,20 @@
 **Outcome:** Full reviews and revision rounds must now verify every bibliography entry rather than sample references. Each DOI must resolve to metadata matching the cited title and publication; load-bearing and high-risk citations must also be checked in context and classified as supporting, partially supporting, unsupported, or unverifiable.
 **Next steps:** Exercise the harness on the next full or revision review and refine only if the resulting audit is too costly or produces ambiguous classifications.
 **Git ref:** 2b4085b
+
+---
+
+## Session 2026-09-04
+**Agent:** Claude Opus 5
+**Goal:** Stop the CLI agents from producing long, hard-to-digest answers; make short answers with drill-down offers the default across Claude, Codex and Gemini.
+**Files touched:**
+- `~\.claude\CLAUDE.md` -- new section "Answer length and drill-downs" after Communication style. Conclusion first, under ~150 words of prose, max 5 one-line bullets, cite `file.py:42` instead of pasting code, report results not process, close with one optional `Drill down: (a)... (b)... (c)...` line. Full length reserved for written deliverables, explicit requests for detail, and irreversible actions.
+- `scripts\generate_handover.ps1` -- same rule injected into the generated AGENTS.md, ahead of the writing-style block, so Codex and Gemini inherit it. ASCII only; parse-checked.
+- `AGENTS.md` in all 41 projects under `JR\` -- regenerated.
+- `~\.claude\projects\...\memory\feedback_answer_length.md` + MEMORY.md index entry.
+**Outcome:** The rule is live for all three CLIs everywhere. Regeneration ran `generate_handover.ps1` per project directly rather than `helpi 7`, so no session-log entries were written and no browsers opened; only AGENTS.md, `_handover.html` and `_handover.json` were rebuilt from each `_ai_log.md`. Checked first that no AGENTS.md was hand-written before overwriting: all 38 existing ones carried the auto-generated marker. Three projects had none and got one: `Ansoegninger\RSO electric`, `Projekter - JHR Privat\BertramVO`, `Publikationer\Reviews\JCYMR_26_28`.
+**Next steps:** Optional, add the rule to the per-project `.claude/CLAUDE.md` template so new projects carry it at creation. Pre-existing latent bug found and left alone: `scripts\generate_handover.ps1:200` has an em-dash inside a PowerShell string literal, the exact encoding trap in the global platform rules. Backlog otherwise unchanged, see `_state/current.md`.
+**Git ref:** e79b5a2
 </textarea>
 </div>
 
