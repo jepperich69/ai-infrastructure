@@ -88,6 +88,6 @@
 - `Infra_frontpage.png` -- replaced with a simple version-neutral generated cover.
 - `VERSION`, `CHANGELOG.md` -- released v1.1 and recorded the documentation update.
 - `infrastructure_full.pdf` -- regenerated and visually verified; summary HTML/PDF outputs were also regenerated locally.
-**Outcome:** The guide now reflects the September 2026 infrastructure. The full PDF has a clean version-neutral cover, and the printable desk reference renders in two pages without overflow.
+**Outcome:** The guide now reflects the September 2026 infrastructure. The full PDF has a clean version-neutral cover, and the printable desk reference renders in two pages without overflow. The GitHub README now presents AI_auto as general project infrastructure, with research as its most developed application rather than its boundary.
 **Next steps:** Keep `TOOLS.md` generated through `helpi 29`; update this guide when a new helpi command or material shared skill is added.
-**Git ref:** 934b55d
+**Git ref:** 7c35c92
