@@ -90,4 +90,4 @@
 - `infrastructure_full.pdf` -- regenerated and visually verified; summary HTML/PDF outputs were also regenerated locally.
 **Outcome:** The guide now reflects the September 2026 infrastructure. The full PDF has a clean version-neutral cover, and the printable desk reference renders in two pages without overflow.
 **Next steps:** Keep `TOOLS.md` generated through `helpi 29`; update this guide when a new helpi command or material shared skill is added.
-**Git ref:** -
+**Git ref:** 934b55d
