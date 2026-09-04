@@ -1,34 +1,32 @@
 # AI_auto
 
-AI_auto is a local research infrastructure for writing papers with AI agents while keeping the actual scholarly work in ordinary files: Overleaf git clones, code repositories, logs, handovers, and reproducible submission packages.
+AI_auto is a local, file-based infrastructure for running long-lived projects with AI agents. It keeps project context, decisions, source material, code, logs, and handovers in ordinary files so work survives across sessions, agents, and machines.
 
 The basic idea is simple:
 
-- Overleaf remains the collaboration surface for manuscripts.
-- Each paper also has a local project folder with `Overleaf_source/`, `code/`, logs, and metadata.
-- PowerShell scripts handle mechanical work such as sync, compile, snapshots, handovers, and submission packaging.
-- AI agents such as Claude Code and Codex read the same project context and write to the same session log, so work can continue across sessions and across tools.
+- Every project gets a durable brief, session log, handover, and agent instructions.
+- Claude Code, Codex, and Gemini read the same context and continue one another's work.
+- PowerShell scripts automate project creation, status, backups, documentation, and tool setup.
+- Research projects add a mature paper workflow: Overleaf synchronization, LaTeX compilation, literature tracking, mathematical verification, reviewer responses, and submission packaging.
 
 The full reference guide is [`infrastructure.html`](infrastructure.html). The short generated guide is [`infrastructure_summary.html`](infrastructure_summary.html), and the printable full guide is [`infrastructure_full.pdf`](infrastructure_full.pdf).
 
 ## What This Solves
 
-Modern research workflows are split across Overleaf, local code, shared notes, AI chat windows, submission portals, and collaborators' machines. That makes it easy to lose context, overwrite work, or leave an AI session with no durable record of what happened.
+Serious projects are split across files, repositories, notes, chat windows, specialist tools, and collaborators' machines. AI agents add another failure mode: each session can start without the decisions and constraints established earlier.
 
-AI_auto adds a file-based backbone:
+AI_auto adds a common project backbone:
 
-- Local git-backed copies of manuscripts and code.
-- Standard paper project folders named like `Pub_Topic_Driver`.
 - AI session logs in `_ai_log.md`.
-- Generated handover documents for agent switching.
-- Version snapshots before major manuscript changes.
-- Submission package generation for journal workflows.
-- Cross-project "feeder" links so one paper can inherit compact context from another.
+- Permanent project briefs in `.claude/CLAUDE.md` and generated `AGENTS.md` files.
+- Generated handovers for switching agents or resuming after a long break.
+- Cross-project feeder links so one project can inherit compact context from another.
 - A shared skill layer for referee review, mathematical verification, pre-submission grilling, diagnosis, TDD, prototyping, and multi-agent pipelines.
 - Project-scoped integrations for specialized tools such as QGIS, plus a generated software inventory in [`TOOLS.md`](TOOLS.md).
 - A NoteTaker bridge that moves dictated notes from a phone through a serverless spool into the local workflow.
+- For research: git-backed manuscripts and code, Overleaf sync, snapshots, reviewer workflows, and submission packages.
 
-It is intentionally local-first. The system does not replace Overleaf, GitHub, or the AI agent. It coordinates them.
+Research is the most developed application, but it is not a boundary: `helpi 27` creates the same continuity layer for software, infrastructure, teaching, administration, and other non-paper projects. The system is intentionally local-first and coordinates existing tools rather than replacing them.
 
 ## Installing
 
@@ -45,7 +43,17 @@ Run commands from PowerShell. The wrapper is:
 helpi
 ```
 
-Common commands:
+Start any general project:
+
+```powershell
+helpi 27 MyProject              # add brief, log, handover, source register, and agent sandbox
+cd <project-folder>
+claude                          # or codex / gemini
+/work                           # load context and agree the session goal
+/close                          # record outcome and regenerate the handover
+```
+
+Research-project commands:
 
 ```powershell
 helpi 1 Pub_MyPaper_JR          # create a new paper project
@@ -152,9 +160,20 @@ Prompts:
 
 - [`prompts/`](prompts): reusable AI prompts for slides, submission staging, reviewer response scaffolds, and reviewer draft loops.
 
-## Standard Project Folder
+## Standard Project Folders
 
-A paper project typically looks like this:
+A general project needs only the continuity layer:
+
+```text
+MyProject/
+  Literature/               # retrieved sources and source register
+  _ai_log.md                # durable cross-agent session log
+  _handover.html            # generated current-state handover
+  .claude/CLAUDE.md         # permanent project brief
+  AGENTS.md                  # generated instructions for Codex and Gemini
+```
+
+A research project extends it with manuscript and analysis infrastructure:
 
 ```text
 Pub_Topic_Driver/
@@ -167,17 +186,15 @@ Pub_Topic_Driver/
   .claude/CLAUDE.md     # project brief shared by agents
 ```
 
-The naming convention is `Pub_Topic_Driver`, where the driver is the person responsible for keeping the paper moving, not necessarily the PI.
+Research folders use `Pub_`, `Pro_`, or `PhD_` prefixes. `Pub_Topic_Driver` names the person responsible for keeping a paper moving, not necessarily the PI. General projects have no required prefix.
 
 ## Operating Principles
 
-- Keep research artifacts in normal files, not only in AI chat history.
-- Sync before major edits and push back to Overleaf after manuscript changes.
-- Snapshot before large rewrites, submissions, and revision rounds.
+- Keep project artifacts and decisions in normal files, not only in AI chat history.
 - Close AI sessions with `/close` so `_ai_log.md` and `_handover.html` stay current.
-- Treat GitHub as the home for code repositories, while Overleaf remains the manuscript collaboration layer.
-- Save web sources used in research outputs under `Literature/` and register them in `Literature/_retrieved_sources.md`.
+- Use the same brief, log, and handover across agents.
 - Make deliberate, scoped commits; do not use indiscriminate per-response auto-commit hooks.
+- For research projects, sync before manuscript edits, snapshot before major revisions, and keep retrieved sources registered under `Literature/`.
 
 ## Requirements
 
@@ -187,9 +204,9 @@ This repository is built for Windows and PowerShell. It assumes:
 - Git
 - GitHub CLI (`gh`) for GitHub publication
 - Node.js for the `gemini` / `codex` / `supabase` CLIs
-- MiKTeX/LaTeX for manuscript compilation
-- Overleaf git access (a paid Overleaf feature) for manuscript sync
 - Claude Code (required) and optionally Gemini / Codex for AI-assisted sessions
+
+Research workflows additionally use MiKTeX/LaTeX and, when required, paid Overleaf git access.
 
 Accounts, paid plans, and API keys are listed in full in [`INSTALL.md`](INSTALL.md).
 See [`known_issues.md`](known_issues.md) for the current machine-specific environment map.
