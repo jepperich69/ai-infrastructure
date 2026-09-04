@@ -410,3 +410,10 @@
 
 - **2026-06-30** (Claude): User asked whether CLI LLMs integrate with a symbolic math engine (... -> Established SymPy (not Z3) is the right fit for the actual need; Z3 considered but not ...
 - **2026-06-30 (second session)** (Claude): Document the new `/verify-math` (SymPy) skill in the infrastructure... -> `/verify-math` is fully documented with an architecture report; SymPy flagged as an ins...
+
+
+---
+
+## Archived 2026-09-04 (1 entry)
+
+- **2026-06-30 (third session)** (Claude): Fix the stale-PDF bug in `generate_docs.ps1` (helpi 16) surfaced la... -> Fix validated with Edge open (the exact failure condition) -- the output PDF now contai...

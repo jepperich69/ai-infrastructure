@@ -30,7 +30,7 @@
 <body>
 
 <h1>Handover Document &mdash; AI_auto</h1>
-<div class="meta">Generated: 2026-09-04 08:12 &nbsp;|&nbsp; Source: <code style="display:inline;padding:2px 6px">_ai_log.md</code> &nbsp;|&nbsp; Sidecar: <code style="display:inline;padding:2px 6px">_handover.json</code></div>
+<div class="meta">Generated: 2026-09-04 15:37 &nbsp;|&nbsp; Source: <code style="display:inline;padding:2px 6px">_ai_log.md</code> &nbsp;|&nbsp; Sidecar: <code style="display:inline;padding:2px 6px">_handover.json</code></div>
 
 <!-- ============================================================ -->
 <!-- AGENT INSTRUCTIONS                                            -->
@@ -63,17 +63,18 @@
   <div class="session-status ok">Complete</div>
   <h2>Latest Session Snapshot</h2>
   <p><strong>Session:</strong> 2026-09-04</p>
-  <p><strong>Agent:</strong> Claude Opus 5</p>
-  <p><strong>Goal:</strong> Stop the CLI agents from producing long, hard-to-digest answers; make short answers with drill-down offers the default across Claude, Codex and Gemini.</p>
-  <p><strong>Outcome:</strong> The rule is live for all three CLIs everywhere. Regeneration ran `generate_handover.ps1` per project directly rather than `helpi 7`, so no session-log entries were written and no browsers opened; only AGENTS.md, `_handover.html` and `_handover.json` were rebuilt from each `_ai_log.md`. Checked first that no AGENTS.md was hand-written before overwriting: all 38 existing ones carried the auto-generated marker. Three projects had none and got one: `Ansoegninger\RSO electric`, `Projekter - JHR Privat\BertramVO`, `Publikationer\Reviews\JCYMR_26_28`.</p>
-  <p><strong>Next steps:</strong> Optional, add the rule to the per-project `.claude/CLAUDE.md` template so new projects carry it at creation. Pre-existing latent bug found and left alone: `scripts\generate_handover.ps1:200` has an em-dash inside a PowerShell string literal, the exact encoding trap in the global platform rules. Backlog otherwise unchanged, see `_state/current.md`.</p>
-  <p><strong>Git ref:</strong> e79b5a2</p>
+  <p><strong>Agent:</strong> Codex</p>
+  <p><strong>Goal:</strong> Bring the infrastructure guide and GitHub README up to date, replace the stale versioned cover, regenerate the documentation, and commit the release.</p>
+  <p><strong>Outcome:</strong> The guide now reflects the September 2026 infrastructure. The full PDF has a clean version-neutral cover, and the printable desk reference renders in two pages without overflow. The GitHub README now presents AI_auto as general project infrastructure, with research as its most developed application rather than its boundary.</p>
+  <p><strong>Next steps:</strong> Keep `TOOLS.md` generated through `helpi 29`; update this guide when a new helpi command or material shared skill is added.</p>
+  <p><strong>Git ref:</strong> 7c35c92</p>
   <h3>Files touched</h3>
   <ul>
-  <li>`~\.claude\CLAUDE.md` -- new section &quot;Answer length and drill-downs&quot; after Communication style. Conclusion first, under ~150 words of prose, max 5 one-line bullets, cite `file.py:42` instead of pasting code, report results not process, close with one optional `Drill down: (a)... (b)... (c)...` line. Full length reserved for written deliverables, explicit requests for detail, and irreversible actions.</li>
-  <li>`scripts\generate_handover.ps1` -- same rule injected into the generated AGENTS.md, ahead of the writing-style block, so Codex and Gemini inherit it. ASCII only; parse-checked.</li>
-  <li>`AGENTS.md` in all 41 projects under `JR\` -- regenerated.</li>
-  <li>`~\.claude\projects\...\memory\feedback_answer_length.md` + MEMORY.md index entry.</li>
+  <li>`infrastructure.html` -- updated through helpi 29; added current shared skills, research tools, source persistence, NoteTaker, and deliberate commit guidance; fixed NoteTaker placement and summary pagination.</li>
+  <li>`README.md` -- updated commands, capabilities, operating principles, and stale script links.</li>
+  <li>`Infra_frontpage.png` -- replaced with a simple version-neutral generated cover.</li>
+  <li>`VERSION`, `CHANGELOG.md` -- released v1.1 and recorded the documentation update.</li>
+  <li>`infrastructure_full.pdf` -- regenerated and visually verified; summary HTML/PDF outputs were also regenerated locally.</li>
 </ul>
 </div>
 
@@ -88,7 +89,6 @@
 <h2>Compressed sessions</h2>
 <br>
 <ul>
-  <li><strong>2026-06-30 (third session)</strong> (Claude): Fix the stale-PDF bug in `generate_docs.ps1` (helpi 16) surfaced la... -&gt; Fix validated with Edge open (the exact failure condition) -- the output PDF now contai...</li>
   <li><strong>2026-07-02</strong> (Claude): Design (not yet build) a general code-robustness system for Jeppe&#39;s... -&gt; Design phase complete and agreed. No infrastructure code written yet -- this was a scop...</li>
   <li><strong>2026-07-02 (close)</strong> (Claude): Build the jr_optlib robustness system end-to-end, migrate the MIPEn... -&gt; jr_optlib is a working, tested, committed shared library with the transport primitive f...</li>
   <li><strong>2026-07-02 (second session)</strong> (Claude): Build the first slice of the code-robustness system designed last s... -&gt; First slice complete and validated. `ipf_2d` vetted + CERTIFIED via matching-marginals ...</li>
@@ -104,25 +104,8 @@
   <li><strong>2026-08-27</strong> (Claude Opus 5): Design and build an instruction set (skill) for refereeing and edit... -&gt; /review-paper is live. It extends the user&#39;s eight criteria with venue fit, claim-evide...</li>
   <li><strong>2026-08-27</strong> (Claude Opus 5): Decide how QGIS should fit the JR structure, and implement it. -&gt; QGIS is a per-project tool, not a project type. No standing QGIS folder: `helpi 28` add...</li>
   <li><strong>2026-08-27 (2)</strong> (Claude Opus 5): Install Biogeme for discrete choice, then make tool tracking surviv... -&gt; Biogeme 3.3.4 installed outside OneDrive and validated against the published Swissmetro...</li>
+  <li><strong>2026-09-03</strong> (Claude Opus 5): Make math render legibly in the Claude Code terminal instead of raw... -&gt; Two-tier math display. The claude-math plugin (third-party, model-invoked skill, no exe...</li>
 </ul>
-<br>
-<hr>
-<br>
-<h2>Session 2026-09-03</h2>
-<p><strong>Agent:</strong> Claude Opus 5</p>
-<p><strong>Goal:</strong> Make math render legibly in the Claude Code terminal instead of raw LaTeX.</p>
-<p><strong>Files touched:</strong></p>
-<ul>
-  <li>`~\.claude\skills\verify-math\scripts\render_math.py` -- new. SymPy 2D pretty-printer; importable by verify.py and usable standalone via `-c &quot;&lt;expr&gt;&quot;`.</li>
-  <li>`~\.claude\skills\verify-math\SKILL.md` -- renderer wired into Step 3 and the report spec; new `## Rendered equations` section; failures now show the rendered form beside the SymPy source.</li>
-  <li>`~\.claude\CLAUDE.md` -- new &quot;Math display in the terminal&quot; section (global rule, loads unconditionally).</li>
-  <li>`~\.claude\settings.json`, `~\.claude\plugins\` -- claude-math@vladimirrott v0.6.0 installed, user scope, pinned to 76418df.</li>
-  <li>memory: `project_claude_math_plugin.md` (new), `project_verify_math_skill.md`, `MEMORY.md`.</li>
-  <li>No AI_auto project files changed this session.</li>
-</ul>
-<p><strong>Outcome:</strong> Two-tier math display. The claude-math plugin (third-party, model-invoked skill, no executables) emits inline Unicode glyphs; a new SymPy 2D renderer handles displayed equations -- stacked fractions, sums with limits, tall integrals, matrix brackets -- and is wired into /verify-math so reports read as mathematics rather than as SymPy source. Established that inline glyph rendering is impossible in this TUI: terminals do support Sixel/kitty graphics, but Claude Code repaints its own buffer and clobbers injected sequences; out-of-band rendering is the only route and stays unbuilt. Three traps found by testing and encoded in the tool: SymPy rejects Symbol *subclasses* as sum/integral limits, so subscripted names are detected by regex up front; bare names must default to Symbols because N, E, I, S, Q, beta and gamma are SymPy exports that would otherwise silently bind a user&#39;s variable to a builtin and render wrong mathematics without erroring; `Eq(lhs, rhs)` collapses to False when the sides differ structurally, so equations need `evaluate=False`.</p>
-<p><strong>Next steps:</strong> Unchanged from 2026-08-27 -- see `_state/current.md` for the carried backlog. New and optional: trial the VS Code extension `nuriyev.claude-code-katex` for true glyph rendering, or build the KaTeX side-pane; neither started.</p>
-<p><strong>Git ref:</strong> 7e974e0</p>
 <br>
 <hr>
 <br>
@@ -168,7 +151,24 @@
 </ul>
 <p><strong>Outcome:</strong> The rule is live for all three CLIs everywhere. Regeneration ran `generate<em>handover.ps1` per project directly rather than `helpi 7`, so no session-log entries were written and no browsers opened; only AGENTS.md, `</em>handover.html` and `<em>handover.json` were rebuilt from each `</em>ai<em>log.md`. Checked first that no AGENTS.md was hand-written before overwriting: all 38 existing ones carried the auto-generated marker. Three projects had none and got one: `Ansoegninger\RSO electric`, `Projekter - JHR Privat\BertramVO`, `Publikationer\Reviews\JCYMR</em>26_28`.</p>
 <p><strong>Next steps:</strong> Optional, add the rule to the per-project `.claude/CLAUDE.md` template so new projects carry it at creation. Pre-existing latent bug found and left alone: `scripts\generate<em>handover.ps1:200` has an em-dash inside a PowerShell string literal, the exact encoding trap in the global platform rules. Backlog otherwise unchanged, see `</em>state/current.md`.</p>
-<p><strong>Git ref:</strong> e79b5a2</p>
+<p><strong>Git ref:</strong> e79b5a2</p>
+<br>
+<hr>
+<br>
+<h2>Session 2026-09-04</h2>
+<p><strong>Agent:</strong> Codex</p>
+<p><strong>Goal:</strong> Bring the infrastructure guide and GitHub README up to date, replace the stale versioned cover, regenerate the documentation, and commit the release.</p>
+<p><strong>Files touched:</strong></p>
+<ul>
+  <li>`infrastructure.html` -- updated through helpi 29; added current shared skills, research tools, source persistence, NoteTaker, and deliberate commit guidance; fixed NoteTaker placement and summary pagination.</li>
+  <li>`README.md` -- updated commands, capabilities, operating principles, and stale script links.</li>
+  <li>`Infra_frontpage.png` -- replaced with a simple version-neutral generated cover.</li>
+  <li>`VERSION`, `CHANGELOG.md` -- released v1.1 and recorded the documentation update.</li>
+  <li>`infrastructure_full.pdf` -- regenerated and visually verified; summary HTML/PDF outputs were also regenerated locally.</li>
+</ul>
+<p><strong>Outcome:</strong> The guide now reflects the September 2026 infrastructure. The full PDF has a clean version-neutral cover, and the printable desk reference renders in two pages without overflow. The GitHub README now presents AI_auto as general project infrastructure, with research as its most developed application rather than its boundary.</p>
+<p><strong>Next steps:</strong> Keep `TOOLS.md` generated through `helpi 29`; update this guide when a new helpi command or material shared skill is added.</p>
+<p><strong>Git ref:</strong> 7c35c92</p>
 <br>
 
 </div>
@@ -185,7 +185,6 @@
 
 ## Compressed sessions
 
-- **2026-06-30 (third session)** (Claude): Fix the stale-PDF bug in `generate_docs.ps1` (helpi 16) surfaced la... -&gt; Fix validated with Edge open (the exact failure condition) -- the output PDF now contai...
 - **2026-07-02** (Claude): Design (not yet build) a general code-robustness system for Jeppe's... -&gt; Design phase complete and agreed. No infrastructure code written yet -- this was a scop...
 - **2026-07-02 (close)** (Claude): Build the jr_optlib robustness system end-to-end, migrate the MIPEn... -&gt; jr_optlib is a working, tested, committed shared library with the transport primitive f...
 - **2026-07-02 (second session)** (Claude): Build the first slice of the code-robustness system designed last s... -&gt; First slice complete and validated. `ipf_2d` vetted + CERTIFIED via matching-marginals ...
@@ -201,22 +200,7 @@
 - **2026-08-27** (Claude Opus 5): Design and build an instruction set (skill) for refereeing and edit... -&gt; /review-paper is live. It extends the user's eight criteria with venue fit, claim-evide...
 - **2026-08-27** (Claude Opus 5): Decide how QGIS should fit the JR structure, and implement it. -&gt; QGIS is a per-project tool, not a project type. No standing QGIS folder: `helpi 28` add...
 - **2026-08-27 (2)** (Claude Opus 5): Install Biogeme for discrete choice, then make tool tracking surviv... -&gt; Biogeme 3.3.4 installed outside OneDrive and validated against the published Swissmetro...
-
----
-
-## Session 2026-09-03
-**Agent:** Claude Opus 5
-**Goal:** Make math render legibly in the Claude Code terminal instead of raw LaTeX.
-**Files touched:**
-- `~\.claude\skills\verify-math\scripts\render_math.py` -- new. SymPy 2D pretty-printer; importable by verify.py and usable standalone via `-c "&lt;expr&gt;"`.
-- `~\.claude\skills\verify-math\SKILL.md` -- renderer wired into Step 3 and the report spec; new `## Rendered equations` section; failures now show the rendered form beside the SymPy source.
-- `~\.claude\CLAUDE.md` -- new "Math display in the terminal" section (global rule, loads unconditionally).
-- `~\.claude\settings.json`, `~\.claude\plugins\` -- claude-math@vladimirrott v0.6.0 installed, user scope, pinned to 76418df.
-- memory: `project_claude_math_plugin.md` (new), `project_verify_math_skill.md`, `MEMORY.md`.
-- No AI_auto project files changed this session.
-**Outcome:** Two-tier math display. The claude-math plugin (third-party, model-invoked skill, no executables) emits inline Unicode glyphs; a new SymPy 2D renderer handles displayed equations -- stacked fractions, sums with limits, tall integrals, matrix brackets -- and is wired into /verify-math so reports read as mathematics rather than as SymPy source. Established that inline glyph rendering is impossible in this TUI: terminals do support Sixel/kitty graphics, but Claude Code repaints its own buffer and clobbers injected sequences; out-of-band rendering is the only route and stays unbuilt. Three traps found by testing and encoded in the tool: SymPy rejects Symbol *subclasses* as sum/integral limits, so subscripted names are detected by regex up front; bare names must default to Symbols because N, E, I, S, Q, beta and gamma are SymPy exports that would otherwise silently bind a user's variable to a builtin and render wrong mathematics without erroring; `Eq(lhs, rhs)` collapses to False when the sides differ structurally, so equations need `evaluate=False`.
-**Next steps:** Unchanged from 2026-08-27 -- see `_state/current.md` for the carried backlog. New and optional: trial the VS Code extension `nuriyev.claude-code-katex` for true glyph rendering, or build the KaTeX side-pane; neither started.
-**Git ref:** 7e974e0
+- **2026-09-03** (Claude Opus 5): Make math render legibly in the Claude Code terminal instead of raw... -&gt; Two-tier math display. The claude-math plugin (third-party, model-invoked skill, no exe...
 
 ---
 
@@ -257,6 +241,21 @@
 **Outcome:** The rule is live for all three CLIs everywhere. Regeneration ran `generate_handover.ps1` per project directly rather than `helpi 7`, so no session-log entries were written and no browsers opened; only AGENTS.md, `_handover.html` and `_handover.json` were rebuilt from each `_ai_log.md`. Checked first that no AGENTS.md was hand-written before overwriting: all 38 existing ones carried the auto-generated marker. Three projects had none and got one: `Ansoegninger\RSO electric`, `Projekter - JHR Privat\BertramVO`, `Publikationer\Reviews\JCYMR_26_28`.
 **Next steps:** Optional, add the rule to the per-project `.claude/CLAUDE.md` template so new projects carry it at creation. Pre-existing latent bug found and left alone: `scripts\generate_handover.ps1:200` has an em-dash inside a PowerShell string literal, the exact encoding trap in the global platform rules. Backlog otherwise unchanged, see `_state/current.md`.
 **Git ref:** e79b5a2
+
+---
+
+## Session 2026-09-04
+**Agent:** Codex
+**Goal:** Bring the infrastructure guide and GitHub README up to date, replace the stale versioned cover, regenerate the documentation, and commit the release.
+**Files touched:**
+- `infrastructure.html` -- updated through helpi 29; added current shared skills, research tools, source persistence, NoteTaker, and deliberate commit guidance; fixed NoteTaker placement and summary pagination.
+- `README.md` -- updated commands, capabilities, operating principles, and stale script links.
+- `Infra_frontpage.png` -- replaced with a simple version-neutral generated cover.
+- `VERSION`, `CHANGELOG.md` -- released v1.1 and recorded the documentation update.
+- `infrastructure_full.pdf` -- regenerated and visually verified; summary HTML/PDF outputs were also regenerated locally.
+**Outcome:** The guide now reflects the September 2026 infrastructure. The full PDF has a clean version-neutral cover, and the printable desk reference renders in two pages without overflow. The GitHub README now presents AI_auto as general project infrastructure, with research as its most developed application rather than its boundary.
+**Next steps:** Keep `TOOLS.md` generated through `helpi 29`; update this guide when a new helpi command or material shared skill is added.
+**Git ref:** 7c35c92
 </textarea>
 </div>
 
