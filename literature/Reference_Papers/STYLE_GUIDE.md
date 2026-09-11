@@ -2,6 +2,8 @@
 
 This guide codifies the shared writing style across the reference papers in this folder. When editing or drafting research text, emulate this style — not a generic AI style. The section "Natural academic writing" lists the AI tells to remove.
 
+**Scope.** The guide applies to every edit of research text, not only to dedicated style passes. Any sentence or paragraph added, rewritten, or touched for any reason (a content change, a reviewer response, a corrected claim, a new result, a caption, an abstract) must obey it on the first write. A content edit that introduces a banned word, an em-dash connector, or a bold header is a defective edit, even when the content is correct.
+
 ## Reference papers (in this folder)
 
 - **Einstein (1905)** — *On the Electrodynamics of Moving Bodies*
