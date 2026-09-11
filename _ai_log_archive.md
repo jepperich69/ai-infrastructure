@@ -417,3 +417,10 @@
 ## Archived 2026-09-04 (1 entry)
 
 - **2026-06-30 (third session)** (Claude): Fix the stale-PDF bug in `generate_docs.ps1` (helpi 16) surfaced la... -> Fix validated with Edge open (the exact failure condition) -- the output PDF now contai...
+
+
+---
+
+## Archived 2026-09-11 (1 entry)
+
+- **2026-07-02** (Claude): Design (not yet build) a general code-robustness system for Jeppe's... -> Design phase complete and agreed. No infrastructure code written yet -- this was a scop...

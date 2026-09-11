@@ -1,20 +1,18 @@
 {
   "project": "AI_auto",
-  "generated": "2026-09-04 15:37",
+  "generated": "2026-09-11 22:18",
   "source": "_ai_log.md",
   "latest_session": {
-    "title": "2026-09-04",
-    "agent": "Codex",
-    "goal": "Bring the infrastructure guide and GitHub README up to date, replace the stale versioned cover, regenerate the documentation, and commit the release.",
-    "outcome": "The guide now reflects the September 2026 infrastructure. The full PDF has a clean version-neutral cover, and the printable desk reference renders in two pages without overflow. The GitHub README now presents AI_auto as general project infrastructure, with research as its most developed application rather than its boundary.",
-    "next_steps": "Keep `TOOLS.md` generated through `helpi 29`; update this guide when a new helpi command or material shared skill is added.",
-    "git_ref": "7c35c92",
+    "title": "2026-09-11",
+    "agent": "Claude Opus 5",
+    "goal": "Fold a \"Natural Academic Writing\" rule set (anti-LLM vocabulary and phrasing) into the research writing style, merge in earlier complaints, and make the rules apply to every text edit rather than only to style passes.",
+    "outcome": "The style rules now name the AI tells explicitly (load-bearing, aware-compounds, robust without technical meaning, leverage, delve, pivotal, etc.), list banned stock phrases, and state that a content edit introducing a banned word, an em-dash connector, or a bold header is a defective edit even when the content is right. `/style-edit` reads the banned list generically, so it picks up the expansion without changes.",
+    "next_steps": "Optional: add the writing-scope rule to the per-project `.claude/CLAUDE.md` template and to `scripts\\generate_handover.ps1` so Codex and Gemini get it via AGENTS.md. Backlog otherwise unchanged, see `_state/current.md`.",
+    "git_ref": "0edf448",
     "files_touched": [
-      "`infrastructure.html` -- updated through helpi 29; added current shared skills, research tools, source persistence, NoteTaker, and deliberate commit guidance; fixed NoteTaker placement and summary pagination.",
-      "`README.md` -- updated commands, capabilities, operating principles, and stale script links.",
-      "`Infra_frontpage.png` -- replaced with a simple version-neutral generated cover.",
-      "`VERSION`, `CHANGELOG.md` -- released v1.1 and recorded the documentation update.",
-      "`infrastructure_full.pdf` -- regenerated and visually verified; summary HTML/PDF outputs were also regenerated locally."
+      "`~\\.claude\\CLAUDE.md` -- \"Research writing style\" section rewritten: scope paragraph (every sentence touched for any reason, not only style passes), banned AI vocabulary list, banned stock phrases, cut-list with em-dash connectors, bold headers, three-item rhetorical lists, rhetorical inflation, and a mandatory final anti-LLM pass.",
+      "`literature\\Reference_Papers\\STYLE_GUIDE.md` -- same scope paragraph in the intro; banned-phrase table extended with 25 rows and substitutions; new section \"Natural academic writing (anti-LLM pass)\" before \"Tone\".",
+      "Claude memory (`project_writing_style_guide.md`, `MEMORY.md`) -- records the expansion and the rule to add any new complaint to both files."
     ]
   },
   "latest_session_complete": true,
