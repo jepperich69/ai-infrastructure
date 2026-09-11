@@ -1,6 +1,6 @@
 # Research Writing Style Guide
 
-This guide codifies the shared writing style across the reference papers in this folder. When editing or drafting research text, emulate this style — not a generic AI style.
+This guide codifies the shared writing style across the reference papers in this folder. When editing or drafting research text, emulate this style — not a generic AI style. The section "Natural academic writing" lists the AI tells to remove.
 
 ## Reference papers (in this folder)
 
@@ -58,6 +58,31 @@ This guide codifies the shared writing style across the reference papers in this
 | a number of | several, many, or give the number |
 | significant (non-technical) | large, substantial, meaningful |
 | facilitate | help, enable, allow |
+| load-bearing (non-structural) | central, essential, decisive — or name what depends on it |
+| aware (compound adjective: context-aware, uncertainty-aware) | "accounts for X", "conditions on X" — unless the compound is an established technical term |
+| unpack | explain, decompose, examine |
+| landscape / ecosystem / realm | (name the actual field, set, or system) |
+| holistic | complete, joint, system-wide — or be specific |
+| seamless | (drop; say what actually connects) |
+| multifaceted | (list the facets or drop) |
+| pivotal / crucial | (drop; if it matters, say why) |
+| compelling | (drop; let the evidence carry it) |
+| transformative | (drop; state the change) |
+| navigate | handle, solve, address |
+| underscore / highlight / illuminate | show, imply, indicate — or drop |
+| foster / harness / unlock | enable, use, obtain |
+| interplay | interaction, dependence (name the mechanism) |
+| at its core | (drop) |
+| importantly / notably | (drop; the sentence should carry its own weight) |
+| in today's rapidly evolving ... | (drop) |
+| sheds light on / offers a lens | shows, explains, measures |
+| raises important questions | (state the question) |
+| serves as a | is |
+| represents a significant | is a |
+| not only ... but also | and — or two sentences |
+| rather than simply / more than just | (drop; state the claim) |
+| This highlights / underscores ... | This implies, This shows — or drop |
+| provides an X-aware framework | accounts for X |
 
 ---
 
@@ -70,6 +95,31 @@ This guide codifies the shared writing style across the reference papers in this
 - **Section-opening announcements.** Do not open a section with a sentence that describes the section. Open with the first substantive claim.
 
 ---
+
+## Natural academic writing (anti-LLM pass)
+
+Write like an experienced researcher, not like an AI assistant. The reference papers read as the work of a person with something specific to say. Generic AI prose reads as promotion: it announces importance instead of demonstrating it.
+
+**Prefer concrete nouns and verbs.** "The model accounts for X" beats "The model provides an X-aware framework." State what the model, result, or mechanism does. Rhetorical inflation ("pivotal," "transformative," "compelling") is a claim without evidence; delete it and let the result carry the weight.
+
+**Delete words that do not change the technical meaning.** If removing a word leaves the claim unchanged, the word was decoration.
+
+**Reserve technical words for their technical meaning.** "Robust" means something in statistics and optimization; do not use it as praise. "Aware" as a compound adjective (context-aware, uncertainty-aware) is fashionable, not informative, unless the compound is an established term in the field.
+
+**Avoid the recognizable LLM rhythms:**
+- Em-dashes as clause connectors (see below)
+- Three-item rhetorical lists assembled for cadence rather than content
+- "Not only ... but also," "rather than simply," "more than just"
+- Sentences opening with "This highlights/underscores ..."
+- Bold paragraph headers (`\textbf{}`) in manuscripts: use `\textit{}`
+
+**Em-dashes.** Use a comma, colon, or two sentences instead of an em-dash that joins two clauses. Keep em-dashes only for a true parenthetical enclosed on both sides. In `.tex` source, prefer ASCII (`--`, `---`) over Unicode dashes; Unicode dashes corrupt latexdiff output (known issue #13).
+
+**Preserve technical terminology, equations, and claims.** The pass is stylistic: no claim gets weakened, strengthened, or re-scoped, and no equation or defined term is touched.
+
+**Do not simplify into plainness.** The target is precise, compact prose fit for a strong journal, not a popular summary. Long sentences are fine when each carries one logical load.
+
+**Final pass.** After editing, reread every sentence and flag any that still sounds generic, promotional, or recognizably LLM-written. Rewrite it more directly, usually by naming the concrete subject and the concrete verb.
 
 ## Tone
 

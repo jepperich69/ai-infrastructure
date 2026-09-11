@@ -737,3 +737,10 @@ application holds a capture stream, so a zero peak is not evidence of a dead mic
 `IPolicyConfig` COM interface (CLSID `870AF99C-...`, IID `F8679F50-...`), setting all three
 roles: eConsole, eMultimedia, eCommunications. Setting only eConsole leaves other
 applications on the old device.
+
+### Log compression drops pre-session metadata (2026-09-08)
+**Status:** open
+**Affects:** scripts/compress_log.ps1 (helpi 22), project _ai_log.md files with metadata between the title and session blocks.
+**Observed:** Closing Pub_NonlinearDiffusion_PartB compressed one older session and removed the published-status/journal line. The script extracts only the title before reconstructing the log. Its final TrimEnd also strips trailing hyphens from the final Git ref placeholder.
+**Fix:** Preserve non-session preamble metadata when rebuilding the log and trim only newline characters. Add a regression fixture containing a published-status line and a final Git ref placeholder. Until fixed, check and restore the preamble after compression, before regenerating handover. This project status was restored during close.
+
