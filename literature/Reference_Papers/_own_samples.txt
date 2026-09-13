@@ -1,0 +1,567 @@
+
+
+===== 1-s2.0-S0191261523000954-main.pdf (30 pages) =====
+Transportation Research Part B 174 (2023) 102778
+Available online 20 June 2023
+0191-2615/© 2023 The Author(s). Published by Elsevier Ltd. This is an open access article under the CC BY license
+(http://creativecommons.org/licenses/by/4.0/).
+Contents lists available at ScienceDirect
+Transportation Research Part B
+journal homepage: www.elsevier.com/locate/trb
+Societally optimal expansion of bicycle networks
+Mads Paulsen ∗, Jeppe Rich
+Transport Division, Department of Technology, Management and Economics, Technical University of Denmark, Bygningstorvet 116B, 2800 Kgs.
+Lyngby, Denmark
+A R T I C L E I N F O
+Keywords:
+Bicycle infrastructure
+Bicycle network design
+Benefit–cost analysis
+Transport network expansion
+Transport geography
+Cycle superhighways
+A B S T R A C T
+In this paper, we consider the problem of expanding bicycle networks over time. The expansion
+of the network at a given point in time is based on the societal cost–benefit performance, which
+entails system-wide effects from previous expansions. The problem is challenging due to non-
+linearities of travel time benefits and the dimension of the problem, which is a consequence
+of the combinatorial complexity of the networks and the planning horizon. It rules out the
+use of conventional bottom-up cost–benefit analysis as evaluating even a small set of possible
+solutions becomes computationally infeasible. To circumvent this problem, we introduce a novel
+reverse geographical mapping approach where the monetary benefits are assigned back onto
+the network. This allows a more detailed geographical planning breakdown at the level of
+network links and makes it possible to apply a more stringent optimization approach with
+respect to the timing and prioritization of network expansions. Based on a linear approximation
+of travel time savings, we propose several variants of mathematical integer programs to solve
+the problem. This allows us to consider the case of growing a cycle superhighway network
+in the Copenhagen region over a time horizon of 50 years. We show that our approximations
+of travel time savings are largely similar to those obtained through actual traffic assignment.
+Furthermore, the optimization approach renders a development plan, which yields a net present
+value that is ten times larger than that of the actual infrastructure upgrades implemented since
+2019. In a long-term scenario, it is shown that our solution returns an accumulated benefit–cost
+ratio of 2.7 over the period, which is a significant improvement over previous findings. This
+underlines the importance of optimal prioritization schemes of where and when to invest in
+bicycle network expansions.
+1. Introduction
+The geographical expansion of bicycle networks is a problem faced by most cities around the world, and it is becoming
+increasingly relevant due to increased urbanization and raised environmental concern (Buehler and Pucher, 2021). From a technical
+point of view, it is a planning problem, which, based on an existing bicycle network in Year 𝑡 = 0, aims at providing support for a
+range of planning decisions regarding the further expansion of the network. More specifically; (i) where should investments start?,
+(ii) where should network investments be directed next (in 𝑡 = 1,𝑡 = 2, …)?, (iii) how to limit investments due to budget constraints
+in specific time periods? and finally, (iv) when should investments stop?
+The problem of expanding bicycle networks is a complex problem previously visited in the literature by e.g. Mesbah et al. (2012),
+Smith and Haghani (2012), Duthie and Unnikrishnan ( 2014), Liu et al. ( 2019), Guillermo et al. ( 2020), Ospina et al. ( 2022). The
+complexity arises from intricate dependencies between network segments, a planning horizon that takes place over many years, and
+∗ Corresponding author.
+E-mail addresses: madsp@dtu.dk (M. Paulsen), rich@dtu.dk (J. Rich).
+https://doi.org/10.1016/j.trb.2023.06.002
+Received 7 January 2023; Received in revised form 1 May 2023; Accepted 7 June 2023
+Transportation Research Part B 174 (2023) 102778
+2
+M. Paulsen and J. Rich
+Fig. 1. Illustration of the bicycle network expansion problem. Gray links represent the ‘gross network’ of links that can be expanded, black links represent the
+network in the Year 𝑡 = 0, whereas the remaining colors indicate expansions for the respective periods. The size of the nodes indicates the population size in
+each node. (For interpretation of the references to color in this figure legend, the reader is referred to the web version of this article.)
+the fact that early network expansions are taken into use before the completion of the entire expansion. A stylized geographical
+illustration of the problem is presented in Fig. 1 where a toy network is gradually expanded from a base year ( 𝑡 = 0 ) over three
+time periods (𝑡 = 1,𝑡 = 2,𝑡 = 3).
+Although the figure is stylized, it is included as a means to convey important information regarding the problem at hand. Firstly,
+that it is often helpful to identify a relevant ‘gross-network’ which is only a small subset of all possible combinations of links between
+nodes (Mesbah et al., 2012; Liu et al. , 2019). This reduces the solution space and eliminate irrelevant links. Secondly, population
+densities affect the development of the network ( Mahfouz et al., 2021). Some links are more important than others simply because
+they connect larger population areas and thereby potentially will carry higher bicycle flows. Thirdly, that there is a cost-side to
+network expansions. Longer links will be more expensive than shorter ones. Fourthly, that increasing connectivity by connecting
+sub-networks early may be a better strategy (Schoner and Levinson, 2014; Guillermo et al., 2020; Ryan et al., 2020) than developing
+links in the outskirts of the network, although some studies argue for the opposite (e.g. Duthie and Unnikrishnan , 2014).
+Although traditional transport model projections are valuable when extending bicycle networks, they cannot determine exactly
+when and where to invest in expansions. Therefore, there is a need to rethink if and how welfare benefits of transport network
+expansions can be expressed at more detailed levels than commonly employed, and to investigate if and how such ability can lead
+to a more stringent optimization of transport network expansions. This is no easy task, as the different networks expansions are
+often mutually dependent. A given network expansion often requires other expansions to be developed before the full benefits are
+realized. However, it may also be that a competing parallel expansion has already been build, in which case the two projects will
+cannibalize benefits from each other and render so-called diminishing returns of transport investments ( Rodrigue and Notteboom,
+2020).
+We circumvent this problem by drawing inspiration from common cost–benefit approaches, where project benefits are monetized
+and compared to investments and maintenance costs before being evaluated at an overall level through performance indicators
+such as net present value (NPV) terms or benefit–cost ratios (BCR) (e.g. Leleur , 2000), see Appendix B.1 for formal definitions.
+Summarizing the various effects into a single monetary value reduces the complexity of the problem, and is the most commonly
+used methodology when appraising large transport infrastructure projects ( Browne and Ryan , 2011; Beukers et al. , 2012; Mackie
+et al., 2014). However, much information is lost during bottom-up aggregation from detailed route and zone-based data to overall
+performance indicators ( Beukers et al. , 2012). Instead, we propose to assign the OD-specific benefits back onto the network and
+utilize the accumulated benefit flowing through each link to establish an approximation of the added benefit of each link.
+Transportation Research Part B 174 (2023) 102778
+3
+M. Paulsen and J. Rich
+The paper provides three main contributions to the literature. Firstly, we propose that monetary consumer benefits of any kind
+can be distributed back onto the transport network by applying a traffic assignment model to the monetary benefits rather than
+flows. The second contribution lies in the formulation of a stage-based cost–benefit optimization framework for transport network
+expansions, that utilizes the resulting link-based measures of benefits. The key contribution is the formulation of a variant of the
+mathematical problem that provides a good approximation while also being feasible for large-scale instances. The third contribution
+is that we apply the optimization framework in a large-scale planning context for cycle superhighway expansions in a network of
+Copenhagen consisting of 471,266 links, 52,742 origin–destination pairs, and nine cyclist types. The resulting approach, we believe,
+supports a new geographical perspective with respect to the distribution of benefits–cost performance at the level of links, that
+allows applying standard binary linear optimization techniques to establish systemati
+
+===== 1-s2.0-S0306261922004597-main.pdf (9 pages) =====
+Applied Energy 317 (2022) 119065
+Available online 28 April 2022
+0306-2619/© 2022 The Authors. Published by Elsevier Ltd. This is an open access article under the CC BY license ( http://creativecommons.org/licenses/by/4.0/).
+Contents lists available at ScienceDirect
+Applied Energy
+journal homepage: www.elsevier.com/locate/apenergy
+Charging, steady-state SoC and energy storage distributions for EV fleets
+F. Hipolito ∗, C.A. Vandet, J. Rich
+Department of Management Engineering, Technical University of Denmark, DTU, 2800 Kgs. Lyngby, Denmark
+A R T I C L E I N F O
+Keywords:
+Electric vehicles
+Decision to charge
+Steady-state SoC
+Charge demand
+Battery utilization
+A B S T R A C T
+A recent worldwide uptake of electric vehicles (EVs) has led to an increasing interest for the EV charging
+situation. A proper understanding of the former is required to understand charging needs and to dimension
+the corresponding infrastructure. In the paper, we develop models that allow us to approximate the steady-
+state distribution of State-of-Charge (SoC) levels for EVs at the beginning of the day and infer its dependence
+regarding the daily relative range, 𝑟 defined as the ratio of mean daily-driven distance to the maximum range.
+The framework combines: (i) a generic parametric model for decision to charge in terms of the SoC and 𝑟; and
+(ii) a simulation model in which we utilize longitudinal log-data for a fleet of cars to track charging events
+and SoC over time. The model brings about several interesting use cases, of which two stand out. Firstly, it
+provides a simple parametric way of circumventing transient behaviour in SoC distributions when applied to
+simulation frameworks. Secondly, it offers a clear method to infer crucial information regarding EV fleets and
+the total energy storage potential. Such information is useful for vehicle-to-grid (V2G) applications in that
+it provides expected lower and upper bounds for the energy that can be stored and charged. The model is
+applied in a Danish context, and it is suggested that while a full electrification of the vehicle fleet could lead
+to significant stress on the power grid, it will at the same time hold a large potential for deploying V2G as
+an important mechanism to dampen the effect of temporal high-demand. The potential for V2G stems from a
+low battery utilization between charging events of approximately 40%, which in turn provides a large storage
+buffer that could be harnessed with little to no impact on EV utilization. Results also indicate that tapping
+into just half of the available buffer could serve the EV demand and also meet close to 50% of the household
+consumption.
+1. Introduction
+The recent worldwide uptake of EVs has led to an increasing interest
+for the EV charging situation. A proper understanding of the charging
+situation and the ability to answer questions regarding where, when
+and how much charging is required, is a necessity to model charging
+needs on a large scale and to dimension the corresponding charging
+infrastructure [ 1,2]. In addition, from the power grid operator per-
+spective, there is an increasing interest in the potential for V2G [ 3,4]
+and its derived benefits ranging from emission minimization, to power
+grid frequency regulation [ 5–7]. This requires knowledge concerning
+the power storage in vehicle fleets that can be accommodated and
+conversely, what amount of energy that can be passed on to the power
+grid [8].
+In this paper, we formulate a general probabilistic model for the
+charge decision of EVs as a function of two dimensionless variables, the
+SoC level𝑥 and the relative daily range 𝑟. The steady-state SoC level is
+defined as the distribution of SoC levels across an entire EV fleet, mea-
+sured at the beginning of a day. Due to the generic nature of the model,
+∗ Corresponding author.
+E-mail addresses: fabhi@dtu.dk (F. Hipolito), canva@dtu.dk (C.A. Vandet), rich@dtu.dk (J. Rich).
+it is easy to calibrate and transfer between, e.g. different countries and
+contexts, and the model thereby serves a range of applications when
+predicting the demand for charging and, more generally, simulating EV
+charging patterns across larger vehicle fleets. In addition, it can be used
+as a means to predict energy storage capabilities and energy demand
+for arbitrary EV fleets. This application is useful for V2G and power
+grid planning.
+In the paper, the decision to charge is based on empirical proba-
+bilistic models to accommodate heterogeneous EV fleets and different
+mobility patterns. This is in contrast with simplistic models [9–12] that
+require population and EV fleet specific calibration or simply follow
+arbitrary constraints [ 13–18]. The model also serves as an important
+input in agent-based simulation models concerned with charging or
+power grid related investigations. Very often these models seek to
+simulate performance and operations over a 24 hour period rather than
+simulating over multiple days [ 14,15]. While the former approach is
+simpler and more straightforward from a data and modelling perspec-
+tive, it requires the existence of steady-state input distributions, which
+https://doi.org/10.1016/j.apenergy.2022.119065
+Received 4 November 2021; Received in revised form 12 March 2022; Accepted 2 April 2022
+Applied Energy 317 (2022) 119065
+2
+F. Hipolito et al.
+Fig. 1. Diagrammatic representation of use of data and models in this paper.
+are non-trivial to develop. It has led to many situations where models
+apply arbitrary initial distributions of SoC with the risk of biasing
+overall results [ 16,19–21] or where ad-hoc methods are implemented
+to minimize transient behaviour caused from initial conditions [ 12,13,
+22,23]. This is also pointed out in Ref. [ 14] which underlines that for
+practical applications, it is necessary to consider the mobility pattern
+of EVs before they enter a given system to properly estimate SoC
+levels. It further suggests that, without such information, the analysis
+of planning decision is limited to investigation of worst-case scenarios,
+by arbitrarily pre-defining upper and lower bands for the SoC levels.
+Moreover, results obtained using our models exhibit a strong and
+nonlinear relationship between the relative daily range, mean SoC level
+and respective probability of charging, which stresses the importance of
+using good approximations to the steady-state distribution. Regarding
+the application of the model to predict the energy storage potential
+in EV fleets, we show how it can be deployed for any arbitrary com-
+bination of EV fleet and driving range. This illustrates the benefit of
+being able to predict, and thus reflect upon, how technological changes
+regarding vehicle range may be accounted for in the distribution. In
+addition, it suggests that the model can be applied to analyse the
+potential of V2G by providing an estimate for not only the mean
+demand required by the fleet of EVs, but also to assess the respective
+battery utilization and therefore the available storage in a probabilistic
+manner.
+The paper is organized in four sections, starting with a review of
+literature. The methods are discussed in Section 2 , where we present
+the models for the charge decision and steady-state SoC distributions.
+In Fig. 1, we offer a diagrammatic representation of how EV utilization
+data is used data to calibrate our decision models, and how we combine
+the models with telemetry data from travel records in a simulation
+to calibrate the steady-state SoC distributions. Finally, the steady-state
+distributions are used to assess the charge demand and energy esti-
+mates. The results, derived using the models introduced in Section 2 ,
+are addressed throughout Section 3, which covers the bulk of this paper
+over its four subsections. It begins with a summary of the data in
+Section 3.1, including the data used for the calibration of the decision
+model, as well as the telemetry data-set used to assess the steady-state
+distributions. The entirety of Section 3.2 is dedicated to the calibration
+of the charge decision model, including the impact of range anxiety.
+The analysis and characterization of steady-state distributions is ad-
+dressed in Section 3.3. The final subsection, Section 3.4, is dedicated to
+the application of our models to estimate the stored energy and charge
+demand in large EV fleets, where we consider the full electrification
+of cars in the municipality of Frederiksberg, Denmark for illustrative
+purposes. The concluding remarks are presented in Section 4. Three ad-
+ditional sections are present in the appendix, providing further details
+to: A. Parametrization of the decision model; B. Simulation algorithm;
+C. Standardized moments for the Beta distribution.
+2. Methodology
+In the present paper, we introduce a simple model to characterize
+the charge decision of EVs as a function of two dimensionless variables,
+the SoC level 𝑥 and the relative daily range 𝑟. The former is intrinsic
+to the vehicle’s battery, defined as the ratio of the stored energy to the
+
+===== 1-s2.0-S0968090X1831180X-main.pdf (25 pages) =====
+Contents lists available atScienceDirect
+Transportation Research Part C
+journal homepage: www.elsevier.com/locate/trc
+How to generate micro-agents? A deep generative modeling
+approach to population synthesis
+Stanislav S. Borysov
+⁎
+, Jeppe Rich, Francisco C. Pereira
+Department of Technology, Management and Economics, Technical University of Denmark, DTU, 2800 Kgs. Lyngby, Denmark
+ARTICLE INFO
+Keywords:
+Population synthesis
+Generative modeling
+Deep learning
+Variational Autoencoder
+Transportation modeling
+Agent-based modeling
+ABSTRACT
+Populationsynthesisisconcernedwiththegenerationofsyntheticyetrealisticrepresentationsof
+populations. It is a fundamental problem in the modeling of transportation where the synthetic
+populations of micro-agents represent a key input to most agent-based models. In this paper, a
+newmethodological framework for how to ‘grow’ pools of micro-agents is presented. The model
+framework adopts a deep generative modeling approach from machine learning based on a
+Variational Autoencoder (VAE). Compared to the previous population synthesis approaches,
+including Iterative Proportional Fitting (IPF), Gibbs sampling and traditional generative models
+suchasBayesianNetworksorHiddenMarkovModels,theproposedmethodallowsfittingthefull
+joint distribution for high dimensions. The proposed methodology is compared with a conven-
+tionalGibbssamplerandaBayesianNetworkbyusingalarge-scaleDanishtripdiary.Itisshown
+that,while thesetwomethodsoutperformtheVAEinthelow-dimensionalcase,theybothsuffer
+fromscalabilityissueswhenthenumberofmodeledattributesincreases.Itisalsoshownthatthe
+Gibbs sampler essentially replicates the agents from the original sample when the required
+conditional distributions are estimated as frequency tables. In contrast, the VAE allows addres-
+singtheproblemofsamplingzerosbygeneratingagentsthatarevirtuallydifferentfromthosein
+the original data but have similar statistical properties. The presented approach can support
+agent-based modeling at all levels by enabling richer synthetic populations with smaller zones
+and more detailed individual characteristics.
+1. Introduction
+Population synthesis is a common term for methods that aim at predicting populations in social and geographical spaces under
+varyingconstraintsthattypicallyreflectprofilingofthefuturepopulation.Theareahasreceivedincreasingattentioninrecentyears
+due to an increased focus on agent-based modeling in the transportation area (Bowman and Ben-Akiva, 2001; Bradley et al., 2010).
+Thefocusonmicro-agentsasopposedtomatricesorprototypicalindividualsenablesmodelerstoinvestigatedistributionaleffectsin
+thesocialandgeographicalspace(Dielemanetal.,2002;BhatandSrinivasan,2005)andtoaddressissuessuchasequity,household
+composition, social coherency and aging in relation to transportation (Stead, 2001; Bento et al., 2005) in a more detailed fashion.
+Today,theworldisexperiencingmanyemergingtechnologieswhichaimtooptimizemobilityattheindividuallevel.Tosupportthis
+development, models capable of simulating and forecasting agents with more detailed characteristics are required (Nourinejad and
+Roorda, 2016; Aziz et al., 2018; Zhang et al., 2019).
+A better understanding of the contribution of the current paper and the different approaches taken in the literature may be
+https://doi.org/10.1016/j.trc.2019.07.006
+Received 24 August 2018; Received in revised form 8 July 2019; Accepted 10 July 2019
+⁎ Corresponding author.
+E-mail address:stabo@dtu.dk (S.S. Borysov).
+Transportation Research Part C 106 (2019) 73–97
+Available online 18 July 2019
+0968-090X/ © 2019 Elsevier Ltd. All rights reserved.
+T
+underpinnedbyreferringtothetraditionalstagesinpopulationsynthesismethods,wheretypicallythreemainstagesareconsidered:
+1. The generation of a starting solution.
+2. A matrix fitting stage.
+3. An allocation stage where prototypical agents are translated into micro-agents and households.
+Thethree-stageapproachhasbeenusedinmanyapplications(Beckmanetal.,1996;Ballasetal.,2005;Rich,2018)andtypically
+combines micro-surveys with deterministic matrix fitting methods and micro-simulation. In contrast, more recent simulation-based
+approachestopopulationsynthesis(Farooqetal.,2013;SunandErath,2015;Saadietal.,2016;Sunetal.,2018)tendtofocusmore
+exclusively on the first stage—the generating of appropriate representative samples for a given population without considering how
+such samples can be aligned with future targets. In this paper, the focus is also entirely on the first stage of the synthesis problem.
+However, at the offset of the paper, it is worth noting that the relevance of a population synthesis method is its ability to produce
+alternative future populations typically controlled through various statistical characteristics, such as marginal distributions or
+combinationsofthem.Forsimulation-basedapproaches,thiscanbeaccomplishedbydefiningare-samplingstagewhereindividuals
+are selected from a simulated pool of individuals. The main challenge of the re-sampling stage is to generate proper sample weights
+that reflect future population targets. Although this problem may not be trivial for many target variables, it can be solved by
+combining traditional fitting methodologies, e.g. Iterative Proportional Fitting (IPF) or simulated annealing, with quota-based
+random sampling.
+Inthepopulationsynthesisliterature,therehasbeenatrendtowardprobabilisticmethodsforthegenerationofstartingsolutions.
+A driver of this development has been an increasing need for more detailed populations exemplified by smaller zones and more
+refined descriptions of individuals and households, for instance, including social interactions between the micro-agents (Feygin and
+Pozdnoukhov, 2018). This development has underlined the importance of population synthesis, but at the same time led to new
+challenges related to scalability and the ability to deal with sampling zeros. Challenges with respect to scalability can refer to
+differentthings.Forinstance,itmayrefertothefactthat,fromacomputationalperspective,thereisalimitforhowmanyattributes
+can be considered. However, it can also refer to the commonly known “curse of dimensionality” problem, which may occur if the
+numberofmodeledattributesishigh.Theproblemiscausedbythefactthattheamountofdatatouniformlyfillahypercubegrows
+exponentially with the dimensionality of the hypercube. This problem is not present for low dimensions because, in that case, the
+distributionspace is typicallydenselypopulatedby data.However, forhigherdimensions,whenthe coverageis sparser,it maylead
+to the existence of isolated or loosely connected “probability density islands” which, for example, can make sampling based on the
+commonly applied Markov Chain Monte Carlo (MCMC) approach less efficient. The second challenge is related to sampling zeros,
+thatis,theagentswhicharemissingfromtheoriginalsamplebutexistintherealpopulation.Theterm“overfitting”usedinthepaper
+refers to the case when a model is not capable of generating such “out-of-sample” agents that have similar statistical properties as
+those in the original sample but are not their strict copies. In this regard, deep learning methods, which are gaining momentum in
+transportation (Wang et al., 2019), represent a promising research direction.
+Thispaperseekstoaddresspreciselythesetwochallengesbyproposinganewscalableapproachtopopulationsynthesisbasedon
+a Variational Autoencoder (VAE) (Kingma and Welling, 2013) known from deep generative modeling. Generative modeling is a
+subfield of statistics and machine learning which focuses on estimating the joint probability distribution of data. Traditionally,
+generative models based on probabilistic graphical models (Bishop, 2006) have suffered from scalability issues, which made them
+applicable either to small problems or required the introduction of simplifying assumptions. In recent years, however, deep gen-
+erativemodels(Goodfellowetal.,2016)haveopenedapathtowardlarge-scaleproblems.Thesemodels,whichcombinedeepneural
+networks and efficient inference algorithms, have proven to be effective as a means of modeling high-dimensional data such as
+images(Radfordetal.,2016)ortext(Yuetal.,2017).Inthispaper,thisprogressisextendedintothetransportationmodelingareaby
+applying the method to model detailed populations of micro-agents.
+Maincontributionsof the paperare as follows.First,weconnectthe areaofpopulation synthesiswith deepgenerative modeling
+and show how a dedicated Variational Autoencoder framework can be tailored to the problem of population synthesis. In doing so,
+we take advantage of the scalability of the framework and the smoothing properties that result from encoding the joint distribution
+over a compressed latent space. Secondly, by dealing with potentially hundreds of mixed continuous and categorical variables, we
+take population synthesis to a new stage where it is possible to mimic entire large-scale travel diaries, including the variables that
+measure individual socio-economic profiles and travel preferences. Finally, we c
+
+===== 1-s2.0-S2452306218300078-main.pdf (14 pages) =====
+Econometrics and Statistics 14 (2020) 24–37 
+Contents lists available at ScienceDirect 
+Econometrics and Statistics 
+journal homepage: www.elsevier.com/locate/ecosta 
+A spline function class suitable for demand models 
+Jeppe Rich 
+Department of Management Engineering, Technical University of Denmark, Bygningstorvet 1, Lyngby 2800, Denmark 
+a r t i c l e i n f o 
+Article history: 
+Received 17 March 2017 
+Revised 8 February 2018 
+Accepted 8 February 2018 
+Available online 21 February 2018 
+Keywords: 
+Discrete choice models 
+Multinomial logit 
+Functional form 
+Cost-damping 
+Spline functions 
+a b s t r a c t 
+A function class suitable for estimating cost preferences in demand models is presented. 
+The function class is applicable to any positive cost variable and is designed to be: (i) 
+monotonically decreasing, (ii) to have decreasing marginal sensitivity with respect to cost, 
+and (iii) to be differentiable at every point. It is shown how suitable functions can be 
+formed from sequences of tailored functions in a manner that ensures their continuity 
+and differentiability at the knot points. The proposed functions are well suited for demand 
+models where price elasticities exhibit a damped pattern as the values of their argument 
+increase. The usual linear-in-parameter functions or non-linear functions, such as the Box- 
+Cox function, do not have an equally ﬂexible way of accounting for such a pattern. This 
+can be relevant when estimating transport demand models where the sensitivity of de- 
+mand with respect to transport costs is known to decline as the cost increases, i.e. the 
+phenomenon of “cost-damping”. However, it may also be relevant as a means to capture 
+the marginal return of investments or declining marginal utility of income. To provide an 
+illustration, the functions are incorporated in a multinomial logit model that is estimated 
+from synthetically generated data by maximum likelihood. A Monte Carlo simulation study 
+shows that the estimator is able to recover the true parameters. 1 The practical application 
+of the function class is also considered within the new large-scale Danish National Trans- 
+port Model. 
+©2 0 1 8 EcoSta Econometrics and Statistics. Published by Elsevier B.V. All rights reserved. 
+1. Introduction 
+This paper proposes new parametric functions that could be used in estimating cost and time preferences in demand 
+models. The proposed functions satisfy the requirement of Deﬁnition 1: 
+Deﬁnition 1. A cost-damping function class 
+Represents functions of positive cost that have the following characteristics. 
+(i) Utility decreases monotonically with respect to cost. 
+(ii) Marginal sensitivity decreases with respect to cost (cost-damping). 
+(iii) The functions are continuous and differentiable at every point. 
+This class includes the well-known Box-Cox function ( Box and Cox, 1964 ) as well as the logarithmic functions. The paper 
+propose two new functions that comply with deﬁnition 1 and that offer some additional ﬂexibility compared to existing 
+E-mail address: rich@dtu.dk 
+1 The programs for generating the synthetic data and for estimating the models (in R and SAS software) are available as supplementary material to the 
+electronic version of the paper. 
+https://doi.org/10.1016/j.ecosta.2018.02.002 
+2452-3062/© 2018 EcoSta Econometrics and Statistics. Published by Elsevier B.V. All rights reserved. 
+J. Rich / Econometrics and Statistics 14 (2020) 24–37 25 
+functions. The ﬁrst function is inspired by a Taylor expansion of the Box-Cox function and it exploits L’hopital’s rule ( Rich 
+and Mabit, 2015 ). It inherits the desirable properties of the Box-Cox function, but it possesses a more ﬂexible curvature. The 
+second function is constructed directly from a sequence of Box-Cox functions. This function relaxes the assumption that the 
+shape parameter is identical across the entire domain. The proposed functions are generally more ﬂexible than traditional 
+functions in the sense that the damping characteristics can be controlled more effectively. It is not discussed in detail why 
+cost-damping is likely to be found in empirical data as this has been considered in other papers ( Daly, 2010; Rich and Mabit, 
+2015; Daly et al., 2016 ). However, the reasons could include human preferences, unobservable attributes, heteroscedasticity, 
+and selection bias. 
+The proposed functions are ﬂexible, yet they are constrained to comply with typical properties of demand models, such 
+as convexity in prices and cost-damping. More speciﬁcally, the functions are appropriate to circumstances where there is 
+decreasing marginal sensitivity of demand with respect to prices. As examples of a decreasing sensitivity, it may be observed 
+that doubling the money spent on a bottle of wine does not always double the pleasure that it will give, that the quality 
+of life does not always increase in proportion to the available income ( Layard et al., 2008 ), that there are often diminishing 
+returns to scale in investments and that the disutility of increasing a driving distance from 10 to 20 KM is generally less 
+than the disutility of increasing the distance from 200 to 210 KM. 
+The functions that are proposed in this paper are particularly relevant in analyzing the demand for transport as a function 
+of its costs. Transport models are typically formulated within a random utility framework, where utility is represented as a 
+function of transport costs and of travel time and estimated as discrete choice models. In the literature, there are several 
+contributions to the issue of functional form speciﬁcation in transport models. Piecewise linear approximations have been 
+discussed in Ben-Akiva and Lerman (1985) in a logit modelling framework and, more recently, in Pinjari and Bhat (2006) in 
+a mixed logit framework. Power series expansions are also discussed in Ben-Akiva and Lerman (1985) and they have been 
+used in testing the adequacy of linear models. Other contributions include the early work on Box-Cox transformations in 
+Gaudry and Wills (1978) and Hensher and Johnson (1981) and the more recent work in Gaudry (2010) . Applications of the 
+Box-Cox function are to be found in Gaudry et al., (1989), Ben-Akiva et al., (1987), Mandel et al., (1994) and Lapparent and 
+de Palma (2002) . Most recently, Rich and Mabit (2015) have investigated several combinations of linear-in-parameter but 
+non-linear-in-attribute forms, which, in several cases, have outperformed the Box-Cox model. 
+Compared to many of the existing functions in the literature, the two functions proposed in this paper can be seen as re- 
+stricted splines ( Wold, 1974 ) that satisfy the requirement of Deﬁnition 1 . The segments of these functions are joined at knot 
+points; and their parameters ensure connectivity and differentiability at these points. Several research papers have been 
+concerned with spline-based approaches in the context of discrete choice models, including those of Kneib et al., (2007), 
+Tutz and Scholz (2004), Huang and Nychka (20 0 0) and Bilbao-Ubillos et al., (2015) . However, these papers typically adapt a 
+Bayesian approach; and they are generally concerned with the estimation of socioeconomic consumer preferences. They are 
+not aimed at the estimation of price and demand relationships. The problem of using unconstrained spline functions (which 
+are often piecewise polynomial functions) is that, in general, they do not ﬁt into a context of random utility maximization. 
+McFadden (1981) touched upon this in his seminal work, which later won him the Nobel price. In his discussion of indi- 
+rect utility properties, he underlined the need for quasi-convexity in prices (page 207), which is also a requirement of the 
+William- Daly- Zachary Theorem ( Williams, 1977; Daly and Zachary, 1978 ). This is also mentioned in McFadden’s work (page 
+211). Although it might be possible to estimate a piecewise polynomial function that is convex and complies with random 
+utility theory, one cannot trust that this will be the case. Typically, such ﬂexible functions conﬂict with the requirements of 
+our deﬁnition in certain parts of the domain and for certain applications. This can lead to elasticities with the wrong sign 
+and to biased policy experiments. For this reason, such unconstrained functions are rarely seen in the econometric literature 
+in connection with discrete-choice demand modelling or in demand models more generally. 
+It is equally relevant to consider the contribution of these proposed functions when compared with piecewise linear 
+functions. Three things can be highlighted in that respect. First, as the linear model is non-differentiable at the knot points, 
+it is not possible to apply a traditional optimization algorithm such as the Newton–Raphson algorithm. Therefore, it is 
+necessary either to set the knot points manually or to develop a heuristic approach to accommodate a search for the optimal 
+placement of the knots. Secondly, a linear segment
+
+===== s11116-024-10505-5-1.pdf (23 pages) =====
+Vol.:(0123456789)
+https://doi.org/10.1007/s11116-024-10505-5
+1 3
+Let’s walk! The fallacy of urban first‑ and last‑mile public 
+transport
+Jeppe Rich1
+© The Author(s) 2024
+Abstract
+In recent years, there has been an upsurge in intelligent mobility solutions that provide 
+door-to-door services. Although these services offer convenience to certain individuals, 
+it is frequently overlooked that they can lead to welfare losses when accounting for the 
+reduced health benefits that result from reduced physical activity. In this paper, we derive a 
+welfare function of introducing first- and last-mile public transport services. By comparing 
+possible health gains from walking with corresponding accessibility losses, we identify the 
+distance boundaries under which the service fails to be socially beneficial. The results are 
+based on a simulation study and draw on further insights from a recent agent-based model 
+from Copenhagen focusing on first- and last-mile public transport. Although the model is 
+intentionally stylized and may not apply universally to all scenarios featuring diverse popu-
+lation densities, demographic profiles, or transport network layouts, the fundamental con -
+clusion presented in the paper is that first-mile services have minimal welfare impact for 
+average trip distances below 1 km, appears robust even under conservative assumptions. In 
+this case, the probability of failure is almost 100% for any realistic parametrization. This 
+finding implies that planners and researchers should focus on the design of main transit 
+networks and the access and egress of active modes to and from the stations. In particular, 
+door-to-door services covering shorter distances should not be the priority of public fund -
+ing unless in particular situations or contexts.
+Keywords First- and last-mile transport · Demand-responsive services · Cost-benefit 
+analysis · External costs · Transport economics · Scenario discovery
+Introduction
+Mobility solutions that provide door-to-door services (Alonso-González et al. 2018), first- 
+and last-mile public transport services (Venter 2020; Zhang et al. 2015), and public transit 
+feeder services Chandra et  al. ( 2013) have received increasing attention in recent years. 
+This study will refer to these services as first- and last-mile (FLM) services. However, it is 
+ * Jeppe Rich 
+ rich@dtu.dk
+1 Department of Management Engineering, Technical University of Denmark, Akademivej, 
+2800, Kgs. Lyngby, Denmark
+Transportation (2026) 53:511–533
+Accepted: 11 June 2024 / Published online: 25 June 2024 
+ 
+1 3
+essential to note that there are differences in whether these services operate on a demand-
+responsive basis, essentially covering door-to-door routes, or if they adhere to a specific 
+route pattern with stops. While FLM services may be convenient for certain user segments, 
+it is often forgotten that such services, besides the operational costs, come at a reasonably 
+sizable welfare loss that results from adverse health effects. This loss is generated from 
+users being less physically active when using these FLM services. Until now, the literature 
+has not examined this loss in societal efficiency, despite the growing recognition of the 
+positive health impacts associated with walking and cycling (Breda et al. 2018; Rich et al. 
+2021). This awareness provides some rationale for exploring this aspect further.
+In this paper, we hypothesize that factoring in the aforementioned welfare loss might 
+result in scenarios where FLM services become inefficient from a welfare perspective 
+when employed for shorter distances. This results from substitution effects from active 
+modes to the FLM service and the welfare losses and operational performance resulting 
+from this shift.
+Therefore, the study aims to study the societal welfare contribution of adding an FLM 
+service by including active modes’ external positive health effects. In particular, using real-
+istic yet conservative assumptions regarding the accessibility and cost of the service, the 
+region under which such service is likely to fail from a welfare efficiency point of view 
+is studied using concepts from the scenario discovery literature (Lempert et al. 2006) and 
+simulation. Based on a standard discrete choice model and welfare economic theory, we 
+show that the failure regime correlates with shorter distances where active modes are com-
+petitive. It suggests a distance threshold of approximately 1 km under which FLM services 
+are largely irrelevant from a welfare-economic perspective. This finding is relevant for sev-
+eral reasons. Firstly, it suggests that from a societal point of view, it is more relevant to 
+support the development of an overall public transit network that operates at a granularity 
+above the minimum threshold rather than spending resources on FLM solutions below such 
+threshold and door-to-door transport services in specific. Second, investments that focus on 
+improving the accessibility of active modes to and from main stations should be an area of 
+priority (Ha et al. 2023; Jiang et al. 2012). This taps into a more fundamental discussion of 
+MaaS services in the Smart City sphere and how such services compete with active modes 
+and main transit lines as also advocated in Currie (2018).
+The paper is organized as follows. In Sect. “ Literature review”, we study the literature 
+with reference to scenario discovery and the evidence for positive health effects of active 
+transport. Last, in the section, we dive into the FLM literature and how it relates to the cur-
+rent paper. In Sect.  “ Methodology”, we present the underlying welfare economic model 
+and discuss the assumptions. Section “ Results” presents results from the simulation study. 
+In Sect.  “Discussion”, a discussion is offered, including a discussion of results from a 
+recent agent-based model from Copenhagen on FLM transport. Finally, in Sect. “ Conclu-
+sions and future work”, we conclude and offer a perspective on future research avenues.
+Literature review
+The literature review is divided into three separate parts. First, we refer to the growing 
+literature on scenario discovery methods, which form part of the methodological basis of 
+this paper. Secondly, since the study is strongly dependent on recent evidence on the health 
+benefits of active modes, we provide an overview of this literature and its main finding. 
+Transportation (2026) 53:511–533194
+ 
+1 3
+Finally, we give an overview of the FLM literature and consider the current research direc-
+tions and the relationship between this literature and the current paper.
+The Scenario discovery literature
+From a methodological perspective, this paper relates to a growing literature centred 
+around the title "scenario discovery analysis" (Lempert et al. 2006), which aims at explor-
+ing scenarios and policy options that could result in negative consequences or system 
+breakdowns (Groves and Lempert 2007). The underlying idea is that by simulating and 
+analyzing these scenarios, researchers and decision-makers can gain insight into the con -
+ditions under which certain policies might fail or lead to adverse outcomes. This meth -
+odology has found numerous applications in climate assessment studies (Shortridge and 
+Guikema 2016; Gerst et al. 2013), in biodiversity studies (Rosa et al. 2020), in transporta-
+tion contexts, such as in the logistics sector (Halim et al. 2016), and as a method applied to 
+the study of land use policies (Ariza-Álvarez 2021) to mention a few.
+In this paper, unlike many large-scale studies, where simulation runs are expensive and 
+time-consuming and where tailored statistical methodologies are applied to interpolate the 
+solution space (Kwakkel and Jaxa-Rozen 2016; Kwakkel 2019), we face a situation where 
+simulation runs are fast and rather simple. This allows us to enumerate the solution space 
+quite accurately over the parameter space and under the assumptions set before the experi -
+ment. However, the idea is entirely similar to the original idea of Lempert et  al. ( 2006) 
+in that we study failure regions under uncertainty and use this insight to provide policy 
+recommendations.
+Health effects of active travel
+Evidence suggests that biking and walking as active forms of transportation positively 
+impact health (Brown et al. 2016; Fishman et al. 20185). A recent large systematic review 
+of reductions in all-cause mortality from walking and bicycling (Kelly et al. 2014) shows 
+that the effects are substantial. However, there is a large degree of variation between the 
+different studies. The HEAT assessment model (Breda et al. 2018; Martin et al. 2006) esti-
+mates that for a person travelling 1 km by bicycle daily at a speed of 14 km/h, the total 
+health benefits amount to 337 euros per year. The main factor is decreased premature fatali-
+ties by 0.0000800 and a monetized value of a statistical life (VSL) of 4,540,000 euro/death. 
+Assuming an average travel distance of 4 km per day, the average
