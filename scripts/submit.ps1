@@ -533,6 +533,7 @@ if ($OriginalTexFile -ne "SKIP") {
         if (Test-Path $latexdiffErr) { Remove-Item $latexdiffErr -Force }
         $result      = & $strawberryPerl $latexdiffScript @latexdiffArgs 2> $latexdiffErr
         $diffContent = $result | Out-String
+        $diffContent = $diffContent -replace '\\true', 'true'
         if (Test-Path $latexdiffErr) {
             $stderrLines = Get-Content $latexdiffErr -Encoding UTF8 | Where-Object {
                 $_ -and
@@ -667,6 +668,7 @@ if ($OriginalTexFile -ne "SKIP") {
 
             if (Test-Path $suppDiffErr) { Remove-Item $suppDiffErr -Force }
             $suppResult = (& $strawberryPerl $latexdiffScript @suppArgs 2> $suppDiffErr) | Out-String
+            $suppResult = $suppResult -replace '\\true', 'true'
             Set-Content -Path $diffSuppTexSrc -Value $suppResult -Encoding UTF8
             Copy-Item $diffSuppTexSrc $diffSuppTexOut -Force
 
