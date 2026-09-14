@@ -424,3 +424,11 @@
 ## Archived 2026-09-11 (1 entry)
 
 - **2026-07-02** (Claude): Design (not yet build) a general code-robustness system for Jeppe's... -> Design phase complete and agreed. No infrastructure code written yet -- this was a scop...
+
+
+---
+
+## Archived 2026-09-14 (2 entries)
+
+- **2026-07-02 (close)** (Claude): Build the jr_optlib robustness system end-to-end, migrate the MIPEn... -> jr_optlib is a working, tested, committed shared library with the transport primitive f...
+- **2026-07-02 (second session)** (Claude): Build the first slice of the code-robustness system designed last s... -> First slice complete and validated. `ipf_2d` vetted + CERTIFIED via matching-marginals ...

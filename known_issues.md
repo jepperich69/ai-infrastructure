@@ -769,3 +769,13 @@ latexdiff automatically injects a preamble that contains \lstset{extendedchars=\
 (Get-Content $diffFile) -replace '\\true', 'true' | Set-Content $diffFile
 `
 *(Ensure you don't add a BOM when saving it back!)*
+
+### 54. `latexdiff` on PATH fails and truncates its own output file to zero bytes
+**Status:** platform-fact
+**Affects:** Any `.tex` diff on this machine. Hit 2026-09-14 regenerating the v9-to-v10 diff in `Pub_SAA_PMIP_MC`.
+MiKTeX's `latexdiff` is a Perl script, and the Perl that resolves first on PATH in Git Bash has no `Algorithm::Diff`. The run dies at `latexdiff line 289` with `Can't locate Algorithm/Diff.pm in @INC`. The damage is the redirection, not the error: the shell creates and truncates the output file before Perl starts, so a command of the form `latexdiff old.tex new.tex > diff.tex` leaves `diff.tex` at zero bytes and the previous diff is gone. Recover with `git checkout -- <diff.tex>` if the file was tracked.
+**Fix:** Use `latexdiff-so`, the standalone build that bundles `Algorithm::Diff`. MiKTeX ships it in the same folder, so only the command name changes:
+`
+latexdiff-so old.tex new.tex > diff.tex
+`
+Write to a scratch path first and move the result into place once it is non-empty, so a failure cannot destroy the existing diff. `latexdiff-fast` and `latexdiff-vc` are also present. Issue #44 (the malformed `\true` in the listings preamble) still applies to whichever variant is used.

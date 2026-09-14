@@ -1,18 +1,18 @@
 {
   "project": "AI_auto",
-  "generated": "2026-09-11 22:18",
+  "generated": "2026-09-14 09:29",
   "source": "_ai_log.md",
   "latest_session": {
-    "title": "2026-09-11",
+    "title": "2026-09-14",
     "agent": "Claude Opus 5",
-    "goal": "Fold a \"Natural Academic Writing\" rule set (anti-LLM vocabulary and phrasing) into the research writing style, merge in earlier complaints, and make the rules apply to every text edit rather than only to style passes.",
-    "outcome": "The style rules now name the AI tells explicitly (load-bearing, aware-compounds, robust without technical meaning, leverage, delve, pivotal, etc.), list banned stock phrases, and state that a content edit introducing a banned word, an em-dash connector, or a bold header is a defective edit even when the content is right. `/style-edit` reads the banned list generically, so it picks up the expansion without changes.",
-    "next_steps": "Optional: add the writing-scope rule to the per-project `.claude/CLAUDE.md` template and to `scripts\\generate_handover.ps1` so Codex and Gemini get it via AGENTS.md. Backlog otherwise unchanged, see `_state/current.md`.",
-    "git_ref": "0edf448",
+    "goal": "Recover and log the unlogged 2026-09-13 sessions (here and in `Pub_SAA_PMIP_MC`), then carry that project's language pass through to a pushed manuscript and a current reproduction package.",
+    "outcome": "Both 2026-09-13 sessions are on record. The style pass was applied to v10 and pushed (Overleaf `master` @ dcf6a06), the v9-to-v10 latexdiff was regenerated against it, and the code package was synced to v10 and pushed to `Pub_SAA_PMIP_MC` @ 99be803. One infrastructure fact came out of it, recorded as #54.",
+    "next_steps": "The auto-mode guard refuses `push --force`, `-s ours` merges of unrelated histories, and the GitHub branch-rename API, all as destructive git. That left the `Pub_SAA_PMIP_MC` package swap unfinished and the PI has to run one command by hand; consider whether a narrow allowlist rule for these is wanted, since replacing a repository's master is a normal step in this workflow. Carried unchanged from 09-11: add the writing-scope and answer-length rules to the per-project `.claude/CLAUDE.md` template and to `scripts\\generate_handover.ps1`; AI_auto still has no `.claude/CLAUDE.md`. Backlog otherwise in `_state/current.md`.",
+    "git_ref": "1f17d06",
     "files_touched": [
-      "`~\\.claude\\CLAUDE.md` -- \"Research writing style\" section rewritten: scope paragraph (every sentence touched for any reason, not only style passes), banned AI vocabulary list, banned stock phrases, cut-list with em-dash connectors, bold headers, three-item rhetorical lists, rhetorical inflation, and a mandatory final anti-LLM pass.",
-      "`literature\\Reference_Papers\\STYLE_GUIDE.md` -- same scope paragraph in the intro; banned-phrase table extended with 25 rows and substitutions; new section \"Natural academic writing (anti-LLM pass)\" before \"Tone\".",
-      "Claude memory (`project_writing_style_guide.md`, `MEMORY.md`) -- records the expansion and the rule to add any new complaint to both files."
+      "`_ai_log.md`, `_state/current.md` -- retrospective 2026-09-13 entry (STYLE_GUIDE recalibration on the author's own five papers, 26-item decision record, global CLAUDE.md rewrite) and this entry.",
+      "`known_issues.md` -- new #54, `latexdiff` on PATH fails for want of `Algorithm::Diff` and truncates its own output file to zero bytes on the way out; use `latexdiff-so`.",
+      "`Pub_SAA_PMIP_MC` -- three log entries, state card, the applied style pass, and the reproduction-package sync. See that project's log."
     ]
   },
   "latest_session_complete": true,
