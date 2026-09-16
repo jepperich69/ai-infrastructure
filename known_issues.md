@@ -779,3 +779,26 @@ MiKTeX's `latexdiff` is a Perl script, and the Perl that resolves first on PATH 
 latexdiff-so old.tex new.tex > diff.tex
 `
 Write to a scratch path first and move the result into place once it is non-empty, so a failure cannot destroy the existing diff. `latexdiff-fast` and `latexdiff-vc` are also present. Issue #44 (the malformed `\true` in the listings preamble) still applies to whichever variant is used.
+
+### 55. Claude PostToolUse logger can stall every tool call for 10 minutes
+**Status:** fixed (2026-09-14)
+**Affects:** `~/.claude/settings.json`, `scripts/_claude_backup/settings.json`, `scripts/log_tool_use.ps1`
+
+The global `PostToolUse` command hook for `Edit|Write|Bash` stalled intermittently in Claude Code 2.1.270. In the DFF_Uncertainty session `b1ab384b-2753-41a2-ad2d-836c2bf70829`, fourteen successful tool calls were each followed by `hook_cancelled` exactly 600 seconds later. The hook consumed 140 minutes of a 154-minute revision turn. Claude Code's default command-hook timeout is 600 seconds, so a small audit hook became the dominant failure.
+
+**Fix:** Set the hook's `timeout` to 5 seconds and invoke PowerShell through the absolute path `C:/Program Files/PowerShell/7/pwsh.exe`. Apply the same change to the backed-up settings file so machine restore cannot reintroduce the unsafe default. The script completed five standalone regression runs in 0.57--0.98 seconds after the change. The lower-level intermittent trigger was not reproducible, but the five-second limit bounds any recurrence.
+
+**Agent recovery rule:** After one `hook_cancelled`, stop issuing matched tools and restart Claude Code or inspect `/hooks`. Never repeat a ten-minute cancellation. The tool action has already completed because this is a `PostToolUse` hook.
+
+### 56. Gurobi cannot read compressed `.mps.gz` files on this machine
+**Status:** platform-fact
+**Affects:** Public MIPLIB instances downloaded in their standard `.mps.gz` form.
+
+`gurobipy.read()` fails with `No tool found to open ... please install "gzip" or "7-zip" and add it to your PATH`. Decompress the file first with the installed miniconda Python and its standard-library `gzip` module, then pass the resulting `.mps` file to Gurobi. Do not treat the error as a corrupt MIPLIB download.
+
+### 57. Close-skill infrastructure paths point to obsolete root-level scripts
+**Status:** open
+**Affects:** `~/.agents/skills/close/SKILL.md`, compact platform instructions, and any automation invoking `AI_auto\helpi.ps1` or `AI_auto\generate_handover.ps1`.
+**Fix:** Replace the obsolete paths with `AI_auto\scripts\helpi.ps1` and `AI_auto\scripts\generate_handover.ps1`, or route the helpi call through the live root-level `helpi.cmd`. Add a path-existence check before invocation.
+
+Observed 2026-09-15 while closing `Pub_MIPEntropy_MPC`: both documented root-level `.ps1` paths failed because the scripts now live under `AI_auto\scripts`. Direct invocation from that directory succeeded.
