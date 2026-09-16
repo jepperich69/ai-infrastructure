@@ -30,7 +30,7 @@
 <body>
 
 <h1>Handover Document &mdash; AI_auto</h1>
-<div class="meta">Generated: 2026-09-14 09:29 &nbsp;|&nbsp; Source: <code style="display:inline;padding:2px 6px">_ai_log.md</code> &nbsp;|&nbsp; Sidecar: <code style="display:inline;padding:2px 6px">_handover.json</code></div>
+<div class="meta">Generated: 2026-09-16 14:33 &nbsp;|&nbsp; Source: <code style="display:inline;padding:2px 6px">_ai_log.md</code> &nbsp;|&nbsp; Sidecar: <code style="display:inline;padding:2px 6px">_handover.json</code></div>
 
 <!-- ============================================================ -->
 <!-- AGENT INSTRUCTIONS                                            -->
@@ -62,17 +62,15 @@
 <div class="latest-session">
   <div class="session-status ok">Complete</div>
   <h2>Latest Session Snapshot</h2>
-  <p><strong>Session:</strong> 2026-09-14</p>
+  <p><strong>Session:</strong> 2026-09-16</p>
   <p><strong>Agent:</strong> Claude Opus 5</p>
-  <p><strong>Goal:</strong> Recover and log the unlogged 2026-09-13 sessions (here and in `Pub_SAA_PMIP_MC`), then carry that project&#39;s language pass through to a pushed manuscript and a current reproduction package.</p>
-  <p><strong>Outcome:</strong> Both 2026-09-13 sessions are on record. The style pass was applied to v10 and pushed (Overleaf `master` @ dcf6a06), the v9-to-v10 latexdiff was regenerated against it, and the code package was synced to v10 and pushed to `Pub_SAA_PMIP_MC` @ 99be803. One infrastructure fact came out of it, recorded as #54.</p>
-  <p><strong>Next steps:</strong> The auto-mode guard refuses `push --force`, `-s ours` merges of unrelated histories, and the GitHub branch-rename API, all as destructive git. That left the `Pub_SAA_PMIP_MC` package swap unfinished and the PI has to run one command by hand; consider whether a narrow allowlist rule for these is wanted, since replacing a repository&#39;s master is a normal step in this workflow. Carried unchanged from 09-11: add the writing-scope and answer-length rules to the per-project `.claude/CLAUDE.md` template and to `scripts\generate_handover.ps1`; AI_auto still has no `.claude/CLAUDE.md`. Backlog otherwise in `_state/current.md`.</p>
-  <p><strong>Git ref:</strong> 1f17d06</p>
+  <p><strong>Goal:</strong> Diagnose four same-day crashes on the DTU EliteBook 840 G11 (triggered by opening Teams or a browser) and the twice-daily Windows Update prompt, a few days after a BIOS update.</p>
+  <p><strong>Outcome:</strong> All four crashes are bugcheck `0xD1 DRIVER_IRQL_NOT_LESS_OR_EQUAL` at the same instruction offset (`...f14a`), i.e. one third-party driver. Timeline from Windows Update history: BIOS 1.10 installed via WU on 09-14 13:21; Realtek audio driver set replaced 09-15 14:46 (HD Audio 6.0.10016.1, APO 13.6437.2557.904); audio endpoints re-enumerated 09-16 09:40 and the first crash followed at 09:59, then 11:33, 13:46, 13:51. Teams and browsers initialise the audio stack on launch, so the Realtek driver is the prime suspect, BIOS secondary. The update prompt is a WU loop: &quot;Intel - Extension - 2.1.10103.24&quot; installed five times in a week (one failure, 0x80246007) and keeps being re-offered.</p>
+  <p><strong>Next steps:</strong> User to ask DTU IT to (1) roll back the Realtek audio driver and pause driver updates, (2) run `!analyze -v` on `C:\Windows\Minidump\091626-*.dmp` to confirm the driver, (3) hide or clear the stuck Intel Extension package. Infrastructure backlog unchanged from 09-14, see `_state/current.md`.</p>
+  <p><strong>Git ref:</strong> 2cbac32</p>
   <h3>Files touched</h3>
   <ul>
-  <li>`_ai_log.md`, `_state/current.md` -- retrospective 2026-09-13 entry (STYLE_GUIDE recalibration on the author&#39;s own five papers, 26-item decision record, global CLAUDE.md rewrite) and this entry.</li>
-  <li>`known_issues.md` -- new #54, `latexdiff` on PATH fails for want of `Algorithm::Diff` and truncates its own output file to zero bytes on the way out; use `latexdiff-so`.</li>
-  <li>`Pub_SAA_PMIP_MC` -- three log entries, state card, the applied style pass, and the reproduction-package sync. See that project&#39;s log.</li>
+  <li>none in the project; diagnostics only (event log, WER app-log entries, Windows Update COM history, PnP driver inventory). Minidumps copied to nothing: `C:\Windows\Minidump` and the WER ReportArchive are admin-only and the user is not a local admin, so the UAC route failed three times.</li>
 </ul>
 </div>
 
@@ -87,7 +85,6 @@
 <h2>Compressed sessions</h2>
 <br>
 <ul>
-  <li><strong>2026-07-02 (third session)</strong> (Gemini CLI): Build a min-cost exact repair oracle for PopInt to verify if greedy... -&gt; Proved via exact LP that exact integer repair for PopInt is mathematically impossible u...</li>
   <li><strong>2026-07-02 (Gemini CLI close)</strong> (Gemini CLI): Extract and verify legacy heuristics (VSP SA, Set-Cover Ladder Burn... -&gt; The optimization library jr_optlib is now fully operational, tested, and pushed to GitH...</li>
   <li><strong>2026-07-02 (fourth session)</strong> (Gemini CLI): Extract Napsti block-coordinate NLP primitive and the Dijkstra + SU... -&gt; The NLP fixed-point solver and routing (Dijkstra+SUE) were successfully extracted to th...</li>
   <li><strong>2026-07-02 (fifth session)</strong> (Gemini CLI): Survey the paper codebases to identify missing algorithmic families... -&gt; Successfully identified three major missing algorithmic families (Finite Horizon DP, Di...</li>
@@ -103,24 +100,8 @@
   <li><strong>2026-09-03</strong> (Claude Opus 5): Get voice input working in the Claude Code CLI, expected to need a ... -&gt; No plugin needed or possible. Dictation is native since v2.x (`/voice`, hold or tap); p...</li>
   <li><strong>2026-09-03</strong> (Codex): Strengthen the `review-paper` skill against ghost references and ci... -&gt; Full reviews and revision rounds must now verify every bibliography entry rather than s...</li>
   <li><strong>2026-09-04</strong> (Claude Opus 5): Stop the CLI agents from producing long, hard-to-digest answers; ma... -&gt; The rule is live for all three CLIs everywhere. Regeneration ran `generate_handover.ps1...</li>
+  <li><strong>2026-09-04</strong> (Codex): Bring the infrastructure guide and GitHub README up to date, replac... -&gt; The guide now reflects the September 2026 infrastructure. The full PDF has a clean vers...</li>
 </ul>
-<br>
-<hr>
-<br>
-<h2>Session 2026-09-04</h2>
-<p><strong>Agent:</strong> Codex</p>
-<p><strong>Goal:</strong> Bring the infrastructure guide and GitHub README up to date, replace the stale versioned cover, regenerate the documentation, and commit the release.</p>
-<p><strong>Files touched:</strong></p>
-<ul>
-  <li>`infrastructure.html` -- updated through helpi 29; added current shared skills, research tools, source persistence, NoteTaker, and deliberate commit guidance; fixed NoteTaker placement and summary pagination.</li>
-  <li>`README.md` -- updated commands, capabilities, operating principles, and stale script links.</li>
-  <li>`Infra_frontpage.png` -- replaced with a simple version-neutral generated cover.</li>
-  <li>`VERSION`, `CHANGELOG.md` -- released v1.1 and recorded the documentation update.</li>
-  <li>`infrastructure_full.pdf` -- regenerated and visually verified; summary HTML/PDF outputs were also regenerated locally.</li>
-</ul>
-<p><strong>Outcome:</strong> The guide now reflects the September 2026 infrastructure. The full PDF has a clean version-neutral cover, and the printable desk reference renders in two pages without overflow. The GitHub README now presents AI_auto as general project infrastructure, with research as its most developed application rather than its boundary.</p>
-<p><strong>Next steps:</strong> Keep `TOOLS.md` generated through `helpi 29`; update this guide when a new helpi command or material shared skill is added.</p>
-<p><strong>Git ref:</strong> 7c35c92</p>
 <br>
 <hr>
 <br>
@@ -167,7 +148,20 @@
 </ul>
 <p><strong>Outcome:</strong> Both 2026-09-13 sessions are on record. The style pass was applied to v10 and pushed (Overleaf `master` @ dcf6a06), the v9-to-v10 latexdiff was regenerated against it, and the code package was synced to v10 and pushed to `Pub<em>SAA</em>PMIP_MC` @ 99be803. One infrastructure fact came out of it, recorded as #54.</p>
 <p><strong>Next steps:</strong> The auto-mode guard refuses `push --force`, `-s ours` merges of unrelated histories, and the GitHub branch-rename API, all as destructive git. That left the `Pub<em>SAA</em>PMIP<em>MC` package swap unfinished and the PI has to run one command by hand; consider whether a narrow allowlist rule for these is wanted, since replacing a repository&#39;s master is a normal step in this workflow. Carried unchanged from 09-11: add the writing-scope and answer-length rules to the per-project `.claude/CLAUDE.md` template and to `scripts\generate</em>handover.ps1`; AI<em>auto still has no `.claude/CLAUDE.md`. Backlog otherwise in `</em>state/current.md`.</p>
-<p><strong>Git ref:</strong> 1f17d06</p>
+<p><strong>Git ref:</strong> 1f17d06</p>
+<br>
+<hr>
+<br>
+<h2>Session 2026-09-16</h2>
+<p><strong>Agent:</strong> Claude Opus 5</p>
+<p><strong>Goal:</strong> Diagnose four same-day crashes on the DTU EliteBook 840 G11 (triggered by opening Teams or a browser) and the twice-daily Windows Update prompt, a few days after a BIOS update.</p>
+<p><strong>Files touched:</strong></p>
+<ul>
+  <li>none in the project; diagnostics only (event log, WER app-log entries, Windows Update COM history, PnP driver inventory). Minidumps copied to nothing: `C:\Windows\Minidump` and the WER ReportArchive are admin-only and the user is not a local admin, so the UAC route failed three times.</li>
+</ul>
+<p><strong>Outcome:</strong> All four crashes are bugcheck `0xD1 DRIVER<em>IRQL</em>NOT<em>LESS</em>OR_EQUAL` at the same instruction offset (`...f14a`), i.e. one third-party driver. Timeline from Windows Update history: BIOS 1.10 installed via WU on 09-14 13:21; Realtek audio driver set replaced 09-15 14:46 (HD Audio 6.0.10016.1, APO 13.6437.2557.904); audio endpoints re-enumerated 09-16 09:40 and the first crash followed at 09:59, then 11:33, 13:46, 13:51. Teams and browsers initialise the audio stack on launch, so the Realtek driver is the prime suspect, BIOS secondary. The update prompt is a WU loop: &quot;Intel - Extension - 2.1.10103.24&quot; installed five times in a week (one failure, 0x80246007) and keeps being re-offered.</p>
+<p><strong>Next steps:</strong> User to ask DTU IT to (1) roll back the Realtek audio driver and pause driver updates, (2) run `!analyze -v` on `C:\Windows\Minidump\091626-*.dmp` to confirm the driver, (3) hide or clear the stuck Intel Extension package. Infrastructure backlog unchanged from 09-14, see `_state/current.md`.</p>
+<p><strong>Git ref:</strong> 2cbac32</p>
 <br>
 
 </div>
@@ -184,7 +178,6 @@
 
 ## Compressed sessions
 
-- **2026-07-02 (third session)** (Gemini CLI): Build a min-cost exact repair oracle for PopInt to verify if greedy... -&gt; Proved via exact LP that exact integer repair for PopInt is mathematically impossible u...
 - **2026-07-02 (Gemini CLI close)** (Gemini CLI): Extract and verify legacy heuristics (VSP SA, Set-Cover Ladder Burn... -&gt; The optimization library jr_optlib is now fully operational, tested, and pushed to GitH...
 - **2026-07-02 (fourth session)** (Gemini CLI): Extract Napsti block-coordinate NLP primitive and the Dijkstra + SU... -&gt; The NLP fixed-point solver and routing (Dijkstra+SUE) were successfully extracted to th...
 - **2026-07-02 (fifth session)** (Gemini CLI): Survey the paper codebases to identify missing algorithmic families... -&gt; Successfully identified three major missing algorithmic families (Finite Horizon DP, Di...
@@ -200,21 +193,7 @@
 - **2026-09-03** (Claude Opus 5): Get voice input working in the Claude Code CLI, expected to need a ... -&gt; No plugin needed or possible. Dictation is native since v2.x (`/voice`, hold or tap); p...
 - **2026-09-03** (Codex): Strengthen the `review-paper` skill against ghost references and ci... -&gt; Full reviews and revision rounds must now verify every bibliography entry rather than s...
 - **2026-09-04** (Claude Opus 5): Stop the CLI agents from producing long, hard-to-digest answers; ma... -&gt; The rule is live for all three CLIs everywhere. Regeneration ran `generate_handover.ps1...
-
----
-
-## Session 2026-09-04
-**Agent:** Codex
-**Goal:** Bring the infrastructure guide and GitHub README up to date, replace the stale versioned cover, regenerate the documentation, and commit the release.
-**Files touched:**
-- `infrastructure.html` -- updated through helpi 29; added current shared skills, research tools, source persistence, NoteTaker, and deliberate commit guidance; fixed NoteTaker placement and summary pagination.
-- `README.md` -- updated commands, capabilities, operating principles, and stale script links.
-- `Infra_frontpage.png` -- replaced with a simple version-neutral generated cover.
-- `VERSION`, `CHANGELOG.md` -- released v1.1 and recorded the documentation update.
-- `infrastructure_full.pdf` -- regenerated and visually verified; summary HTML/PDF outputs were also regenerated locally.
-**Outcome:** The guide now reflects the September 2026 infrastructure. The full PDF has a clean version-neutral cover, and the printable desk reference renders in two pages without overflow. The GitHub README now presents AI_auto as general project infrastructure, with research as its most developed application rather than its boundary.
-**Next steps:** Keep `TOOLS.md` generated through `helpi 29`; update this guide when a new helpi command or material shared skill is added.
-**Git ref:** 7c35c92
+- **2026-09-04** (Codex): Bring the infrastructure guide and GitHub README up to date, replac... -&gt; The guide now reflects the September 2026 infrastructure. The full PDF has a clean vers...
 
 ---
 
@@ -256,6 +235,17 @@
 **Outcome:** Both 2026-09-13 sessions are on record. The style pass was applied to v10 and pushed (Overleaf `master` @ dcf6a06), the v9-to-v10 latexdiff was regenerated against it, and the code package was synced to v10 and pushed to `Pub_SAA_PMIP_MC` @ 99be803. One infrastructure fact came out of it, recorded as #54.
 **Next steps:** The auto-mode guard refuses `push --force`, `-s ours` merges of unrelated histories, and the GitHub branch-rename API, all as destructive git. That left the `Pub_SAA_PMIP_MC` package swap unfinished and the PI has to run one command by hand; consider whether a narrow allowlist rule for these is wanted, since replacing a repository's master is a normal step in this workflow. Carried unchanged from 09-11: add the writing-scope and answer-length rules to the per-project `.claude/CLAUDE.md` template and to `scripts\generate_handover.ps1`; AI_auto still has no `.claude/CLAUDE.md`. Backlog otherwise in `_state/current.md`.
 **Git ref:** 1f17d06
+
+---
+
+## Session 2026-09-16
+**Agent:** Claude Opus 5
+**Goal:** Diagnose four same-day crashes on the DTU EliteBook 840 G11 (triggered by opening Teams or a browser) and the twice-daily Windows Update prompt, a few days after a BIOS update.
+**Files touched:**
+- none in the project; diagnostics only (event log, WER app-log entries, Windows Update COM history, PnP driver inventory). Minidumps copied to nothing: `C:\Windows\Minidump` and the WER ReportArchive are admin-only and the user is not a local admin, so the UAC route failed three times.
+**Outcome:** All four crashes are bugcheck `0xD1 DRIVER_IRQL_NOT_LESS_OR_EQUAL` at the same instruction offset (`...f14a`), i.e. one third-party driver. Timeline from Windows Update history: BIOS 1.10 installed via WU on 09-14 13:21; Realtek audio driver set replaced 09-15 14:46 (HD Audio 6.0.10016.1, APO 13.6437.2557.904); audio endpoints re-enumerated 09-16 09:40 and the first crash followed at 09:59, then 11:33, 13:46, 13:51. Teams and browsers initialise the audio stack on launch, so the Realtek driver is the prime suspect, BIOS secondary. The update prompt is a WU loop: "Intel - Extension - 2.1.10103.24" installed five times in a week (one failure, 0x80246007) and keeps being re-offered.
+**Next steps:** User to ask DTU IT to (1) roll back the Realtek audio driver and pause driver updates, (2) run `!analyze -v` on `C:\Windows\Minidump\091626-*.dmp` to confirm the driver, (3) hide or clear the stuck Intel Extension package. Infrastructure backlog unchanged from 09-14, see `_state/current.md`.
+**Git ref:** 2cbac32
 </textarea>
 </div>
 

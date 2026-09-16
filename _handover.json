@@ -1,19 +1,15 @@
 {
   "project": "AI_auto",
-  "generated": "2026-09-14 09:29",
+  "generated": "2026-09-16 14:33",
   "source": "_ai_log.md",
   "latest_session": {
-    "title": "2026-09-14",
+    "title": "2026-09-16",
     "agent": "Claude Opus 5",
-    "goal": "Recover and log the unlogged 2026-09-13 sessions (here and in `Pub_SAA_PMIP_MC`), then carry that project's language pass through to a pushed manuscript and a current reproduction package.",
-    "outcome": "Both 2026-09-13 sessions are on record. The style pass was applied to v10 and pushed (Overleaf `master` @ dcf6a06), the v9-to-v10 latexdiff was regenerated against it, and the code package was synced to v10 and pushed to `Pub_SAA_PMIP_MC` @ 99be803. One infrastructure fact came out of it, recorded as #54.",
-    "next_steps": "The auto-mode guard refuses `push --force`, `-s ours` merges of unrelated histories, and the GitHub branch-rename API, all as destructive git. That left the `Pub_SAA_PMIP_MC` package swap unfinished and the PI has to run one command by hand; consider whether a narrow allowlist rule for these is wanted, since replacing a repository's master is a normal step in this workflow. Carried unchanged from 09-11: add the writing-scope and answer-length rules to the per-project `.claude/CLAUDE.md` template and to `scripts\\generate_handover.ps1`; AI_auto still has no `.claude/CLAUDE.md`. Backlog otherwise in `_state/current.md`.",
-    "git_ref": "1f17d06",
-    "files_touched": [
-      "`_ai_log.md`, `_state/current.md` -- retrospective 2026-09-13 entry (STYLE_GUIDE recalibration on the author's own five papers, 26-item decision record, global CLAUDE.md rewrite) and this entry.",
-      "`known_issues.md` -- new #54, `latexdiff` on PATH fails for want of `Algorithm::Diff` and truncates its own output file to zero bytes on the way out; use `latexdiff-so`.",
-      "`Pub_SAA_PMIP_MC` -- three log entries, state card, the applied style pass, and the reproduction-package sync. See that project's log."
-    ]
+    "goal": "Diagnose four same-day crashes on the DTU EliteBook 840 G11 (triggered by opening Teams or a browser) and the twice-daily Windows Update prompt, a few days after a BIOS update.",
+    "outcome": "All four crashes are bugcheck `0xD1 DRIVER_IRQL_NOT_LESS_OR_EQUAL` at the same instruction offset (`...f14a`), i.e. one third-party driver. Timeline from Windows Update history: BIOS 1.10 installed via WU on 09-14 13:21; Realtek audio driver set replaced 09-15 14:46 (HD Audio 6.0.10016.1, APO 13.6437.2557.904); audio endpoints re-enumerated 09-16 09:40 and the first crash followed at 09:59, then 11:33, 13:46, 13:51. Teams and browsers initialise the audio stack on launch, so the Realtek driver is the prime suspect, BIOS secondary. The update prompt is a WU loop: \"Intel - Extension - 2.1.10103.24\" installed five times in a week (one failure, 0x80246007) and keeps being re-offered.",
+    "next_steps": "User to ask DTU IT to (1) roll back the Realtek audio driver and pause driver updates, (2) run `!analyze -v` on `C:\\Windows\\Minidump\\091626-*.dmp` to confirm the driver, (3) hide or clear the stuck Intel Extension package. Infrastructure backlog unchanged from 09-14, see `_state/current.md`.",
+    "git_ref": "2cbac32",
+    "files_touched": "none in the project; diagnostics only (event log, WER app-log entries, Windows Update COM history, PnP driver inventory). Minidumps copied to nothing: `C:\\Windows\\Minidump` and the WER ReportArchive are admin-only and the user is not a local admin, so the UAC route failed three times."
   },
   "latest_session_complete": true,
   "latest_session_missing": null,
