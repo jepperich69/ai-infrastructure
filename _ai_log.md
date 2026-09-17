@@ -4,7 +4,6 @@
 
 ## Compressed sessions
 
-- **2026-07-02 (Gemini CLI close)** (Gemini CLI): Extract and verify legacy heuristics (VSP SA, Set-Cover Ladder Burn... -> The optimization library jr_optlib is now fully operational, tested, and pushed to GitH...
 - **2026-07-02 (fourth session)** (Gemini CLI): Extract Napsti block-coordinate NLP primitive and the Dijkstra + SU... -> The NLP fixed-point solver and routing (Dijkstra+SUE) were successfully extracted to th...
 - **2026-07-02 (fifth session)** (Gemini CLI): Survey the paper codebases to identify missing algorithmic families... -> Successfully identified three major missing algorithmic families (Finite Horizon DP, Di...
 - **2026-07-02 (sixth session)** (Claude): Verify the DP/choice/RL primitives Gemini (Agy) added to jr_optlib ... -> Agy's choice/dp/rl code was numerically correct but registered vetted with no oracle/te...
@@ -20,19 +19,7 @@
 - **2026-09-03** (Codex): Strengthen the `review-paper` skill against ghost references and ci... -> Full reviews and revision rounds must now verify every bibliography entry rather than s...
 - **2026-09-04** (Claude Opus 5): Stop the CLI agents from producing long, hard-to-digest answers; ma... -> The rule is live for all three CLIs everywhere. Regeneration ran `generate_handover.ps1...
 - **2026-09-04** (Codex): Bring the infrastructure guide and GitHub README up to date, replac... -> The guide now reflects the September 2026 infrastructure. The full PDF has a clean vers...
-
----
-
-## Session 2026-09-11
-**Agent:** Claude Opus 5
-**Goal:** Fold a "Natural Academic Writing" rule set (anti-LLM vocabulary and phrasing) into the research writing style, merge in earlier complaints, and make the rules apply to every text edit rather than only to style passes.
-**Files touched:**
-- `~\.claude\CLAUDE.md` -- "Research writing style" section rewritten: scope paragraph (every sentence touched for any reason, not only style passes), banned AI vocabulary list, banned stock phrases, cut-list with em-dash connectors, bold headers, three-item rhetorical lists, rhetorical inflation, and a mandatory final anti-LLM pass.
-- `literature\Reference_Papers\STYLE_GUIDE.md` -- same scope paragraph in the intro; banned-phrase table extended with 25 rows and substitutions; new section "Natural academic writing (anti-LLM pass)" before "Tone".
-- Claude memory (`project_writing_style_guide.md`, `MEMORY.md`) -- records the expansion and the rule to add any new complaint to both files.
-**Outcome:** The style rules now name the AI tells explicitly (load-bearing, aware-compounds, robust without technical meaning, leverage, delve, pivotal, etc.), list banned stock phrases, and state that a content edit introducing a banned word, an em-dash connector, or a bold header is a defective edit even when the content is right. `/style-edit` reads the banned list generically, so it picks up the expansion without changes.
-**Next steps:** Optional: add the writing-scope rule to the per-project `.claude/CLAUDE.md` template and to `scripts\generate_handover.ps1` so Codex and Gemini get it via AGENTS.md. Backlog otherwise unchanged, see `_state/current.md`.
-**Git ref:** 0edf448
+- **2026-09-11** (Claude Opus 5): Fold a "Natural Academic Writing" rule set (anti-LLM vocabulary and... -> The style rules now name the AI tells explicitly (load-bearing, aware-compounds, robust...
 
 ---
 
@@ -72,3 +59,15 @@
 **Outcome:** All four crashes are bugcheck `0xD1 DRIVER_IRQL_NOT_LESS_OR_EQUAL` at the same instruction offset (`...f14a`), i.e. one third-party driver. Timeline from Windows Update history: BIOS 1.10 installed via WU on 09-14 13:21; Realtek audio driver set replaced 09-15 14:46 (HD Audio 6.0.10016.1, APO 13.6437.2557.904); audio endpoints re-enumerated 09-16 09:40 and the first crash followed at 09:59, then 11:33, 13:46, 13:51. Teams and browsers initialise the audio stack on launch, so the Realtek driver is the prime suspect, BIOS secondary. The update prompt is a WU loop: "Intel - Extension - 2.1.10103.24" installed five times in a week (one failure, 0x80246007) and keeps being re-offered.
 **Next steps:** User to ask DTU IT to (1) roll back the Realtek audio driver and pause driver updates, (2) run `!analyze -v` on `C:\Windows\Minidump\091626-*.dmp` to confirm the driver, (3) hide or clear the stuck Intel Extension package. Infrastructure backlog unchanged from 09-14, see `_state/current.md`.
 **Git ref:** 2cbac32
+
+---
+
+## Session 2026-09-17
+**Agent:** Claude Opus 5
+**Goal:** Answer DTU IT's request for the minidumps behind the EliteBook crashes (follow-up to the 09-16 session).
+**Files touched:**
+- `C:\Users\rich\Desktop\crash_info_for_IT.txt` (outside the project) -- bugcheck history from the System event log, minidump filenames, BIOS/OS, and the NET/MEDIA driver inventory, written for IT since the dumps themselves cannot be copied.
+- none in the project.
+**Outcome:** A fifth `0xD1` crash occurred 09-17 09:48, same instruction offset (`...f14a`) as the four on 09-16; a sixth, older dump (09-11, `0x3B`) also exists. `C:\Windows\Minidump` is admin-only and the user has no local admin, so the UAC copy route failed again. WER's event-log heuristic attributes all five `0xD1` crashes to `tcpip.sys`, which does not fit the audio-driver hypothesis from 09-16; the network path (Cisco AnyConnect 4.10 miniport from 2021, ASIX USB Ethernet 4.22.1.0, Intel AX211 Wi-Fi 24.50.0.4) is now the competing suspect. Only `!analyze -v` on the dumps can settle it. Drafted a Danish reply asking IT to pull the six dumps by remote support or grant temporary admin, with the tcpip.sys observation.
+**Next steps:** Wait for IT's dump analysis. If they confirm a network filter driver, ask them to update or remove Cisco AnyConnect and the ASIX driver first. Infrastructure backlog unchanged, see `_state/current.md`.
+**Git ref:** 1a2dbe0
