@@ -238,7 +238,7 @@ Symptom: when MiKTeX exited before compiling, the script found an old PDF in `ou
 Some agent tool executions do not resolve `.\helpi.ps1` from the apparent project root, even when the request says the current directory is `AI_auto` or a `workdir` was supplied. Use the absolute script path instead:
 
 ```powershell
-& "C:\Users\rich\OneDrive - Danmarks Tekniske Universitet\JR\AI_auto\helpi.ps1" 6 AI_auto -Force
+& "C:\Users\rich\OneDrive - Danmarks Tekniske Universitet\JR\AI_auto\scripts\helpi.ps1" 6 AI_auto -Force
 ```
 
 Symptom: `The term '.\helpi.ps1' is not recognized as a name of a cmdlet, function, script file, or executable program.` This has recurred during Codex LaTeX verification. For local compile verification, combine the absolute path with escalated execution because MiKTeX is initialized for the normal `rich` user, not the sandbox identity.
