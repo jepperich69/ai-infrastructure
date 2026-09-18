@@ -30,7 +30,7 @@
 <body>
 
 <h1>Handover Document &mdash; AI_auto</h1>
-<div class="meta">Generated: 2026-09-18 18:52 &nbsp;|&nbsp; Source: <code style="display:inline;padding:2px 6px">_ai_log.md</code> &nbsp;|&nbsp; Sidecar: <code style="display:inline;padding:2px 6px">_handover.json</code></div>
+<div class="meta">Generated: 2026-09-18 18:53 &nbsp;|&nbsp; Source: <code style="display:inline;padding:2px 6px">_ai_log.md</code> &nbsp;|&nbsp; Sidecar: <code style="display:inline;padding:2px 6px">_handover.json</code></div>
 
 <!-- ============================================================ -->
 <!-- AGENT INSTRUCTIONS                                            -->
@@ -66,7 +66,7 @@
   <p><strong>Agent:</strong> Claude Opus 5</p>
   <p><strong>Goal:</strong> Explain and fix the Windows Update prompt that appears at every boot (&quot;Intel - Extension - 2.1.10103.24&quot;), left open from the crash-diagnosis sessions.</p>
   <p><strong>Outcome:</strong> Loop mechanism identified from `C:\Windows\INF\setupapi.dev.log` (11 rounds since 09-11). Each &quot;OK&quot; install stages `ipf_ef_ext.inf` (Intel IPF Extensible Framework Extension) as `oem337.inf`, PnP lists it as Selected for the IPF device `PCI\VEN_8086&amp;DEV_7D03` but cannot bind its install section against base driver `ipf_cpu.inf` 2.3.20300.4905 (installed by HP/WU on 09-14), configures the device with only `oem321`+`oem211`+`oem314`, then deletes the unreferenced package 40 s later (`Delete flags 0x2`). WU records exit 0, the device still lacks extension ID `{002c4697-...}`, and the package is re-offered at the next scan. The package therefore never appears in the PnP driver inventory. It is an Intel/HP catalog mismatch, harmless; hiding the package is the fix. Also observed: the machine has not been rebooted since the 16:04 crash (`PendingFileRenameOperations` set), so the post-Cisco reboot is still outstanding. Six other driver updates queued (Realtek, HP keyboard/software component, Cirrus Logic, Logitech) are one-shot, not part of the loop.</p>
-  <p><strong>Next steps:</strong> User runs `hide_intel_ext.ps1` from the admin prompt, then reboots. Machine watch and IT mail as in the previous session. Infrastructure backlog unchanged, see `_state/current.md`.</p>
+  <p><strong>Next steps:</strong> Package hidden by the user (verified: WU lists it under IsHidden=1, no longer offered). Reboot still outstanding. Machine watch and IT mail as in the previous session. Infrastructure backlog unchanged, see `_state/current.md`.</p>
   
   <h3>Files touched</h3>
   <ul>
@@ -83,83 +83,83 @@
   <br>
 <hr>
 <br>
-<h2>Compressed sessions</h2>
+<h2>Compressed sessions</h2>
 <br>
 <ul>
-  <li><strong>2026-07-03</strong> (Gemini CLI (Gemini 3.1 Pro (High))): Establish automated, recurring Google Drive backups for AI_auto, No... -&gt; Deployed a local background daemon that bypasses DTU Task Scheduler restrictions. It si...</li>
-  <li><strong>2026-07-03 (2)</strong> (Claude Fable 5): Discuss a portfolio &quot;helicopter view&quot; (surface unexploited/dormant ... -&gt; Decided the helicopter view is NOT a RAG (36 logs, 278 KB, fits in context) but an agen...</li>
-  <li><strong>2026-08-14</strong> (Claude Opus 5): Build a presentation on how we do mathematical verification and cer... -&gt; Deck delivered. Section 5 is a real run, not a mock-up: Kahneman &amp; Tversky (1979) check...</li>
-  <li><strong>2026-08-18</strong> (Codex): Build a shorter, popular mathematical-verification deck with anonym... -&gt; Delivered a 16-slide popular talk. The anonymous sample illustrates three distinct prin...</li>
-  <li><strong>2026-08-27</strong> (Claude Opus 5): Design and build an instruction set (skill) for refereeing and edit... -&gt; /review-paper is live. It extends the user&#39;s eight criteria with venue fit, claim-evide...</li>
-  <li><strong>2026-08-27</strong> (Claude Opus 5): Decide how QGIS should fit the JR structure, and implement it. -&gt; QGIS is a per-project tool, not a project type. No standing QGIS folder: `helpi 28` add...</li>
-  <li><strong>2026-08-27 (2)</strong> (Claude Opus 5): Install Biogeme for discrete choice, then make tool tracking surviv... -&gt; Biogeme 3.3.4 installed outside OneDrive and validated against the published Swissmetro...</li>
-  <li><strong>2026-09-03</strong> (Claude Opus 5): Make math render legibly in the Claude Code terminal instead of raw... -&gt; Two-tier math display. The claude-math plugin (third-party, model-invoked skill, no exe...</li>
-  <li><strong>2026-09-03</strong> (Claude Opus 5): Get voice input working in the Claude Code CLI, expected to need a ... -&gt; No plugin needed or possible. Dictation is native since v2.x (`/voice`, hold or tap); p...</li>
-  <li><strong>2026-09-03</strong> (Codex): Strengthen the `review-paper` skill against ghost references and ci... -&gt; Full reviews and revision rounds must now verify every bibliography entry rather than s...</li>
-  <li><strong>2026-09-04</strong> (Claude Opus 5): Stop the CLI agents from producing long, hard-to-digest answers; ma... -&gt; The rule is live for all three CLIs everywhere. Regeneration ran `generate_handover.ps1...</li>
-  <li><strong>2026-09-04</strong> (Codex): Bring the infrastructure guide and GitHub README up to date, replac... -&gt; The guide now reflects the September 2026 infrastructure. The full PDF has a clean vers...</li>
-  <li><strong>2026-09-11</strong> (Claude Opus 5): Fold a &quot;Natural Academic Writing&quot; rule set (anti-LLM vocabulary and... -&gt; The style rules now name the AI tells explicitly (load-bearing, aware-compounds, robust...</li>
-  <li><strong>2026-09-13</strong> (Claude Opus 5): Recalibrate the research writing style guide against the author&#39;s o... -&gt; The guide is now calibrated on the author&#39;s own five papers rather than on Einstein, Ak...</li>
-  <li><strong>2026-09-14</strong> (Claude Opus 5): Recover and log the unlogged 2026-09-13 sessions (here and in `Pub_... -&gt; Both 2026-09-13 sessions are on record. The style pass was applied to v10 and pushed (O...</li>
-  <li><strong>2026-09-16</strong> (Claude Opus 5): Diagnose four same-day crashes on the DTU EliteBook 840 G11 (trigge... -&gt; All four crashes are bugcheck `0xD1 DRIVER_IRQL_NOT_LESS_OR_EQUAL` at the same instruct...</li>
+  <li><strong>2026-07-03</strong> (Gemini CLI (Gemini 3.1 Pro (High))): Establish automated, recurring Google Drive backups for AI_auto, No... -&gt; Deployed a local background daemon that bypasses DTU Task Scheduler restrictions. It si...</li>
+  <li><strong>2026-07-03 (2)</strong> (Claude Fable 5): Discuss a portfolio &quot;helicopter view&quot; (surface unexploited/dormant ... -&gt; Decided the helicopter view is NOT a RAG (36 logs, 278 KB, fits in context) but an agen...</li>
+  <li><strong>2026-08-14</strong> (Claude Opus 5): Build a presentation on how we do mathematical verification and cer... -&gt; Deck delivered. Section 5 is a real run, not a mock-up: Kahneman &amp; Tversky (1979) check...</li>
+  <li><strong>2026-08-18</strong> (Codex): Build a shorter, popular mathematical-verification deck with anonym... -&gt; Delivered a 16-slide popular talk. The anonymous sample illustrates three distinct prin...</li>
+  <li><strong>2026-08-27</strong> (Claude Opus 5): Design and build an instruction set (skill) for refereeing and edit... -&gt; /review-paper is live. It extends the user&#39;s eight criteria with venue fit, claim-evide...</li>
+  <li><strong>2026-08-27</strong> (Claude Opus 5): Decide how QGIS should fit the JR structure, and implement it. -&gt; QGIS is a per-project tool, not a project type. No standing QGIS folder: `helpi 28` add...</li>
+  <li><strong>2026-08-27 (2)</strong> (Claude Opus 5): Install Biogeme for discrete choice, then make tool tracking surviv... -&gt; Biogeme 3.3.4 installed outside OneDrive and validated against the published Swissmetro...</li>
+  <li><strong>2026-09-03</strong> (Claude Opus 5): Make math render legibly in the Claude Code terminal instead of raw... -&gt; Two-tier math display. The claude-math plugin (third-party, model-invoked skill, no exe...</li>
+  <li><strong>2026-09-03</strong> (Claude Opus 5): Get voice input working in the Claude Code CLI, expected to need a ... -&gt; No plugin needed or possible. Dictation is native since v2.x (`/voice`, hold or tap); p...</li>
+  <li><strong>2026-09-03</strong> (Codex): Strengthen the `review-paper` skill against ghost references and ci... -&gt; Full reviews and revision rounds must now verify every bibliography entry rather than s...</li>
+  <li><strong>2026-09-04</strong> (Claude Opus 5): Stop the CLI agents from producing long, hard-to-digest answers; ma... -&gt; The rule is live for all three CLIs everywhere. Regeneration ran `generate_handover.ps1...</li>
+  <li><strong>2026-09-04</strong> (Codex): Bring the infrastructure guide and GitHub README up to date, replac... -&gt; The guide now reflects the September 2026 infrastructure. The full PDF has a clean vers...</li>
+  <li><strong>2026-09-11</strong> (Claude Opus 5): Fold a &quot;Natural Academic Writing&quot; rule set (anti-LLM vocabulary and... -&gt; The style rules now name the AI tells explicitly (load-bearing, aware-compounds, robust...</li>
+  <li><strong>2026-09-13</strong> (Claude Opus 5): Recalibrate the research writing style guide against the author&#39;s o... -&gt; The guide is now calibrated on the author&#39;s own five papers rather than on Einstein, Ak...</li>
+  <li><strong>2026-09-14</strong> (Claude Opus 5): Recover and log the unlogged 2026-09-13 sessions (here and in `Pub_... -&gt; Both 2026-09-13 sessions are on record. The style pass was applied to v10 and pushed (O...</li>
+  <li><strong>2026-09-16</strong> (Claude Opus 5): Diagnose four same-day crashes on the DTU EliteBook 840 G11 (trigge... -&gt; All four crashes are bugcheck `0xD1 DRIVER_IRQL_NOT_LESS_OR_EQUAL` at the same instruct...</li>
 </ul>
 <br>
 <hr>
 <br>
-<h2>Session 2026-09-17</h2>
-<p><strong>Agent:</strong> Claude Opus 5</p>
-<p><strong>Goal:</strong> Answer DTU IT&#39;s request for the minidumps behind the EliteBook crashes (follow-up to the 09-16 session).</p>
-<p><strong>Files touched:</strong></p>
+<h2>Session 2026-09-17</h2>
+<p><strong>Agent:</strong> Claude Opus 5</p>
+<p><strong>Goal:</strong> Answer DTU IT&#39;s request for the minidumps behind the EliteBook crashes (follow-up to the 09-16 session).</p>
+<p><strong>Files touched:</strong></p>
 <ul>
-  <li>`C:\Users\rich\Desktop\crash_info_for_IT.txt` (outside the project) -- bugcheck history from the System event log, minidump filenames, BIOS/OS, and the NET/MEDIA driver inventory, written for IT since the dumps themselves cannot be copied.</li>
-  <li>none in the project.</li>
+  <li>`C:\Users\rich\Desktop\crash_info_for_IT.txt` (outside the project) -- bugcheck history from the System event log, minidump filenames, BIOS/OS, and the NET/MEDIA driver inventory, written for IT since the dumps themselves cannot be copied.</li>
+  <li>none in the project.</li>
 </ul>
-<p><strong>Outcome:</strong> A fifth `0xD1` crash occurred 09-17 09:48, same instruction offset (`...f14a`) as the four on 09-16; a sixth, older dump (09-11, `0x3B`) also exists. `C:\Windows\Minidump` is admin-only and the user has no local admin, so the UAC copy route failed again. WER&#39;s event-log heuristic attributes all five `0xD1` crashes to `tcpip.sys`, which does not fit the audio-driver hypothesis from 09-16; the network path (Cisco AnyConnect 4.10 miniport from 2021, ASIX USB Ethernet 4.22.1.0, Intel AX211 Wi-Fi 24.50.0.4) is now the competing suspect. Only `!analyze -v` on the dumps can settle it. Drafted a Danish reply asking IT to pull the six dumps by remote support or grant temporary admin, with the tcpip.sys observation.</p>
-<p><strong>Next steps:</strong> Wait for IT&#39;s dump analysis. If they confirm a network filter driver, ask them to update or remove Cisco AnyConnect and the ASIX driver first. Infrastructure backlog unchanged, see `_state/current.md`.</p>
-<p><strong>Git ref:</strong> 1a2dbe0</p>
+<p><strong>Outcome:</strong> A fifth `0xD1` crash occurred 09-17 09:48, same instruction offset (`...f14a`) as the four on 09-16; a sixth, older dump (09-11, `0x3B`) also exists. `C:\Windows\Minidump` is admin-only and the user has no local admin, so the UAC copy route failed again. WER&#39;s event-log heuristic attributes all five `0xD1` crashes to `tcpip.sys`, which does not fit the audio-driver hypothesis from 09-16; the network path (Cisco AnyConnect 4.10 miniport from 2021, ASIX USB Ethernet 4.22.1.0, Intel AX211 Wi-Fi 24.50.0.4) is now the competing suspect. Only `!analyze -v` on the dumps can settle it. Drafted a Danish reply asking IT to pull the six dumps by remote support or grant temporary admin, with the tcpip.sys observation.</p>
+<p><strong>Next steps:</strong> Wait for IT&#39;s dump analysis. If they confirm a network filter driver, ask them to update or remove Cisco AnyConnect and the ASIX driver first. Infrastructure backlog unchanged, see `_state/current.md`.</p>
+<p><strong>Git ref:</strong> 1a2dbe0</p>
 <br>
 <hr>
 <br>
-<h2>Session 2026-09-17 (afternoon)</h2>
-<p><strong>Agent:</strong> Claude Opus 5</p>
-<p><strong>Goal:</strong> Resume the EliteBook crash diagnosis now that DTU IT has reportedly granted admin rights: copy the six minidumps out of `C:\Windows\Minidump` and analyze them.</p>
-<p><strong>Files touched:</strong></p>
+<h2>Session 2026-09-17 (afternoon)</h2>
+<p><strong>Agent:</strong> Claude Opus 5</p>
+<p><strong>Goal:</strong> Resume the EliteBook crash diagnosis now that DTU IT has reportedly granted admin rights: copy the six minidumps out of `C:\Windows\Minidump` and analyze them.</p>
+<p><strong>Files touched:</strong></p>
 <ul>
-  <li>`scratchpad\copy_dumps.ps1` (session scratchpad, outside the project) -- elevated copy script: copies `C:\Windows\Minidump\*.dmp` (and `MEMORY.DMP` if present) to `C:\Users\rich\Desktop\minidumps`, grants `WIN\rich` full access, writes `_copied.txt` as a receipt.</li>
-  <li>none in the project.</li>
+  <li>`scratchpad\copy_dumps.ps1` (session scratchpad, outside the project) -- elevated copy script: copies `C:\Windows\Minidump\*.dmp` (and `MEMORY.DMP` if present) to `C:\Users\rich\Desktop\minidumps`, grants `WIN\rich` full access, writes `_copied.txt` as a receipt.</li>
+  <li>none in the project.</li>
 </ul>
-<p><strong>Outcome:</strong> Admin grant has not landed as far as the OS is concerned: `whoami /groups` shows medium integrity and `net localgroup administrators` lists only the built-in `Administrator`; `C:\Windows\Minidump` is still access-denied. `Start-Process -Verb RunAs` from this sandboxed shell fails instantly with &quot;operation was canceled by the user&quot; (the UAC dialog never appears), so elevation must be started by the user. Handed over a one-liner to run from PowerShell ISE opened as administrator; session closed before it was run, so the dumps are not yet copied and no `!analyze -v` has been done. No debugger is installed (`windbg`/`cdb`/`kd` absent); plan is `winget install Microsoft.WinDbg` (per-user MSIX, no admin) or a Python minidump module-list parse once the dumps are on the Desktop.</p>
-<p><strong>Next steps:</strong> User runs `copy<em>dumps.ps1` from elevated ISE (or the script is re-created if the scratchpad is gone; it is four lines). If the UAC prompt rejects the credentials, the admin grant needs a logoff/reboot or IT gave a separate account. Then: install WinDbg, `!analyze -v` on `091626-*.dmp` / `091726-*.dmp`, check the stack for an NDIS/WFP filter (Cisco AnyConnect 4.10, ASIX) versus Realtek audio. Infrastructure backlog unchanged, see `</em>state/current.md`.</p>
-<p><strong>Git ref:</strong> 0bf479b</p>
+<p><strong>Outcome:</strong> Admin grant has not landed as far as the OS is concerned: `whoami /groups` shows medium integrity and `net localgroup administrators` lists only the built-in `Administrator`; `C:\Windows\Minidump` is still access-denied. `Start-Process -Verb RunAs` from this sandboxed shell fails instantly with &quot;operation was canceled by the user&quot; (the UAC dialog never appears), so elevation must be started by the user. Handed over a one-liner to run from PowerShell ISE opened as administrator; session closed before it was run, so the dumps are not yet copied and no `!analyze -v` has been done. No debugger is installed (`windbg`/`cdb`/`kd` absent); plan is `winget install Microsoft.WinDbg` (per-user MSIX, no admin) or a Python minidump module-list parse once the dumps are on the Desktop.</p>
+<p><strong>Next steps:</strong> User runs `copy<em>dumps.ps1` from elevated ISE (or the script is re-created if the scratchpad is gone; it is four lines). If the UAC prompt rejects the credentials, the admin grant needs a logoff/reboot or IT gave a separate account. Then: install WinDbg, `!analyze -v` on `091626-*.dmp` / `091726-*.dmp`, check the stack for an NDIS/WFP filter (Cisco AnyConnect 4.10, ASIX) versus Realtek audio. Infrastructure backlog unchanged, see `</em>state/current.md`.</p>
+<p><strong>Git ref:</strong> 0bf479b</p>
 <br>
 <hr>
 <br>
-<h2>Session 2026-09-18</h2>
-<p><strong>Agent:</strong> Claude Opus 5</p>
-<p><strong>Goal:</strong> Finish the EliteBook crash diagnosis. The 15:41 session copied the dumps and installed WinDbg but the machine crashed mid-analysis (16:04); this session resumed from the files on disk in an elevated window.</p>
-<p><strong>Files touched:</strong></p>
+<h2>Session 2026-09-18</h2>
+<p><strong>Agent:</strong> Claude Opus 5</p>
+<p><strong>Goal:</strong> Finish the EliteBook crash diagnosis. The 15:41 session copied the dumps and installed WinDbg but the machine crashed mid-analysis (16:04); this session resumed from the files on disk in an elevated window.</p>
+<p><strong>Files touched:</strong></p>
 <ul>
-  <li>`C:\Users\rich\Desktop\minidumps\` (outside the project) -- six dumps, `run_all.sh` (cdb batch), `analysis\*_full.txt` (`!analyze -v` + `lm t n` per dump), `symbols\` cache.</li>
-  <li>`C:\Users\rich\Desktop\crash_report_for_IT_v2.txt` -- full report: conclusion, timeline, stacks, requested actions.</li>
-  <li>`C:\Users\rich\Desktop\mail_til_IT_v2.txt` -- Danish cover mail for IT.</li>
-  <li>none in the project.</li>
+  <li>`C:\Users\rich\Desktop\minidumps\` (outside the project) -- six dumps, `run_all.sh` (cdb batch), `analysis\*_full.txt` (`!analyze -v` + `lm t n` per dump), `symbols\` cache.</li>
+  <li>`C:\Users\rich\Desktop\crash_report_for_IT_v2.txt` -- full report: conclusion, timeline, stacks, requested actions.</li>
+  <li>`C:\Users\rich\Desktop\mail_til_IT_v2.txt` -- Danish cover mail for IT.</li>
+  <li>none in the project.</li>
 </ul>
-<p><strong>Outcome:</strong> Root cause found and the driver removed. Connecting to `vpn.dtu.dk` (16:18) did not upgrade the client: the headend offers only AnyConnect 4.5.03040, so the downloader skipped it. VPN last used 2026-01-27. Cisco Secure Client 5.1.3.62 was therefore uninstalled silently (`msiexec /X{5AE2D1E5-CA9D-4B56-BF01-178F7E2C0033} /qn`, exit 0, log in `Desktop\minidumps\cisco<em>uninstall.log`); the `acsock` service key and `vpnva64-6.sys` are gone, the orphan `acsock64.sys` file remains because the auto-mode guard refuses delete and rename in `System32\drivers`; the user deleted it by hand from the admin prompt afterwards. Original finding: All six crashes are 0xD1 in the UDP receive path. Five (09-16 x4, 09-17) bucket as `AV</em>tcpip!INET<em>UNALIGNED</em>ADDR<em>EQUAL` (invalid endpoint read in `UdpDeliverDatagrams` on the NDIS receive thread); the sixth (09-18 16:04) faults directly in `acsock64.sys+0x2ab6e` (`AV</em>acsock64!unknown_function`, NULL read at IRQL 2, process svchost) and Windows&#39; Event 1001 names acsock64.sys too. `acsock64.sys` is the Cisco Secure Client WFP socket interceptor, v5.1.2.22 built 2023-12-21, loaded in every dump; the installed client is 5.1.3.62 (2026-01-21). The 09-11 cumulative update KB5124008 replaced `tcpip.sys`/`ndis.sys`; crashes started 09-16; KB5129241 (09-17) did not help. Trigger explained: Teams (WebView2, crash 2 was in `msedgewebview2.exe`) and browsers (QUIC) flood UDP at launch. Realtek audio and BIOS are cleared. WinDbg is installed per-user as MSIX; `cdbX64.exe` is on the WindowsApps alias path and works headless with `-z &lt;dmp&gt; -y srv*&lt;cache&gt;*https://msdl.microsoft.com/download/symbols -c &quot;!analyze -v; q&quot;`. The first run per machine is slow because `lm t n` pulls every module image from the symbol server; later runs use the cache.</p>
-<p><strong>Next steps:</strong> Reboot once so the kernel comes up without acsock (pending at close); then watch `C:\Windows\Minidump` for a week. If the crashes stop, send IT `mail<em>til</em>IT<em>v2.txt` anyway so the DTU package (headend offers only AnyConnect 4.5.03040) gets updated before the client is reinstalled. Reinstall the VPN from `vpn.dtu.dk` in a browser when it is next needed, and check `acsock64.sys` version is newer than 5.1.2.22 afterwards. Infrastructure backlog unchanged, see `</em>state/current.md`.</p>
-<p><strong>Git ref:</strong> 6ae4582</p>
+<p><strong>Outcome:</strong> Root cause found and the driver removed. Connecting to `vpn.dtu.dk` (16:18) did not upgrade the client: the headend offers only AnyConnect 4.5.03040, so the downloader skipped it. VPN last used 2026-01-27. Cisco Secure Client 5.1.3.62 was therefore uninstalled silently (`msiexec /X{5AE2D1E5-CA9D-4B56-BF01-178F7E2C0033} /qn`, exit 0, log in `Desktop\minidumps\cisco<em>uninstall.log`); the `acsock` service key and `vpnva64-6.sys` are gone, the orphan `acsock64.sys` file remains because the auto-mode guard refuses delete and rename in `System32\drivers`; the user deleted it by hand from the admin prompt afterwards. Original finding: All six crashes are 0xD1 in the UDP receive path. Five (09-16 x4, 09-17) bucket as `AV</em>tcpip!INET<em>UNALIGNED</em>ADDR<em>EQUAL` (invalid endpoint read in `UdpDeliverDatagrams` on the NDIS receive thread); the sixth (09-18 16:04) faults directly in `acsock64.sys+0x2ab6e` (`AV</em>acsock64!unknown_function`, NULL read at IRQL 2, process svchost) and Windows&#39; Event 1001 names acsock64.sys too. `acsock64.sys` is the Cisco Secure Client WFP socket interceptor, v5.1.2.22 built 2023-12-21, loaded in every dump; the installed client is 5.1.3.62 (2026-01-21). The 09-11 cumulative update KB5124008 replaced `tcpip.sys`/`ndis.sys`; crashes started 09-16; KB5129241 (09-17) did not help. Trigger explained: Teams (WebView2, crash 2 was in `msedgewebview2.exe`) and browsers (QUIC) flood UDP at launch. Realtek audio and BIOS are cleared. WinDbg is installed per-user as MSIX; `cdbX64.exe` is on the WindowsApps alias path and works headless with `-z &lt;dmp&gt; -y srv*&lt;cache&gt;*https://msdl.microsoft.com/download/symbols -c &quot;!analyze -v; q&quot;`. The first run per machine is slow because `lm t n` pulls every module image from the symbol server; later runs use the cache.</p>
+<p><strong>Next steps:</strong> Reboot once so the kernel comes up without acsock (pending at close); then watch `C:\Windows\Minidump` for a week. If the crashes stop, send IT `mail<em>til</em>IT<em>v2.txt` anyway so the DTU package (headend offers only AnyConnect 4.5.03040) gets updated before the client is reinstalled. Reinstall the VPN from `vpn.dtu.dk` in a browser when it is next needed, and check `acsock64.sys` version is newer than 5.1.2.22 afterwards. Infrastructure backlog unchanged, see `</em>state/current.md`.</p>
+<p><strong>Git ref:</strong> 6ae4582</p>
 <br>
 <hr>
 <br>
-<h2>Session 2026-09-18 (evening)</h2>
-<p><strong>Agent:</strong> Claude Opus 5</p>
-<p><strong>Goal:</strong> Explain and fix the Windows Update prompt that appears at every boot (&quot;Intel - Extension - 2.1.10103.24&quot;), left open from the crash-diagnosis sessions.</p>
-<p><strong>Files touched:</strong></p>
+<h2>Session 2026-09-18 (evening)</h2>
+<p><strong>Agent:</strong> Claude Opus 5</p>
+<p><strong>Goal:</strong> Explain and fix the Windows Update prompt that appears at every boot (&quot;Intel - Extension - 2.1.10103.24&quot;), left open from the crash-diagnosis sessions.</p>
+<p><strong>Files touched:</strong></p>
 <ul>
-  <li>`C:\Users\rich\Desktop\minidumps\hide_intel_ext.ps1` -- hides the looping WU package via the Update Session COM API; must be run from an elevated PowerShell.</li>
-  <li>none in the project.</li>
+  <li>`C:\Users\rich\Desktop\minidumps\hide_intel_ext.ps1` -- hides the looping WU package via the Update Session COM API; must be run from an elevated PowerShell.</li>
+  <li>none in the project.</li>
 </ul>
-<p><strong>Outcome:</strong> Loop mechanism identified from `C:\Windows\INF\setupapi.dev.log` (11 rounds since 09-11). Each &quot;OK&quot; install stages `ipf<em>ef</em>ext.inf` (Intel IPF Extensible Framework Extension) as `oem337.inf`, PnP lists it as Selected for the IPF device `PCI\VEN<em>8086&amp;DEV</em>7D03` but cannot bind its install section against base driver `ipf_cpu.inf` 2.3.20300.4905 (installed by HP/WU on 09-14), configures the device with only `oem321`+`oem211`+`oem314`, then deletes the unreferenced package 40 s later (`Delete flags 0x2`). WU records exit 0, the device still lacks extension ID `{002c4697-...}`, and the package is re-offered at the next scan. The package therefore never appears in the PnP driver inventory. It is an Intel/HP catalog mismatch, harmless; hiding the package is the fix. Also observed: the machine has not been rebooted since the 16:04 crash (`PendingFileRenameOperations` set), so the post-Cisco reboot is still outstanding. Six other driver updates queued (Realtek, HP keyboard/software component, Cirrus Logic, Logitech) are one-shot, not part of the loop.</p>
-<p><strong>Next steps:</strong> User runs `hide<em>intel</em>ext.ps1` from the admin prompt, then reboots. Machine watch and IT mail as in the previous session. Infrastructure backlog unchanged, see `_state/current.md`.</p>
+<p><strong>Outcome:</strong> Loop mechanism identified from `C:\Windows\INF\setupapi.dev.log` (11 rounds since 09-11). Each &quot;OK&quot; install stages `ipf<em>ef</em>ext.inf` (Intel IPF Extensible Framework Extension) as `oem337.inf`, PnP lists it as Selected for the IPF device `PCI\VEN<em>8086&amp;DEV</em>7D03` but cannot bind its install section against base driver `ipf_cpu.inf` 2.3.20300.4905 (installed by HP/WU on 09-14), configures the device with only `oem321`+`oem211`+`oem314`, then deletes the unreferenced package 40 s later (`Delete flags 0x2`). WU records exit 0, the device still lacks extension ID `{002c4697-...}`, and the package is re-offered at the next scan. The package therefore never appears in the PnP driver inventory. It is an Intel/HP catalog mismatch, harmless; hiding the package is the fix. Also observed: the machine has not been rebooted since the 16:04 crash (`PendingFileRenameOperations` set), so the post-Cisco reboot is still outstanding. Six other driver updates queued (Realtek, HP keyboard/software component, Cirrus Logic, Logitech) are one-shot, not part of the loop.</p>
+<p><strong>Next steps:</strong> Package hidden by the user (verified: WU lists it under IsHidden=1, no longer offered). Reboot still outstanding. Machine watch and IT mail as in the previous session. Infrastructure backlog unchanged, see `_state/current.md`.</p>
 <p><strong>Git ref:</strong></p>
 <br>
 
@@ -241,7 +241,7 @@
 - `C:\Users\rich\Desktop\minidumps\hide_intel_ext.ps1` -- hides the looping WU package via the Update Session COM API; must be run from an elevated PowerShell.
 - none in the project.
 **Outcome:** Loop mechanism identified from `C:\Windows\INF\setupapi.dev.log` (11 rounds since 09-11). Each "OK" install stages `ipf_ef_ext.inf` (Intel IPF Extensible Framework Extension) as `oem337.inf`, PnP lists it as Selected for the IPF device `PCI\VEN_8086&DEV_7D03` but cannot bind its install section against base driver `ipf_cpu.inf` 2.3.20300.4905 (installed by HP/WU on 09-14), configures the device with only `oem321`+`oem211`+`oem314`, then deletes the unreferenced package 40 s later (`Delete flags 0x2`). WU records exit 0, the device still lacks extension ID `{002c4697-...}`, and the package is re-offered at the next scan. The package therefore never appears in the PnP driver inventory. It is an Intel/HP catalog mismatch, harmless; hiding the package is the fix. Also observed: the machine has not been rebooted since the 16:04 crash (`PendingFileRenameOperations` set), so the post-Cisco reboot is still outstanding. Six other driver updates queued (Realtek, HP keyboard/software component, Cirrus Logic, Logitech) are one-shot, not part of the loop.
-**Next steps:** User runs `hide_intel_ext.ps1` from the admin prompt, then reboots. Machine watch and IT mail as in the previous session. Infrastructure backlog unchanged, see `_state/current.md`.
+**Next steps:** Package hidden by the user (verified: WU lists it under IsHidden=1, no longer offered). Reboot still outstanding. Machine watch and IT mail as in the previous session. Infrastructure backlog unchanged, see `_state/current.md`.
 **Git ref:**
 </textarea>
 </div>
