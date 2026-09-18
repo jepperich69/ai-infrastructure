@@ -4,7 +4,6 @@
 
 ## Compressed sessions
 
-- **2026-07-02 (sixth session)** (Claude): Verify the DP/choice/RL primitives Gemini (Agy) added to jr_optlib ... -> Agy's choice/dp/rl code was numerically correct but registered vetted with no oracle/te...
 - **2026-07-03** (Gemini CLI (Gemini 3.1 Pro (High))): Establish automated, recurring Google Drive backups for AI_auto, No... -> Deployed a local background daemon that bypasses DTU Task Scheduler restrictions. It si...
 - **2026-07-03 (2)** (Claude Fable 5): Discuss a portfolio "helicopter view" (surface unexploited/dormant ... -> Decided the helicopter view is NOT a RAG (36 logs, 278 KB, fits in context) but an agen...
 - **2026-08-14** (Claude Opus 5): Build a presentation on how we do mathematical verification and cer... -> Deck delivered. Section 5 is a real run, not a mock-up: Kahneman & Tversky (1979) check...
@@ -20,17 +19,7 @@
 - **2026-09-11** (Claude Opus 5): Fold a "Natural Academic Writing" rule set (anti-LLM vocabulary and... -> The style rules now name the AI tells explicitly (load-bearing, aware-compounds, robust...
 - **2026-09-13** (Claude Opus 5): Recalibrate the research writing style guide against the author's o... -> The guide is now calibrated on the author's own five papers rather than on Einstein, Ak...
 - **2026-09-14** (Claude Opus 5): Recover and log the unlogged 2026-09-13 sessions (here and in `Pub_... -> Both 2026-09-13 sessions are on record. The style pass was applied to v10 and pushed (O...
-
----
-
-## Session 2026-09-16
-**Agent:** Claude Opus 5
-**Goal:** Diagnose four same-day crashes on the DTU EliteBook 840 G11 (triggered by opening Teams or a browser) and the twice-daily Windows Update prompt, a few days after a BIOS update.
-**Files touched:**
-- none in the project; diagnostics only (event log, WER app-log entries, Windows Update COM history, PnP driver inventory). Minidumps copied to nothing: `C:\Windows\Minidump` and the WER ReportArchive are admin-only and the user is not a local admin, so the UAC route failed three times.
-**Outcome:** All four crashes are bugcheck `0xD1 DRIVER_IRQL_NOT_LESS_OR_EQUAL` at the same instruction offset (`...f14a`), i.e. one third-party driver. Timeline from Windows Update history: BIOS 1.10 installed via WU on 09-14 13:21; Realtek audio driver set replaced 09-15 14:46 (HD Audio 6.0.10016.1, APO 13.6437.2557.904); audio endpoints re-enumerated 09-16 09:40 and the first crash followed at 09:59, then 11:33, 13:46, 13:51. Teams and browsers initialise the audio stack on launch, so the Realtek driver is the prime suspect, BIOS secondary. The update prompt is a WU loop: "Intel - Extension - 2.1.10103.24" installed five times in a week (one failure, 0x80246007) and keeps being re-offered.
-**Next steps:** User to ask DTU IT to (1) roll back the Realtek audio driver and pause driver updates, (2) run `!analyze -v` on `C:\Windows\Minidump\091626-*.dmp` to confirm the driver, (3) hide or clear the stuck Intel Extension package. Infrastructure backlog unchanged from 09-14, see `_state/current.md`.
-**Git ref:** 2cbac32
+- **2026-09-16** (Claude Opus 5): Diagnose four same-day crashes on the DTU EliteBook 840 G11 (trigge... -> All four crashes are bugcheck `0xD1 DRIVER_IRQL_NOT_LESS_OR_EQUAL` at the same instruct...
 
 ---
 
@@ -69,3 +58,15 @@
 **Outcome:** Root cause found and the driver removed. Connecting to `vpn.dtu.dk` (16:18) did not upgrade the client: the headend offers only AnyConnect 4.5.03040, so the downloader skipped it. VPN last used 2026-01-27. Cisco Secure Client 5.1.3.62 was therefore uninstalled silently (`msiexec /X{5AE2D1E5-CA9D-4B56-BF01-178F7E2C0033} /qn`, exit 0, log in `Desktop\minidumps\cisco_uninstall.log`); the `acsock` service key and `vpnva64-6.sys` are gone, the orphan `acsock64.sys` file remains because the auto-mode guard refuses delete and rename in `System32\drivers`; the user deleted it by hand from the admin prompt afterwards. Original finding: All six crashes are 0xD1 in the UDP receive path. Five (09-16 x4, 09-17) bucket as `AV_tcpip!INET_UNALIGNED_ADDR_EQUAL` (invalid endpoint read in `UdpDeliverDatagrams` on the NDIS receive thread); the sixth (09-18 16:04) faults directly in `acsock64.sys+0x2ab6e` (`AV_acsock64!unknown_function`, NULL read at IRQL 2, process svchost) and Windows' Event 1001 names acsock64.sys too. `acsock64.sys` is the Cisco Secure Client WFP socket interceptor, v5.1.2.22 built 2023-12-21, loaded in every dump; the installed client is 5.1.3.62 (2026-01-21). The 09-11 cumulative update KB5124008 replaced `tcpip.sys`/`ndis.sys`; crashes started 09-16; KB5129241 (09-17) did not help. Trigger explained: Teams (WebView2, crash 2 was in `msedgewebview2.exe`) and browsers (QUIC) flood UDP at launch. Realtek audio and BIOS are cleared. WinDbg is installed per-user as MSIX; `cdbX64.exe` is on the WindowsApps alias path and works headless with `-z <dmp> -y srv*<cache>*https://msdl.microsoft.com/download/symbols -c "!analyze -v; q"`. The first run per machine is slow because `lm t n` pulls every module image from the symbol server; later runs use the cache.
 **Next steps:** Reboot once so the kernel comes up without acsock (pending at close); then watch `C:\Windows\Minidump` for a week. If the crashes stop, send IT `mail_til_IT_v2.txt` anyway so the DTU package (headend offers only AnyConnect 4.5.03040) gets updated before the client is reinstalled. Reinstall the VPN from `vpn.dtu.dk` in a browser when it is next needed, and check `acsock64.sys` version is newer than 5.1.2.22 afterwards. Infrastructure backlog unchanged, see `_state/current.md`.
 **Git ref:** 6ae4582
+
+---
+
+## Session 2026-09-18 (evening)
+**Agent:** Claude Opus 5
+**Goal:** Explain and fix the Windows Update prompt that appears at every boot ("Intel - Extension - 2.1.10103.24"), left open from the crash-diagnosis sessions.
+**Files touched:**
+- `C:\Users\rich\Desktop\minidumps\hide_intel_ext.ps1` -- hides the looping WU package via the Update Session COM API; must be run from an elevated PowerShell.
+- none in the project.
+**Outcome:** Loop mechanism identified from `C:\Windows\INF\setupapi.dev.log` (11 rounds since 09-11). Each "OK" install stages `ipf_ef_ext.inf` (Intel IPF Extensible Framework Extension) as `oem337.inf`, PnP lists it as Selected for the IPF device `PCI\VEN_8086&DEV_7D03` but cannot bind its install section against base driver `ipf_cpu.inf` 2.3.20300.4905 (installed by HP/WU on 09-14), configures the device with only `oem321`+`oem211`+`oem314`, then deletes the unreferenced package 40 s later (`Delete flags 0x2`). WU records exit 0, the device still lacks extension ID `{002c4697-...}`, and the package is re-offered at the next scan. The package therefore never appears in the PnP driver inventory. It is an Intel/HP catalog mismatch, harmless; hiding the package is the fix. Also observed: the machine has not been rebooted since the 16:04 crash (`PendingFileRenameOperations` set), so the post-Cisco reboot is still outstanding. Six other driver updates queued (Realtek, HP keyboard/software component, Cirrus Logic, Logitech) are one-shot, not part of the loop.
+**Next steps:** User runs `hide_intel_ext.ps1` from the admin prompt, then reboots. Machine watch and IT mail as in the previous session. Infrastructure backlog unchanged, see `_state/current.md`.
+**Git ref:**

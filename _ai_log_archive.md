@@ -460,3 +460,10 @@
 ## Archived 2026-09-18 (1 entry)
 
 - **2026-07-02 (fifth session)** (Gemini CLI): Survey the paper codebases to identify missing algorithmic families... -> Successfully identified three major missing algorithmic families (Finite Horizon DP, Di...
+
+
+---
+
+## Archived 2026-09-18 (1 entry)
+
+- **2026-07-02 (sixth session)** (Claude): Verify the DP/choice/RL primitives Gemini (Agy) added to jr_optlib ... -> Agy's choice/dp/rl code was numerically correct but registered vetted with no oracle/te...
