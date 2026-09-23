@@ -12,7 +12,8 @@ param(
 )
 
 $claudeDir = "$env:USERPROFILE\.claude"
-$backupDir = Join-Path $PSScriptRoot "_claude_backup"
+# Backup lives at the AI_auto root, where restore.ps1 reads it (not under scripts/).
+$backupDir = Join-Path (Split-Path $PSScriptRoot -Parent) "_claude_backup"
 
 function Sync-Dir($src, $dst) {
     if (!(Test-Path $dst)) { New-Item -ItemType Directory $dst -Force | Out-Null }
