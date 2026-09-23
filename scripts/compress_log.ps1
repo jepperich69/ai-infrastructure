@@ -134,11 +134,11 @@ if ($allCompressed.Count -gt $MaxCompressed) {
 # --- Rebuild _ai_log.md ---
 $sb = [System.Text.StringBuilder]::new()
 
-[void]$sb.Append("$title`n")
+[void]$sb.Append("$title`n`n")
 if ($preamble) {
     [void]$sb.Append("$preamble`n`n")
 } else {
-    [void]$sb.Append("`n---`n`n")
+    [void]$sb.Append("---`n`n")
 }
 
 if ($allCompressed.Count -gt 0) {

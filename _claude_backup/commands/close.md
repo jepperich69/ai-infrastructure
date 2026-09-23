@@ -80,7 +80,7 @@ Say "CLAUDE.md unchanged" if nothing needed updating, or list what you changed (
 
 ### G — Regenerate handover
 Run via Bash tool (not PowerShell — avoids the "nested process" security warning):
-`$handoverScript = "C:\Users\rich\OneDrive - Danmarks Tekniske Universitet\JR\AI_auto\scripts\generate_handover.ps1"; if (!(Test-Path -LiteralPath $handoverScript)) { throw "Handover generator not found: $handoverScript" }; pwsh -NoProfile -File $handoverScript -Project <PROJECT_NAME>`
+`s="C:/Users/rich/OneDrive - Danmarks Tekniske Universitet/JR/AI_auto/scripts/generate_handover.ps1"; [ -f "$s" ] || { echo "Handover generator not found: $s"; exit 1; }; pwsh -NoProfile -File "$s" -Project <PROJECT_NAME>`
 Say "Handover regenerated." when done.
 
 ### H — Report
