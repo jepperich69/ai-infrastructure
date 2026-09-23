@@ -4,7 +4,6 @@
 
 ## Compressed sessions
 
-- **2026-07-03** (Gemini CLI (Gemini 3.1 Pro (High))): Establish automated, recurring Google Drive backups for AI_auto, No... -> Deployed a local background daemon that bypasses DTU Task Scheduler restrictions. It si...
 - **2026-07-03 (2)** (Claude Fable 5): Discuss a portfolio "helicopter view" (surface unexploited/dormant ... -> Decided the helicopter view is NOT a RAG (36 logs, 278 KB, fits in context) but an agen...
 - **2026-08-14** (Claude Opus 5): Build a presentation on how we do mathematical verification and cer... -> Deck delivered. Section 5 is a real run, not a mock-up: Kahneman & Tversky (1979) check...
 - **2026-08-18** (Codex): Build a shorter, popular mathematical-verification deck with anonym... -> Delivered a 16-slide popular talk. The anonymous sample illustrates three distinct prin...
@@ -20,18 +19,7 @@
 - **2026-09-13** (Claude Opus 5): Recalibrate the research writing style guide against the author's o... -> The guide is now calibrated on the author's own five papers rather than on Einstein, Ak...
 - **2026-09-14** (Claude Opus 5): Recover and log the unlogged 2026-09-13 sessions (here and in `Pub_... -> Both 2026-09-13 sessions are on record. The style pass was applied to v10 and pushed (O...
 - **2026-09-16** (Claude Opus 5): Diagnose four same-day crashes on the DTU EliteBook 840 G11 (trigge... -> All four crashes are bugcheck `0xD1 DRIVER_IRQL_NOT_LESS_OR_EQUAL` at the same instruct...
-
----
-
-## Session 2026-09-17
-**Agent:** Claude Opus 5
-**Goal:** Answer DTU IT's request for the minidumps behind the EliteBook crashes (follow-up to the 09-16 session).
-**Files touched:**
-- `C:\Users\rich\Desktop\crash_info_for_IT.txt` (outside the project) -- bugcheck history from the System event log, minidump filenames, BIOS/OS, and the NET/MEDIA driver inventory, written for IT since the dumps themselves cannot be copied.
-- none in the project.
-**Outcome:** A fifth `0xD1` crash occurred 09-17 09:48, same instruction offset (`...f14a`) as the four on 09-16; a sixth, older dump (09-11, `0x3B`) also exists. `C:\Windows\Minidump` is admin-only and the user has no local admin, so the UAC copy route failed again. WER's event-log heuristic attributes all five `0xD1` crashes to `tcpip.sys`, which does not fit the audio-driver hypothesis from 09-16; the network path (Cisco AnyConnect 4.10 miniport from 2021, ASIX USB Ethernet 4.22.1.0, Intel AX211 Wi-Fi 24.50.0.4) is now the competing suspect. Only `!analyze -v` on the dumps can settle it. Drafted a Danish reply asking IT to pull the six dumps by remote support or grant temporary admin, with the tcpip.sys observation.
-**Next steps:** Wait for IT's dump analysis. If they confirm a network filter driver, ask them to update or remove Cisco AnyConnect and the ASIX driver first. Infrastructure backlog unchanged, see `_state/current.md`.
-**Git ref:** 1a2dbe0
+- **2026-09-17** (Claude Opus 5): Answer DTU IT's request for the minidumps behind the EliteBook cras... -> A fifth `0xD1` crash occurred 09-17 09:48, same instruction offset (`...f14a`) as the f...
 
 ---
 
@@ -71,12 +59,13 @@
 **Next steps:** Package hidden by the user (verified: WU lists it under IsHidden=1, no longer offered). Reboot still outstanding. Machine watch and IT mail as in the previous session. Infrastructure backlog unchanged, see `_state/current.md`.
 **Git ref:**
 
+---
+
 ## Session 2026-09-23
 **Agent:** Gemini CLI (Gemini 3.1 Pro (High))
 **Goal:** Install a new A0 printer in Building 358, room 161.
 **Files touched:**
 - none in the project.
-**Outcome:** Located the new plotter on the DTU print server (`\\ait-print\LY358-161A-POSTER`) and installed it on the local machine.
-**Next steps:** None.
-**Git ref:** -
-
+**Outcome:** Located the new plotter on the DTU print server (`\\ait-print\LY358-161A-POSTER`) and installed it on the local machine. The printer failed to print via the server because the LAN port in room 161 is dead (printer pulled APIPA `169.254.24.233`). Instructed the user to connect via Wi-Fi Direct (`Direct-D4-HP DesignJet T850`) using the security key instead of the WPS PIN.
+**Next steps:** User to contact DTU IT to activate the LAN wall port in Building 358 room 161 so the printer can join the DTU network.
+**Git ref:**
