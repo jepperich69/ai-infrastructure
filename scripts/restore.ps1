@@ -64,7 +64,11 @@ if (Test-Path $vscode) {
 Write-Host ""
 Write-Host "  5. PowerShell profile (helpi)" -ForegroundColor DarkYellow
 $profilePath = $PROFILE.CurrentUserAllHosts
-$helpiCall   = "function helpi { & `"$aiRoot\helpi.ps1`" @args }"
+$helpiLauncher = Join-Path $aiRoot "helpi.cmd"
+if (!(Test-Path -LiteralPath $helpiLauncher)) {
+    throw "Infrastructure launcher not found: $helpiLauncher"
+}
+$helpiCall = "function helpi { & `"$helpiLauncher`" @args }"
 if (Test-Path $profilePath) {
     $profileContent = Get-Content $profilePath -Raw -ErrorAction SilentlyContinue
     if ($profileContent -match 'helpi') {

@@ -33,9 +33,26 @@ if (!(Test-Path $logPath)) {
 $raw   = Get-Content $logPath -Raw -Encoding UTF8
 $lines = $raw -split "`r?`n"
 
-# --- Extract title ---
-$title = ($lines | Where-Object { $_ -match '^# ' } | Select-Object -First 1)
-if (!$title) { $title = "# AI Session Log" }
+# --- Extract title and preserve all pre-session metadata ---
+$titleIndex = -1
+for ($i = 0; $i -lt $lines.Count; $i++) {
+    if ($lines[$i] -match '^# ') { $titleIndex = $i; break }
+}
+
+$title = if ($titleIndex -ge 0) { $lines[$titleIndex] } else { "# AI Session Log" }
+
+$managedIndex = $lines.Count
+for ($i = [Math]::Max(0, $titleIndex + 1); $i -lt $lines.Count; $i++) {
+    if ($lines[$i] -match '^## (Compressed sessions|Session )') {
+        $managedIndex = $i
+        break
+    }
+}
+
+$preamble = ""
+if ($titleIndex -ge 0 -and $managedIndex -gt ($titleIndex + 1)) {
+    $preamble = ($lines[($titleIndex + 1)..($managedIndex - 1)] -join "`n").Trim([char[]]"`r`n")
+}
 
 # --- Extract existing compressed one-liners (from a prior run) ---
 $existingCompressed = [System.Collections.Generic.List[string]]::new()
@@ -57,12 +74,14 @@ if ($sessionMatches.Count -le $ActiveCount) {
     exit 0
 }
 
-# Extract each block as trimmed text (trailing --- and whitespace stripped)
+# Extract each block as trimmed text. Trim newlines only so values such as
+# "**Git ref:** ---" are preserved exactly.
 $sessionBlocks = [System.Collections.Generic.List[string]]::new()
 for ($i = 0; $i -lt $sessionMatches.Count; $i++) {
     $start = $sessionMatches[$i].Index
     $end   = if ($i + 1 -lt $sessionMatches.Count) { $sessionMatches[$i + 1].Index } else { $raw.Length }
-    $block = $raw.Substring($start, $end - $start).TrimEnd(" `r`n-")
+    $block = $raw.Substring($start, $end - $start).TrimEnd([char[]]"`r`n")
+    $block = [regex]::Replace($block, '(?s)\r?\n\r?\n---\s*$', '')
     [void]$sessionBlocks.Add($block)
 }
 
@@ -115,7 +134,12 @@ if ($allCompressed.Count -gt $MaxCompressed) {
 # --- Rebuild _ai_log.md ---
 $sb = [System.Text.StringBuilder]::new()
 
-[void]$sb.Append("$title`n`n---`n`n")
+[void]$sb.Append("$title`n")
+if ($preamble) {
+    [void]$sb.Append("$preamble`n`n")
+} else {
+    [void]$sb.Append("`n---`n`n")
+}
 
 if ($allCompressed.Count -gt 0) {
     [void]$sb.Append("## Compressed sessions`n`n")
@@ -129,7 +153,7 @@ for ($i = 0; $i -lt $toKeep.Count; $i++) {
     if ($i -lt $toKeep.Count - 1) { [void]$sb.Append("`n`n") }
 }
 
-$newContent = $sb.ToString().TrimEnd("`r`n -")
+$newContent = $sb.ToString().TrimEnd([char[]]"`r`n")
 Set-Content $logPath $newContent -Encoding UTF8
 
 Write-Host "  compress_log: $compressCount session(s) compressed. Active: $ActiveCount. One-liners in log: $($allCompressed.Count)." -ForegroundColor Green

@@ -51,7 +51,7 @@ Codex patched three issues:
 Only if Richard explicitly approves LLM/tool spend, run a one-round test using
 the cheapest practical configuration:
 
-`& "C:\Users\rich\OneDrive - Danmarks Tekniske Universitet\JR\AI_auto\helpi.ps1" 25 AI_auto code-audit -Agent codex -Mode SAD -Force`
+`$helpi = "C:\Users\rich\OneDrive - Danmarks Tekniske Universitet\JR\AI_auto\helpi.cmd"; if (!(Test-Path -LiteralPath $helpi)) { throw "Infrastructure launcher not found: $helpi" }; & $helpi 25 AI_auto code-audit -Agent codex -Mode SAD -Force`
 
 Stop after the first clear failure. Do not push to Overleaf or GitHub.
 

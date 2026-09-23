@@ -739,7 +739,7 @@ roles: eConsole, eMultimedia, eCommunications. Setting only eConsole leaves othe
 applications on the old device.
 
 ### Log compression drops pre-session metadata (2026-09-08)
-**Status:** open
+**Status:** fixed (2026-09-23)
 **Affects:** scripts/compress_log.ps1 (helpi 22), project _ai_log.md files with metadata between the title and session blocks.
 **Observed:** Closing Pub_NonlinearDiffusion_PartB compressed one older session and removed the published-status/journal line. The script extracts only the title before reconstructing the log. Its final TrimEnd also strips trailing hyphens from the final Git ref placeholder.
 **Fix:** Preserve non-session preamble metadata when rebuilding the log and trim only newline characters. Add a regression fixture containing a published-status line and a final Git ref placeholder. Until fixed, check and restore the preamble after compression, before regenerating handover. This project status was restored during close.
@@ -797,7 +797,7 @@ The global `PostToolUse` command hook for `Edit|Write|Bash` stalled intermittent
 `gurobipy.read()` fails with `No tool found to open ... please install "gzip" or "7-zip" and add it to your PATH`. Decompress the file first with the installed miniconda Python and its standard-library `gzip` module, then pass the resulting `.mps` file to Gurobi. Do not treat the error as a corrupt MIPLIB download.
 
 ### 57. Close-skill infrastructure paths point to obsolete root-level scripts
-**Status:** open
+**Status:** fixed (2026-09-23)
 **Affects:** `~/.agents/skills/close/SKILL.md`, compact platform instructions, and any automation invoking `AI_auto\helpi.ps1` or `AI_auto\generate_handover.ps1`.
 **Fix:** Replace the obsolete paths with `AI_auto\scripts\helpi.ps1` and `AI_auto\scripts\generate_handover.ps1`, or route the helpi call through the live root-level `helpi.cmd`. Add a path-existence check before invocation.
 

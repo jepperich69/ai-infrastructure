@@ -3,7 +3,7 @@
 # Writes _handover.html to the project root (nice to read).
 # Also prints markdown to stdout (pipe to a file if needed).
 #
-# The _ai_log.md is the editable source of truth â€” any agent (Claude, GPT, etc.)
+# The _ai_log.md is the editable source of truth -- any agent (Claude, GPT, etc.)
 # can update it as plain text. The HTML is regenerated from it each run.
 #
 # Usage:
@@ -187,7 +187,7 @@ $html = @"
   <p>This document records the research work done on <strong>$Project</strong>.
   The <strong>editable source of truth</strong> is <code style="display:inline;padding:2px 4px">_ai_log.md</code> in the project root.
   The HTML is regenerated from it by running:</p>
-  <pre>.\AI_auto\generate_handover.ps1 -Project $Project</pre>
+  <pre>.\AI_auto\scripts\generate_handover.ps1 -Project $Project</pre>
   <p><strong>To add a session entry:</strong> append a new <code style="display:inline;padding:2px 4px">## Session YYYY-MM-DD</code> block
   to the markdown below (in the textarea), following the existing format.
   Hand the updated markdown back to the user to paste into <code style="display:inline;padding:2px 4px">_ai_log.md</code>.</p>
@@ -197,7 +197,7 @@ $html = @"
 **Agent:** [Claude / GPT-4o / etc.]
 **Goal:** [what was worked on]
 **Files touched:**
-- \`code/file.py\` â€” [description of change]
+- \`code/file.py\` -- [description of change]
 **Outcome:** [what was accomplished]
 **Next steps:** [what remains open]
 **Git ref:** [short commit hash(es), if applicable]</pre>
