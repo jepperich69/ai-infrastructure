@@ -656,7 +656,7 @@ Installed 2026-08-27 at `C:\Users\rich\venvs\biogeme313` (850 MB, 26,076 files),
 ---
 
 ### 52. The `Stop` auto-commit hook does `git add -A` and bundles unrelated work
-**Status:** OPEN -- needs a removal from `~/.claude/settings.json` that Claude cannot make itself
+**Status:** fixed (2026-09-23) -- Stop hook entry removed from `~/.claude/settings.json` with user approval; the script is kept but no longer registered, and `update.ps1` does not re-add it
 **Affects:** Every project with a git repo reachable from the working directory. Observed in `Pub_NapstiGranularity_TBA` in both `code/` and `Overleaf_source/`.
 
 `scripts/auto_commit_hook.ps1` is registered as a Claude Code **`Stop` hook** at line 50 of

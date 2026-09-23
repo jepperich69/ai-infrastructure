@@ -1,9 +1,9 @@
 # AI Session Log — AI Infrastructure Project
+
 ---
 
 ## Compressed sessions
 
-- **2026-08-18** (Codex): Build a shorter, popular mathematical-verification deck with anonym... -> Delivered a 16-slide popular talk. The anonymous sample illustrates three distinct prin...
 - **2026-08-27** (Claude Opus 5): Design and build an instruction set (skill) for refereeing and edit... -> /review-paper is live. It extends the user's eight criteria with venue fit, claim-evide...
 - **2026-08-27** (Claude Opus 5): Decide how QGIS should fit the JR structure, and implement it. -> QGIS is a per-project tool, not a project type. No standing QGIS folder: `helpi 28` add...
 - **2026-08-27 (2)** (Claude Opus 5): Install Biogeme for discrete choice, then make tool tracking surviv... -> Biogeme 3.3.4 installed outside OneDrive and validated against the published Swissmetro...
@@ -19,18 +19,7 @@
 - **2026-09-17** (Claude Opus 5): Answer DTU IT's request for the minidumps behind the EliteBook cras... -> A fifth `0xD1` crash occurred 09-17 09:48, same instruction offset (`...f14a`) as the f...
 - **2026-09-17 (afternoon)** (Claude Opus 5): Resume the EliteBook crash diagnosis now that DTU IT has reportedly... -> Admin grant has not landed as far as the OS is concerned: `whoami /groups` shows medium...
 - **2026-09-18** (Claude Opus 5): Finish the EliteBook crash diagnosis. The 15:41 session copied the ... -> Root cause found and the driver removed. Connecting to `vpn.dtu.dk` (16:18) did not upg...
-
----
-
-## Session 2026-09-18 (evening)
-**Agent:** Claude Opus 5
-**Goal:** Explain and fix the Windows Update prompt that appears at every boot ("Intel - Extension - 2.1.10103.24"), left open from the crash-diagnosis sessions.
-**Files touched:**
-- `C:\Users\rich\Desktop\minidumps\hide_intel_ext.ps1` -- hides the looping WU package via the Update Session COM API; must be run from an elevated PowerShell.
-- none in the project.
-**Outcome:** Loop mechanism identified from `C:\Windows\INF\setupapi.dev.log` (11 rounds since 09-11). Each "OK" install stages `ipf_ef_ext.inf` (Intel IPF Extensible Framework Extension) as `oem337.inf`, PnP lists it as Selected for the IPF device `PCI\VEN_8086&DEV_7D03` but cannot bind its install section against base driver `ipf_cpu.inf` 2.3.20300.4905 (installed by HP/WU on 09-14), configures the device with only `oem321`+`oem211`+`oem314`, then deletes the unreferenced package 40 s later (`Delete flags 0x2`). WU records exit 0, the device still lacks extension ID `{002c4697-...}`, and the package is re-offered at the next scan. The package therefore never appears in the PnP driver inventory. It is an Intel/HP catalog mismatch, harmless; hiding the package is the fix. Also observed: the machine has not been rebooted since the 16:04 crash (`PendingFileRenameOperations` set), so the post-Cisco reboot is still outstanding. Six other driver updates queued (Realtek, HP keyboard/software component, Cirrus Logic, Logitech) are one-shot, not part of the loop.
-**Next steps:** Package hidden by the user (verified: WU lists it under IsHidden=1, no longer offered). Reboot still outstanding. Machine watch and IT mail as in the previous session. Infrastructure backlog unchanged, see `_state/current.md`.
-**Git ref:**
+- **2026-09-18 (evening)** (Claude Opus 5): Explain and fix the Windows Update prompt that appears at every boo... -> Loop mechanism identified from `C:\Windows\INF\setupapi.dev.log` (11 rounds since 09-11...
 
 ---
 
@@ -68,5 +57,23 @@
 **Outcome:** The system remains sound in principle, but the audit found one unsafe auto-commit Stop hook, excess always-loaded context, duplicate skill aliases, and stale reminders; two open infrastructure bugs were fixed and verified in commit `f4ef133`.
 **Next steps:** Ask Claude for an independent assessment of the audit. Then remove the `auto_commit_hook.ps1` Stop hook manually and, if desired, run a focused pruning pass that shortens always-loaded instructions, routes to task-specific documentation, and consolidates duplicate aliases without deleting safety or domain constraints.
 **Git ref:** f4ef133
+
+---
+
+## Session 2026-09-23 (4)
+**Agent:** Claude Opus 5.5
+**Goal:** Independently check the Codex catch-up commit, then act on the audit: slim always-loaded instructions for newer models.
+**Files touched:**
+- `scripts/compress_log.ps1`, `_claude_backup/commands/close.md` -- title spacing restored; backup close step made Bash-valid.
+- `~/.claude/CLAUDE.md` -- slimmed from 3,829 to 652 words; style rules now a pointer to STYLE_GUIDE.md; "style the lingo" trigger added. Old file in `~/.claude/CLAUDE.pre-slim-2026-09-23.md`.
+- `scripts/generate_handover.ps1` -- AGENTS.md drops full log, helpi table and stale Einstein-era style rules; regenerated in all 44 projects (~2,200 -> ~600 words each).
+- `~/.claude/skills/style-edit/SKILL.md` -- description triggers on "style the lingo"; calibration text corrected.
+- `~/.claude/settings.json` -- auto-commit Stop hook removed (known_issues #52 fixed).
+- `scripts/sync_claude_config.ps1` -- backup was writing to `scripts/_claude_backup` since the scripts/ move; restore read the root copy, stale since 2026-05-29. Fixed.
+- `~/.agents/skills`, `~/.codex/skills` -- research-* alias copies retired to `~/.agents/_retired_aliases_2026-09-23/`; `infrastructure.html`, `~/.gemini/AGENTS.md` updated.
+- memory/ -- 5 obsolete files deleted, 5 updated, `feedback_lean_instructions` added.
+**Outcome:** Commit f4ef133 verified sound; always-loaded context cut from ~6,500 to ~1,550 words, the AGENTS.md/STYLE_GUIDE contradiction removed, the unsafe auto-commit hook and the broken config backup fixed.
+**Next steps:** Check Codex still sees work/close/snapshot/family from `~/.agents/skills` (restore from `_retired_aliases` if not). Run `helpi 16` to regenerate infrastructure_full/summary.html. Watch whether manuscript edits drift now that style rules load on demand. Delete empty `drafts/` folder (OneDrive lock).
+**Git ref:** edd5cdd
 
 ---

@@ -1,20 +1,23 @@
 {
   "project": "AI_auto",
-  "generated": "2026-09-23 22:31",
+  "generated": "2026-09-23 22:39",
   "source": "_ai_log.md",
   "latest_session": {
-    "title": "2026-09-23 (3)",
-    "agent": "Codex",
-    "goal": "Audit the AI_auto instruction, skill, and hook system against claims that newer models benefit from fewer prescriptive guardrails, while applying the mandatory infrastructure catch-up.",
-    "outcome": "The system remains sound in principle, but the audit found one unsafe auto-commit Stop hook, excess always-loaded context, duplicate skill aliases, and stale reminders; two open infrastructure bugs were fixed and verified in commit `f4ef133`.",
-    "next_steps": "Ask Claude for an independent assessment of the audit. Then remove the `auto_commit_hook.ps1` Stop hook manually and, if desired, run a focused pruning pass that shortens always-loaded instructions, routes to task-specific documentation, and consolidates duplicate aliases without deleting safety or domain constraints.",
-    "git_ref": "f4ef133",
+    "title": "2026-09-23 (4)",
+    "agent": "Claude Opus 5.5",
+    "goal": "Independently check the Codex catch-up commit, then act on the audit: slim always-loaded instructions for newer models.",
+    "outcome": "Commit f4ef133 verified sound; always-loaded context cut from ~6,500 to ~1,550 words, the AGENTS.md/STYLE_GUIDE contradiction removed, the unsafe auto-commit hook and the broken config backup fixed.",
+    "next_steps": "Check Codex still sees work/close/snapshot/family from `~/.agents/skills` (restore from `_retired_aliases` if not). Run `helpi 16` to regenerate infrastructure_full/summary.html. Watch whether manuscript edits drift now that style rules load on demand. Delete empty `drafts/` folder (OneDrive lock).",
+    "git_ref": "edd5cdd",
     "files_touched": [
-      "`scripts/compress_log.ps1` -- preserved pre-session metadata and final `Git ref: ---` placeholders during compression.",
-      "`scripts/compress_log_metadata_fixture.md`, `scripts/test_compress_log.ps1` -- added and passed a regression test for log compression.",
-      "`scripts/restore.ps1`, `scripts/generate_handover.ps1`, `prompts/claude-validate-helpi25.md` -- replaced obsolete root-level script paths and added supported launcher usage.",
-      "`known_issues.md` -- marked the log-compression and stale-close-path issues fixed.",
-      "`~/.agents/skills/close/SKILL.md`, `~/.agents/skills/research-close/SKILL.md`, `~/.claude/CLAUDE.md` and its active backup -- corrected close paths and removed superseded workaround notices."
+      "`scripts/compress_log.ps1`, `_claude_backup/commands/close.md` -- title spacing restored; backup close step made Bash-valid.",
+      "`~/.claude/CLAUDE.md` -- slimmed from 3,829 to 652 words; style rules now a pointer to STYLE_GUIDE.md; \"style the lingo\" trigger added. Old file in `~/.claude/CLAUDE.pre-slim-2026-09-23.md`.",
+      "`scripts/generate_handover.ps1` -- AGENTS.md drops full log, helpi table and stale Einstein-era style rules; regenerated in all 44 projects (~2,200 -> ~600 words each).",
+      "`~/.claude/skills/style-edit/SKILL.md` -- description triggers on \"style the lingo\"; calibration text corrected.",
+      "`~/.claude/settings.json` -- auto-commit Stop hook removed (known_issues #52 fixed).",
+      "`scripts/sync_claude_config.ps1` -- backup was writing to `scripts/_claude_backup` since the scripts/ move; restore read the root copy, stale since 2026-05-29. Fixed.",
+      "`~/.agents/skills`, `~/.codex/skills` -- research-* alias copies retired to `~/.agents/_retired_aliases_2026-09-23/`; `infrastructure.html`, `~/.gemini/AGENTS.md` updated.",
+      "memory/ -- 5 obsolete files deleted, 5 updated, `feedback_lean_instructions` added."
     ]
   },
   "latest_session_complete": true,

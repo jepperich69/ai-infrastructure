@@ -488,3 +488,10 @@
 ## Archived 2026-09-23 (1 entry)
 
 - **2026-08-14** (Claude Opus 5): Build a presentation on how we do mathematical verification and cer... -> Deck delivered. Section 5 is a real run, not a mock-up: Kahneman & Tversky (1979) check...
+
+
+---
+
+## Archived 2026-09-23 (1 entry)
+
+- **2026-08-18** (Codex): Build a shorter, popular mathematical-verification deck with anonym... -> Delivered a 16-slide popular talk. The anonymous sample illustrates three distinct prin...
