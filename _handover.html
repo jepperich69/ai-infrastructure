@@ -30,7 +30,7 @@
 <body>
 
 <h1>Handover Document &mdash; AI_auto</h1>
-<div class="meta">Generated: 2026-09-23 13:12 &nbsp;|&nbsp; Source: <code style="display:inline;padding:2px 6px">_ai_log.md</code> &nbsp;|&nbsp; Sidecar: <code style="display:inline;padding:2px 6px">_handover.json</code></div>
+<div class="meta">Generated: 2026-09-23 13:32 &nbsp;|&nbsp; Source: <code style="display:inline;padding:2px 6px">_ai_log.md</code> &nbsp;|&nbsp; Sidecar: <code style="display:inline;padding:2px 6px">_handover.json</code></div>
 
 <!-- ============================================================ -->
 <!-- AGENT INSTRUCTIONS                                            -->
@@ -62,15 +62,15 @@
 <div class="latest-session">
   <div class="session-status ok">Complete</div>
   <h2>Latest Session Snapshot</h2>
-  <p><strong>Session:</strong> 2026-09-23</p>
-  <p><strong>Agent:</strong> Gemini CLI (Gemini 3.1 Pro (High))</p>
-  <p><strong>Goal:</strong> Install a new A0 printer in Building 358, room 161.</p>
-  <p><strong>Outcome:</strong> Located the new plotter on the DTU print server (`\\ait-print\LY358-161A-POSTER`) and installed it on the local machine. The printer failed to print via the server because the LAN port in room 161 is dead (printer pulled APIPA `169.254.24.233`). Instructed the user to connect via Wi-Fi Direct (`Direct-D4-HP DesignJet T850`) using the security key instead of the WPS PIN.</p>
-  <p><strong>Next steps:</strong> User to contact DTU IT to activate the LAN wall port in Building 358 room 161 so the printer can join the DTU network.</p>
+  <p><strong>Session:</strong> 2026-09-23 (2)</p>
+  <p><strong>Agent:</strong> Claude Opus 5.5</p>
+  <p><strong>Goal:</strong> Get the new A0 poster printer (HP DesignJet T850, `\ait-print\LY358-161A-POSTER`, Bldg 358 rm 161A) working after the Gemini/AGY session.</p>
+  <p><strong>Outcome:</strong> Laptop cannot join the printer&#39;s Wi-Fi Direct: DTU group policy sets a WLAN allow list (`eduroam`, `DTUsecure` only) and the DIRECT SSID is not even listed in scans. The server queue expects the T850 at `10.196.0.196` (unreachable) and uses the wrong driver, &quot;HP DesignJet T830 24in MFP PCL3&quot;, which may not offer A0 width. The old T730 queue (`LY358-161A-CO2`) is gone from `ait-print` (the T850 replaced it); the stale local entry was removed and could not be re-added. The T850 has no USB device port, only a USB-stick host port. Workarounds given: print an A0 PDF from a USB stick at the printer, print from a phone over Wi-Fi Direct (AirPrint/Mopria/HP Smart, fit-to-page off), or use another campus plotter (`LY325-140-POSTER` Z6, `LY345E-142-POSTER` T1500, `LY310-237A-POSTER` Z9).</p>
+  <p><strong>Next steps:</strong> Mail DTU IT: activate the LAN wall port in 358/161A and switch the POSTER queue driver to a 36in T850 driver. Infrastructure backlog unchanged, see `_state/current.md`.</p>
   
   <h3>Files touched</h3>
   <ul>
-  <li>none in the project.</li>
+  <li>none in the project. Removed the stale local connection `\ait-print\LY358-161A-CO2 (HP DesignJet T730)`.</li>
 </ul>
 </div>
 
@@ -85,7 +85,6 @@
 <h2>Compressed sessions</h2>
 <br>
 <ul>
-  <li><strong>2026-07-03 (2)</strong> (Claude Fable 5): Discuss a portfolio &quot;helicopter view&quot; (surface unexploited/dormant ... -&gt; Decided the helicopter view is NOT a RAG (36 logs, 278 KB, fits in context) but an agen...</li>
   <li><strong>2026-08-14</strong> (Claude Opus 5): Build a presentation on how we do mathematical verification and cer... -&gt; Deck delivered. Section 5 is a real run, not a mock-up: Kahneman &amp; Tversky (1979) check...</li>
   <li><strong>2026-08-18</strong> (Codex): Build a shorter, popular mathematical-verification deck with anonym... -&gt; Delivered a 16-slide popular talk. The anonymous sample illustrates three distinct prin...</li>
   <li><strong>2026-08-27</strong> (Claude Opus 5): Design and build an instruction set (skill) for refereeing and edit... -&gt; /review-paper is live. It extends the user&#39;s eight criteria with venue fit, claim-evide...</li>
@@ -101,21 +100,8 @@
   <li><strong>2026-09-14</strong> (Claude Opus 5): Recover and log the unlogged 2026-09-13 sessions (here and in `Pub_... -&gt; Both 2026-09-13 sessions are on record. The style pass was applied to v10 and pushed (O...</li>
   <li><strong>2026-09-16</strong> (Claude Opus 5): Diagnose four same-day crashes on the DTU EliteBook 840 G11 (trigge... -&gt; All four crashes are bugcheck `0xD1 DRIVER_IRQL_NOT_LESS_OR_EQUAL` at the same instruct...</li>
   <li><strong>2026-09-17</strong> (Claude Opus 5): Answer DTU IT&#39;s request for the minidumps behind the EliteBook cras... -&gt; A fifth `0xD1` crash occurred 09-17 09:48, same instruction offset (`...f14a`) as the f...</li>
+  <li><strong>2026-09-17 (afternoon)</strong> (Claude Opus 5): Resume the EliteBook crash diagnosis now that DTU IT has reportedly... -&gt; Admin grant has not landed as far as the OS is concerned: `whoami /groups` shows medium...</li>
 </ul>
-<br>
-<hr>
-<br>
-<h2>Session 2026-09-17 (afternoon)</h2>
-<p><strong>Agent:</strong> Claude Opus 5</p>
-<p><strong>Goal:</strong> Resume the EliteBook crash diagnosis now that DTU IT has reportedly granted admin rights: copy the six minidumps out of `C:\Windows\Minidump` and analyze them.</p>
-<p><strong>Files touched:</strong></p>
-<ul>
-  <li>`scratchpad\copy_dumps.ps1` (session scratchpad, outside the project) -- elevated copy script: copies `C:\Windows\Minidump\*.dmp` (and `MEMORY.DMP` if present) to `C:\Users\rich\Desktop\minidumps`, grants `WIN\rich` full access, writes `_copied.txt` as a receipt.</li>
-  <li>none in the project.</li>
-</ul>
-<p><strong>Outcome:</strong> Admin grant has not landed as far as the OS is concerned: `whoami /groups` shows medium integrity and `net localgroup administrators` lists only the built-in `Administrator`; `C:\Windows\Minidump` is still access-denied. `Start-Process -Verb RunAs` from this sandboxed shell fails instantly with &quot;operation was canceled by the user&quot; (the UAC dialog never appears), so elevation must be started by the user. Handed over a one-liner to run from PowerShell ISE opened as administrator; session closed before it was run, so the dumps are not yet copied and no `!analyze -v` has been done. No debugger is installed (`windbg`/`cdb`/`kd` absent); plan is `winget install Microsoft.WinDbg` (per-user MSIX, no admin) or a Python minidump module-list parse once the dumps are on the Desktop.</p>
-<p><strong>Next steps:</strong> User runs `copy<em>dumps.ps1` from elevated ISE (or the script is re-created if the scratchpad is gone; it is four lines). If the UAC prompt rejects the credentials, the admin grant needs a logoff/reboot or IT gave a separate account. Then: install WinDbg, `!analyze -v` on `091626-*.dmp` / `091726-*.dmp`, check the stack for an NDIS/WFP filter (Cisco AnyConnect 4.10, ASIX) versus Realtek audio. Infrastructure backlog unchanged, see `</em>state/current.md`.</p>
-<p><strong>Git ref:</strong> 0bf479b</p>
 <br>
 <hr>
 <br>
@@ -158,6 +144,19 @@
 </ul>
 <p><strong>Outcome:</strong> Located the new plotter on the DTU print server (`\\ait-print\LY358-161A-POSTER`) and installed it on the local machine. The printer failed to print via the server because the LAN port in room 161 is dead (printer pulled APIPA `169.254.24.233`). Instructed the user to connect via Wi-Fi Direct (`Direct-D4-HP DesignJet T850`) using the security key instead of the WPS PIN.</p>
 <p><strong>Next steps:</strong> User to contact DTU IT to activate the LAN wall port in Building 358 room 161 so the printer can join the DTU network.</p>
+<p><strong>Git ref:</strong></p>
+<br>
+<hr>
+<br>
+<h2>Session 2026-09-23 (2)</h2>
+<p><strong>Agent:</strong> Claude Opus 5.5</p>
+<p><strong>Goal:</strong> Get the new A0 poster printer (HP DesignJet T850, `\ait-print\LY358-161A-POSTER`, Bldg 358 rm 161A) working after the Gemini/AGY session.</p>
+<p><strong>Files touched:</strong></p>
+<ul>
+  <li>none in the project. Removed the stale local connection `\ait-print\LY358-161A-CO2 (HP DesignJet T730)`.</li>
+</ul>
+<p><strong>Outcome:</strong> Laptop cannot join the printer&#39;s Wi-Fi Direct: DTU group policy sets a WLAN allow list (`eduroam`, `DTUsecure` only) and the DIRECT SSID is not even listed in scans. The server queue expects the T850 at `10.196.0.196` (unreachable) and uses the wrong driver, &quot;HP DesignJet T830 24in MFP PCL3&quot;, which may not offer A0 width. The old T730 queue (`LY358-161A-CO2`) is gone from `ait-print` (the T850 replaced it); the stale local entry was removed and could not be re-added. The T850 has no USB device port, only a USB-stick host port. Workarounds given: print an A0 PDF from a USB stick at the printer, print from a phone over Wi-Fi Direct (AirPrint/Mopria/HP Smart, fit-to-page off), or use another campus plotter (`LY325-140-POSTER` Z6, `LY345E-142-POSTER` T1500, `LY310-237A-POSTER` Z9).</p>
+<p><strong>Next steps:</strong> Mail DTU IT: activate the LAN wall port in 358/161A and switch the POSTER queue driver to a 36in T850 driver. Infrastructure backlog unchanged, see `_state/current.md`.</p>
 <p><strong>Git ref:</strong></p>
 <br>
 
@@ -175,7 +174,6 @@
 
 ## Compressed sessions
 
-- **2026-07-03 (2)** (Claude Fable 5): Discuss a portfolio "helicopter view" (surface unexploited/dormant ... -&gt; Decided the helicopter view is NOT a RAG (36 logs, 278 KB, fits in context) but an agen...
 - **2026-08-14** (Claude Opus 5): Build a presentation on how we do mathematical verification and cer... -&gt; Deck delivered. Section 5 is a real run, not a mock-up: Kahneman & Tversky (1979) check...
 - **2026-08-18** (Codex): Build a shorter, popular mathematical-verification deck with anonym... -&gt; Delivered a 16-slide popular talk. The anonymous sample illustrates three distinct prin...
 - **2026-08-27** (Claude Opus 5): Design and build an instruction set (skill) for refereeing and edit... -&gt; /review-paper is live. It extends the user's eight criteria with venue fit, claim-evide...
@@ -191,18 +189,7 @@
 - **2026-09-14** (Claude Opus 5): Recover and log the unlogged 2026-09-13 sessions (here and in `Pub_... -&gt; Both 2026-09-13 sessions are on record. The style pass was applied to v10 and pushed (O...
 - **2026-09-16** (Claude Opus 5): Diagnose four same-day crashes on the DTU EliteBook 840 G11 (trigge... -&gt; All four crashes are bugcheck `0xD1 DRIVER_IRQL_NOT_LESS_OR_EQUAL` at the same instruct...
 - **2026-09-17** (Claude Opus 5): Answer DTU IT's request for the minidumps behind the EliteBook cras... -&gt; A fifth `0xD1` crash occurred 09-17 09:48, same instruction offset (`...f14a`) as the f...
-
----
-
-## Session 2026-09-17 (afternoon)
-**Agent:** Claude Opus 5
-**Goal:** Resume the EliteBook crash diagnosis now that DTU IT has reportedly granted admin rights: copy the six minidumps out of `C:\Windows\Minidump` and analyze them.
-**Files touched:**
-- `scratchpad\copy_dumps.ps1` (session scratchpad, outside the project) -- elevated copy script: copies `C:\Windows\Minidump\*.dmp` (and `MEMORY.DMP` if present) to `C:\Users\rich\Desktop\minidumps`, grants `WIN\rich` full access, writes `_copied.txt` as a receipt.
-- none in the project.
-**Outcome:** Admin grant has not landed as far as the OS is concerned: `whoami /groups` shows medium integrity and `net localgroup administrators` lists only the built-in `Administrator`; `C:\Windows\Minidump` is still access-denied. `Start-Process -Verb RunAs` from this sandboxed shell fails instantly with "operation was canceled by the user" (the UAC dialog never appears), so elevation must be started by the user. Handed over a one-liner to run from PowerShell ISE opened as administrator; session closed before it was run, so the dumps are not yet copied and no `!analyze -v` has been done. No debugger is installed (`windbg`/`cdb`/`kd` absent); plan is `winget install Microsoft.WinDbg` (per-user MSIX, no admin) or a Python minidump module-list parse once the dumps are on the Desktop.
-**Next steps:** User runs `copy_dumps.ps1` from elevated ISE (or the script is re-created if the scratchpad is gone; it is four lines). If the UAC prompt rejects the credentials, the admin grant needs a logoff/reboot or IT gave a separate account. Then: install WinDbg, `!analyze -v` on `091626-*.dmp` / `091726-*.dmp`, check the stack for an NDIS/WFP filter (Cisco AnyConnect 4.10, ASIX) versus Realtek audio. Infrastructure backlog unchanged, see `_state/current.md`.
-**Git ref:** 0bf479b
+- **2026-09-17 (afternoon)** (Claude Opus 5): Resume the EliteBook crash diagnosis now that DTU IT has reportedly... -&gt; Admin grant has not landed as far as the OS is concerned: `whoami /groups` shows medium...
 
 ---
 
@@ -239,6 +226,17 @@
 - none in the project.
 **Outcome:** Located the new plotter on the DTU print server (`\\ait-print\LY358-161A-POSTER`) and installed it on the local machine. The printer failed to print via the server because the LAN port in room 161 is dead (printer pulled APIPA `169.254.24.233`). Instructed the user to connect via Wi-Fi Direct (`Direct-D4-HP DesignJet T850`) using the security key instead of the WPS PIN.
 **Next steps:** User to contact DTU IT to activate the LAN wall port in Building 358 room 161 so the printer can join the DTU network.
+**Git ref:**
+
+---
+
+## Session 2026-09-23 (2)
+**Agent:** Claude Opus 5.5
+**Goal:** Get the new A0 poster printer (HP DesignJet T850, `\ait-print\LY358-161A-POSTER`, Bldg 358 rm 161A) working after the Gemini/AGY session.
+**Files touched:**
+- none in the project. Removed the stale local connection `\ait-print\LY358-161A-CO2 (HP DesignJet T730)`.
+**Outcome:** Laptop cannot join the printer's Wi-Fi Direct: DTU group policy sets a WLAN allow list (`eduroam`, `DTUsecure` only) and the DIRECT SSID is not even listed in scans. The server queue expects the T850 at `10.196.0.196` (unreachable) and uses the wrong driver, "HP DesignJet T830 24in MFP PCL3", which may not offer A0 width. The old T730 queue (`LY358-161A-CO2`) is gone from `ait-print` (the T850 replaced it); the stale local entry was removed and could not be re-added. The T850 has no USB device port, only a USB-stick host port. Workarounds given: print an A0 PDF from a USB stick at the printer, print from a phone over Wi-Fi Direct (AirPrint/Mopria/HP Smart, fit-to-page off), or use another campus plotter (`LY325-140-POSTER` Z6, `LY345E-142-POSTER` T1500, `LY310-237A-POSTER` Z9).
+**Next steps:** Mail DTU IT: activate the LAN wall port in 358/161A and switch the POSTER queue driver to a 36in T850 driver. Infrastructure backlog unchanged, see `_state/current.md`.
 **Git ref:**
 </textarea>
 </div>
