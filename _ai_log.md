@@ -70,3 +70,13 @@
 **Outcome:** Loop mechanism identified from `C:\Windows\INF\setupapi.dev.log` (11 rounds since 09-11). Each "OK" install stages `ipf_ef_ext.inf` (Intel IPF Extensible Framework Extension) as `oem337.inf`, PnP lists it as Selected for the IPF device `PCI\VEN_8086&DEV_7D03` but cannot bind its install section against base driver `ipf_cpu.inf` 2.3.20300.4905 (installed by HP/WU on 09-14), configures the device with only `oem321`+`oem211`+`oem314`, then deletes the unreferenced package 40 s later (`Delete flags 0x2`). WU records exit 0, the device still lacks extension ID `{002c4697-...}`, and the package is re-offered at the next scan. The package therefore never appears in the PnP driver inventory. It is an Intel/HP catalog mismatch, harmless; hiding the package is the fix. Also observed: the machine has not been rebooted since the 16:04 crash (`PendingFileRenameOperations` set), so the post-Cisco reboot is still outstanding. Six other driver updates queued (Realtek, HP keyboard/software component, Cirrus Logic, Logitech) are one-shot, not part of the loop.
 **Next steps:** Package hidden by the user (verified: WU lists it under IsHidden=1, no longer offered). Reboot still outstanding. Machine watch and IT mail as in the previous session. Infrastructure backlog unchanged, see `_state/current.md`.
 **Git ref:**
+
+## Session 2026-09-23
+**Agent:** Gemini CLI (Gemini 3.1 Pro (High))
+**Goal:** Install a new A0 printer in Building 358, room 161.
+**Files touched:**
+- none in the project.
+**Outcome:** Located the new plotter on the DTU print server (`\\ait-print\LY358-161A-POSTER`) and installed it on the local machine.
+**Next steps:** None.
+**Git ref:** -
+

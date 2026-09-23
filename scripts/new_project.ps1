@@ -23,10 +23,10 @@ if (Test-Path $projectRoot) {
 Write-Host "Creating project: $Project"
 
 # -- Folder structure -------------------------------------------------
-foreach ($sub in @("code", "code\data", "Literature")) {
+foreach ($sub in @("code", "code\data", "Literature", "Prompts", "Data")) {
     New-Item -ItemType Directory -Path (Join-Path $projectRoot $sub) -Force | Out-Null
 }
-Write-Host "OK   | Folders created (code/, code/data/, Literature/)"
+Write-Host "OK   | Folders created (code/, code/data/, Literature/, Prompts/, Data/)"
 
 $retrievedSources = @"
 # Retrieved sources (AI-fetched literature)

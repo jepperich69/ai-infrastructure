@@ -40,9 +40,11 @@ if (Test-Path (Join-Path $projectRoot "_ai_log.md")) {
 Write-Host "Initializing generic project: $projectName"
 Write-Host "  $projectRoot"
 
-# -- Literature source log ---------------------------------------------
+# -- Standard Folders --------------------------------------------------
+foreach ($sub in @("Literature", "Prompts", "Data")) {
+    New-Item -ItemType Directory -Path (Join-Path $projectRoot $sub) -Force | Out-Null
+}
 $literatureDir = Join-Path $projectRoot "Literature"
-New-Item -ItemType Directory -Path $literatureDir -Force | Out-Null
 $retrievedSources = @"
 # Retrieved sources (AI-fetched literature)
 
