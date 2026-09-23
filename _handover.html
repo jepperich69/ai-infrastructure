@@ -30,7 +30,7 @@
 <body>
 
 <h1>Handover Document &mdash; AI_auto</h1>
-<div class="meta">Generated: 2026-09-23 13:32 &nbsp;|&nbsp; Source: <code style="display:inline;padding:2px 6px">_ai_log.md</code> &nbsp;|&nbsp; Sidecar: <code style="display:inline;padding:2px 6px">_handover.json</code></div>
+<div class="meta">Generated: 2026-09-23 22:18 &nbsp;|&nbsp; Source: <code style="display:inline;padding:2px 6px">_ai_log.md</code> &nbsp;|&nbsp; Sidecar: <code style="display:inline;padding:2px 6px">_handover.json</code></div>
 
 <!-- ============================================================ -->
 <!-- AGENT INSTRUCTIONS                                            -->
@@ -40,7 +40,7 @@
   <p>This document records the research work done on <strong>AI_auto</strong>.
   The <strong>editable source of truth</strong> is <code style="display:inline;padding:2px 4px">_ai_log.md</code> in the project root.
   The HTML is regenerated from it by running:</p>
-  <pre>.\AI_auto\generate_handover.ps1 -Project AI_auto</pre>
+  <pre>.\AI_auto\scripts\generate_handover.ps1 -Project AI_auto</pre>
   <p><strong>To add a session entry:</strong> append a new <code style="display:inline;padding:2px 4px">## Session YYYY-MM-DD</code> block
   to the markdown below (in the textarea), following the existing format.
   Hand the updated markdown back to the user to paste into <code style="display:inline;padding:2px 4px">_ai_log.md</code>.</p>
@@ -50,7 +50,7 @@
 **Agent:** [Claude / GPT-4o / etc.]
 **Goal:** [what was worked on]
 **Files touched:**
-- \code/file.py\ â€” [description of change]
+- \code/file.py\ -- [description of change]
 **Outcome:** [what was accomplished]
 **Next steps:** [what remains open]
 **Git ref:** [short commit hash(es), if applicable]</pre>
@@ -62,15 +62,19 @@
 <div class="latest-session">
   <div class="session-status ok">Complete</div>
   <h2>Latest Session Snapshot</h2>
-  <p><strong>Session:</strong> 2026-09-23 (2)</p>
-  <p><strong>Agent:</strong> Claude Opus 5.5</p>
-  <p><strong>Goal:</strong> Get the new A0 poster printer (HP DesignJet T850, `\ait-print\LY358-161A-POSTER`, Bldg 358 rm 161A) working after the Gemini/AGY session.</p>
-  <p><strong>Outcome:</strong> Laptop cannot join the printer&#39;s Wi-Fi Direct: DTU group policy sets a WLAN allow list (`eduroam`, `DTUsecure` only) and the DIRECT SSID is not even listed in scans. The server queue expects the T850 at `10.196.0.196` (unreachable) and uses the wrong driver, &quot;HP DesignJet T830 24in MFP PCL3&quot;, which may not offer A0 width. The old T730 queue (`LY358-161A-CO2`) is gone from `ait-print` (the T850 replaced it); the stale local entry was removed and could not be re-added. The T850 has no USB device port, only a USB-stick host port. Workarounds given: print an A0 PDF from a USB stick at the printer, print from a phone over Wi-Fi Direct (AirPrint/Mopria/HP Smart, fit-to-page off), or use another campus plotter (`LY325-140-POSTER` Z6, `LY345E-142-POSTER` T1500, `LY310-237A-POSTER` Z9).</p>
-  <p><strong>Next steps:</strong> Mail DTU IT: activate the LAN wall port in 358/161A and switch the POSTER queue driver to a 36in T850 driver. Infrastructure backlog unchanged, see `_state/current.md`.</p>
-  
+  <p><strong>Session:</strong> 2026-09-23 (3)</p>
+  <p><strong>Agent:</strong> Codex</p>
+  <p><strong>Goal:</strong> Audit the AI_auto instruction, skill, and hook system against claims that newer models benefit from fewer prescriptive guardrails, while applying the mandatory infrastructure catch-up.</p>
+  <p><strong>Outcome:</strong> The system remains sound in principle, but the audit found one unsafe auto-commit Stop hook, excess always-loaded context, duplicate skill aliases, and stale reminders; two open infrastructure bugs were fixed and verified in commit `f4ef133`.</p>
+  <p><strong>Next steps:</strong> Ask Claude for an independent assessment of the audit. Then remove the `auto_commit_hook.ps1` Stop hook manually and, if desired, run a focused pruning pass that shortens always-loaded instructions, routes to task-specific documentation, and consolidates duplicate aliases without deleting safety or domain constraints.</p>
+  <p><strong>Git ref:</strong> f4ef133</p>
   <h3>Files touched</h3>
   <ul>
-  <li>none in the project. Removed the stale local connection `\ait-print\LY358-161A-CO2 (HP DesignJet T730)`.</li>
+  <li>`scripts/compress_log.ps1` -- preserved pre-session metadata and final `Git ref: ---` placeholders during compression.</li>
+  <li>`scripts/compress_log_metadata_fixture.md`, `scripts/test_compress_log.ps1` -- added and passed a regression test for log compression.</li>
+  <li>`scripts/restore.ps1`, `scripts/generate_handover.ps1`, `prompts/claude-validate-helpi25.md` -- replaced obsolete root-level script paths and added supported launcher usage.</li>
+  <li>`known_issues.md` -- marked the log-compression and stale-close-path issues fixed.</li>
+  <li>`~/.agents/skills/close/SKILL.md`, `~/.agents/skills/research-close/SKILL.md`, `~/.claude/CLAUDE.md` and its active backup -- corrected close paths and removed superseded workaround notices.</li>
 </ul>
 </div>
 
@@ -79,13 +83,11 @@
 <!-- ============================================================ -->
 <div class="section">
   <h2>Session Log</h2>
-  <br>
-<hr>
+  <hr>
 <br>
 <h2>Compressed sessions</h2>
 <br>
 <ul>
-  <li><strong>2026-08-14</strong> (Claude Opus 5): Build a presentation on how we do mathematical verification and cer... -&gt; Deck delivered. Section 5 is a real run, not a mock-up: Kahneman &amp; Tversky (1979) check...</li>
   <li><strong>2026-08-18</strong> (Codex): Build a shorter, popular mathematical-verification deck with anonym... -&gt; Delivered a 16-slide popular talk. The anonymous sample illustrates three distinct prin...</li>
   <li><strong>2026-08-27</strong> (Claude Opus 5): Design and build an instruction set (skill) for refereeing and edit... -&gt; /review-paper is live. It extends the user&#39;s eight criteria with venue fit, claim-evide...</li>
   <li><strong>2026-08-27</strong> (Claude Opus 5): Decide how QGIS should fit the JR structure, and implement it. -&gt; QGIS is a per-project tool, not a project type. No standing QGIS folder: `helpi 28` add...</li>
@@ -101,23 +103,8 @@
   <li><strong>2026-09-16</strong> (Claude Opus 5): Diagnose four same-day crashes on the DTU EliteBook 840 G11 (trigge... -&gt; All four crashes are bugcheck `0xD1 DRIVER_IRQL_NOT_LESS_OR_EQUAL` at the same instruct...</li>
   <li><strong>2026-09-17</strong> (Claude Opus 5): Answer DTU IT&#39;s request for the minidumps behind the EliteBook cras... -&gt; A fifth `0xD1` crash occurred 09-17 09:48, same instruction offset (`...f14a`) as the f...</li>
   <li><strong>2026-09-17 (afternoon)</strong> (Claude Opus 5): Resume the EliteBook crash diagnosis now that DTU IT has reportedly... -&gt; Admin grant has not landed as far as the OS is concerned: `whoami /groups` shows medium...</li>
+  <li><strong>2026-09-18</strong> (Claude Opus 5): Finish the EliteBook crash diagnosis. The 15:41 session copied the ... -&gt; Root cause found and the driver removed. Connecting to `vpn.dtu.dk` (16:18) did not upg...</li>
 </ul>
-<br>
-<hr>
-<br>
-<h2>Session 2026-09-18</h2>
-<p><strong>Agent:</strong> Claude Opus 5</p>
-<p><strong>Goal:</strong> Finish the EliteBook crash diagnosis. The 15:41 session copied the dumps and installed WinDbg but the machine crashed mid-analysis (16:04); this session resumed from the files on disk in an elevated window.</p>
-<p><strong>Files touched:</strong></p>
-<ul>
-  <li>`C:\Users\rich\Desktop\minidumps\` (outside the project) -- six dumps, `run_all.sh` (cdb batch), `analysis\*_full.txt` (`!analyze -v` + `lm t n` per dump), `symbols\` cache.</li>
-  <li>`C:\Users\rich\Desktop\crash_report_for_IT_v2.txt` -- full report: conclusion, timeline, stacks, requested actions.</li>
-  <li>`C:\Users\rich\Desktop\mail_til_IT_v2.txt` -- Danish cover mail for IT.</li>
-  <li>none in the project.</li>
-</ul>
-<p><strong>Outcome:</strong> Root cause found and the driver removed. Connecting to `vpn.dtu.dk` (16:18) did not upgrade the client: the headend offers only AnyConnect 4.5.03040, so the downloader skipped it. VPN last used 2026-01-27. Cisco Secure Client 5.1.3.62 was therefore uninstalled silently (`msiexec /X{5AE2D1E5-CA9D-4B56-BF01-178F7E2C0033} /qn`, exit 0, log in `Desktop\minidumps\cisco<em>uninstall.log`); the `acsock` service key and `vpnva64-6.sys` are gone, the orphan `acsock64.sys` file remains because the auto-mode guard refuses delete and rename in `System32\drivers`; the user deleted it by hand from the admin prompt afterwards. Original finding: All six crashes are 0xD1 in the UDP receive path. Five (09-16 x4, 09-17) bucket as `AV</em>tcpip!INET<em>UNALIGNED</em>ADDR<em>EQUAL` (invalid endpoint read in `UdpDeliverDatagrams` on the NDIS receive thread); the sixth (09-18 16:04) faults directly in `acsock64.sys+0x2ab6e` (`AV</em>acsock64!unknown_function`, NULL read at IRQL 2, process svchost) and Windows&#39; Event 1001 names acsock64.sys too. `acsock64.sys` is the Cisco Secure Client WFP socket interceptor, v5.1.2.22 built 2023-12-21, loaded in every dump; the installed client is 5.1.3.62 (2026-01-21). The 09-11 cumulative update KB5124008 replaced `tcpip.sys`/`ndis.sys`; crashes started 09-16; KB5129241 (09-17) did not help. Trigger explained: Teams (WebView2, crash 2 was in `msedgewebview2.exe`) and browsers (QUIC) flood UDP at launch. Realtek audio and BIOS are cleared. WinDbg is installed per-user as MSIX; `cdbX64.exe` is on the WindowsApps alias path and works headless with `-z &lt;dmp&gt; -y srv*&lt;cache&gt;*https://msdl.microsoft.com/download/symbols -c &quot;!analyze -v; q&quot;`. The first run per machine is slow because `lm t n` pulls every module image from the symbol server; later runs use the cache.</p>
-<p><strong>Next steps:</strong> Reboot once so the kernel comes up without acsock (pending at close); then watch `C:\Windows\Minidump` for a week. If the crashes stop, send IT `mail<em>til</em>IT<em>v2.txt` anyway so the DTU package (headend offers only AnyConnect 4.5.03040) gets updated before the client is reinstalled. Reinstall the VPN from `vpn.dtu.dk` in a browser when it is next needed, and check `acsock64.sys` version is newer than 5.1.2.22 afterwards. Infrastructure backlog unchanged, see `</em>state/current.md`.</p>
-<p><strong>Git ref:</strong> 6ae4582</p>
 <br>
 <hr>
 <br>
@@ -157,7 +144,26 @@
 </ul>
 <p><strong>Outcome:</strong> Laptop cannot join the printer&#39;s Wi-Fi Direct: DTU group policy sets a WLAN allow list (`eduroam`, `DTUsecure` only) and the DIRECT SSID is not even listed in scans. The server queue expects the T850 at `10.196.0.196` (unreachable) and uses the wrong driver, &quot;HP DesignJet T830 24in MFP PCL3&quot;, which may not offer A0 width. The old T730 queue (`LY358-161A-CO2`) is gone from `ait-print` (the T850 replaced it); the stale local entry was removed and could not be re-added. The T850 has no USB device port, only a USB-stick host port. Workarounds given: print an A0 PDF from a USB stick at the printer, print from a phone over Wi-Fi Direct (AirPrint/Mopria/HP Smart, fit-to-page off), or use another campus plotter (`LY325-140-POSTER` Z6, `LY345E-142-POSTER` T1500, `LY310-237A-POSTER` Z9).</p>
 <p><strong>Next steps:</strong> Mail DTU IT: activate the LAN wall port in 358/161A and switch the POSTER queue driver to a 36in T850 driver. Infrastructure backlog unchanged, see `_state/current.md`.</p>
-<p><strong>Git ref:</strong></p>
+<p><strong>Git ref:</strong></p>
+<br>
+<hr>
+<br>
+<h2>Session 2026-09-23 (3)</h2>
+<p><strong>Agent:</strong> Codex</p>
+<p><strong>Goal:</strong> Audit the AI_auto instruction, skill, and hook system against claims that newer models benefit from fewer prescriptive guardrails, while applying the mandatory infrastructure catch-up.</p>
+<p><strong>Files touched:</strong></p>
+<ul>
+  <li>`scripts/compress_log.ps1` -- preserved pre-session metadata and final `Git ref: ---` placeholders during compression.</li>
+  <li>`scripts/compress_log_metadata_fixture.md`, `scripts/test_compress_log.ps1` -- added and passed a regression test for log compression.</li>
+  <li>`scripts/restore.ps1`, `scripts/generate_handover.ps1`, `prompts/claude-validate-helpi25.md` -- replaced obsolete root-level script paths and added supported launcher usage.</li>
+  <li>`known_issues.md` -- marked the log-compression and stale-close-path issues fixed.</li>
+  <li>`~/.agents/skills/close/SKILL.md`, `~/.agents/skills/research-close/SKILL.md`, `~/.claude/CLAUDE.md` and its active backup -- corrected close paths and removed superseded workaround notices.</li>
+</ul>
+<p><strong>Outcome:</strong> The system remains sound in principle, but the audit found one unsafe auto-commit Stop hook, excess always-loaded context, duplicate skill aliases, and stale reminders; two open infrastructure bugs were fixed and verified in commit `f4ef133`.</p>
+<p><strong>Next steps:</strong> Ask Claude for an independent assessment of the audit. Then remove the `auto<em>commit</em>hook.ps1` Stop hook manually and, if desired, run a focused pruning pass that shortens always-loaded instructions, routes to task-specific documentation, and consolidates duplicate aliases without deleting safety or domain constraints.</p>
+<p><strong>Git ref:</strong> f4ef133</p>
+<br>
+<hr>
 <br>
 
 </div>
@@ -169,12 +175,10 @@
   <h2>Editable Source (_ai_log.md)</h2>
   <div class="label">Copy this, update it with your session entry, and paste back into _ai_log.md</div>
   <textarea id="mdSource" spellcheck="false"># AI Session Log — AI Infrastructure Project
-
 ---
 
 ## Compressed sessions
 
-- **2026-08-14** (Claude Opus 5): Build a presentation on how we do mathematical verification and cer... -&gt; Deck delivered. Section 5 is a real run, not a mock-up: Kahneman & Tversky (1979) check...
 - **2026-08-18** (Codex): Build a shorter, popular mathematical-verification deck with anonym... -&gt; Delivered a 16-slide popular talk. The anonymous sample illustrates three distinct prin...
 - **2026-08-27** (Claude Opus 5): Design and build an instruction set (skill) for refereeing and edit... -&gt; /review-paper is live. It extends the user's eight criteria with venue fit, claim-evide...
 - **2026-08-27** (Claude Opus 5): Decide how QGIS should fit the JR structure, and implement it. -&gt; QGIS is a per-project tool, not a project type. No standing QGIS folder: `helpi 28` add...
@@ -190,20 +194,7 @@
 - **2026-09-16** (Claude Opus 5): Diagnose four same-day crashes on the DTU EliteBook 840 G11 (trigge... -&gt; All four crashes are bugcheck `0xD1 DRIVER_IRQL_NOT_LESS_OR_EQUAL` at the same instruct...
 - **2026-09-17** (Claude Opus 5): Answer DTU IT's request for the minidumps behind the EliteBook cras... -&gt; A fifth `0xD1` crash occurred 09-17 09:48, same instruction offset (`...f14a`) as the f...
 - **2026-09-17 (afternoon)** (Claude Opus 5): Resume the EliteBook crash diagnosis now that DTU IT has reportedly... -&gt; Admin grant has not landed as far as the OS is concerned: `whoami /groups` shows medium...
-
----
-
-## Session 2026-09-18
-**Agent:** Claude Opus 5
-**Goal:** Finish the EliteBook crash diagnosis. The 15:41 session copied the dumps and installed WinDbg but the machine crashed mid-analysis (16:04); this session resumed from the files on disk in an elevated window.
-**Files touched:**
-- `C:\Users\rich\Desktop\minidumps\` (outside the project) -- six dumps, `run_all.sh` (cdb batch), `analysis\*_full.txt` (`!analyze -v` + `lm t n` per dump), `symbols\` cache.
-- `C:\Users\rich\Desktop\crash_report_for_IT_v2.txt` -- full report: conclusion, timeline, stacks, requested actions.
-- `C:\Users\rich\Desktop\mail_til_IT_v2.txt` -- Danish cover mail for IT.
-- none in the project.
-**Outcome:** Root cause found and the driver removed. Connecting to `vpn.dtu.dk` (16:18) did not upgrade the client: the headend offers only AnyConnect 4.5.03040, so the downloader skipped it. VPN last used 2026-01-27. Cisco Secure Client 5.1.3.62 was therefore uninstalled silently (`msiexec /X{5AE2D1E5-CA9D-4B56-BF01-178F7E2C0033} /qn`, exit 0, log in `Desktop\minidumps\cisco_uninstall.log`); the `acsock` service key and `vpnva64-6.sys` are gone, the orphan `acsock64.sys` file remains because the auto-mode guard refuses delete and rename in `System32\drivers`; the user deleted it by hand from the admin prompt afterwards. Original finding: All six crashes are 0xD1 in the UDP receive path. Five (09-16 x4, 09-17) bucket as `AV_tcpip!INET_UNALIGNED_ADDR_EQUAL` (invalid endpoint read in `UdpDeliverDatagrams` on the NDIS receive thread); the sixth (09-18 16:04) faults directly in `acsock64.sys+0x2ab6e` (`AV_acsock64!unknown_function`, NULL read at IRQL 2, process svchost) and Windows' Event 1001 names acsock64.sys too. `acsock64.sys` is the Cisco Secure Client WFP socket interceptor, v5.1.2.22 built 2023-12-21, loaded in every dump; the installed client is 5.1.3.62 (2026-01-21). The 09-11 cumulative update KB5124008 replaced `tcpip.sys`/`ndis.sys`; crashes started 09-16; KB5129241 (09-17) did not help. Trigger explained: Teams (WebView2, crash 2 was in `msedgewebview2.exe`) and browsers (QUIC) flood UDP at launch. Realtek audio and BIOS are cleared. WinDbg is installed per-user as MSIX; `cdbX64.exe` is on the WindowsApps alias path and works headless with `-z &lt;dmp&gt; -y srv*&lt;cache&gt;*https://msdl.microsoft.com/download/symbols -c "!analyze -v; q"`. The first run per machine is slow because `lm t n` pulls every module image from the symbol server; later runs use the cache.
-**Next steps:** Reboot once so the kernel comes up without acsock (pending at close); then watch `C:\Windows\Minidump` for a week. If the crashes stop, send IT `mail_til_IT_v2.txt` anyway so the DTU package (headend offers only AnyConnect 4.5.03040) gets updated before the client is reinstalled. Reinstall the VPN from `vpn.dtu.dk` in a browser when it is next needed, and check `acsock64.sys` version is newer than 5.1.2.22 afterwards. Infrastructure backlog unchanged, see `_state/current.md`.
-**Git ref:** 6ae4582
+- **2026-09-18** (Claude Opus 5): Finish the EliteBook crash diagnosis. The 15:41 session copied the ... -&gt; Root cause found and the driver removed. Connecting to `vpn.dtu.dk` (16:18) did not upg...
 
 ---
 
@@ -238,6 +229,23 @@
 **Outcome:** Laptop cannot join the printer's Wi-Fi Direct: DTU group policy sets a WLAN allow list (`eduroam`, `DTUsecure` only) and the DIRECT SSID is not even listed in scans. The server queue expects the T850 at `10.196.0.196` (unreachable) and uses the wrong driver, "HP DesignJet T830 24in MFP PCL3", which may not offer A0 width. The old T730 queue (`LY358-161A-CO2`) is gone from `ait-print` (the T850 replaced it); the stale local entry was removed and could not be re-added. The T850 has no USB device port, only a USB-stick host port. Workarounds given: print an A0 PDF from a USB stick at the printer, print from a phone over Wi-Fi Direct (AirPrint/Mopria/HP Smart, fit-to-page off), or use another campus plotter (`LY325-140-POSTER` Z6, `LY345E-142-POSTER` T1500, `LY310-237A-POSTER` Z9).
 **Next steps:** Mail DTU IT: activate the LAN wall port in 358/161A and switch the POSTER queue driver to a 36in T850 driver. Infrastructure backlog unchanged, see `_state/current.md`.
 **Git ref:**
+
+---
+
+## Session 2026-09-23 (3)
+**Agent:** Codex
+**Goal:** Audit the AI_auto instruction, skill, and hook system against claims that newer models benefit from fewer prescriptive guardrails, while applying the mandatory infrastructure catch-up.
+**Files touched:**
+- `scripts/compress_log.ps1` -- preserved pre-session metadata and final `Git ref: ---` placeholders during compression.
+- `scripts/compress_log_metadata_fixture.md`, `scripts/test_compress_log.ps1` -- added and passed a regression test for log compression.
+- `scripts/restore.ps1`, `scripts/generate_handover.ps1`, `prompts/claude-validate-helpi25.md` -- replaced obsolete root-level script paths and added supported launcher usage.
+- `known_issues.md` -- marked the log-compression and stale-close-path issues fixed.
+- `~/.agents/skills/close/SKILL.md`, `~/.agents/skills/research-close/SKILL.md`, `~/.claude/CLAUDE.md` and its active backup -- corrected close paths and removed superseded workaround notices.
+**Outcome:** The system remains sound in principle, but the audit found one unsafe auto-commit Stop hook, excess always-loaded context, duplicate skill aliases, and stale reminders; two open infrastructure bugs were fixed and verified in commit `f4ef133`.
+**Next steps:** Ask Claude for an independent assessment of the audit. Then remove the `auto_commit_hook.ps1` Stop hook manually and, if desired, run a focused pruning pass that shortens always-loaded instructions, routes to task-specific documentation, and consolidates duplicate aliases without deleting safety or domain constraints.
+**Git ref:** f4ef133
+
+---
 </textarea>
 </div>
 
