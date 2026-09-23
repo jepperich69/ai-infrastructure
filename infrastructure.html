@@ -2156,14 +2156,10 @@ claude --full-auto        # launch Claude Code without approval pauses
 
   <h3>Shared skill directory</h3>
   <pre>~\.agents\skills\
-  work\            SKILL.md + agents\openai.yaml   # alias for research-work
-  close\           SKILL.md + agents\openai.yaml   # alias for research-close
-  snapshot\        SKILL.md + agents\openai.yaml   # alias for research-snapshot
-  family\          SKILL.md + agents\openai.yaml   # alias for research-family
-  research-work\   SKILL.md + agents\openai.yaml   # full name (Codex fallback)
-  research-close\  SKILL.md + agents\openai.yaml
-  research-snapshot\
-  research-family\
+  work\            SKILL.md + agents\openai.yaml   # one copy, shared by Codex and Gemini
+  close\           SKILL.md + agents\openai.yaml
+  snapshot\        SKILL.md + agents\openai.yaml
+  family\          SKILL.md + agents\openai.yaml
   grill-paper\     SKILL.md + agents\openai.yaml   # pre-submission stress-test
   grill-edit\      SKILL.md + agents\openai.yaml   # edit phase after grill-paper
   grill-me\        (Matt Pocock) general idea stress-test
@@ -2183,25 +2179,25 @@ claude --full-auto        # launch Claude Code without approval pauses
   <table class="cmd-table">
     <tr><th>Skill</th><th>Invocation</th><th>What it does</th><th>Claude equivalent</th></tr>
     <tr>
-      <td><code>work</code> / <code>research-work</code></td>
+      <td><code>work</code></td>
       <td><code>/work Pub_XXX</code>, pasted project path</td>
       <td>Reads <code>.claude/CLAUDE.md</code>, <code>_ai_log.md</code>, feeder digests, git status &mdash; asks for goal &mdash; writes session-start block</td>
       <td><code>/work</code></td>
     </tr>
     <tr>
-      <td><code>close</code> / <code>research-close</code></td>
+      <td><code>close</code></td>
       <td><code>/close</code></td>
       <td>Writes close block to <code>_ai_log.md</code>, compresses log, regenerates handover, reminds to push to Overleaf</td>
       <td><code>/close</code></td>
     </tr>
     <tr>
-      <td><code>snapshot</code> / <code>research-snapshot</code></td>
+      <td><code>snapshot</code></td>
       <td><code>/snapshot V2</code></td>
       <td>Creates annotated git tag on <code>Overleaf_source/</code></td>
       <td><code>/snapshot</code></td>
     </tr>
     <tr>
-      <td><code>family</code> / <code>research-family</code></td>
+      <td><code>family</code></td>
       <td><code>/family Pub_YYY</code></td>
       <td>Reads feeder log + handover + abstract &mdash; writes digest to <code>_feeders/</code> &mdash; updates <code>_feeders.json</code></td>
       <td><code>/family</code></td>
@@ -2633,9 +2629,9 @@ Goal: Add robustness checks to results
 
       <h2 style="margin-top:14px;">GPT Codex CLI — equivalent skills</h2>
       <table>
-        <tr><td>/work Pub_XXX</td><td>Open session (research-work skill)</td></tr>
-        <tr><td>/close</td><td>Close session (research-close skill)</td></tr>
-        <tr><td>/snapshot V2</td><td>Version manuscript (research-snapshot skill)</td></tr>
+        <tr><td>/work Pub_XXX</td><td>Open session (work skill)</td></tr>
+        <tr><td>/close</td><td>Close session (close skill)</td></tr>
+        <tr><td>/snapshot V2</td><td>Version manuscript (snapshot skill)</td></tr>
         <tr><td>/review-paper</td><td>Referee/editor assessment (shared skill)</td></tr>
         <tr><td>/diagnose</td><td>Reproduce, isolate, instrument, and report hard failures</td></tr>
       </table>
