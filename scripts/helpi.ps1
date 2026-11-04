@@ -131,7 +131,11 @@ $commands = @(
     [PSCustomObject]@{ N=28; NeedsProject=$false; Tag="MANUAL";  Name="Add PyQGIS to current project";
          Example="add_qgis.ps1 [-Project XXX]" },
     [PSCustomObject]@{ N=29; NeedsProject=$false; Tag="INFO";    Name="Tool inventory (regenerate TOOLS.md)";
-         Example="tool_inventory.ps1" }
+         Example="tool_inventory.ps1" },
+    [PSCustomObject]@{ N=30; NeedsProject=$false; Tag="INFO";    Name="Open runs window (background jobs monitor)";
+         Example="runs_watch.ps1 -Open" },
+    [PSCustomObject]@{ N=31; NeedsProject=$false; Tag="INFO";    Name="Open files window (live file changes under JR)";
+         Example="runs_watch.ps1 -Files -Open" }
     )
 
 # ── Contextual help for a single command ──────────────────────────
@@ -560,6 +564,43 @@ function Show-CommandHelp {
             "Example:",
             "  helpi 29                      # probe, rewrite TOOLS.md, print summary"
         )}
+        30 { @(
+            "Open runs window (background jobs monitor)",
+            "Opens a small Windows Terminal window listing running Python, R,",
+            "PowerShell script, Gemini, Codex and LaTeX jobs, plus Claude subagents",
+            "such as /style-edit and /verify-math. Recent finished jobs are below.",
+            "",
+            "It also opens by itself on the first Claude subagent, without taking",
+            "keyboard focus. It remembers where you move it and how you size it.",
+            "A window at least 100 columns wide shows the extra columns.",
+            "The files window (helpi 31) opens with it.",
+            "",
+            "Read-only: nothing is added to the jobs. Claude subagents are recorded",
+            "by the runs_hook.py hook in %LOCALAPPDATA%\AI_runs.",
+            "",
+            "'ended' means the process is gone; the exit code is not known. Processes",
+            "that end while the window is closed are not recorded.",
+            "",
+            "Example:",
+            "  helpi 30                      # open the window"
+        )}
+        31 { @(
+            "Open files window (live file changes under JR)",
+            "Opens a small window listing every file created, changed, renamed or",
+            "deleted under JR, newest first and numbered, with time, project and path. It sees",
+            "changes from any agent, script or person, not only Claude.",
+            "",
+            "A = added, M = modified, D = deleted. Green = changed in the last minute.",
+            "Git internals, caches, LaTeX by-products, temp files, _claude_backup and",
+            "Sensitive_Data are left out. Changes are recorded only while it is open.",
+            "",
+            "Row 1 is always the latest file. Type  open #1  or  open #1 #3  at the",
+            "Claude prompt to open files: PDF and Office in their default apps,",
+            "everything else (code and LaTeX too) in Notepad++.",
+            "",
+            "Example:",
+            "  helpi 31                      # open the window"
+        )}
         default { @("No help available for command $n.") }
     }
 
@@ -653,6 +694,8 @@ function Get-CommandPreview {
         27 { if ($proj) { "new_generic_project.ps1 -Project $proj" } else { "new_generic_project.ps1  (current directory)" } }
         28 { if ($proj) { "add_qgis.ps1 -Project $proj" } else { "add_qgis.ps1  (current directory)" } }
         29 { "tool_inventory.ps1" }
+        30 { "runs_watch.ps1 -Open" }
+        31 { "runs_watch.ps1 -Files -Open" }
     }
 }
 
@@ -920,6 +963,8 @@ function Invoke-Command-N {
         28 { if ($proj) { & "$PSScriptRoot\add_qgis.ps1" -Project $proj }
              else        { & "$PSScriptRoot\add_qgis.ps1" } }
         29 { & "$PSScriptRoot\tool_inventory.ps1" }
+        30 { & "$PSScriptRoot\runs_watch.ps1" -Open }
+        31 { & "$PSScriptRoot\runs_watch.ps1" -Files -Open }
     }
 }
 

@@ -989,6 +989,8 @@ helpi 9 Pub_XXX -N 3      # undo last 3 commits</pre>
     <tr><td>27</td><td>Create a lightweight non-paper project with an AI log, project brief, proxy sandbox, and retrieved-source register; no Overleaf or code repository is assumed.</td><td><code>helpi 27 [Project]</code></td></tr>
     <tr><td>28</td><td>Add project-scoped PyQGIS support. Writes VS Code interpreter settings, <code>.env</code>, and a smoke test without changing global Python.</td><td><code>helpi 28 [Project]</code></td></tr>
     <tr><td>29</td><td>Probe installed research software and regenerate <code>TOOLS.md</code>. This is the authoritative current inventory; do not hand-edit it.</td><td><code>helpi 29</code></td></tr>
+    <tr><td>30</td><td>Open the runs window: a separate read-only monitor of running Python, R, PowerShell, Gemini, Codex and LaTeX jobs and Claude subagents, with recently finished jobs. Also opens by itself on the first Claude subagent.</td><td><code>helpi 30</code></td></tr>
+    <tr><td>31</td><td>Open the files window: a live list of every file created, changed, renamed or deleted under <code>JR</code> by any agent, script or person, numbered with row 1 the latest, with time, project and path. Type <code>open #1</code> at the Claude prompt to open a file: PDF and Office in their default apps, code and everything else in Notepad++. Opens with the runs window; records only while open.</td><td><code>helpi 31</code></td></tr>
   </table>
 </div>
 
@@ -1082,6 +1084,8 @@ helpi 3 Pub_X main.tex             # run command 3 with a specific .tex file</pr
     <tr><td>27</td><td>Create generic non-paper project</td><td><code>new_generic_project.ps1 [-Project Name]</code> &mdash; creates the AI continuity layer without assuming Overleaf or a code repository</td><td><span class="tag once">once</span></td></tr>
     <tr><td>28</td><td>Add PyQGIS to a project</td><td><code>add_qgis.ps1 [-Project Name]</code> &mdash; writes project-scoped VS Code settings, environment file, and smoke test</td><td><span class="tag once">once</span></td></tr>
     <tr><td>29</td><td>Regenerate software inventory</td><td><code>tool_inventory.ps1</code> &mdash; probes installed tools and rewrites generated <code>TOOLS.md</code></td><td><span class="tag manual">manual</span></td></tr>
+    <tr><td>30</td><td>Open runs window</td><td><code>runs_watch.ps1 -Open</code> &mdash; polls processes and reads <code>%LOCALAPPDATA%\AI_runs\events.jsonl</code>, written by the <code>runs_hook.py</code> Claude hook</td><td><span class="tag manual">manual</span></td></tr>
+    <tr><td>31</td><td>Open files window</td><td><code>runs_watch.ps1 -Files -Open</code> &mdash; file-system watcher on <code>JR</code>; history in <code>%LOCALAPPDATA%\AI_runs\files.jsonl</code></td><td><span class="tag manual">manual</span></td></tr>
   </table>
 </div>
 
@@ -2606,6 +2610,8 @@ Goal: Add robustness checks to results
         <tr><td>helpi 27 [Project]</td><td>Create generic non-paper project</td></tr>
         <tr><td>helpi 28 [Project]</td><td>Add project-scoped PyQGIS support</td></tr>
         <tr><td>helpi 29</td><td>Regenerate <code>TOOLS.md</code> software inventory</td></tr>
+        <tr><td>helpi 30</td><td>Open the runs window (background jobs monitor)</td></tr>
+        <tr><td>helpi 31</td><td>Open the files window (live file changes under <code>JR</code>)</td></tr>
       </table>
     </div>
 
