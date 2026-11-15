@@ -1,0 +1,29 @@
+{
+  "_comment": "Copy to local/cellar_config.json and fill in. local/ is gitignored; never commit real values.",
+  "ssh_host": "cellar",
+  "ssh_exe": "C:/WINDOWS/System32/OpenSSH/ssh.exe",
+  "ssh_port": 2222,
+  "ssh_key": "~/.ssh/id_ed25519_cellar",
+  "lan_ip": "<cellar LAN IPv4, DHCP-reserved>",
+  "tailscale_ip": "<cellar Tailscale 100.x IP>",
+  "tailscale_name": "cellar",
+  "mac": "<cellar NIC MAC, AA:BB:CC:DD:EE:FF>",
+  "wol_broadcast": [
+    "<LAN broadcast, e.g. 192.168.1.255>",
+    "255.255.255.255"
+  ],
+  "relay_host": "cellar-relay",
+  "relay_ip": "<phone Tailscale 100.x IP>",
+  "relay_port": 8022,
+  "relay_user": "relay",
+  "cellar_host_key": "<ED25519 SHA256:... from the cellar>",
+  "relay_host_key": "<ED25519 SHA256:... from the phone>",
+  "wake_timeout_s": 180,
+  "idle_sleep_min": 30,
+  "laptop_pyopt": "C:/Users/<you>/AppData/Local/miniconda3/envs/pyopt/python.exe",
+  "jr_optlib": "C:/Users/<you>/OneDrive - Danmarks Tekniske Universitet/JR/jr_optlib",
+  "cellar_pyopt": "~/miniforge3/envs/pyopt/bin/python",
+  "cellar_jr_optlib": "~/src/jr_optlib",
+  "cellar_windows_user": "<Windows user on the cellar>",
+  "gurobi_license_id": "<from gurobi.lic / User Portal>"
+}

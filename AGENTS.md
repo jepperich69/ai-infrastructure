@@ -11,6 +11,9 @@
 
 **Blanket Approval:** `helpi 25` and the `/pipeline` skill only produce Markdown files and do not modify code or manuscripts. They have blanket approval to run end-to-end without user confirmation across all agents.
 
+## Cellar compute server
+Long Gurobi/Python jobs can run on the home compute server (WSL2, ssh alias `cellar`). When the user says "run X on the cellar", use `C:\Users\rich\OneDrive - Danmarks Tekniske Universitet\JR\AI_auto\scripts\cellar.py` (`run --project DIR -- CMD`, `jobs`, `log`, `pull`, `status`, `doctor`); it wakes the server itself. Read `C:\Users\rich\OneDrive - Danmarks Tekniske Universitet\JR\AI_auto\compute_server\README.md` first. Max 2 concurrent Gurobi jobs across laptop and cellar (WLS licence). Codex: the workspace sandbox blocks ssh, so request escalation for `cellar.py`.
+
 ## How to answer
 Lead with the answer, keep prose under ~150 words, report results rather than process, and close with a `Drill down: (a) ... (b) ...` line when there is more to give. Write at full length for deliverables, explicit requests for detail, and anything the user must know before an irreversible action.
 

@@ -40,6 +40,9 @@ infrastructure_summary.html
 infrastructure_full.html
 infrastructure_summary.pdf
 
+# ── Cellar: machine-specific values (MAC, IPs, host keys); repo is public ──
+compute_server/local/
+
 # ── OS noise ─────────────────────────────────────────────────────
 Thumbs.db
 .DS_Store

@@ -802,3 +802,9 @@ The global `PostToolUse` command hook for `Edit|Write|Bash` stalled intermittent
 **Fix:** Replace the obsolete paths with `AI_auto\scripts\helpi.ps1` and `AI_auto\scripts\generate_handover.ps1`, or route the helpi call through the live root-level `helpi.cmd`. Add a path-existence check before invocation.
 
 Observed 2026-09-15 while closing `Pub_MIPEntropy_MPC`: both documented root-level `.ps1` paths failed because the scripts now live under `AI_auto\scripts`. Direct invocation from that directory succeeded.
+
+### 59. Codex workspace sandbox blocks ssh to the cellar
+**Status:** platform-fact (2026-11-15)
+**Affects:** `scripts/cellar.py` and any `ssh cellar` / `ssh cellar-relay` from Codex.
+**Symptom:** `banner exchange: Connection to UNKNOWN port -1: Connection refused`, while the same command works from Claude Code and a plain shell. Turning on `sandbox_workspace_write.network_access=true` does not help (tested with codex-cli 0.167.2).
+**Workaround:** Codex requests escalation (run outside the sandbox, user approves) for `cellar.py` and ssh. Not yet verified end to end from an interactive Codex session; confirm once and update this entry. Gemini/agy: untested.

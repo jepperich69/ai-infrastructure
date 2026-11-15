@@ -320,6 +320,7 @@
       <div><a href="#secG" style="color:inherit;">G &mdash; Worked Example</a></div>
       <div><a href="#secH" style="color:inherit;">H &mdash; GPT Codex CLI Skills</a></div>
       <div><a href="#notetaker" style="color:inherit;">I &mdash; NoteTaker Mobile Voice Bridge</a></div>
+      <div><a href="#cellar" style="color:inherit;">K &mdash; Cellar Compute Server</a></div>
       <div><a href="#secInstall" style="color:inherit;">Install &mdash; New machine / new colleague</a></div>
       <div><a href="#secI" style="color:inherit;">I &mdash; Collaborative Setup</a></div>
 
@@ -1086,6 +1087,7 @@ helpi 3 Pub_X main.tex             # run command 3 with a specific .tex file</pr
     <tr><td>29</td><td>Regenerate software inventory</td><td><code>tool_inventory.ps1</code> &mdash; probes installed tools and rewrites generated <code>TOOLS.md</code></td><td><span class="tag manual">manual</span></td></tr>
     <tr><td>30</td><td>Open runs window</td><td><code>runs_watch.ps1 -Open</code> &mdash; polls processes and reads <code>%LOCALAPPDATA%\AI_runs\events.jsonl</code>, written by the <code>runs_hook.py</code> Claude hook</td><td><span class="tag manual">manual</span></td></tr>
     <tr><td>31</td><td>Open files window</td><td><code>runs_watch.ps1 -Files -Open</code> &mdash; file-system watcher on <code>JR</code>; history in <code>%LOCALAPPDATA%\AI_runs\files.jsonl</code></td><td><span class="tag manual">manual</span></td></tr>
+    <tr><td>33</td><td>Cellar compute server</td><td><code>python scripts\cellar.py status</code> &mdash; up or asleep, load, running jobs; full use in <a href="#cellar">K &mdash; Cellar Compute Server</a></td><td><span class="tag manual">manual</span></td></tr>
   </table>
 </div>
 
@@ -2512,6 +2514,39 @@ Goal: Add robustness checks to results
   </table>
 </div>
 
+<div class="section" id="cellar">
+  <h2>K &mdash; Cellar Compute Server <span class="tag manual">helpi 33</span></h2>
+  <p>
+    Long Gurobi and Python runs go to the music PC in the cellar instead of the laptop. Windows and the studio
+    stay as they are; the calculations run in <b>WSL2 Ubuntu 24.04</b> (12 GB RAM cap, 14 threads), reached by
+    SSH as <code>cellar</code> (key login only, port 2222, home LAN or Tailscale; no router port forward).
+    Jobs run in <code>tmux</code>, so they survive a closed laptop and Claude Code's low-memory stop of
+    background jobs. <b>The laptop stays the only master copy</b>: no OneDrive on the cellar, results come back
+    by <code>pull</code>. Design and set-up: <code>compute_server/README.md</code>.
+  </p>
+  <p><b>In Claude:</b> say <em>&ldquo;run X on the cellar&rdquo;</em>. Claude then uses <code>scripts/cellar.py</code>:</p>
+  <table>
+    <tr><th>Command</th><th>What it does</th></tr>
+    <tr><td><code>run --project DIR [--src code] -- CMD</code></td><td>Hashes every file in <code>DIR/code</code>; stores the snapshot once under <code>~/store/&lt;sha256&gt;</code>; starts CMD in its own copy <code>~/runs/&lt;runid&gt;/work</code>; adds a row to <code>DIR/_remote_runs.csv</code></td></tr>
+    <tr><td><code>jobs</code>, <code>log RUNID</code>, <code>kill RUNID</code></td><td>List runs (state, wall time, peak memory), tail a log, stop a run</td></tr>
+    <tr><td><code>pull RUNID</code></td><td>Copies new or changed files, <code>run.log</code> and <code>manifest.json</code> to <code>DIR/code/remote_runs/RUNID/</code>, checks SHA-256 of each file, updates the CSV row</td></tr>
+    <tr><td><code>env</code></td><td>Compares the <code>pyopt</code> envs (pip-freeze fingerprint, key versions) and the jr_optlib commit on both sides</td></tr>
+    <tr><td><code>wake</code>, <code>sleep</code>, <code>status</code>, <code>install</code></td><td>Wake-on-LAN and wait for SSH; suspend now (refused while a job runs); up/down, load and jobs; reinstall the cellar helper and the idle-sleep timer</td></tr>
+    <tr><td><code>doctor</code></td><td>Checks the laptop side without waking anything: local config, ssh key, ssh config entries, Tailscale, phone relay</td></tr>
+  </table>
+  <p>
+    <b>Reproducibility.</b> Each run's <code>manifest.json</code> records the snapshot hash, both env fingerprints,
+    both jr_optlib commits, start and end, exit code, wall and CPU time, and peak memory. Only pushed jr_optlib
+    commits reach the cellar (<code>git -C ~/src/jr_optlib pull</code>); for a paper, cite the run id and hash.
+    <b>Power.</b> Windows suspends after 30 idle minutes; a running job holds a keep-awake request, and
+    <code>cellar.py</code> sends Wake-on-LAN before any command: a local packet at home, and from anywhere via the phone relay (Android + Termux on the home Wi-Fi, reached over Tailscale).
+    <b>Licence.</b> Gurobi WLS academic: any machine, <b>2 concurrent sessions in total</b>, so at most one job on
+    the laptop and one on the cellar. <b>Data.</b> No raw PostNord or other restricted data on the cellar.
+    <b>Other agents.</b> Every generated <code>AGENTS.md</code> has a cellar block; Codex must request escalation, because its sandbox blocks ssh (known issue #59).
+    <b>Machine values and rebuilds.</b> MAC, IPs and host keys are in the gitignored <code>compute_server/local/cellar_config.json</code> (the repo is public); replacing the laptop, the cellar or the phone is <code>INSTALL.md</code> Part G. Reference: <code>compute_server/README.md</code>.
+  </p>
+</div>
+
 <div class="section" id="envmap">
   <h2>J &mdash; Environment Map &amp; Known Issues</h2>
   <p>
@@ -2978,4 +3013,3 @@ Goal: Add robustness checks to results
 </script>
 </body>
 </html>
-

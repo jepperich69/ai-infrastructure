@@ -219,6 +219,58 @@ owner wants voice-note capture. Summary of what it additionally needs:
 
 ---
 
+## Part G - Cellar compute server (optional; replacing any of its three machines)
+
+The cellar is a home PC running WSL2 that takes long Gurobi/Python jobs; an Android phone relays Wake-on-LAN from
+outside home. Reference: `compute_server/README.md`. The machine-specific values live in
+`compute_server/local/cellar_config.json`, which is **gitignored** (the repo is public). On the owner's machines
+OneDrive carries `local/`; a fresh clone has only the template `compute_server/cellar_config.example.json`.
+
+Check at any point, without waking anything: `python scripts\cellar.py doctor` (every FAIL names its fix).
+
+### G1 - New laptop (cellar and phone unchanged)
+1. Parts B-C as usual. Tailscale: install it and `HUMAN STEP` log in to the same tailnet.
+2. Config: if OneDrive brought `compute_server/local/cellar_config.json`, check `laptop_pyopt` and `jr_optlib`
+   paths. Otherwise copy the example there and fill it in (values: old config, or `local/cellar_setup_log.md`).
+3. Key, either way:
+   - **Copy** `~/.ssh/id_ed25519_cellar` and `.pub` from the old laptop (nothing else to change), or
+   - **New key:** `ssh-keygen -t ed25519 -N "" -C laptop-claude-to-cellar -f $HOME\.ssh\id_ed25519_cellar`, then
+     authorize the `.pub` on both ends while the old laptop still works:
+     `type id_ed25519_cellar.pub | ssh cellar "cat >> ~/.ssh/authorized_keys"` and
+     `type id_ed25519_cellar.pub | ssh cellar-relay "cat >> ~/.ssh/authorized_keys"` (run from the old laptop).
+     Without the old laptop: `HUMAN STEP` paste the key on the cellar PC (WSL, `~/.ssh/authorized_keys`) and in
+     Termux on the phone.
+4. `~/.ssh/config`: add the `Host cellar` and `Host cellar-relay` blocks shown in `compute_server/README.md`.
+5. First connect to each: compare the fingerprint with `cellar_host_key` / `relay_host_key` before accepting.
+   (For the phone, use Git's `ssh-keyscan`; Windows OpenSSH 9.5's cannot negotiate with it.)
+6. Profile function in both PS5 and PS7 profiles:
+   `function cellar { & "<AI_auto>\compute_server\laptop\wake-cellar.ps1" -Ssh }`
+7. Gurobi: the WLS licence file goes to the new laptop as usual; the cellar already has its own copy.
+8. Verify: `cellar.py doctor` all OK, then `cellar.py status` and `cellar.py env`.
+
+### G2 - New cellar PC
+1. On the new PC, give a Claude Code session `compute_server/cellar_setup_instructions.md` (copy it over; the PC
+   gets no OneDrive). It ends with a REPORT BACK block.
+2. On the laptop, update `local/cellar_config.json` from that block: `mac`, `lan_ip`, `wol_broadcast`,
+   `tailscale_ip`, `cellar_host_key`, `cellar_windows_user`. Remove the old `cellar` line from `~/.ssh/known_hosts`.
+3. `scp` the Gurobi licence to `~/gurobi.lic` (mode 600), then `cellar.py install` (job helper + idle-sleep timer).
+4. New MAC: regenerate the relay's wake command (G3 step 5 only).
+5. Verify: `cellar.py doctor`, `cellar.py env`, a short test job, then a sleep-then-wake test.
+
+### G3 - New phone relay
+1. `HUMAN STEP` On the phone: Tailscale (log in, set as Always-on VPN, disable key expiry in the admin console),
+   Termux and Termux:Boot (GitHub builds; Play/F-Droid installs may be blocked by Play Protect), battery
+   "Unrestricted" for all three, lock Termux in recents, open Termux:Boot once.
+2. In Termux: `pkg install openssh python`, `passwd` (temporary), `sshd`, `termux-wake-lock`. Note the phone's
+   Tailscale IP and its Termux user name.
+3. From the laptop, with password login: `scp -P 8022 compute_server/phone/relay-setup.sh <user>@<phone ip>:`
+4. `type $HOME\.ssh\id_ed25519_cellar.pub | ssh -p 8022 <user>@<phone ip> "sh relay-setup.sh <mac> <wol_broadcast[0]>"`
+5. Check key login works, then `ssh -p 8022 <user>@<phone ip> "sh relay-setup.sh lock"` (key only).
+6. Update `relay_ip` and `relay_host_key` in the local config and the `Host cellar-relay` block (`User` = the
+   Termux user). Verify: `ssh cellar-relay wake-cellar` prints "sent (4/4)".
+
+---
+
 ## What the agent can and cannot do - quick reference
 
 **Agent can:** clone the repo, run `setup.ps1`, write `config.local.ps1`, install
