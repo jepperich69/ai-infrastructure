@@ -258,9 +258,10 @@ Check at any point, without waking anything: `python scripts\cellar.py doctor` (
 5. Verify: `cellar.py doctor`, `cellar.py env`, a short test job, then a sleep-then-wake test.
 
 ### G3 - New phone relay
-1. `HUMAN STEP` On the phone: Tailscale (log in, set as Always-on VPN, disable key expiry in the admin console),
-   Termux and Termux:Boot (GitHub builds; Play/F-Droid installs may be blocked by Play Protect), battery
-   "Unrestricted" for all three, lock Termux in recents, open Termux:Boot once.
+1. `HUMAN STEP` On the phone: Tailscale (log in, disable key expiry in the admin console), Termux and
+   Termux:Boot (GitHub builds; Play/F-Droid installs may be blocked by Play Protect), open Termux:Boot once.
+   Then every setting in the phone table in `compute_server/README.md` (Always-on VPN, battery, auto start,
+   wake lock, recents lock, no automatic system updates). Without them the relay dies after a night-time reboot.
 2. In Termux: `pkg install openssh python`, `passwd` (temporary), `sshd`, `termux-wake-lock`. Note the phone's
    Tailscale IP and its Termux user name.
 3. From the laptop, with password login: `scp -P 8022 compute_server/phone/relay-setup.sh <user>@<phone ip>:`
@@ -268,6 +269,7 @@ Check at any point, without waking anything: `python scripts\cellar.py doctor` (
 5. Check key login works, then `ssh -p 8022 <user>@<phone ip> "sh relay-setup.sh lock"` (key only).
 6. Update `relay_ip` and `relay_host_key` in the local config and the `Host cellar-relay` block (`User` = the
    Termux user). Verify: `ssh cellar-relay wake-cellar` prints "sent (4/4)".
+7. Reboot test: restart the phone, unlock it, touch nothing; `cellar.py doctor` must show the relay OK within a few minutes.
 
 ---
 

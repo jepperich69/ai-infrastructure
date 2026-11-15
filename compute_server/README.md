@@ -104,9 +104,22 @@ In any agent: "run X on the cellar". Commands: `run --project DIR [--src code] -
 - `laptop/wake-cellar.ps1`: local packet + relay, waits up to 150 s for the ssh port on `lan_ip` or `tailscale_ip`;
   `-Ssh` then logs in. The PowerShell function `cellar` (PS5 and PS7 profiles) runs it with `-Ssh`.
 - `cellar.py` does the same before every command: local packet every 5 s, relay once, again after 60 s.
-- **Known weak spot (2026-11-15):** the phone dropped off Tailscale overnight ("offline, last seen 7h ago"), so the
-  relay did not answer. Android battery management is the likely cause; check that Tailscale, Termux and
-  Termux:Boot are all "Unrestricted" and that Tailscale is set as Always-on VPN. At home the local packet still works.
+- **Phone settings that keep the relay alive (fixed 2026-11-15).** On 2026-11-15 the phone had rebooted at 02:04
+  (likely a night-time system update) and Android stopped Tailscale about an hour later, so the relay was down.
+  After the settings below, a reboot with no touching brings back Tailscale (about 60 s) and sshd by itself.
+  OnePlus OxygenOS, Danish UI (search the term in Indstillinger if the path differs):
+  | Setting | Where (Danish UI) | Value |
+  |---|---|---|
+  | Always-on VPN | Indstillinger > search `VPN` > gear next to Tailscale > **Permanent VPN** | on |
+  | Block without VPN | same page, **Bloker forbindelser uden VPN** | **off** (else the phone locks itself out) |
+  | Battery, all three apps | Apps > Administration af apps > [app] > **Batteriforbrug**: **Tillad baggrundsaktivitet**, **Kør tjeneste i forgrunden** | on |
+  | Auto start | Termux:Boot: **Kør ved opstart**; also **Afhold telefonen fra at gå i dvale** (wake lock) | on |
+  | Recents | recent apps > three dots on Termux and Tailscale > **Lås** | locked |
+  | System updates | System og opdateringer > Softwareopdatering > gear > automatic download / night install | off (update by hand) |
+  | Play Store auto-update | keep on (Tailscale needs to stay current) | on |
+  | Bekræft apps via USB | Indstillinger for udviklere | on (was off during setup) |
+  Changing an app's battery settings force-stops it: afterwards open Termux and run `sshd`, or restart the phone.
+  At home the laptop's local packet works even when the relay is down.
 
 ## Tests and benchmark (2026-11-14)
 - `test_fishbone_mip_soft.py` (Pub_DistributionNetworks_TBA): 10/10 pass on the cellar, values identical to the laptop.
@@ -146,5 +159,4 @@ laptop (OneDrive is enough); without it, rebuild it from the template plus the s
 
 ## Open
 1. One real sleep-then-wake test (PI: Start > Power > Sleep on the cellar, then `cellar` from the laptop, away from home).
-2. Make the phone relay survive Android battery management (see "Known weak spot").
-3. Make the old-copy jr_optlib tests skip when paper folders are missing.
+2. Make the old-copy jr_optlib tests skip when paper folders are missing.
