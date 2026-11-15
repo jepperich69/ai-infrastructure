@@ -106,7 +106,8 @@ In any agent: "run X on the cellar". Commands: `run --project DIR [--src code] -
 - `cellar.py` does the same before every command: local packet every 5 s, relay once, again after 60 s.
 - **Phone settings that keep the relay alive (fixed 2026-11-15).** On 2026-11-15 the phone had rebooted at 02:04
   (likely a night-time system update) and Android stopped Tailscale about an hour later, so the relay was down.
-  After the settings below, a reboot with no touching brings back Tailscale (about 60 s) and sshd by itself.
+  After the settings below, a reboot with no touching brings back Tailscale and sshd by themselves within about
+  3 minutes (reboot test passed 2026-11-15 10:45).
   OnePlus OxygenOS, Danish UI (search the term in Indstillinger if the path differs):
   | Setting | Where (Danish UI) | Value |
   |---|---|---|
